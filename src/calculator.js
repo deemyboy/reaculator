@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./calculator.scss";
 import Display from "./components/display";
+import Keyboard from "./components/keyboard";
 
 class Calculator extends Component {
   displayRef = React.createRef();
@@ -14,6 +15,7 @@ class Calculator extends Component {
             <div className="title">Calculator</div>
             <div className="body">
               <Display />
+              <Keyboard />
             </div>
           </div>
         </div>

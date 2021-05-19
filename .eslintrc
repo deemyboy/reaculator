@@ -1,0 +1,9 @@
+{
+  "extends": "react-app",
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  },
+  "extends": ["airbnb", "prettier"],
+"plugins": ["react", "jsx-a11y", "import", "react-hooks", "plugin:prettier/recommended"],
+}
