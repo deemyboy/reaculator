@@ -5,7 +5,192 @@ import Keyboard from "./components/keyboard";
 
 class Calculator extends Component {
   displayRef = React.createRef();
-  state = {};
+  state = {
+    calculationData: { calculationClass: "", calculationValue: "" },
+    resultData: { resultClass: "", resultValue: "" },
+    keys: [
+      {
+        id: 0,
+        value: "0",
+        title: "zero",
+        keycode: 48,
+        type: "num",
+      },
+      {
+        id: 1,
+        value: "1",
+        title: "one",
+        keycode: 49,
+        type: "num",
+      },
+      {
+        id: 2,
+        value: "2",
+        title: "two",
+        keycode: 50,
+        type: "num",
+      },
+      {
+        id: 3,
+        value: "3",
+        title: "three",
+        keycode: 51,
+        type: "num",
+      },
+      {
+        id: 4,
+        value: "4",
+        title: "four",
+        keycode: 52,
+        type: "num",
+      },
+      {
+        id: 5,
+        value: "5",
+        title: "five",
+        keycode: 53,
+        type: "num",
+      },
+      {
+        id: 6,
+        value: "6",
+        title: "six",
+        keycode: 54,
+        type: "num",
+      },
+      {
+        id: 7,
+        value: "7",
+        title: "seven",
+        keycode: 55,
+        type: "num",
+      },
+      {
+        id: 8,
+        value: "8",
+        title: "eight",
+        keycode: 56,
+        type: "num",
+      },
+      {
+        id: 9,
+        value: "9",
+        title: "nine",
+        keycode: 57,
+        type: "num",
+      },
+      {
+        id: 10,
+        value: ".",
+        title: "dot",
+        keycode: 190,
+        type: "num",
+      },
+      {
+        id: 11,
+        value: "m",
+        uniChar: "\u00B1",
+        title: "plus minus (m)",
+        keycode: 189,
+        type: "num",
+      },
+      {
+        id: 19,
+        value: "+",
+        title: "plus",
+        keycode: 187,
+        type: "func",
+      },
+      {
+        id: 12,
+        value: "-",
+        title: "minus",
+        keycode: 189,
+        type: "func",
+      },
+      {
+        id: 13,
+        value: "x",
+        uniChar: "\u00D7",
+        title: "multiply (x)",
+        keycode: 88,
+        type: "func",
+      },
+      {
+        id: 14,
+        value: "/",
+        uniChar: "\u00F7",
+        title: "divide (/)",
+        keycode: 191,
+        type: "func",
+      },
+      {
+        id: 15,
+        value: "^",
+        uniChar: "\uD835\uDC65\u00B2",
+        title: "square (^)",
+        keycode: 54,
+        type: "func",
+      },
+      {
+        id: 21,
+        value: "r",
+        uniChar: "\u00B2\u221A",
+        title: "square root (r)",
+        keycode: 82,
+        type: "func",
+      },
+      {
+        id: 20,
+        value: "y",
+        uniChar: "\uD835\uDC65\u02B8",
+        title: "x to the power y (y)",
+        keycode: 89,
+        type: "func",
+      },
+      {
+        id: 16,
+        value: "=",
+        specialClass: "btn-success",
+        title: "equals",
+        keycode: 187,
+        type: "func",
+      },
+      {
+        id: 17,
+        value: "c",
+        specialClass: "btn-danger",
+        title: "clear last keypress (c)",
+        keycode: 67,
+        type: "func",
+      },
+      {
+        id: 18,
+        value: "a",
+        uniChar: "\u0061\u0063",
+        specialClass: "btn-danger",
+        title: "all clear (a)",
+        keycode: 65,
+        type: "func",
+      },
+      {
+        id: 23,
+        value: "l",
+        title: "clear console (l)",
+        keycode: 76,
+        type: "func",
+      },
+    ],
+  };
+
+  handleKeyClick = (e) => {
+    const keys = this.state.keys;
+    const keyClicked = keys.filter((k) => {
+      return k.id.toString() === e.target.id;
+    });
+  };
+
+  // parseInput
 
   render = () => {
     return (
@@ -14,8 +199,14 @@ class Calculator extends Component {
           <div className="calculator">
             <div className="title">Calculator</div>
             <div className="body">
-              <Display />
-              <Keyboard />
+              <Display
+                calculationData={this.state.calculationData}
+                resultData={this.state.resultData}
+              />
+              <Keyboard
+                keys={this.state.keys}
+                passClickHandler={(e) => this.handleKeyClick(e)}
+              />
             </div>
           </div>
         </div>

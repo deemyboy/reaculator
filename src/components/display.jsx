@@ -7,9 +7,9 @@ const Display = React.forwardRef((props, ref) => {
   return (
     <div className="col">
       <div className={props.dispClass} ref={ref}>
-        <Calculation />
+        <Calculation calculationData={props.calculationData} />
         <p className="clearIt"></p>
-        <Result />
+        <Result resultData={props.resultData} />
       </div>
     </div>
   );

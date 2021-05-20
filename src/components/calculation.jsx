@@ -4,7 +4,7 @@ import "./calculation.scss";
 const Calculation = React.forwardRef((props, ref) => {
   return (
     <div className="col">
-        <p className={props.calcClass}>{props.calculation}</p>
+      <p className={props.calculationClass}>{props.calculationValue}</p>
     </div>
   );
 });

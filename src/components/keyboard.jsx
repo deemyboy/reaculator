@@ -1,14 +1,25 @@
-import React from "react";
+import React, { Component } from "react";
 import "./keyboard.scss";
+import Key from "./key";
 
-const Keyboard = React.forwardRef((props, ref) => {
-  makeKeyboard = () => {
-console.log('making keyboard');
-  }
-  return (
-    <div className="col">
-        <p className={props.keybClass}>{this.makeKeyboard}</p>
-    </div>
-  );
-});
+class Keyboard extends Component {
+  render = () => {
+    console.log(this.props);
+    return (
+      <div className="col">
+        <p className="bob">
+          {this.props.keys.map((ky) => {
+            return (
+              <Key
+                key={ky.id}
+                kObj={ky}
+                handleKeyClick={(e) => this.props.passClickHandler(e)}
+              />
+            );
+          })}
+        </p>
+      </div>
+    );
+  };
+}
 export default Keyboard;
