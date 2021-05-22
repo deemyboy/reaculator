@@ -1,11 +1,13 @@
 import React from "react";
-import "./calculation.scss";
+// import "./scss/calculation.scss";
 
 const Calculation = React.forwardRef((props, ref) => {
   return (
-    <div className="col">
-      <p className={props.calculationClass}>{props.calculationValue}</p>
-    </div>
+    <React.Fragment>
+      <p className={props.calculationData.calculationClass}>
+        {props.calculationData.calculationValue}
+      </p>
+    </React.Fragment>
   );
 });
 export default Calculation;

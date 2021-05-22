@@ -2,13 +2,26 @@ import React, { Component } from "react";
 import "./calculator.scss";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
+import Sidebar from "./components/sidebar";
 
 class Calculator extends Component {
   displayRef = React.createRef();
   state = {
-    calculationData: { calculationClass: "", calculationValue: "" },
-    resultData: { resultClass: "", resultValue: "" },
-    keys: [
+    calculationData: {
+      calculationClass: "calculation",
+      calculationValue: "100x500",
+    },
+    resultData: { resultClass: "result", resultValue: "50000" },
+    sidebarData: {
+      sidebarClass: "sidebar",
+      sidebarValue: "50000",
+      isOpen: false,
+    },
+    numberKeyboardClass: "numberKeyboard",
+    functionKeyboardClass: "functionKeyboard",
+    utilityKeyboardClass: "utilityKeyboard",
+    title: "Calculator",
+    numberKeys: [
       {
         id: 0,
         value: "0",
@@ -94,6 +107,8 @@ class Calculator extends Component {
         keycode: 189,
         type: "num",
       },
+    ],
+    functionKeys: [
       {
         id: 19,
         value: "+",
@@ -156,6 +171,8 @@ class Calculator extends Component {
         keycode: 187,
         type: "func",
       },
+    ],
+    utilityKeys: [
       {
         id: 17,
         value: "c",
@@ -184,30 +201,105 @@ class Calculator extends Component {
   };
 
   handleKeyClick = (e) => {
-    const keys = this.state.keys;
-    const keyClicked = keys.filter((k) => {
-      return k.id.toString() === e.target.id;
-    });
+    const keyClicked = this.state.utilityKeys
+      .concat(this.state.numberKeys, this.state.functionKeys)
+      .filter((k) => {
+        return k.id.toString() === e.target.id;
+      });
+    console.log(e, e.target.parentElement.className);
+    let className = e.target.parentElement.className;
+    if (className.toLowerCase().indexOf(this.state.numberKeyboardClass) > -1) {
+      console.log("numberKeys clicked");
+    } else if (
+      className.toLowerCase().indexOf(this.state.functionKeyboardClass) > -1
+    ) {
+      console.log("functionKeys clicked");
+    } else if (
+      className.toLowerCase().indexOf(this.state.utilityKeyboardClass) > -1
+    ) {
+      console.log("utilityKeys clicked");
+    }
+  };
+
+  toggleSidebar = (e) => {
+    console.log("sidebar toggle clicked", this.state.sidebarData.isOpen);
+    let sidebarData = { ...this.state.sidebarData };
+    let isOpen = sidebarData.isOpen;
+    console.log(isOpen);
+    if (!isOpen) {
+      isOpen = true;
+    } else {
+      isOpen = false;
+    }
+    console.log(isOpen);
+
+    sidebarData.isOpen = isOpen;
+
+    this.setState({ sidebarData });
+    // : this.setState({ isOpen: isOpen });
   };
 
   // parseInput
 
   render = () => {
     return (
-      <div className="container">
-        <div className="row">
+      // <div className="container">
+      <div
+        className={`container ${
+          this.state.sidebarData.isOpen === true ? "open" : ""
+        }`}>
+        <div className="flex-row">
           <div className="calculator">
-            <div className="title">Calculator</div>
-            <div className="body">
-              <Display
-                calculationData={this.state.calculationData}
-                resultData={this.state.resultData}
-              />
-              <Keyboard
-                keys={this.state.keys}
-                passClickHandler={(e) => this.handleKeyClick(e)}
-              />
+            <div className="title">{this.state.title}</div>
+            <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
+              <div className="icon-bar"></div>
+              <div className="icon-bar"></div>
+              <div className="icon-bar"></div>
             </div>
+            <div className="body container">
+              <div className="row">
+                <div className="col">
+                  <div className="row">
+                    <div className="col display">
+                      <Display
+                        calculationData={this.state.calculationData}
+                        resultData={this.state.resultData}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div
+                      className={`col keyboard ${this.state.numberKeyboardClass}`}>
+                      <Keyboard
+                        keys={this.state.numberKeys}
+                        passClickHandler={(e) => this.handleKeyClick(e)}
+                      />
+                    </div>
+                    <div
+                      className={`col keyboard ${this.state.functionKeyboardClass}`}>
+                      <Keyboard
+                        keys={this.state.functionKeys}
+                        passClickHandler={(e) => this.handleKeyClick(e)}
+                      />
+                      <div
+                        className={`row keyboard ${this.state.utilityKeyboardClass}`}>
+                        <Keyboard
+                          keys={this.state.utilityKeys}
+                          passClickHandler={(e) => this.handleKeyClick(e)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* <div
+            className={`sidebar ${
+              this.state.sidebarData.isOpen === true ? "open" : ""
+            }`}> */}
+          <div className="sidebar">
+            <Sidebar sidebarData={this.state.sidebarData}></Sidebar>
           </div>
         </div>
       </div>

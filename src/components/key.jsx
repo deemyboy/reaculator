@@ -1,5 +1,5 @@
 import React from "react";
-import "./key.scss";
+// import "./scss/key.scss";
 
 const Key = React.forwardRef((props, ref) => {
   const setKeyClasses = (keyObj) => {
