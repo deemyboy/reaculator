@@ -248,7 +248,7 @@ class Calculator extends Component {
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
         }`}>
-        <div className="flex-row">
+        <div className="flex-row row">
           <div className="calculator">
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>

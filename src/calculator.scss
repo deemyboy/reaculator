@@ -6,7 +6,7 @@
 
 #calculator {
   > .container {
-    max-width: 540px;
+    max-width: 640px;
     margin-top: $s-3r;
     .calculator {
       transform: scaleX(1);
@@ -14,12 +14,17 @@
     }
     &.open {
       .calculator {
-        transform: scaleX(0.8);
+        // transform: scaleX(0.8)
+        width: 540px;
       }
       .sidebar {
+        z-index: 2;
         transform: scaleX(1);
+        transform-origin: right;
       }
       .menu-icon {
+        transform-origin: center;
+        transform: translate(-250%, 0%);
         .icon-bar {
           &:nth-of-type(1) {
             transform-origin: center;
@@ -34,20 +39,20 @@
           }
         }
       }
-      .body.container {
-        .keyboard {
-          margin: 0;
-          padding: 2px;
-          .utilityKeyboard {
-            margin: 0;
-            width: 100%;
-          }
-          button {
-            margin: 2px;
-            transform: scale(0.8);
-          }
-        }
-      }
+      // .body.container {
+      //   .keyboard {
+      //     margin: 0;
+      //     padding: 2px;
+      //     .utilityKeyboard {
+      //       margin: 0;
+      //       width: 100%;
+      //     }
+      //     button {
+      //       margin: 2px;
+      //       transform: scale(0.8);
+      //     }
+      //   }
+      // }
     }
   }
 }
