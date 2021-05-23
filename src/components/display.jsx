@@ -1,5 +1,4 @@
 import React from "react";
-// import "./scss/display.scss";
 import Calculation from "./calculation";
 import Result from "./result";
 

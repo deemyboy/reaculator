@@ -1,5 +1,4 @@
 import React from "react";
-// import "./scss/key.scss";
 
 const Key = React.forwardRef((props, ref) => {
   const setKeyClasses = (keyObj) => {
@@ -17,7 +16,6 @@ const Key = React.forwardRef((props, ref) => {
     }
     return classes;
   };
-  console.log(props.handleKeyClick);
   return (
     <button
       id={props.kObj.id}

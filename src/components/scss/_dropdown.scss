@@ -1,0 +1,12 @@
+.dropdown {
+  &.theme {
+    width: 200%;
+  }
+  .btn-dropdown {
+    width: 100%;
+    text-align: left;
+    color: #60c1da;
+    background-color: #99999b;
+    border-color: #0d6efd;
+  }
+}

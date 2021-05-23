@@ -1,5 +1,4 @@
 import React from "react";
-// import "./scss/result.scss";
 
 const Result = React.forwardRef((props, ref) => {
   return (

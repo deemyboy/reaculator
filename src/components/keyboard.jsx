@@ -4,7 +4,6 @@ import Key from "./key";
 
 class Keyboard extends Component {
   render = () => {
-    console.log(this.props);
     return (
       <React.Fragment>
         {this.props.keys.map((ky) => {

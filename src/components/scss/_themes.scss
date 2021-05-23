@@ -1,0 +1,263 @@
+$fire_color: #584934;
+$fire_bg: #ffd900;
+$fire_border: #6b5630;
+$fire_btn_color: #f3d3b4;
+$fire_btn_bg: #b49a05;
+$fire_btn_border: #6c5d07;
+
+$midnight_bg: #39395a;
+$midnight_color: #7e7c7c;
+$midnight_border: #919191;
+$midnight_btn_color: #abbaa7;
+$midnight_btn_bg: #0c0c28;
+$midnight_btn_border: #686878;
+
+$default_bg: #0000ff;
+$default_color: #fff;
+$default_border: #007bff;
+$default_btn_color: #b0e0ed;
+$default_btn_bg: #0d6efd;
+$default_btn_border: #0846a1;
+
+$storm_bg: #818185;
+$storm_color: #b0e0ed;
+$storm_border: #a6d9ea;
+$storm_btn_color: #b0e0ed;
+$storm_btn_bg: #626263;
+$storm_btn_border: #95b0bb;
+
+$jungle_bg: #4cbc06;
+$jungle_color: #61503a;
+$jungle_border: #504125;
+$jungle_btn_color: #ef9494;
+$jungle_btn_bg: #a83920;
+$jungle_btn_border: #777771;
+
+.fire {
+  &.calculator {
+    background-color: $fire_bg;
+    + .sidebar {
+      background: rgba($fire_bg, 80%);
+      .title {
+        color: $fire_color;
+      }
+      .btn-dropdown {
+        background: rgba($fire_bg, 50%);
+        color: $fire_color;
+        border-color: $fire_border;
+      }
+    }
+    .keyboard {
+      color: $fire_color;
+      background-color: $fire_bg;
+      border-color: $fire_border;
+      .btn-primary {
+        color: $fire_btn_color;
+        background-color: $fire_btn_bg;
+        border-color: $fire_btn_border;
+      }
+      .btn-secondary {
+        color: complement($fire_btn_color);
+        background-color: complement($fire_btn_bg);
+        border-color: complement($fire_btn_border);
+      }
+    }
+    .title {
+      color: $fire_color;
+    }
+  }
+}
+.midnight {
+  &.calculator {
+    background-color: $midnight_bg;
+    + .sidebar {
+      background: rgba($midnight_bg, 80%);
+      .title {
+        color: $midnight_color;
+      }
+      .btn-dropdown {
+        background: rgba($midnight_bg, 50%);
+        color: $midnight_color;
+        border-color: $midnight_border;
+      }
+    }
+    .keyboard {
+      color: $midnight_color;
+      background-color: $midnight_bg;
+      border-color: $midnight_border;
+      .btn-primary {
+        color: $midnight_btn_color;
+        background-color: $midnight_btn_bg;
+        border-color: $midnight_btn_border;
+      }
+      .btn-secondary {
+        color: complement($midnight_btn_color);
+        background-color: complement($midnight_btn_bg);
+        border-color: complement($midnight_btn_border);
+      }
+    }
+    .title {
+      color: $midnight_color;
+    }
+  }
+}
+.default {
+  &.calculator {
+    background-color: $default_bg;
+    + .sidebar {
+      background: rgba($default_bg, 80%);
+      .title {
+        color: $default_color;
+      }
+      .btn-dropdown {
+        background: rgba($default_bg, 50%);
+        color: $default_color;
+        border-color: $default_border;
+      }
+    }
+    .keyboard {
+      color: $default_color;
+      background-color: $default_bg;
+      border-color: $default_border;
+      .btn-primary {
+        color: $default_btn_color;
+        background-color: $default_btn_bg;
+        border-color: $default_btn_border;
+      }
+      .btn-secondary {
+        color: complement($default_btn_color);
+        background-color: complement($default_btn_bg);
+        border-color: complement($default_btn_border);
+        color: #5b3906;
+        background-color: #fd9c0d;
+        border-color: #a16308;
+      }
+    }
+    .title {
+      color: $default_color;
+    }
+  }
+}
+.storm {
+  &.calculator {
+    background-color: $storm_bg;
+    + .sidebar {
+      background: rgba($storm_bg, 80%);
+      .title {
+        color: $storm_color;
+      }
+      .btn-dropdown {
+        background: rgba($storm_bg, 50%);
+        color: $storm_color;
+        border-color: $storm_border;
+      }
+    }
+    .keyboard {
+      color: $storm_color;
+      background-color: $storm_bg;
+      border-color: $storm_border;
+      .btn-primary {
+        color: $storm_btn_color;
+        background-color: $storm_btn_bg;
+        border-color: $storm_btn_border;
+      }
+      .btn-secondary {
+        color: complement($storm_btn_color);
+        background-color: complement($storm_btn_bg);
+        border-color: complement($storm_btn_border);
+        color: #035f63;
+        background-color: #dbdbd8;
+        border-color: #256c96;
+      }
+    }
+    .title {
+      color: $storm_color;
+    }
+  }
+}
+.jungle {
+  &.calculator {
+    background-color: $jungle_bg;
+    + .sidebar {
+      background: rgba($jungle_bg, 80%);
+      .title {
+        color: $jungle_color;
+      }
+      .btn-dropdown {
+        background: rgba($jungle_bg, 50%);
+        color: $jungle_color;
+        border-color: $jungle_border;
+      }
+    }
+    .keyboard {
+      color: $jungle_color;
+      background-color: $jungle_bg;
+      border-color: $jungle_border;
+      .btn-primary {
+        color: $jungle_btn_color;
+        background-color: $jungle_btn_bg;
+        border-color: $jungle_btn_border;
+      }
+      .btn-secondary {
+        color: complement($jungle_btn_color);
+        background-color: complement($jungle_btn_bg);
+        border-color: complement($jungle_btn_border);
+      }
+    }
+    .title {
+      color: $jungle_color;
+    }
+  }
+}
+
+.fire {
+  .btn-primary {
+    &:focus {
+      box-shadow: 0 0 0 0.15rem lighten($fire_btn_bg, 20%);
+    }
+    &:hover {
+      background-color: darken($fire_btn_bg, 10%);
+    }
+  }
+}
+.midnight {
+  .btn-primary {
+    &:focus {
+      box-shadow: 0 0 0 0.15rem lighten($midnight_btn_bg, 20%);
+    }
+    &:hover {
+      background-color: darken($midnight_btn_bg, 10%);
+    }
+  }
+}
+
+.default {
+  .btn-primary {
+    &:focus {
+      box-shadow: 0 0 0 0.15rem lighten($default_btn_bg, 20%);
+    }
+    &:hover {
+      background-color: darken($default_btn_bg, 10%);
+    }
+  }
+}
+.storm {
+  .btn-primary {
+    &:focus {
+      box-shadow: 0 0 0 0.15rem lighten($storm_btn_bg, 20%);
+    }
+    &:hover {
+      background-color: darken($storm_btn_bg, 10%);
+    }
+  }
+}
+.jungle {
+  .btn-primary {
+    &:focus {
+      box-shadow: 0 0 0 0.15rem lighten($jungle_btn_bg, 20%);
+    }
+    &:hover {
+      background-color: darken($jungle_btn_bg, 10%);
+    }
+  }
+}

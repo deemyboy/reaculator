@@ -1,8 +1,10 @@
+$imp: #{"!"}important;
 @import "~bootstrap/scss/bootstrap";
 @import "./components/scss/_spacers", "./components/scss/_transitions",
   "./components/scss/_calculation", "./components/scss/_display",
   "./components/scss/_key", "./components/scss/_keyboard",
-  "./components/scss/_result", "./components/scss/_sidebar";
+  "./components/scss/_result", "./components/scss/_sidebar",
+  "./components/scss/_dropdown", "./components/scss/_themes";
 
 #calculator {
   > .container {
@@ -14,17 +16,24 @@
     }
     &.open {
       .calculator {
-        // transform: scaleX(0.8)
         width: 540px;
       }
       .sidebar {
         z-index: 2;
-        transform: scaleX(1);
+        transform: scaleX(2);
         transform-origin: right;
+        > div:first-of-type,
+        div.dropdown,
+        .title {
+          transform: scaleX(0.5);
+        }
+        div.dropdown {
+          transform-origin: left;
+        }
       }
       .menu-icon {
         transform-origin: center;
-        transform: translate(-250%, 0%);
+        transform: translate(-600%, 0%);
         .icon-bar {
           &:nth-of-type(1) {
             transform-origin: center;
@@ -39,20 +48,6 @@
           }
         }
       }
-      // .body.container {
-      //   .keyboard {
-      //     margin: 0;
-      //     padding: 2px;
-      //     .utilityKeyboard {
-      //       margin: 0;
-      //       width: 100%;
-      //     }
-      //     button {
-      //       margin: 2px;
-      //       transform: scale(0.8);
-      //     }
-      //   }
-      // }
     }
   }
 }

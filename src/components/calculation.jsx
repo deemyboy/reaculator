@@ -1,5 +1,4 @@
 import React from "react";
-// import "./scss/calculation.scss";
 
 const Calculation = React.forwardRef((props, ref) => {
   return (

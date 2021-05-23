@@ -3,9 +3,16 @@ import "./calculator.scss";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Sidebar from "./components/sidebar";
-
+import Cookies from "universal-cookie";
 class Calculator extends Component {
   displayRef = React.createRef();
+  constructor(props) {
+    super(props);
+
+    this.state.theme = this.getCookie("currentTheme");
+    this.state.themesData.currentSetting = this.getCookie("currentTheme");
+  }
+
   state = {
     calculationData: {
       calculationClass: "calculation",
@@ -14,8 +21,24 @@ class Calculator extends Component {
     resultData: { resultClass: "result", resultValue: "50000" },
     sidebarData: {
       sidebarClass: "sidebar",
-      sidebarValue: "50000",
+      sidebarValue: "Settings",
       isOpen: false,
+    },
+    dropdownData: {
+      dropdownClass: "dropdown",
+    },
+    themesData: {
+      labelForDropdown: "Theme",
+      classForDropdown: "theme",
+      currentSetting: "Default",
+      callbackForDropdown: (e) => this.onSelectTheme(e),
+      itemsForDropdown: [
+        { itemName: "Fire" },
+        { itemName: "Midnight" },
+        { itemName: "Default" },
+        { itemName: "Storm" },
+        { itemName: "Jungle" },
+      ],
     },
     numberKeyboardClass: "numberKeyboard",
     functionKeyboardClass: "functionKeyboard",
@@ -206,7 +229,7 @@ class Calculator extends Component {
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
-    console.log(e, e.target.parentElement.className);
+    // console.log(e, e.target.parentElement.className);
     let className = e.target.parentElement.className;
     if (className.toLowerCase().indexOf(this.state.numberKeyboardClass) > -1) {
       console.log("numberKeys clicked");
@@ -222,34 +245,67 @@ class Calculator extends Component {
   };
 
   toggleSidebar = (e) => {
-    console.log("sidebar toggle clicked", this.state.sidebarData.isOpen);
     let sidebarData = { ...this.state.sidebarData };
     let isOpen = sidebarData.isOpen;
-    console.log(isOpen);
     if (!isOpen) {
       isOpen = true;
     } else {
       isOpen = false;
     }
-    console.log(isOpen);
 
     sidebarData.isOpen = isOpen;
 
     this.setState({ sidebarData });
-    // : this.setState({ isOpen: isOpen });
+  };
+
+  packageDropdownData = (dropdownUser) => {
+    let dropdownData = { ...this.state.dropdownData };
+    dropdownData.labelForDropdown = dropdownUser.labelForDropdown;
+    dropdownData.itemsForDropdown = dropdownUser.itemsForDropdown;
+    dropdownData.classForDropdown = dropdownUser.classForDropdown;
+    dropdownData.currentSetting = dropdownUser.currentSetting;
+    dropdownData.onClick = dropdownUser.callbackForDropdown;
+    return dropdownData;
+  };
+
+  onSelectTheme = (e) => {
+    let cookieData = {};
+    let themesData = { ...this.state.themesData };
+    themesData.currentSetting = e.target.innerHTML;
+    cookieData.cookieLabel = "currentTheme";
+    cookieData.cookieValue = themesData.currentSetting;
+    cookieData.cookiePath = { path: "/" };
+    this.setState({ themesData, theme: themesData.currentSetting });
+    this.setCookie(cookieData);
+  };
+
+  setCookie = (cookieData) => {
+    console.log("setCookie ", cookieData);
+    const cookies = new Cookies();
+
+    cookies.set(
+      cookieData.cookieLabel,
+      cookieData.cookieValue,
+      cookieData.cookiePath
+    );
+  };
+
+  getCookie = (cookieLabel) => {
+    const cookies = new Cookies();
+    console.log(cookies.get(cookieLabel));
+    return cookies.get(cookieLabel);
   };
 
   // parseInput
 
   render = () => {
     return (
-      // <div className="container">
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
         }`}>
         <div className="flex-row row">
-          <div className="calculator">
+          <div className={`calculator ${this.state.theme.toLowerCase()}`}>
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>
@@ -294,13 +350,11 @@ class Calculator extends Component {
               </div>
             </div>
           </div>
-          {/* <div
-            className={`sidebar ${
-              this.state.sidebarData.isOpen === true ? "open" : ""
-            }`}> */}
-          <div className="sidebar">
-            <Sidebar sidebarData={this.state.sidebarData}></Sidebar>
-          </div>
+          <Sidebar
+            sidebarData={this.state.sidebarData}
+            dropdownData={this.packageDropdownData(
+              this.state.themesData
+            )}></Sidebar>
         </div>
       </div>
     );
