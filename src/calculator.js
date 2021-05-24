@@ -290,17 +290,23 @@ class Calculator extends Component {
     cookieData.cookiePath = { path: "/" };
     this.setState({ themesData, theme: themesData.currentSetting });
     this.setCookie(cookieData);
+    this.toggleSidebar(e);
   };
 
   setCookie = (cookieData) => {
-    console.log("setCookie ", cookieData);
+    let d = new Date();
+    let year = d.getFullYear();
+    let month = d.getMonth();
+    let day = d.getDate();
+    let expires = new Date(year + 1, month, day);
+
     const cookies = new Cookies();
 
-    cookies.set(
-      cookieData.cookieLabel,
-      cookieData.cookieValue,
-      cookieData.cookiePath
-    );
+    const path = cookieData.cookiePath;
+    cookies.set(cookieData.cookieLabel, cookieData.cookieValue, {
+      path,
+      expires,
+    });
   };
 
   getCookie = (cookieLabel) => {

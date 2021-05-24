@@ -1,4 +1,3 @@
-@import "_spacers";
 .sidebar {
   border-radius: $s-025r;
   width: 100px;
@@ -30,9 +29,6 @@
   margin-bottom: -30px;
   z-index: 10;
   @include transition(0.15s, all);
-  &:hover {
-    background-color: #ffffff55;
-  }
 }
 .icon-bar {
   background: black;
@@ -42,63 +38,87 @@
   transition: opacity 0.5s;
 }
 
-.fire {
-  .menu-icon {
-    background-color: darken($fire_bg, 10%);
-    &:hover {
-      //cow
-      background-color: darken($fire_bg, 20%);
-    }
-    .icon-bar {
-      background-color: $fire_color;
+#calculator {
+  > .container {
+    &.open {
     }
   }
 }
-.midnight {
-  .menu-icon {
-    background-color: darken($midnight_bg, 10%);
-    &:hover {
-      //cow
-      background-color: darken($midnight_bg, 20%);
+
+@mixin menuIconMaker($menuIconBgColor, $iconBarColor, $themeClass) {
+  #calculator {
+    > .container {
+      &.open {
+        #{$themeClass} {
+          .menu-icon {
+            transform-origin: center;
+            transform: translate(-620%, 0%) scale(1.2);
+            background-color: darken($menuIconBgColor, 10%);
+          }
+        }
+      }
     }
-    .icon-bar {
-      background-color: $midnight_color;
+  }
+  #{$themeClass} {
+    .menu-icon {
+      background-color: darken($menuIconBgColor, 5%);
+      &:hover {
+        background-color: darken($menuIconBgColor, 10%);
+        transform: scale(1.2);
+      }
+      .icon-bar {
+        background-color: $iconBarColor;
+      }
     }
   }
 }
-.default {
-  .menu-icon {
-    background-color: darken($default_bg, 10%);
-    &:hover {
-      //cow
-      background-color: darken($default_bg, 20%);
-    }
-    .icon-bar {
-      background-color: $default_color;
-    }
-  }
-}
-.storm {
-  .menu-icon {
-    background-color: darken($storm_bg, 10%);
-    &:hover {
-      //cow
-      background-color: darken($storm_bg, 20%);
-    }
-    .icon-bar {
-      background-color: $storm_color;
-    }
-  }
-}
-.jungle {
-  .menu-icon {
-    background-color: darken($jungle_bg, 10%);
-    &:hover {
-      //cow
-      background-color: darken($jungle_bg, 20%);
-    }
-    .icon-bar {
-      background-color: $jungle_color;
-    }
-  }
-}
+
+@include menuIconMaker($fire_bg, $fire_color, ".fire");
+@include menuIconMaker($midnight_bg, $midnight_color, ".midnight");
+@include menuIconMaker($default_bg, $default_color, ".default");
+@include menuIconMaker($storm_bg, $storm_color, ".storm");
+@include menuIconMaker($jungle_bg, $jungle_color, ".jungle");
+// .midnight {
+//   .menu-icon {
+//     background-color: darken($midnight_bg, 5%);
+//     &:hover {
+//       background-color: darken($midnight_bg, 10%);
+//     }
+//     .icon-bar {
+//       background-color: $midnight_color;
+//     }
+//   }
+// }
+// .default {
+//   .menu-icon {
+//     background-color: darken($default_bg, 5%);
+//     &:hover {
+//       background-color: darken($default_bg, 10%);
+//     }
+//     .icon-bar {
+//       background-color: $default_color;
+//     }
+//   }
+// }
+// .storm {
+//   .menu-icon {
+//     background-color: darken($storm_bg, 5%);
+//     &:hover {
+//       background-color: darken($storm_bg, 10%);
+//     }
+//     .icon-bar {
+//       background-color: $storm_color;
+//     }
+//   }
+// }
+// .jungle {
+//   .menu-icon {
+//     background-color: darken($jungle_bg, 5%);
+//     &:hover {
+//       background-color: darken($jungle_bg, 10%);
+//     }
+//     .icon-bar {
+//       background-color: $jungle_color;
+//     }
+//   }
+// }
