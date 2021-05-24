@@ -40,6 +40,7 @@ class Calculator extends Component {
         { itemName: "Jungle" },
       ],
     },
+    theme: "default",
     numberKeyboardClass: "numberKeyboard",
     functionKeyboardClass: "functionKeyboard",
     utilityKeyboardClass: "utilityKeyboard",
@@ -229,7 +230,6 @@ class Calculator extends Component {
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
-    // console.log(e, e.target.parentElement.className);
     let className = e.target.parentElement.className;
     if (className.toLowerCase().indexOf(this.state.numberKeyboardClass) > -1) {
       console.log("numberKeys clicked");
@@ -247,14 +247,27 @@ class Calculator extends Component {
   toggleSidebar = (e) => {
     let sidebarData = { ...this.state.sidebarData };
     let isOpen = sidebarData.isOpen;
-    if (!isOpen) {
-      isOpen = true;
+
+    // test if body touched (not menu icon)
+    if (
+      e.target.className !== "menu-icon" &&
+      e.target.className !== "icon-bar"
+    ) {
+      // if sidebar open allow touch on calculator body  to close sidebar
+      if (isOpen) {
+        isOpen = false;
+        sidebarData.isOpen = isOpen;
+        this.setState({ sidebarData });
+      }
     } else {
-      isOpen = false;
+      if (!isOpen) {
+        isOpen = true;
+      } else {
+        isOpen = false;
+      }
+
+      sidebarData.isOpen = isOpen;
     }
-
-    sidebarData.isOpen = isOpen;
-
     this.setState({ sidebarData });
   };
 
@@ -292,8 +305,9 @@ class Calculator extends Component {
 
   getCookie = (cookieLabel) => {
     const cookies = new Cookies();
-    console.log(cookies.get(cookieLabel));
-    return cookies.get(cookieLabel);
+    return cookies.get(cookieLabel)
+      ? cookies.get(cookieLabel)
+      : this.state.theme;
   };
 
   // parseInput
@@ -305,7 +319,9 @@ class Calculator extends Component {
           this.state.sidebarData.isOpen === true ? "open" : ""
         }`}>
         <div className="flex-row row">
-          <div className={`calculator ${this.state.theme.toLowerCase()}`}>
+          <div
+            className={`calculator ${this.state.theme.toLowerCase()}`}
+            onClick={(e) => this.toggleSidebar(e)}>
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>

@@ -26,6 +26,5 @@ const Key = React.forwardRef((props, ref) => {
       {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
     </button>
   );
-  // };
 });
 export default Key;
