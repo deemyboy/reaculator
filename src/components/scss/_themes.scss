@@ -55,6 +55,12 @@ $jungle_btn_border: #777771;
         color: $fire_btn_color;
         background-color: $fire_btn_bg;
         border-color: $fire_btn_border;
+        &:focus {
+          box-shadow: 0 0 0 0.15rem darken($fire_btn_bg, 10%);
+        }
+        &:hover {
+          background-color: darken($fire_btn_bg, 10%);
+        }
       }
       .btn-secondary {
         color: complement($fire_btn_color);
@@ -89,6 +95,12 @@ $jungle_btn_border: #777771;
         color: $midnight_btn_color;
         background-color: $midnight_btn_bg;
         border-color: $midnight_btn_border;
+        &:focus {
+          box-shadow: 0 0 0 0.15rem lighten($midnight_btn_bg, 20%);
+        }
+        &:hover {
+          background-color: darken($midnight_btn_bg, 10%);
+        }
       }
       .btn-secondary {
         color: complement($midnight_btn_color);
@@ -123,6 +135,12 @@ $jungle_btn_border: #777771;
         color: $default_btn_color;
         background-color: $default_btn_bg;
         border-color: $default_btn_border;
+        &:focus {
+          box-shadow: 0 0 0 0.15rem lighten($default_btn_bg, 20%);
+        }
+        &:hover {
+          background-color: darken($default_btn_bg, 10%);
+        }
       }
       .btn-secondary {
         color: complement($default_btn_color);
@@ -160,6 +178,12 @@ $jungle_btn_border: #777771;
         color: $storm_btn_color;
         background-color: $storm_btn_bg;
         border-color: $storm_btn_border;
+        &:focus {
+          box-shadow: 0 0 0 0.15rem lighten($storm_btn_bg, 20%);
+        }
+        &:hover {
+          background-color: darken($storm_btn_bg, 10%);
+        }
       }
       .btn-secondary {
         color: complement($storm_btn_color);
@@ -197,6 +221,12 @@ $jungle_btn_border: #777771;
         color: $jungle_btn_color;
         background-color: $jungle_btn_bg;
         border-color: $jungle_btn_border;
+        &:focus {
+          box-shadow: 0 0 0 0.15rem lighten($jungle_btn_bg, 20%);
+        }
+        &:hover {
+          background-color: darken($jungle_btn_bg, 10%);
+        }
       }
       .btn-secondary {
         color: complement($jungle_btn_color);
@@ -210,54 +240,23 @@ $jungle_btn_border: #777771;
   }
 }
 
-.fire {
-  .btn-primary {
-    &:focus {
-      box-shadow: 0 0 0 0.15rem lighten($fire_btn_bg, 20%);
-    }
-    &:hover {
-      background-color: darken($fire_btn_bg, 10%);
-    }
-  }
-}
-.midnight {
-  .btn-primary {
-    &:focus {
-      box-shadow: 0 0 0 0.15rem lighten($midnight_btn_bg, 20%);
-    }
-    &:hover {
-      background-color: darken($midnight_btn_bg, 10%);
-    }
-  }
-}
-
-.default {
-  .btn-primary {
-    &:focus {
-      box-shadow: 0 0 0 0.15rem lighten($default_btn_bg, 20%);
-    }
-    &:hover {
-      background-color: darken($default_btn_bg, 10%);
-    }
-  }
-}
-.storm {
-  .btn-primary {
-    &:focus {
-      box-shadow: 0 0 0 0.15rem lighten($storm_btn_bg, 20%);
-    }
-    &:hover {
-      background-color: darken($storm_btn_bg, 10%);
-    }
-  }
-}
-.jungle {
-  .btn-primary {
-    &:focus {
-      box-shadow: 0 0 0 0.15rem lighten($jungle_btn_bg, 20%);
-    }
-    &:hover {
-      background-color: darken($jungle_btn_bg, 10%);
-    }
-  }
-}
+// .fire {
+//   .btn-primary {
+//   }
+// }
+// .midnight {
+//   .btn-primary {
+//   }
+// }
+// .default {
+//   .btn-primary {
+//   }
+// }
+// .storm {
+//   .btn-primary {
+//   }
+// }
+// .jungle {
+//   .btn-primary {
+//   }
+// }
