@@ -3,8 +3,8 @@ $imp: #{"!"}important;
 @import "./components/scss/_spacers", "./components/scss/_transitions",
   "./components/scss/_calculation", "./components/scss/_display",
   "./components/scss/_key", "./components/scss/_keyboard",
-  "./components/scss/_result", "./components/scss/_sidebar",
-  "./components/scss/_dropdown", "./components/scss/_themes";
+  "./components/scss/_result", "./components/scss/_themes",
+  "./components/scss/_sidebar", "./components/scss/_dropdown";
 
 #calculator {
   > .container {
