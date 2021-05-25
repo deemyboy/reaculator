@@ -316,6 +316,9 @@ class Calculator extends Component {
       : this.state.theme;
   };
 
+  handleKeypress = (e) => {
+    console.log("handleKeypress", e);
+  };
   // parseInput
 
   render = () => {
