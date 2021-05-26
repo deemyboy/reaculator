@@ -9,6 +9,5 @@
     justify-content: center;
     transform: scale(1);
     @include transition(0.25s, all);
-    cursor: pointer;
   }
 }

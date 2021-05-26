@@ -100,15 +100,15 @@ $jungle_btn_border: #777771;
   }
 }
 
-@include themeMaker(
-  $fire_class,
-  $fire_bg,
-  $fire_color,
-  $fire_border,
-  $fire_btn_color,
-  $fire_btn_bg,
-  $fire_btn_border
-);
+// @include themeMaker(
+//   $fire_class,
+//   $fire_bg,
+//   $fire_color,
+//   $fire_border,
+//   $fire_btn_color,
+//   $fire_btn_bg,
+//   $fire_btn_border
+// );
 
 @include themeMaker(
   $midnight_class,
