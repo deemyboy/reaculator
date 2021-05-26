@@ -12,7 +12,7 @@ $imp: #{"!"}important;
     margin-top: $s-3r;
     .calculator {
       transform: scaleX(1);
-      @include transition(0.15s, all);
+      @include transition(0.25s, all);
     }
     &.open {
       .calculator {
@@ -32,19 +32,17 @@ $imp: #{"!"}important;
         }
       }
       .menu-icon {
-        // transform-origin: center;
-        // transform: translate(-600%, 0%) scale(1.2);
         .icon-bar {
           &:nth-of-type(1) {
             transform-origin: center;
-            transform: translate(0%, 200%) rotate(45deg);
+            transform: translate(0%, 180%) rotate(45deg) scale(1.5);
           }
           &:nth-of-type(2) {
             opacity: 0;
           }
           &:nth-of-type(3) {
             transform-origin: center;
-            transform: translate(0%, -180%) rotate(-45deg);
+            transform: translate(0%, -180%) rotate(-45deg) scale(1.5);
           }
         }
       }

@@ -165,10 +165,10 @@ class Calculator extends Component {
       },
       {
         id: 15,
-        value: "^",
+        value: "s",
         uniChar: "\uD835\uDC65\u00B2",
-        title: "square (^)",
-        keycode: 54,
+        title: "square (s)",
+        keycode: 83,
         type: "func",
       },
       {
@@ -224,7 +224,8 @@ class Calculator extends Component {
     ],
   };
 
-  handleKeyClick = (e) => {
+  handleClick = (e) => {
+    console.log("handleClick", e);
     const keyClicked = this.state.utilityKeys
       .concat(this.state.numberKeys, this.state.functionKeys)
       .filter((k) => {
@@ -316,9 +317,26 @@ class Calculator extends Component {
       : this.state.theme;
   };
 
-  handleKeypress = (e) => {
-    console.log("handleKeypress", e);
+  handleKeyPress = (event) => {
+    if (!event.repeat) {
+      console.log(event, event.key, event.repeat);
+
+      this.setState({ lastPressedKey: event.key });
+      this.setState({ lastPressedKeyCode: event.keyCode });
+      this.setState({ shiftKey: event.shiftKey });
+    }
   };
+
+  handleActiveClass = () => {};
+
+  componentDidMount() {
+    document.addEventListener("keydown", (e) => this.handleKeyPress(e));
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
+  }
+
   // parseInput
 
   render = () => {
@@ -353,20 +371,20 @@ class Calculator extends Component {
                       className={`col keyboard ${this.state.numberKeyboardClass}`}>
                       <Keyboard
                         keys={this.state.numberKeys}
-                        passClickHandler={(e) => this.handleKeyClick(e)}
+                        passClickHandler={(e) => this.handleClick(e)}
                       />
                     </div>
                     <div
                       className={`col keyboard ${this.state.functionKeyboardClass}`}>
                       <Keyboard
                         keys={this.state.functionKeys}
-                        passClickHandler={(e) => this.handleKeyClick(e)}
+                        passClickHandler={(e) => this.handleClick(e)}
                       />
                       <div
                         className={`row keyboard ${this.state.utilityKeyboardClass}`}>
                         <Keyboard
                           keys={this.state.utilityKeys}
-                          passClickHandler={(e) => this.handleKeyClick(e)}
+                          passClickHandler={(e) => this.handleClick(e)}
                         />
                       </div>
                     </div>

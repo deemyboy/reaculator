@@ -64,7 +64,8 @@ $jungle_btn_border: #777771;
           &:focus {
             box-shadow: 0 0 0 0.15rem darken($btnBg, 10%);
           }
-          &:hover {
+          &:hover,
+          &:active {
             background-color: darken($btnBg, 10%);
           }
         }
@@ -75,7 +76,8 @@ $jungle_btn_border: #777771;
           &:focus {
             box-shadow: 0 0 0 0.15rem darken(complement($btnBg), 10%);
           }
-          &:hover {
+          &:hover,
+          &:active {
             background-color: darken(complement($btnBg), 10%);
           }
         }

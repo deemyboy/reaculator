@@ -22,7 +22,7 @@ const Key = React.forwardRef((props, ref) => {
       className={setKeyClasses(props.kObj)}
       type="button"
       value={props.kObj.value}
-      onClick={(e) => props.handleKeyClick(e)}>
+      onClick={(e) => props.handleClick(e)}>
       {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
     </button>
   );
