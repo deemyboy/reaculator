@@ -22,13 +22,13 @@ $default_btn_color: #b0e0ed;
 $default_btn_bg: #0d6efd;
 $default_btn_border: #0846a1;
 
-$storm_class: ".storm";
-$storm_bg: #818185;
-$storm_color: #b0e0ed;
-$storm_border: #a6d9ea;
-$storm_btn_color: #b0e0ed;
-$storm_btn_bg: #626263;
-$storm_btn_border: #95b0bb;
+// $storm_class: ".storm";
+// $storm_bg: #818185;
+// $storm_color: #b0e0ed;
+// $storm_border: #a6d9ea;
+// $storm_btn_color: #b0e0ed;
+// $storm_btn_bg: #626263;
+// $storm_btn_border: #95b0bb;
 
 $jungle_class: ".jungle";
 $jungle_bg: #4cbc06;
@@ -83,7 +83,7 @@ $jungle_btn_border: #777771;
         }
       }
       + .sidebar {
-        background: rgba($bodyBg, 80%);
+        background: transparentize($bodyBg, 0.2);
         .title {
           color: $bodyTextColor;
         }
@@ -110,45 +110,45 @@ $jungle_btn_border: #777771;
 //   $fire_btn_border
 // );
 
-@include themeMaker(
-  $midnight_class,
-  $midnight_bg,
-  $midnight_color,
-  $midnight_border,
-  $midnight_btn_color,
-  $midnight_btn_bg,
-  $midnight_btn_border
-);
+// @include themeMaker(
+//   $midnight_class,
+//   $midnight_bg,
+//   $midnight_color,
+//   $midnight_border,
+//   $midnight_btn_color,
+//   $midnight_btn_bg,
+//   $midnight_btn_border
+// );
 
-@include themeMaker(
-  $default_class,
-  $default_bg,
-  $default_color,
-  $default_border,
-  $default_btn_color,
-  $default_btn_bg,
-  $default_btn_border
-);
+// @include themeMaker(
+//   $default_class,
+//   $default_bg,
+//   $default_color,
+//   $default_border,
+//   $default_btn_color,
+//   $default_btn_bg,
+//   $default_btn_border
+// );
 
-@include themeMaker(
-  $storm_class,
-  $storm_bg,
-  $storm_color,
-  $storm_border,
-  $storm_btn_color,
-  $storm_btn_bg,
-  $storm_btn_border
-);
+// @include themeMaker(
+//   $storm_class,
+//   $storm_bg,
+//   $storm_color,
+//   $storm_border,
+//   $storm_btn_color,
+//   $storm_btn_bg,
+//   $storm_btn_border
+// );
 
-@include themeMaker(
-  $jungle_class,
-  $jungle_bg,
-  $jungle_color,
-  $jungle_border,
-  $jungle_btn_color,
-  $jungle_btn_bg,
-  $jungle_btn_border
-);
+// @include themeMaker(
+//   $jungle_class,
+//   $jungle_bg,
+//   $jungle_color,
+//   $jungle_border,
+//   $jungle_btn_color,
+//   $jungle_btn_bg,
+//   $jungle_btn_border
+// );
 
 // .fire {
 //   .btn-primary {
