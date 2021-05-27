@@ -29,7 +29,6 @@ class Calculator extends Component {
     },
     themesData: {
       labelForDropdown: "Theme",
-      classForDropdown: "theme",
       currentSetting: "Default",
       callbackForDropdown: (e) => this.onSelectTheme(e),
       itemsForDropdown: [
@@ -225,22 +224,26 @@ class Calculator extends Component {
   };
 
   handleClick = (e) => {
-    console.log("handleClick", e);
+    console.log("handleClick 228", e);
+    e.target.blur();
     const keyClicked = this.state.utilityKeys
       .concat(this.state.numberKeys, this.state.functionKeys)
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
     let className = e.target.parentElement.className;
-    if (className.toLowerCase().indexOf(this.state.numberKeyboardClass) > -1) {
+    console.log(
+      "keyClicked",
+      keyClicked,
+      "className",
+      className,
+      className.indexOf(this.state.numberKeyboardClass) > -1
+    );
+    if (className.indexOf(this.state.numberKeyboardClass) > -1) {
       console.log("numberKeys clicked");
-    } else if (
-      className.toLowerCase().indexOf(this.state.functionKeyboardClass) > -1
-    ) {
+    } else if (className.indexOf(this.state.functionKeyboardClass) > -1) {
       console.log("functionKeys clicked");
-    } else if (
-      className.toLowerCase().indexOf(this.state.utilityKeyboardClass) > -1
-    ) {
+    } else if (className.indexOf(this.state.utilityKeyboardClass) > -1) {
       console.log("utilityKeys clicked");
     }
   };
@@ -276,7 +279,6 @@ class Calculator extends Component {
     let dropdownData = { ...this.state.dropdownData };
     dropdownData.labelForDropdown = dropdownUser.labelForDropdown;
     dropdownData.itemsForDropdown = dropdownUser.itemsForDropdown;
-    dropdownData.classForDropdown = dropdownUser.classForDropdown;
     dropdownData.currentSetting = dropdownUser.currentSetting;
     dropdownData.onClick = dropdownUser.callbackForDropdown;
     return dropdownData;

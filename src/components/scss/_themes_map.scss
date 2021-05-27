@@ -1,27 +1,19 @@
-$fire_class: ".fire";
-$fire_bg: #ffd900;
-$fire_color: #f60d0d;
-$fire_border: #6b5630;
-$fire_btn_color: #f60d0d;
-$fire_btn_bg: #d59f06;
-$fire_btn_border: #6c5d07;
-
-$midnight_class: ".midnight";
-$midnight_bg: #0c0c28;
-$midnight_color: #7e7c7c;
-$midnight_border: #919191;
-$midnight_btn_color: #abbaa7;
-$midnight_btn_bg: #39395a;
-$midnight_btn_border: #686878;
-
 $themes: (
   fire: (
     backgroundColor: $fire_bg,
     textColor: $fire_color,
-    sidebarBackground: transparentize($fire_bg, 0.2),
-    sidebarDropdownBackground: transparentize($fire_bg, 0.5),
-    sidebarDropdownHoverBackground: darken(transparentize($fire_bg, 0.5), 10%),
     borderColor: $fire_border,
+    menuIconBackgroundColor: darken($fire_bg, 5%),
+    menuIconBackgroundHoverColor: darken($fire_bg, 10%),
+    menuIconBorderColor: $fire_border,
+    iconBarColor: $fire_color,
+    sidebarBackground: transparentize($fire_bg, 0.2),
+    sidebarDropdownBackground: $fire_bg,
+    sidebarDropdownHoverBackground: darken($fire_bg, 5%),
+    dropdownBackgroundColor: darken($fire_bg, 5%),
+    dropdownItemBackgroundColor: $fire_bg,
+    dropdownItemBackgroundHoverColor: lighten($fire_bg, 10%),
+    dropdownTextColor: $fire_color,
     keyboardBackground: darken($fire_bg, 4%),
     keyboardBorderColor: $fire_border,
     primaryButtonColor: $fire_btn_bg,
@@ -29,22 +21,32 @@ $themes: (
     primaryButtonBorderColor: $fire_btn_border,
     primaryButtonHoverColor: darken($fire_btn_bg, 5%),
     primaryButtonActiveColor: darken($fire_btn_bg, 10%),
+    primaryButtonBoxShadowColor: darken(transparentize($fire_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
     secondaryButtonColor: complement($fire_btn_bg),
     secondaryButtonTextColor: complement($fire_btn_color),
     secondaryButtonBorderColor: complement($fire_btn_border),
     secondaryButtonHoverColor: darken(complement($fire_btn_bg), 5%),
-    secondaryButtonActiveColor: darken(complement($fire_btn_bg), 10),
+    secondaryButtonActiveColor: darken(complement($fire_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($fire_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
   midnight: (
     backgroundColor: $midnight_bg,
     textColor: $midnight_color,
-    sidebarBackground: transparentize($midnight_bg, 0.2),
-    sidebarDropdownBackground: transparentize($midnight_bg, 0.5),
-    sidebarDropdownHoverBackground:
-      darken(transparentize($midnight_bg, 0.5), 10%),
     borderColor: $midnight_border,
+    menuIconBackgroundColor: darken($midnight_bg, 5%),
+    menuIconBackgroundHoverColor: darken($midnight_bg, 10%),
+    menuIconBorderColor: $midnight_border,
+    iconBarColor: $midnight_color,
+    sidebarBackground: transparentize($midnight_bg, 0.2),
+    sidebarDropdownBackground: $midnight_bg,
+    sidebarDropdownHoverBackground: darken($midnight_bg, 5%),
+    dropdownBackgroundColor: darken($midnight_bg, 5%),
+    dropdownItemBackgroundColor: $midnight_bg,
+    dropdownItemBackgroundHoverColor: lighten($midnight_bg, 10%),
+    dropdownTextColor: $midnight_color,
     keyboardBackground: lighten($midnight_bg, 5%),
     keyboardBorderColor: $midnight_border,
     primaryButtonColor: $midnight_btn_bg,
@@ -52,22 +54,33 @@ $themes: (
     primaryButtonBorderColor: $midnight_btn_border,
     primaryButtonHoverColor: darken($midnight_btn_bg, 5%),
     primaryButtonActiveColor: darken($midnight_btn_bg, 10%),
+    primaryButtonBoxShadowColor:
+      darken(transparentize($midnight_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
     secondaryButtonColor: complement($midnight_btn_bg),
     secondaryButtonTextColor: complement($midnight_btn_color),
     secondaryButtonBorderColor: complement($midnight_btn_border),
     secondaryButtonHoverColor: darken(complement($midnight_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($midnight_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($midnight_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
   default: (
     backgroundColor: $default_bg,
     textColor: $default_color,
-    sidebarBackground: transparentize($default_bg, 0.2),
-    sidebarDropdownBackground: transparentize($default_bg, 0.5),
-    sidebarDropdownHoverBackground:
-      darken(transparentize($default_bg, 0.5), 10%),
     borderColor: $default_border,
+    menuIconBackgroundColor: darken($default_bg, 5%),
+    menuIconBackgroundHoverColor: darken($default_bg, 10%),
+    menuIconBorderColor: $default_border,
+    iconBarColor: $default_color,
+    sidebarBackground: transparentize($default_bg, 0.2),
+    sidebarDropdownBackground: $default_bg,
+    sidebarDropdownHoverBackground: darken($default_bg, 5%),
+    dropdownBackgroundColor: darken($default_bg, 5%),
+    dropdownItemBackgroundColor: $default_bg,
+    dropdownItemBackgroundHoverColor: lighten($default_bg, 10%),
+    dropdownTextColor: $default_color,
     keyboardBackground: darken($default_bg, 10%),
     keyboardBorderColor: $default_border,
     primaryButtonColor: $default_btn_bg,
@@ -75,21 +88,33 @@ $themes: (
     primaryButtonBorderColor: $default_btn_border,
     primaryButtonHoverColor: darken($default_btn_bg, 5%),
     primaryButtonActiveColor: darken($default_btn_bg, 10%),
+    primaryButtonBoxShadowColor:
+      darken(transparentize($default_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
     secondaryButtonColor: complement($default_btn_bg),
     secondaryButtonTextColor: complement($default_btn_color),
     secondaryButtonBorderColor: complement($default_btn_border),
     secondaryButtonHoverColor: darken(complement($default_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($default_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($default_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
   storm: (
     backgroundColor: $storm_bg,
     textColor: $storm_color,
-    sidebarBackground: transparentize($storm_bg, 0.2),
-    sidebarDropdownBackground: transparentize($storm_bg, 0.5),
-    sidebarDropdownHoverBackground: darken(transparentize($storm_bg, 0.5), 10%),
     borderColor: $storm_border,
+    menuIconBackgroundColor: darken($storm_bg, 5%),
+    menuIconBackgroundHoverColor: darken($storm_bg, 10%),
+    menuIconBorderColor: $storm_border,
+    iconBarColor: $storm_color,
+    sidebarBackground: transparentize($storm_bg, 0.2),
+    sidebarDropdownBackground: $storm_bg,
+    sidebarDropdownHoverBackground: darken($storm_bg, 5%),
+    dropdownBackgroundColor: darken($storm_bg, 5%),
+    dropdownItemBackgroundColor: $storm_bg,
+    dropdownItemBackgroundHoverColor: lighten($storm_bg, 10%),
+    dropdownTextColor: $storm_color,
     keyboardBackground: lighten($storm_bg, 10%),
     keyboardBorderColor: $storm_border,
     primaryButtonColor: $storm_btn_bg,
@@ -97,21 +122,32 @@ $themes: (
     primaryButtonBorderColor: $storm_btn_border,
     primaryButtonHoverColor: darken($storm_btn_bg, 5%),
     primaryButtonActiveColor: darken($storm_btn_bg, 10%),
+    primaryButtonBoxShadowColor: darken(transparentize($storm_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
     secondaryButtonColor: complement($storm_btn_bg),
     secondaryButtonTextColor: complement($storm_btn_color),
     secondaryButtonBorderColor: complement($storm_btn_border),
     secondaryButtonHoverColor: darken(complement($storm_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($storm_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($storm_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
   jungle: (
     backgroundColor: $jungle_bg,
     textColor: $jungle_color,
-    sidebarBackground: transparentize($jungle_bg, 0.2),
-    sidebarDropdownBackground: transparentize($jungle_bg, 0.5),
-    sidebarDropdownHoverBackground: darken(transparentize($jungle_bg, 0.5), 10%),
     borderColor: $jungle_border,
+    menuIconBackgroundColor: darken($jungle_bg, 5%),
+    menuIconBackgroundHoverColor: darken($jungle_bg, 10%),
+    menuIconBorderColor: $jungle_border,
+    iconBarColor: $jungle_color,
+    sidebarBackground: transparentize($jungle_bg, 0.2),
+    sidebarDropdownBackground: $jungle_bg,
+    sidebarDropdownHoverBackground: darken($jungle_bg, 5%),
+    dropdownBackgroundColor: darken($jungle_bg, 5%),
+    dropdownItemBackgroundColor: $jungle_bg,
+    dropdownItemBackgroundHoverColor: lighten($jungle_bg, 10%),
+    dropdownTextColor: $jungle_color,
     keyboardBackground: lighten($jungle_bg, 5%),
     keyboardBorderColor: $jungle_border,
     primaryButtonColor: $jungle_btn_bg,
@@ -120,11 +156,15 @@ $themes: (
     primaryButtonHoverColor: darken($jungle_btn_bg, 5%),
     primaryButtonActiveColor: darken($jungle_btn_bg, 10%),
     primaryButtonTextTransform: none,
+    primaryButtonBoxShadowColor:
+      darken(transparentize($jungle_btn_bg, 0.5), 10%),
     secondaryButtonColor: complement($jungle_btn_bg),
     secondaryButtonTextColor: complement($jungle_btn_color),
     secondaryButtonBorderColor: complement($jungle_btn_border),
     secondaryButtonHoverColor: darken(complement($jungle_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($jungle_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($jungle_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
 );
@@ -155,66 +195,134 @@ $themes: (
   @return map-get($theme-map, $key);
 }
 
-@include themify($themes) {
-  background-color: themed(backgroundColor);
-  .title {
-    color: themed(textColor);
-  }
-  + .sidebar {
-    background: themed(sidebarBackground);
-    .title {
-      color: themed(textColor);
-    }
-    .btn-dropdown {
-      background: themed(sidebarDropdownBackground);
-      color: themed(textColor);
-      border-color: themed(borderColor);
-      &:hover {
-        background: themed(sidebarDropdownHoverBackground);
+#calculator {
+  > .container {
+    @include themify($themes) {
+      background-color: themed(backgroundColor);
+      .title {
+        color: themed(textColor);
+      }
+
+      .menu-icon {
+        background-color: themed(menuIconBackgroundColor);
+        border-color: themed(menuIconBorderColor);
+        &:hover {
+          background-color: themed(menuIconBackgroundHoverColor);
+          transform: scale(1.2);
+        }
+        .icon-bar {
+          background-color: themed(iconBarColor);
+        }
+        transition: all 0.25s;
+      }
+
+      + .sidebar {
+        background: themed(sidebarBackground);
+        .title {
+          color: themed(textColor);
+        }
+        .btn-dropdown {
+          background: themed(sidebarDropdownBackground);
+          color: themed(textColor);
+          border-color: themed(borderColor);
+          &:hover {
+            background: themed(sidebarDropdownHoverBackground);
+          }
+        }
+      }
+
+      .keyboard {
+        background-color: themed(keyboardBackground);
+        border-color: themed(keyboardBorderColor);
+      }
+
+      //buttons
+      .btn-primary {
+        background-color: themed(primaryButtonColor);
+        color: themed(primaryButtonTextColor);
+        border-color: themed(primaryButtonBorderColor);
+        &:hover,
+        &:focus {
+          background-color: themed(primaryButtonHoverColor);
+        }
+        &:focus {
+          box-shadow: 0 0 0 0.1rem themed(primaryButtonBoxShadowColor);
+        }
+        &:active {
+          background-color: themed(primaryButtonActiveColor);
+        }
+      }
+      .btn-secondary {
+        background-color: themed(secondaryButtonColor);
+        color: themed(secondaryButtonTextColor);
+        border-color: themed(secondaryButtonBorderColor);
+        &:hover,
+        &:focus {
+          background-color: themed(secondaryButtonHoverColor);
+        }
+        &:focus {
+          box-shadow: 0 0 0 0.1rem themed(secondaryButtonBoxShadowColor);
+        }
+        &:active {
+          background-color: themed(secondaryButtonActiveColor);
+        }
       }
     }
   }
-  .keyboard {
-    background-color: themed(keyboardBackground);
-    border-color: themed(keyboardBorderColor);
-  }
-  .btn-primary {
-    background-color: themed(primaryButtonColor);
-    color: themed(primaryButtonTextColor);
-    border-color: themed(primaryButtonBorderColor);
-    &:hover,
-    &:focus {
-      background-color: themed(primaryButtonHoverColor);
-    }
-    &:active {
-      background-color: themed(primaryButtonActiveColor);
-    }
-  }
-  .btn-secondary {
-    background-color: themed(secondaryButtonColor);
-    color: themed(secondaryButtonTextColor);
-    border-color: themed(secondaryButtonBorderColor);
-    &:hover,
-    &:focus {
-      background-color: themed(secondaryButtonHoverColor);
-    }
-    &:active {
-      background-color: themed(secondaryButtonActiveColor);
+}
+
+// handle .open
+// .sidebar .menu-icon and .icon-bar
+#calculator {
+  > .container.open {
+    @include themify($themes) {
+      .menu-icon {
+        transform-origin: center;
+        transform: translate(-620%, 0%) scale(1.2);
+        background-color: themed(menuIconBackgroundHoverColor);
+        border-width: 2px;
+
+        .icon-bar {
+          &:nth-of-type(1) {
+            transform-origin: center;
+            transform: translate(0%, 180%) rotate(45deg) scale(1.5);
+          }
+          &:nth-of-type(2) {
+            opacity: 0;
+          }
+          &:nth-of-type(3) {
+            transform-origin: center;
+            transform: translate(0%, -180%) rotate(-45deg) scale(1.5);
+          }
+        }
+      }
+      + .sidebar {
+        z-index: 2;
+        transform: scaleX(2);
+        transform-origin: right;
+        > div:first-of-type,
+        .dropdown,
+        .title {
+          transform: scaleX(0.5);
+        }
+        .dropdown {
+          transform-origin: left;
+          .dropdown-menu {
+            background-color: themed(dropdownBackgroundColor);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            color: themed(dropdownTextColor);
+            padding: 0;
+            .dropdown-item {
+              background-color: themed(dropdownItemBackgroundColor);
+              color: themed(dropdownTextColor);
+              margin: 2px 0;
+              &:hover {
+                background-color: themed(dropdownItemBackgroundHoverColor);
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
-// darken(complement($btnBg), 10%);
-// &:focus {
-//     box-shadow: 0 0 0 0.15rem darken($btnBg, 10%);
-//   }
-//   &:hover,
-//   &:active {
-//     background-color: darken($btnBg, 10%);
-
-// $fire_class: ".fire";
-// $fire_bg: #ffd900;
-// $fire_color: #f60d0d;
-// $fire_border: #6b5630;
-// $fire_btn_bg: #d59f06;
-// $fire_btn_color: #f60d0d;
-// $fire_btn_border: #6c5d07;

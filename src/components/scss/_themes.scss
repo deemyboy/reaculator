@@ -1,26 +1,26 @@
-$fire_class: ".fire";
-$fire_bg: #ffd900;
-$fire_color: #f60d0d;
-$fire_border: #6b5630;
-$fire_btn_color: #f60d0d;
-$fire_btn_bg: #d59f06;
-$fire_btn_border: #6c5d07;
+// $fire_class: ".fire";
+// $fire_bg: #ffd900;
+// $fire_color: #f60d0d;
+// $fire_border: #6b5630;
+// $fire_btn_color: #f60d0d;
+// $fire_btn_bg: #d59f06;
+// $fire_btn_border: #6c5d07;
 
-$midnight_class: ".midnight";
-$midnight_bg: #0c0c28;
-$midnight_color: #7e7c7c;
-$midnight_border: #919191;
-$midnight_btn_color: #abbaa7;
-$midnight_btn_bg: #39395a;
-$midnight_btn_border: #686878;
+// $midnight_class: ".midnight";
+// $midnight_bg: #0c0c28;
+// $midnight_color: #7e7c7c;
+// $midnight_border: #919191;
+// $midnight_btn_color: #abbaa7;
+// $midnight_btn_bg: #39395a;
+// $midnight_btn_border: #686878;
 
-$default_class: ".default";
-$default_bg: #0000ff;
-$default_color: #fff;
-$default_border: #007bff;
-$default_btn_color: #b0e0ed;
-$default_btn_bg: #0d6efd;
-$default_btn_border: #0846a1;
+// $default_class: ".default";
+// $default_bg: #0000ff;
+// $default_color: #fff;
+// $default_border: #007bff;
+// $default_btn_color: #b0e0ed;
+// $default_btn_bg: #0d6efd;
+// $default_btn_border: #0846a1;
 
 // $storm_class: ".storm";
 // $storm_bg: #818185;
@@ -30,143 +30,143 @@ $default_btn_border: #0846a1;
 // $storm_btn_bg: #626263;
 // $storm_btn_border: #95b0bb;
 
-$jungle_class: ".jungle";
-$jungle_bg: #4cbc06;
-$jungle_color: #61503a;
-$jungle_border: #504125;
-$jungle_btn_color: #ef9494;
-$jungle_btn_bg: #a83920;
-$jungle_btn_border: #777771;
+// $jungle_class: ".jungle";
+// $jungle_bg: #4cbc06;
+// $jungle_color: #61503a;
+// $jungle_border: #504125;
+// $jungle_btn_color: #ef9494;
+// $jungle_btn_bg: #a83920;
+// $jungle_btn_border: #777771;
 
-@mixin themeMaker(
-  $themeClass,
-  $bodyBg,
-  $bodyTextColor,
-  $bodyBorder,
-  $btnTextColor,
-  $btnBg,
-  $btnBorder
-) {
-  #{$themeClass} {
-    &.calculator {
-      background-color: $bodyBg;
-      .title {
-        color: $bodyTextColor;
-      }
-      .keyboard {
-        color: $bodyTextColor;
-        background-color: $bodyBg;
-        border-color: $bodyBorder;
-        .btn-primary {
-          color: $btnTextColor;
-          background-color: $btnBg;
-          border-color: $btnBorder;
-          &:focus {
-            box-shadow: 0 0 0 0.15rem darken($btnBg, 10%);
-          }
-          &:hover,
-          &:active {
-            background-color: darken($btnBg, 10%);
-          }
-        }
-        .btn-secondary {
-          color: complement($btnTextColor);
-          background-color: complement($btnBg);
-          border-color: complement($btnBorder);
-          &:focus {
-            box-shadow: 0 0 0 0.15rem darken(complement($btnBg), 10%);
-          }
-          &:hover,
-          &:active {
-            background-color: darken(complement($btnBg), 10%);
-          }
-        }
-      }
-      + .sidebar {
-        background: transparentize($bodyBg, 0.2);
-        .title {
-          color: $bodyTextColor;
-        }
-        .btn-dropdown {
-          background: rgba($bodyBg, 50%);
-          color: $bodyTextColor;
-          border-color: $bodyBorder;
-          &:hover {
-            background: darken(rgba($bodyBg, 50%), 10%);
-          }
-        }
-      }
-    }
-  }
-}
-
-// @include themeMaker(
-//   $fire_class,
-//   $fire_bg,
-//   $fire_color,
-//   $fire_border,
-//   $fire_btn_color,
-//   $fire_btn_bg,
-//   $fire_btn_border
-// );
-
-// @include themeMaker(
-//   $midnight_class,
-//   $midnight_bg,
-//   $midnight_color,
-//   $midnight_border,
-//   $midnight_btn_color,
-//   $midnight_btn_bg,
-//   $midnight_btn_border
-// );
-
-// @include themeMaker(
-//   $default_class,
-//   $default_bg,
-//   $default_color,
-//   $default_border,
-//   $default_btn_color,
-//   $default_btn_bg,
-//   $default_btn_border
-// );
-
-// @include themeMaker(
-//   $storm_class,
-//   $storm_bg,
-//   $storm_color,
-//   $storm_border,
-//   $storm_btn_color,
-//   $storm_btn_bg,
-//   $storm_btn_border
-// );
-
-// @include themeMaker(
-//   $jungle_class,
-//   $jungle_bg,
-//   $jungle_color,
-//   $jungle_border,
-//   $jungle_btn_color,
-//   $jungle_btn_bg,
-//   $jungle_btn_border
-// );
-
-// .fire {
-//   .btn-primary {
+// @mixin themeMaker(
+//   $themeClass,
+//   $bodyBg,
+//   $bodyTextColor,
+//   $bodyBorder,
+//   $btnTextColor,
+//   $btnBg,
+//   $btnBorder
+// ) {
+//   #{$themeClass} {
+//     &.calculator {
+//       background-color: $bodyBg;
+//       .title {
+//         color: $bodyTextColor;
+//       }
+//       .keyboard {
+//         color: $bodyTextColor;
+//         background-color: $bodyBg;
+//         border-color: $bodyBorder;
+//         .btn-primary {
+//           color: $btnTextColor;
+//           background-color: $btnBg;
+//           border-color: $btnBorder;
+//           &:focus {
+//             box-shadow: 0 0 0 0.15rem darken($btnBg, 10%);
+//           }
+//           &:hover,
+//           &:active {
+//             background-color: darken($btnBg, 10%);
+//           }
+//         }
+//         .btn-secondary {
+//           color: complement($btnTextColor);
+//           background-color: complement($btnBg);
+//           border-color: complement($btnBorder);
+//           &:focus {
+//             box-shadow: 0 0 0 0.15rem darken(complement($btnBg), 10%);
+//           }
+//           &:hover,
+//           &:active {
+//             background-color: darken(complement($btnBg), 10%);
+//           }
+//         }
+//       }
+//       + .sidebar {
+//         background: transparentize($bodyBg, 0.2);
+//         .title {
+//           color: $bodyTextColor;
+//         }
+//         .btn-dropdown {
+//           background: rgba($bodyBg, 50%);
+//           color: $bodyTextColor;
+//           border-color: $bodyBorder;
+//           &:hover {
+//             background: darken(rgba($bodyBg, 50%), 10%);
+//           }
+//         }
+//       }
+//     }
 //   }
 // }
-// .midnight {
-//   .btn-primary {
-//   }
-// }
-// .default {
-//   .btn-primary {
-//   }
-// }
-// .storm {
-//   .btn-primary {
-//   }
-// }
-// .jungle {
-//   .btn-primary {
-//   }
-// }
+
+// // @include themeMaker(
+// //   $fire_class,
+// //   $fire_bg,
+// //   $fire_color,
+// //   $fire_border,
+// //   $fire_btn_color,
+// //   $fire_btn_bg,
+// //   $fire_btn_border
+// // );
+
+// // @include themeMaker(
+// //   $midnight_class,
+// //   $midnight_bg,
+// //   $midnight_color,
+// //   $midnight_border,
+// //   $midnight_btn_color,
+// //   $midnight_btn_bg,
+// //   $midnight_btn_border
+// // );
+
+// // @include themeMaker(
+// //   $default_class,
+// //   $default_bg,
+// //   $default_color,
+// //   $default_border,
+// //   $default_btn_color,
+// //   $default_btn_bg,
+// //   $default_btn_border
+// // );
+
+// // @include themeMaker(
+// //   $storm_class,
+// //   $storm_bg,
+// //   $storm_color,
+// //   $storm_border,
+// //   $storm_btn_color,
+// //   $storm_btn_bg,
+// //   $storm_btn_border
+// // );
+
+// // @include themeMaker(
+// //   $jungle_class,
+// //   $jungle_bg,
+// //   $jungle_color,
+// //   $jungle_border,
+// //   $jungle_btn_color,
+// //   $jungle_btn_bg,
+// //   $jungle_btn_border
+// // );
+
+// // .fire {
+// //   .btn-primary {
+// //   }
+// // }
+// // .midnight {
+// //   .btn-primary {
+// //   }
+// // }
+// // .default {
+// //   .btn-primary {
+// //   }
+// // }
+// // .storm {
+// //   .btn-primary {
+// //   }
+// // }
+// // .jungle {
+// //   .btn-primary {
+// //   }
+// // }
