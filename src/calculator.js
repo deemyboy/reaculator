@@ -224,6 +224,7 @@ class Calculator extends Component {
     ],
 
     operators: ["+", "-", "x", "/", "s", "r", "y", "=", "c", "a", "l"],
+    matches: 0,
   };
 
   toggleSidebar = (e) => {
@@ -308,20 +309,20 @@ class Calculator extends Component {
       });
     let className = e.target.parentElement.className;
     if (className.indexOf(this.state.numberKeyboardClass) > -1) {
-      console.log("numberKeys clicked");
+      // console.log("numberKeys clicked");
     } else if (className.indexOf(this.state.functionKeyboardClass) > -1) {
-      console.log("functionKeys clicked");
+      // console.log("functionKeys clicked");
     } else if (className.indexOf(this.state.utilityKeyboardClass) > -1) {
-      console.log("utilityKeys clicked");
+      // console.log("utilityKeys clicked");
     }
     userInput += e.target.value;
 
-    this.setState({ userInput });
+    this.setState({ userInput }, this.parseUserInput);
   };
 
   handleKeyPress = (event) => {
     if (!event.repeat) {
-      console.log(event, event.key, event.repeat);
+      // console.log(event, event.key, event.repeat);
 
       this.setState({ lastPressedKey: event.key });
       this.setState({ lastPressedKeyCode: event.keyCode });
@@ -341,8 +342,31 @@ class Calculator extends Component {
 
   // parseInput
   parseUserInput = () => {
+    let calculationData = { ...this.state.calculationData };
     const { userInput } = this.state;
     const { operators } = this.state;
+    let { matches } = this.state;
+    console.log(userInput);
+    if (matches < 2) {
+      if (
+        matches === 0 &&
+        userInput.match(/[sr+\-\/x\=acy\.]/g) &&
+        userInput.match(/[sr+\-\/x\=acy\.]/g).length > 0
+      ) {
+        matches = userInput.match(/[sr+\-\/x\=acy\.]/g).length;
+        calculationData.calculationValue = userInput;
+        this.setState({ calculationData, matches });
+      } else if (matches < 2) {
+        console.log("else1 matches", matches);
+      }
+    }
+    // if (matches < 2) {
+    //   matches = userInput.match(/[sr+\-\/x\=acy\.]/g).length;
+    // }
+    // console.log(
+    //   "regex matches length: ",
+    //   userInput.match(/[sr+\-\/x\=acy\.]/g).length
+    // );
   };
 
   render = () => {
