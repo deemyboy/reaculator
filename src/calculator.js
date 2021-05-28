@@ -18,6 +18,7 @@ class Calculator extends Component {
       calculationClass: "calculation",
       calculationValue: "100x500",
     },
+    userInput: "",
     resultData: { resultClass: "result", resultValue: "50000" },
     sidebarData: {
       sidebarClass: "sidebar",
@@ -221,31 +222,8 @@ class Calculator extends Component {
         type: "func",
       },
     ],
-  };
 
-  handleClick = (e) => {
-    console.log("handleClick 228", e);
-    e.target.blur();
-    const keyClicked = this.state.utilityKeys
-      .concat(this.state.numberKeys, this.state.functionKeys)
-      .filter((k) => {
-        return k.id.toString() === e.target.id;
-      });
-    let className = e.target.parentElement.className;
-    console.log(
-      "keyClicked",
-      keyClicked,
-      "className",
-      className,
-      className.indexOf(this.state.numberKeyboardClass) > -1
-    );
-    if (className.indexOf(this.state.numberKeyboardClass) > -1) {
-      console.log("numberKeys clicked");
-    } else if (className.indexOf(this.state.functionKeyboardClass) > -1) {
-      console.log("functionKeys clicked");
-    } else if (className.indexOf(this.state.utilityKeyboardClass) > -1) {
-      console.log("utilityKeys clicked");
-    }
+    operators: ["+", "-", "x", "/", "s", "r", "y", "=", "c", "a", "l"],
   };
 
   toggleSidebar = (e) => {
@@ -319,6 +297,28 @@ class Calculator extends Component {
       : this.state.theme;
   };
 
+  handleClick = (e) => {
+    let { userInput } = this.state;
+
+    e.target.blur();
+    const keyClicked = this.state.utilityKeys
+      .concat(this.state.numberKeys, this.state.functionKeys)
+      .filter((k) => {
+        return k.id.toString() === e.target.id;
+      });
+    let className = e.target.parentElement.className;
+    if (className.indexOf(this.state.numberKeyboardClass) > -1) {
+      console.log("numberKeys clicked");
+    } else if (className.indexOf(this.state.functionKeyboardClass) > -1) {
+      console.log("functionKeys clicked");
+    } else if (className.indexOf(this.state.utilityKeyboardClass) > -1) {
+      console.log("utilityKeys clicked");
+    }
+    userInput += e.target.value;
+
+    this.setState({ userInput });
+  };
+
   handleKeyPress = (event) => {
     if (!event.repeat) {
       console.log(event, event.key, event.repeat);
@@ -340,6 +340,10 @@ class Calculator extends Component {
   }
 
   // parseInput
+  parseUserInput = () => {
+    const { userInput } = this.state;
+    const { operators } = this.state;
+  };
 
   render = () => {
     return (
