@@ -1,4 +1,5 @@
 .sidebar {
+  border: 1px solid #007bff;
   border-radius: $s-025r;
   width: 100px;
   position: relative;
@@ -20,6 +21,12 @@
       background-color: #99999b;
       border-color: #0d6efd;
       @include transition(0.15s, all);
+      &::after {
+        // override bs5 caret pos at end of content/label
+        position: absolute;
+        left: 85%;
+        top: 43%;
+      }
     }
     ul {
       background-color: #ffd900;

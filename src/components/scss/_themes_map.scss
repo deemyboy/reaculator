@@ -1,3 +1,26 @@
+// .fire
+// background-repeat: no-repeat no-repeat;
+// background-position: bottom center;
+// light ring
+// background-image: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
+// candles
+// background-image: url("https://c.pxhere.com/photos/0d/48/candle_flame_flame_fire_light_burn_wax_candle_candlelight_heat-1058201.jpg!a");
+// background-size: cover;
+
+// .midnight
+// <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+// .ocean
+
+// .storm
+// https://get.pxhere.com/photo/night-city-weather-storm-lightning-thunder-thunderstorm-phenomenon-city-at-night-flashes-1023959.jpg
+// https://c.pxhere.com/photos/65/cf/barn_lightning_bolt_storm_thunderstorm_clouds_night_shack-804994.jpg!a
+// background-size: cover;
+// background-repeat: no-repeat;
+// background-position: bottom;
+
+// .jungle
+
 $themes: (
   fire: (
     backgroundColor: $fire_bg,
@@ -8,13 +31,14 @@ $themes: (
     menuIconBorderColor: $fire_border,
     iconBarColor: $fire_color,
     sidebarBackground: transparentize($fire_bg, 0.2),
+    sidebarBorderColor: $fire_border,
     sidebarDropdownBackground: $fire_bg,
     sidebarDropdownHoverBackground: darken($fire_bg, 5%),
     dropdownBackgroundColor: darken($fire_bg, 5%),
     dropdownItemBackgroundColor: $fire_bg,
     dropdownItemBackgroundHoverColor: lighten($fire_bg, 10%),
     dropdownTextColor: $fire_color,
-    keyboardBackground: darken($fire_bg, 4%),
+    keyboardBackground: transparentize(darken($fire_bg, 10%), 0.5),
     keyboardBorderColor: $fire_border,
     primaryButtonColor: $fire_btn_bg,
     primaryButtonTextColor: $fire_btn_color,
@@ -41,13 +65,14 @@ $themes: (
     menuIconBorderColor: $midnight_border,
     iconBarColor: $midnight_color,
     sidebarBackground: transparentize($midnight_bg, 0.2),
+    sidebarBorderColor: $midnight_border,
     sidebarDropdownBackground: $midnight_bg,
     sidebarDropdownHoverBackground: darken($midnight_bg, 5%),
     dropdownBackgroundColor: darken($midnight_bg, 5%),
     dropdownItemBackgroundColor: $midnight_bg,
     dropdownItemBackgroundHoverColor: lighten($midnight_bg, 10%),
     dropdownTextColor: $midnight_color,
-    keyboardBackground: lighten($midnight_bg, 5%),
+    keyboardBackground: transparentize(lighten($midnight_bg, 5%), 0.5),
     keyboardBorderColor: $midnight_border,
     primaryButtonColor: $midnight_btn_bg,
     primaryButtonTextColor: $midnight_btn_color,
@@ -66,38 +91,38 @@ $themes: (
       darken(transparentize(complement($midnight_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
-  default: (
-    backgroundColor: $default_bg,
-    textColor: $default_color,
-    borderColor: $default_border,
-    menuIconBackgroundColor: darken($default_bg, 5%),
-    menuIconBackgroundHoverColor: darken($default_bg, 10%),
-    menuIconBorderColor: $default_border,
-    iconBarColor: $default_color,
-    sidebarBackground: transparentize($default_bg, 0.2),
-    sidebarDropdownBackground: $default_bg,
-    sidebarDropdownHoverBackground: darken($default_bg, 5%),
-    dropdownBackgroundColor: darken($default_bg, 5%),
-    dropdownItemBackgroundColor: $default_bg,
-    dropdownItemBackgroundHoverColor: lighten($default_bg, 10%),
-    dropdownTextColor: $default_color,
-    keyboardBackground: darken($default_bg, 10%),
-    keyboardBorderColor: $default_border,
-    primaryButtonColor: $default_btn_bg,
-    primaryButtonTextColor: $default_btn_color,
-    primaryButtonBorderColor: $default_btn_border,
-    primaryButtonHoverColor: darken($default_btn_bg, 5%),
-    primaryButtonActiveColor: darken($default_btn_bg, 10%),
-    primaryButtonBoxShadowColor:
-      darken(transparentize($default_btn_bg, 0.5), 10%),
+  ocean: (
+    backgroundColor: $ocean_bg,
+    textColor: $ocean_color,
+    borderColor: $ocean_border,
+    menuIconBackgroundColor: darken($ocean_bg, 5%),
+    menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
+    menuIconBorderColor: $ocean_border,
+    iconBarColor: $ocean_color,
+    sidebarBackground: transparentize($ocean_bg, 0.2),
+    sidebarBorderColor: $ocean_border,
+    sidebarDropdownBackground: $ocean_bg,
+    sidebarDropdownHoverBackground: darken($ocean_bg, 5%),
+    dropdownBackgroundColor: darken($ocean_bg, 5%),
+    dropdownItemBackgroundColor: $ocean_bg,
+    dropdownItemBackgroundHoverColor: lighten($ocean_bg, 10%),
+    dropdownTextColor: $ocean_color,
+    keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5),
+    keyboardBorderColor: $ocean_border,
+    primaryButtonColor: $ocean_btn_bg,
+    primaryButtonTextColor: $ocean_btn_color,
+    primaryButtonBorderColor: $ocean_btn_border,
+    primaryButtonHoverColor: darken($ocean_btn_bg, 5%),
+    primaryButtonActiveColor: darken($ocean_btn_bg, 10%),
+    primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
-    secondaryButtonColor: complement($default_btn_bg),
-    secondaryButtonTextColor: complement($default_btn_color),
-    secondaryButtonBorderColor: complement($default_btn_border),
-    secondaryButtonHoverColor: darken(complement($default_btn_bg), 5%),
-    secondaryButtonActiveColor: darken(complement($default_btn_bg), 10%),
+    secondaryButtonColor: complement($ocean_btn_bg),
+    secondaryButtonTextColor: complement($ocean_btn_color),
+    secondaryButtonBorderColor: complement($ocean_btn_border),
+    secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
+    secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%),
     secondaryButtonBoxShadowColor:
-      darken(transparentize(complement($default_btn_bg), 0.5), 10%),
+      darken(transparentize(complement($ocean_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
   storm: (
@@ -109,13 +134,14 @@ $themes: (
     menuIconBorderColor: $storm_border,
     iconBarColor: $storm_color,
     sidebarBackground: transparentize($storm_bg, 0.2),
+    sidebarBorderColor: $storm_border,
     sidebarDropdownBackground: $storm_bg,
     sidebarDropdownHoverBackground: darken($storm_bg, 5%),
     dropdownBackgroundColor: darken($storm_bg, 5%),
     dropdownItemBackgroundColor: $storm_bg,
     dropdownItemBackgroundHoverColor: lighten($storm_bg, 10%),
     dropdownTextColor: $storm_color,
-    keyboardBackground: lighten($storm_bg, 10%),
+    keyboardBackground: transparentize(lighten($storm_bg, 10%), 0.5),
     keyboardBorderColor: $storm_border,
     primaryButtonColor: $storm_btn_bg,
     primaryButtonTextColor: $storm_btn_color,
@@ -142,13 +168,14 @@ $themes: (
     menuIconBorderColor: $jungle_border,
     iconBarColor: $jungle_color,
     sidebarBackground: transparentize($jungle_bg, 0.2),
+    sidebarBorderColor: $jungle_border,
     sidebarDropdownBackground: $jungle_bg,
     sidebarDropdownHoverBackground: darken($jungle_bg, 5%),
     dropdownBackgroundColor: darken($jungle_bg, 5%),
     dropdownItemBackgroundColor: $jungle_bg,
     dropdownItemBackgroundHoverColor: lighten($jungle_bg, 10%),
     dropdownTextColor: $jungle_color,
-    keyboardBackground: lighten($jungle_bg, 5%),
+    keyboardBackground: transparentize(lighten($jungle_bg, 10%), 0.5),
     keyboardBorderColor: $jungle_border,
     primaryButtonColor: $jungle_btn_bg,
     primaryButtonTextColor: $jungle_btn_color,
@@ -199,6 +226,7 @@ $themes: (
   > .container {
     @include themify($themes) {
       background-color: themed(backgroundColor);
+      border-color: themed(borderColor);
       .title {
         color: themed(textColor);
       }
@@ -208,7 +236,7 @@ $themes: (
         border-color: themed(menuIconBorderColor);
         &:hover {
           background-color: themed(menuIconBackgroundHoverColor);
-          transform: scale(1.2);
+          transform: scale(1.05);
         }
         .icon-bar {
           background-color: themed(iconBarColor);
@@ -218,6 +246,7 @@ $themes: (
 
       + .sidebar {
         background: themed(sidebarBackground);
+        border-color: themed(sidebarBorderColor);
         .title {
           color: themed(textColor);
         }
@@ -278,21 +307,20 @@ $themes: (
     @include themify($themes) {
       .menu-icon {
         transform-origin: center;
-        transform: translate(-620%, 0%) scale(1.2);
+        transform: translate(-620%, 0%) scale(1.05);
         background-color: themed(menuIconBackgroundHoverColor);
-        border-width: 2px;
 
         .icon-bar {
           &:nth-of-type(1) {
             transform-origin: center;
-            transform: translate(0%, 180%) rotate(45deg) scale(1.5);
+            transform: translate(0%, 180%) rotate(45deg) scale(1.3);
           }
           &:nth-of-type(2) {
             opacity: 0;
           }
           &:nth-of-type(3) {
             transform-origin: center;
-            transform: translate(0%, -180%) rotate(-45deg) scale(1.5);
+            transform: translate(0%, -180%) rotate(-45deg) scale(1.3);
           }
         }
       }

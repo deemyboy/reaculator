@@ -16,7 +16,7 @@ class Calculator extends Component {
   state = {
     calculationData: {
       calculationClass: "calculation",
-      calculationValue: "100x500",
+      calculationValue: "0",
     },
     userInput: "",
     resultData: { resultClass: "result", resultValue: "50000" },
@@ -30,17 +30,17 @@ class Calculator extends Component {
     },
     themesData: {
       labelForDropdown: "Theme",
-      currentSetting: "Default",
+      currentSetting: "Ocean",
       callbackForDropdown: (e) => this.onSelectTheme(e),
       itemsForDropdown: [
         { itemName: "Fire" },
         { itemName: "Midnight" },
-        { itemName: "Default" },
+        { itemName: "Ocean" },
         { itemName: "Storm" },
         { itemName: "Jungle" },
       ],
     },
-    theme: "default",
+    theme: "ocean",
     numberKeyboardClass: "numberKeyboard",
     functionKeyboardClass: "functionKeyboard",
     utilityKeyboardClass: "utilityKeyboard",
@@ -214,18 +214,45 @@ class Calculator extends Component {
         keycode: 65,
         type: "func",
       },
-      {
-        id: 23,
-        value: "l",
-        title: "clear console (l)",
-        keycode: 76,
-        type: "func",
-      },
     ],
 
-    operators: ["+", "-", "x", "/", "s", "r", "y", "=", "c", "a", "l"],
-    matches: 0,
+    operators: ["+", "-", "x", "/", "s", "r", "y", "=", "c", "a"],
+    allMathsOperatorsRegex: /[sr+\-\/x\=acy\.]/g,
+    singleMathsOperatorsRegex: /[sr]/g,
+    allMathsOperatorsRegexNonGreedy: /[sr+\-\/x\=acy\.]/,
+    singleMathsOperatorsRegexNonGreedy: /[sr]/,
+    matchCount: 0,
   };
+
+  // componentDidMount() {
+  //   document.addEventListener("keydown", (e) => this.handleKeyPress(e));
+  //   this.doTheMaths();
+  // }
+
+  // componentDidUpdate() {
+  componentDidUpdate(nextProps, nextState) {
+    if (
+      this.state.userInput === nextState.userInput &&
+      this.state.calculationData === nextState.calculationData
+    ) {
+      return false;
+    } else {
+      this.storeComputableParts();
+      return true;
+    }
+  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (this.state.userInput === nextState.userInput) {
+  //     return false;
+  //   } else {
+  //     this.storeComputableParts();
+  //     return true;
+  //   }
+  // }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
+  }
 
   toggleSidebar = (e) => {
     let sidebarData = { ...this.state.sidebarData };
@@ -316,8 +343,8 @@ class Calculator extends Component {
       // console.log("utilityKeys clicked");
     }
     userInput += e.target.value;
-
-    this.setState({ userInput }, this.parseUserInput);
+    // this.setState({ userInput }, this.doTheMaths);
+    this.setState({ userInput });
   };
 
   handleKeyPress = (event) => {
@@ -332,41 +359,174 @@ class Calculator extends Component {
 
   handleActiveClass = () => {};
 
-  componentDidMount() {
-    document.addEventListener("keydown", (e) => this.handleKeyPress(e));
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
-  }
-
   // parseInput
   parseUserInput = () => {
-    let calculationData = { ...this.state.calculationData };
     const { userInput } = this.state;
-    const { operators } = this.state;
-    let { matches } = this.state;
-    console.log(userInput);
-    if (matches < 2) {
-      if (
-        matches === 0 &&
-        userInput.match(/[sr+\-\/x\=acy\.]/g) &&
-        userInput.match(/[sr+\-\/x\=acy\.]/g).length > 0
-      ) {
-        matches = userInput.match(/[sr+\-\/x\=acy\.]/g).length;
-        calculationData.calculationValue = userInput;
-        this.setState({ calculationData, matches });
-      } else if (matches < 2) {
-        console.log("else1 matches", matches);
+    const regex = this.state.allMathsOperatorsRegex;
+    let individualParts = {};
+    const packageIndividualParts = (part) => {
+      console.log(`part: ${JSON.stringify(part)}`);
+      let _individualParts = {};
+      if (part.num1) {
+        _individualParts.num1 = part.num1;
+      }
+      if (part.op1) {
+        _individualParts.op1 = part.op1;
+      }
+      if (part.num2) {
+        _individualParts.num2 = part.num2;
+      }
+      if (part.op2) {
+        _individualParts.op2 = part.op2;
+      }
+      return _individualParts;
+    };
+    console.log("parseUserInput"), userInput;
+
+    // function key pressed
+    if (userInput.match(regex)) {
+      let numOfMathsOperatorsFound = userInput.match(regex);
+      console.log("matched");
+      // handle function key first
+      if (userInput.length === 1) {
+        console.log(
+          `${userInput.match(
+            regex
+          )}, ${userInput} : you pressed a function key without a number key first`
+        );
+        return;
+      } else {
+        console.log(
+          `user input.length greater than 1: ${numOfMathsOperatorsFound},${numOfMathsOperatorsFound.length},${userInput.length},${userInput}`
+        );
+        // match found, userinput length > 1
+        // 1 match
+        if (numOfMathsOperatorsFound.length === 1) {
+          console.log("only 1 function key");
+          // do maths.
+          individualParts = packageIndividualParts({
+            op1: userInput.match(
+              this.state.singleMathsOperatorsRegexNonGreedy
+            )[0],
+            num1: userInput.substr(
+              0,
+              userInput.match(this.state.singleMathsOperatorsRegexNonGreedy)
+                .index
+            ),
+          });
+
+          console.log("449", individualParts);
+          return individualParts;
+        }
+        // 2 matches
+        else if (numOfMathsOperatorsFound.length === 2) {
+          console.log("we stop here and do maths");
+        } else {
+          console.log("we should not reach this point");
+        }
+      }
+      // no function key - must be a number
+    } else {
+      console.log("no match: ", userInput);
+      individualParts = packageIndividualParts({ num1: userInput });
+      return individualParts;
+    }
+    return;
+    if (userInput.length > 1) {
+    } else if (userInput.match(regex) && userInput.length === 1) {
+      console.log(
+        `${userInput.match(
+          regex
+        )}, ${userInput} : you pressed a function key without a number key first`
+      );
+      return;
+    } else if (!userInput.match(regex) && userInput.length === 1) {
+      packageIndividualParts("num", userInput);
+    } else if (userInput.length > 1) {
+      if (userInput.match(regex)) {
+        individualParts.push("ops", userInput.match(regex));
+      }
+    } else console.log(userInput);
+  };
+
+  setCalculationData = (data) => {
+    let calculationData = { ...this.state.calculationData };
+    if (data.calculationClass) {
+      calculationData.calculationClass = data.calculationClass;
+    }
+    if (data.calculationValue) {
+      calculationData.calculationValue = data.calculationValue;
+    }
+    this.setState({ calculationData });
+  };
+
+  doTheMaths = () => {
+    console.log(`doTheMaths`);
+    let parameters = this.parseUserInput();
+    console.log(parameters);
+    if (parameters && Object.keys(parameters).length > 0) {
+      console.log(
+        `parameters: ${parameters}, length: ${Object.keys(parameters).length}`
+      );
+      if (Object.keys(parameters).length === 2) {
+        // is the operator a single response key?
+        if (parameters["op"].match(this.state.singleMathsOperatorsRegex)) {
+          console.log("yes it is single resp");
+
+          console.log(`${parameters} -  doing single maths`);
+        }
+      } else if (Object.keys(parameters).length === 4) {
+        //
+        console.log(parameters);
       }
     }
-    // if (matches < 2) {
-    //   matches = userInput.match(/[sr+\-\/x\=acy\.]/g).length;
+    return;
+  };
+
+  storeComputableParts = () => {
+    console.log(`storeComputableParts`);
+    let parameters = this.parseUserInput();
+    console.log(`parameters: ${JSON.stringify(parameters)}`);
+    if (parameters && Object.keys(parameters).length > 0) {
+      console.log(
+        `parameters: ${parameters}, length: ${Object.keys(parameters).length}`
+      );
+      if (Object.keys(parameters).length === 1) {
+        // is the operator a single response key?
+        // handleNumber
+        this.handleNumber(parameters);
+        if (Object.keys(parameters).length === 2) {
+          // is the operator a single response key?
+          if (parameters["op"].match(this.state.singleMathsOperatorsRegex)) {
+            console.log("yes it is single resp");
+
+            console.log(`${parameters} -  doing single maths`);
+          }
+        } else if (Object.keys(parameters).length === 3) {
+          //
+          console.log(parameters);
+        }
+      } else if (Object.keys(parameters).length === 4) {
+        //
+        console.log(parameters);
+      }
+    }
+    return;
+  };
+
+  handleNumber = (numberData) => {
+    console.log(`handleNumber: ${JSON.stringify(numberData)}`);
+    let _keys = Object.keys(numberData);
+    console.log(keys);
+    return;
+    if (Number(Number(parameters.num1) !== NaN)) {
+      // store it
+      this.setState({ number1: parameters.num1 });
+    }
+    // else
+    // // handleDecimalPoint
+    // // handlePlusMinus
     // }
-    // console.log(
-    //   "regex matches length: ",
-    //   userInput.match(/[sr+\-\/x\=acy\.]/g).length
-    // );
   };
 
   render = () => {

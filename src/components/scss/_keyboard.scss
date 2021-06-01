@@ -1,4 +1,5 @@
 .keyboard {
+  background-color: #0000ff;
   border: 1px solid #007bff;
   border-radius: 10px;
   margin: 0;
@@ -12,6 +13,7 @@
   }
   &.utilityKeyboard {
     border: 0;
+    background: none$imp;
     margin: 0;
     padding: 0;
     width: 100%;
