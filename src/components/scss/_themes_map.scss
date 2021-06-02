@@ -148,7 +148,7 @@ $themes: (
     primaryButtonBorderColor: $storm_btn_border,
     primaryButtonHoverColor: darken($storm_btn_bg, 5%),
     primaryButtonActiveColor: darken($storm_btn_bg, 10%),
-    primaryButtonBoxShadowColor: darken(transparentize($storm_btn_bg, 0.5), 10%),
+    primaryButtonBoxShadowColor: darken(transparentize($storm_btn_bg, 0.6), 10%),
     primaryButtonTextTransform: none,
     secondaryButtonColor: complement($storm_btn_bg),
     secondaryButtonTextColor: complement($storm_btn_color),
@@ -156,7 +156,7 @@ $themes: (
     secondaryButtonHoverColor: darken(complement($storm_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($storm_btn_bg), 10%),
     secondaryButtonBoxShadowColor:
-      darken(transparentize(complement($storm_btn_bg), 0.5), 10%),
+      darken(transparentize(complement($storm_btn_bg), 0.6), 10%),
     secondaryButtonTextTransform: none,
   ),
   jungle: (
@@ -294,6 +294,44 @@ $themes: (
         }
         &:active {
           background-color: themed(secondaryButtonActiveColor);
+        }
+      }
+      .btn-danger {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+        &:hover,
+        &:focus {
+          color: #fff;
+          background-color: #bb2d3b;
+          border-color: #b02a37;
+          &:focus {
+            box-shadow: 0 0 0 0.1rem rgb(225 83 97 / 50%);
+          }
+        }
+        &:active {
+          color: #fff;
+          background-color: #b02a37;
+          border-color: #a52834;
+        }
+      }
+      .btn-success {
+        color: #fff;
+        background-color: #198754;
+        border-color: #198754;
+        &:hover,
+        &:focus {
+          color: #fff;
+          background-color: #157347;
+          border-color: #146c43;
+          &:focus {
+            box-shadow: 0 0 0 0.1rem rgb(60 153 110 / 50%);
+          }
+        }
+        &:active {
+          color: #fff;
+          background-color: #146c43;
+          border-color: #13653f;
         }
       }
     }
