@@ -14,37 +14,6 @@ class Calculator extends Component {
   }
 
   state = {
-    calculationData: {
-      calculationClass: "calculation",
-      calculationValue: "0",
-    },
-    userInput: "",
-    resultData: { resultClass: "result", resultValue: "50000" },
-    sidebarData: {
-      sidebarClass: "sidebar",
-      sidebarValue: "Settings",
-      isOpen: false,
-    },
-    dropdownData: {
-      dropdownClass: "dropdown",
-    },
-    themesData: {
-      labelForDropdown: "Theme",
-      currentSetting: "Ocean",
-      callbackForDropdown: (e) => this.onSelectTheme(e),
-      itemsForDropdown: [
-        { itemName: "Fire" },
-        { itemName: "Midnight" },
-        { itemName: "Ocean" },
-        { itemName: "Storm" },
-        { itemName: "Jungle" },
-      ],
-    },
-    theme: "ocean",
-    numberKeyboardClass: "numberKeyboard",
-    functionKeyboardClass: "functionKeyboard",
-    utilityKeyboardClass: "utilityKeyboard",
-    title: "Calculator",
     numberKeys: [
       {
         id: 0,
@@ -241,15 +210,58 @@ class Calculator extends Component {
         type: "func",
       },
     ],
+    calculationData: {
+      calculationClass: "calculation",
+      calculationValue: "0",
+    },
+    userInput: "",
+    resultData: { resultClass: "result", resultValue: "50000" },
+    sidebarData: {
+      sidebarClass: "sidebar",
+      sidebarValue: "Settings",
+      isOpen: false,
+    },
+    dropdownData: {
+      dropdownClass: "dropdown",
+    },
+    themesData: {
+      labelForDropdown: "Theme",
+      currentSetting: "Ocean",
+      callbackForDropdown: (e) => this.onSelectTheme(e),
+      itemsForDropdown: [
+        { itemName: "Fire" },
+        { itemName: "Midnight" },
+        { itemName: "Ocean" },
+        { itemName: "Storm" },
+        { itemName: "Jungle" },
+      ],
+    },
+    theme: "ocean",
+    numberKeyboardClass: "numberKeyboard",
+    functionKeyboardClass: "functionKeyboard",
+    utilityKeyboardClass: "utilityKeyboard",
+    title: "Calculator",
 
+    computableParts: {
+      num1: "",
+      num2: "",
+      op1: "",
+      op2: "",
+      shiftKey: false,
+      ctrlKey: false,
+      numOp: false,
+      snglOp: false,
+      dblOp: false,
+      utilOp: false,
+    },
     operators: ["+", "-", "x", "/", "s", "r", "y", "=", "c", "a", "m", "."],
-    mathOpRgx: /[sr+\-xy.ac=m]/g,
+    funcOpRgx: /[sr+\/\-xy.ac=m]/g,
     utilOpRgx: /[.ac=m]/g,
-    dblMathOpRgx: /[+\-xy=]/g,
+    dblMathOpRgx: /[+\/\-xy=]/g,
     snglMathOpRgx: /[sr]/g,
-    mathOpRgxNonGreedy: /[sr+\-xy.ac=m]/,
+    mathOpRgxNonGreedy: /[sr+\/\-xy.ac=m]/,
     utilOpRgxNonGreedy: /[.ac=m]/,
-    dblMathOpRgxNonGreedy: /[+\-xy=]/,
+    dblMathOpRgxNonGreedy: /[+\/\-xy=]/,
     snglMathOpRgxNonGreedy: /[sr]/,
     matchCount: 0,
   };
@@ -344,7 +356,7 @@ class Calculator extends Component {
   };
 
   handleClick = (e) => {
-    console.log("handleClick");
+    // console.log("347: handleClick");
     e.target.blur();
     // console.log(e);
     const keyClicked = this.state.utilityKeys
@@ -352,97 +364,43 @@ class Calculator extends Component {
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
-    console.log(keyClicked);
-    let inputData = this.packageInputData({ ["key"]: keyClicked[0].value });
-    this.handleUserInput(inputData);
+    let clickData = {};
+    clickData.key = keyClicked[0].value ? keyClicked[0].value : "";
+    clickData.ctrlKey = false;
+    clickData.shiftKey = false;
+    this.parseUserInput(clickData);
   };
 
   handleKeyPress = (e) => {
-    console.log("handleKeyPress");
-    // console.log(e);
+    console.log("376: handleKeyPress");
+    console.log(e, e.repeat);
+    const allowedKeys = [
+      16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 190, 189, 187, 189, 88,
+      191, 83, 82, 89, 187, 67, 65,
+    ];
     if (!e.repeat) {
-      let inputData = this.packageInputData({
-        ["key"]: e.key,
-        ctrlKey: e.ctrlKey,
-        shiftKey: e.shiftKey,
-      });
-      this.handleUserInput(inputData);
-      this.handleActiveClass(e);
+      if (allowedKeys.includes(e.keyCode)) {
+        let pressData = {
+          key: e.key,
+          ctrlKey: e.ctrlKey,
+          shiftKey: e.shiftKey,
+        };
+        this.handleActiveClass(e);
+        // this.handleUserInput(pressData);
+        this.parseUserInput(pressData);
+      }
     }
-  };
-
-  packageInputData = (inputData) => {
-    let _inputData = {};
-    if ("key" in inputData) {
-      _inputData.key = inputData.key;
-    } else {
-      _inputData.key = "";
-    }
-    if ("ctrlKey" in inputData) {
-      _inputData.ctrlKey = inputData.ctrlKey;
-    } else {
-      _inputData.ctrlKey = false;
-    }
-    if ("shiftKey" in inputData) {
-      _inputData.shiftKey = inputData.shiftKey;
-    } else {
-      _inputData.shiftKey = false;
-    }
-    return _inputData;
-  };
-
-  handleUserInput = (event) => {
-    console.log("handleUserInput: ", event);
-
-    // const keyClicked = this.state.utilityKeys
-    //   .concat(this.state.numberKeys, this.state.functionKeys)
-    //   .filter((k) => {
-    //     return k.id.toString() === event.target.id;
-    //   });
-    // console.log("keyClicked: ", keyClicked);
-    // let className = event.target.parentElement.className;
-    // if (className.indexOf(this.state.numberKeyboardClass) > -1) {
-    //   // console.log("numberKeys clicked");
-    // } else if (className.indexOf(this.state.functionKeyboardClass) > -1) {
-    //   // console.log("functionKeys clicked");
-    // } else if (className.indexOf(this.state.utilityKeyboardClass) > -1) {
-    //   // console.log("utilityKeys clicked");
-    // }
-    const key = event.key;
-    const shiftKey = event.shiftKey;
-    const ctrlKey = event.ctrlKey;
-    let inputData = {};
-    console.log(key, ctrlKey, shiftKey);
-    inputData = this.packageInputData({
-      ["key"]: key,
-      ["ctrlKey"]: ctrlKey,
-      ["shiftKey"]: shiftKey,
-    });
-
-    this.parseUserInputTest(inputData);
   };
 
   handleActiveClass = (e) => {
     console.log("adding and removing active class");
   };
 
-  // parseInput
-  parseUserInput = () => {
-    const { userInput } = this.state;
-    const mathOpRgx = this.state.mathOpRgx;
-    const utilOpRgx = this.state.utilOpRgx;
-    const snglMathOpRgx = this.state.snglMathOpRgx;
-    const dblMathOpRgx = this.state.dblMathOpRgx;
-
-    const mathOpRgxNonGreedy = this.state.mathOpRgxNonGreedy;
-    const utilOpRgxNonGreedy = this.state.utilOpRgxNonGreedy;
-    const snglMathOpRgxNonGreedy = this.state.snglMathOpRgxNonGreedy;
-    const dblMathOpRgxNonGreedy = this.state.dblMathOpRgxNonGreedy;
-
-    let individualParts = {};
+  parseUserInput = (inputData) => {
+    console.log("417: parseUserInput", inputData);
 
     const packageIndividualParts = (part) => {
-      console.log(`389: part: ${JSON.stringify(part)}`);
+      console.log(`420: part: ${JSON.stringify(part)}`);
       let _individualParts = {};
       if (part.num1) {
         _individualParts.num1 = part.num1;
@@ -456,93 +414,18 @@ class Calculator extends Component {
       if (part.op2) {
         _individualParts.op2 = part.op2;
       }
+      if (part.ctrlKey) {
+        _individualParts.ctrlKey = part.ctrlKey;
+      }
+      if (part.shiftKey) {
+        _individualParts.shiftKey = part.shiftKey;
+      }
       return _individualParts;
     };
 
-    console.log("406: parseUserInput"), userInput;
-
-    // function key pressed
-    if (userInput.match(mathOpRgx)) {
-      let operator = userInput.match(mathOpRgx)[0];
-      let numOfMathOpFound = userInput.match(mathOpRgx).length;
-
-      console.log("413: matched All regex");
-      // handle function key first
-      if (userInput.length === 1) {
-        console.log(
-          `${userInput.match(
-            mathOpRgx
-          )} ${userInput} : function key without a number key first`
-        );
-        return;
-      } else {
-        console.log(
-          `424: user input.length ${userInput.length} greater than 1 | maths operators: ${operator} , numOfMathOpFound ${numOfMathOpFound}, userInput${userInput}`
-        );
-        // match found, userinput length > 1
-        // 1 match
-        if (operator.length === 1) {
-          console.log("only 1 function key");
-          // do maths.
-          if (userInput.match(snglMathOpRgx)) {
-            individualParts = packageIndividualParts({
-              op1: userInput.match(snglMathOpRgxNonGreedy)[0],
-              num1: userInput.substr(
-                0,
-                userInput.match(snglMathOpRgxNonGreedy).index
-              ),
-            });
-
-            console.log("440", individualParts);
-            return individualParts;
-          } else if (userInput.match(dblMathOpRgx)) {
-            individualParts = packageIndividualParts({
-              op1: userInput.match(dblMathOpRgxNonGreedy)[0],
-              num1: userInput.substr(
-                0,
-                userInput.match(dblMathOpRgxNonGreedy).index
-              ),
-            });
-          }
-        }
-
-        // 2 matches
-        else if (operator.length === 2) {
-          console.log("we stop here and do maths");
-        } else {
-          console.log("we should not reach this point");
-        }
-      }
-      // no function key - must be a number, +/- or .
-    } else {
-      console.log("no match: ", userInput);
-      individualParts = packageIndividualParts({ num1: userInput });
-      return individualParts;
-    }
-    return;
-    if (userInput.length > 1) {
-    } else if (userInput.match(mathOpRgx) && userInput.length === 1) {
-      console.log(
-        `${userInput.match(
-          mathOpRgx
-        )}, ${userInput} : you pressed a function key without a number key first`
-      );
-      return;
-    } else if (!userInput.match(mathOpRgx) && userInput.length === 1) {
-      packageIndividualParts("num", userInput);
-    } else if (userInput.length > 1) {
-      if (userInput.match(mathOpRgx)) {
-        individualParts.push("ops", userInput.match(mathOpRgx));
-      }
-    } else console.log(userInput);
-  };
-
-  parseUserInputTest = (inputData) => {
-    console.log(inputData);
-    return;
     const key = inputData.key;
     // const { userInput } = this.state;
-    const mathOpRgx = this.state.mathOpRgx;
+    const funcOpRgx = this.state.funcOpRgx;
     const utilOpRgx = this.state.utilOpRgx;
     const snglMathOpRgx = this.state.snglMathOpRgx;
     const dblMathOpRgx = this.state.dblMathOpRgx;
@@ -553,19 +436,28 @@ class Calculator extends Component {
     const dblMathOpRgxNonGreedy = this.state.dblMathOpRgxNonGreedy;
 
     let individualParts = {};
-    console.log(`we are testing parseUserInputTest ${key}`);
 
-    if (key.match(mathOpRgx)) {
-      console.log("key.match(mathOpRgx)", key.match(mathOpRgx));
-    } else if (key.match(utilOpRgx)) {
-      console.log("key.match(utilOpRgx)", key.match(utilOpRgx));
-    } else if (key.match(snglMathOpRgx)) {
-      console.log("key.match(snglMathOpRgx)", key.match(snglMathOpRgx));
-    } else if (key.match(dblMathOpRgx)) {
-      console.log("key.match(dblMathOpRgx):", key.match(dblMathOpRgx));
+    if (key.match(funcOpRgx)) {
+      console.log("key.match(funcOpRgx)", key.match(funcOpRgx));
+      inputData.op = key;
+      // if (key.match(utilOpRgx)) {
+      //   console.log("utilOp", key.match(utilOpRgx));
+      //   inputData.utilOp = true;
+      //   // this.storeComputableParts(inputData);
+      // } else if (key.match(snglMathOpRgx)) {
+      //   console.log("snglMathOp", key.match(snglMathOpRgx));
+      //   inputData.snglOp = true;
+      //   // this.storeComputableParts(inputData);
+      // } else if (key.match(dblMathOpRgx)) {
+      //   console.log("dblMathOp:", key.match(dblMathOpRgx));
+      //   inputData.dblOp = true;
+      // }
     } else {
       console.log(`key - just digits: ${key}`);
+      inputData.num = key;
     }
+    this.storeComputableParts(inputData);
+    return;
   };
 
   setCalculationData = (data) => {
@@ -579,42 +471,97 @@ class Calculator extends Component {
     this.setState({ calculationData });
   };
 
-  storeComputableParts = () => {
-    console.log(`storeComputableParts`);
-    // let parameters = this.parseUserInput();
-    this.parseUserInputTest();
-    return;
-    console.log(`517: parameters: ${JSON.stringify(parameters)}`);
-    if (parameters && Object.keys(parameters).length > 0) {
-      console.log(
-        `520: parameters: ${JSON.stringify(parameters)}, length: ${
-          Object.keys(parameters).length
-        } Object.keys(parameters) ${Object.keys(parameters)}
-        `
-      );
-      if (Object.keys(parameters).length === 1) {
-        // is the operator a single response key?
-        // handleNumber
-        this.handleNumber(parameters);
-      }
-      if (Object.keys(parameters).length === 2) {
-        // is the operator a single response key?
-        console.log("524: parameters:op1", parameters["op1"]);
-        return;
-        if (parameters["op1"].match(this.state.snglMathOpRgx)) {
-          console.log("yes it is single resp");
+  storeComputableParts = (partData) => {
+    let _computableParts = {
+      num1: "",
+      num2: "",
+      op1: "",
+      op2: "",
+      shiftKey: false,
+      ctrlKey: false,
+      numOp: false,
+      snglOp: false,
+      dblOp: false,
+      utilOp: false,
+    };
 
-          console.log(`${parameters} -  doing single maths`);
+    let num;
+    let op;
+    let computableParts = { ...this.state.computableParts };
+    console.log(
+      "501: storeComputableParts partData: ",
+      partData,
+      " computableParts: ",
+      computableParts
+    );
+    console.log(
+      "!partData.ctrlKey && !partData.shiftKey && (partData.num || partData.op)",
+      !partData.ctrlKey && !partData.shiftKey && (partData.num || partData.op)
+    );
+    console.log("end");
+    if (
+      (!partData.ctrlKey &&
+        !partData.shiftKey &&
+        (partData.num || partData.op)) ||
+      ((partData.ctrlKey || partData.shiftKey) && (partData.num || partData.op))
+    ) {
+      if (partData.num) {
+        if (!computableParts.op1) {
+          computableParts.num1 += partData.num;
+        } else {
+          computableParts.num2 += partData.num;
         }
-      } else if (Object.keys(parameters).length === 3) {
-        //
-        console.log(parameters);
-      } else if (Object.keys(parameters).length === 4) {
-        //
-        console.log(parameters);
+      } else if (partData.op) {
+        if (!computableParts.op1) {
+          computableParts.op1 = partData.op;
+        } else {
+          computableParts.op2 = partData.op;
+        }
+      }
+    } else if (partData.ctrlKey) {
+      computableParts.ctrlKey = partData.ctrlKey;
+    } else if (!partData.ctrlKey) {
+      computableParts.ctrlKey = false;
+    } else if (partData.shiftKey) {
+      computableParts.shiftKey = partData.shiftKey;
+    } else if (!partData.shiftKey) {
+      computableParts.shiftKey = false;
+    }
+    console.log("557: ", computableParts);
+    this.setState({ computableParts });
+    return;
+  };
+
+  doTheMath = () => {};
+
+  calculateResult = (op) => {
+    switch (op) {
+      case "+": {
+        return num1 + num2;
+      }
+      case "-": {
+        return num1 - num2;
+      }
+      case "x": {
+        return num1 * num2;
+      }
+      case "y": {
+        return Math.pow(num1, num2);
+      }
+      case "r": {
+        return Math.sqrt(num1);
+      }
+      case "/": {
+        return num1 / num2;
+      }
+      case "s": {
+        if (num1 === 0) return 1;
+        return num1 * num1;
+      }
+      default: {
+        return null;
       }
     }
-    return;
   };
 
   handleNumber = (numberData) => {
