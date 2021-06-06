@@ -4,6 +4,10 @@ import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Sidebar from "./components/sidebar";
 import Cookies from "universal-cookie";
+import { numberKeys } from "./keys";
+import { functionKeys } from "./keys";
+import { utilityKeys } from "./keys";
+
 class Calculator extends Component {
   displayRef = React.createRef();
   constructor(props) {
@@ -11,202 +15,12 @@ class Calculator extends Component {
 
     this.state.theme = this.getCookie("currentTheme");
     this.state.themesData.currentSetting = this.getCookie("currentTheme");
+    this.numberKeys = numberKeys;
+    this.functionKeys = functionKeys;
+    this.utilityKeys = utilityKeys;
   }
 
   state = {
-    numberKeys: [
-      {
-        id: 0,
-        value: "0",
-        title: "zero",
-        keycode: 48,
-        kbCode: "Digit0",
-        type: "num",
-      },
-      {
-        id: 1,
-        value: "1",
-        title: "one",
-        keycode: 49,
-        kbCode: "Digit1",
-        type: "num",
-      },
-      {
-        id: 2,
-        value: "2",
-        title: "two",
-        keycode: 50,
-        kbCode: "Digit2",
-        type: "num",
-      },
-      {
-        id: 3,
-        value: "3",
-        title: "three",
-        keycode: 51,
-        kbCode: "Digit3",
-        type: "num",
-      },
-      {
-        id: 4,
-        value: "4",
-        title: "four",
-        keycode: 52,
-        kbCode: "Digit4",
-        type: "num",
-      },
-      {
-        id: 5,
-        value: "5",
-        title: "five",
-        keycode: 53,
-        kbCode: "Digit5",
-        type: "num",
-      },
-      {
-        id: 6,
-        value: "6",
-        title: "six",
-        keycode: 54,
-        kbCode: "Digit6",
-        type: "num",
-      },
-      {
-        id: 7,
-        value: "7",
-        title: "seven",
-        keycode: 55,
-        kbCode: "Digit7",
-        type: "num",
-      },
-      {
-        id: 8,
-        value: "8",
-        title: "eight",
-        keycode: 56,
-        kbCode: "Digit8",
-        type: "num",
-      },
-      {
-        id: 9,
-        value: "9",
-        title: "nine",
-        keycode: 57,
-        kbCode: "Digit9",
-        type: "num",
-      },
-      {
-        id: 10,
-        value: ".",
-        title: "dot",
-        keycode: 190,
-        kbCode: "Period",
-        type: "num",
-      },
-      {
-        id: 11,
-        value: "m",
-        uniChar: "\u00B1",
-        title: "plus minus (m)",
-        keycode: 189,
-        kbCode: "KeyM",
-        type: "num",
-      },
-    ],
-    functionKeys: [
-      {
-        id: 19,
-        value: "+",
-        title: "plus",
-        keycode: 187,
-        kbCode: "Equal",
-        type: "func",
-      },
-      {
-        id: 12,
-        value: "-",
-        title: "minus",
-        keycode: 189,
-        kbCode: "Minus",
-        type: "func",
-      },
-      {
-        id: 13,
-        value: "x",
-        uniChar: "\u00D7",
-        title: "multiply (x)",
-        keycode: 88,
-        kbCode: "KeyX",
-        type: "func",
-      },
-      {
-        id: 14,
-        value: "/",
-        uniChar: "\u00F7",
-        title: "divide (/)",
-        keycode: 191,
-        kbCode: "Slash",
-        type: "func",
-      },
-      {
-        id: 15,
-        value: "s",
-        uniChar: "\uD835\uDC65\u00B2",
-        title: "square (s)",
-        keycode: 83,
-        kbCode: "KeyS",
-        type: "func",
-      },
-      {
-        id: 21,
-        value: "r",
-        uniChar: "\u00B2\u221A",
-        title: "square root (r)",
-        keycode: 82,
-        kbCode: "KeyR",
-        type: "func",
-        ctrlKey: false,
-      },
-      {
-        id: 20,
-        value: "y",
-        uniChar: "\uD835\uDC65\u02B8",
-        title: "x to the power y (y)",
-        keycode: 89,
-        kbCode: "KeyY",
-        type: "func",
-      },
-      {
-        id: 16,
-        value: "=",
-        specialClass: "btn-success",
-        title: "equals",
-        keycode: 187,
-        kbCode: "Equal",
-        type: "func",
-      },
-    ],
-    utilityKeys: [
-      {
-        id: 17,
-        value: "c",
-        specialClass: "btn-danger",
-        title: "clear last keypress (c)",
-        keycode: 67,
-        kbCode: "KeyC",
-        type: "func",
-      },
-      {
-        id: 18,
-        value: "a",
-        uniChar: "\u0061\u0063",
-        specialClass: "btn-danger",
-        title: "all clear (a)",
-        keycode: 65,
-        kbCode: "KeyA",
-        type: "func",
-      },
-    ],
     calculationData: {
       calculationClass: "calculation",
       calculationValue: "",
@@ -237,22 +51,29 @@ class Calculator extends Component {
     functionKeyboardClass: "functionKeyboard",
     utilityKeyboardClass: "utilityKeyboard",
     title: "Calculator",
-
     computableParts: {
       num1: "",
       num2: "",
       op1: "",
       op2: "",
     },
+    numberData: {
+      num1: "",
+      num2: "",
+    },
+    operatorData: {
+      op1: "",
+      op2: "",
+    },
     numberRgx: /[0-9]/g,
-    mathOpRgx: /[+\-x/ysr]/g,
+    mathOpRgx: /[+\-x\\ysr]/g,
     utilOpRgx: /[acm.=]/g,
-    dblMathOpRgx: /[+\-x/y]/g,
+    dblMathOpRgx: /[+\-x\\y]/g,
     snglMathOpRgx: /[sr]/g,
     numberRgxNonGreedy: /[0-9]/,
-    mathOpRgxNonGreedy: /[+\-x/ysr]/,
+    mathOpRgxNonGreedy: /[+\-x\\ysr]/,
     utilOpRgxNonGreedy: /[acm.=]/,
-    dblMathOpRgxNonGreedy: /[+\-x/y]/,
+    dblMathOpRgxNonGreedy: /[+\-x\\y]/,
     snglMathOpRgxNonGreedy: /[sr]/,
     userInput: "",
   };
@@ -263,11 +84,12 @@ class Calculator extends Component {
 
   // componentDidUpdate() {
   componentDidUpdate(nextProps, nextState) {
-    if (this.state.computableParts === nextState.computableParts) {
-      return false;
-    } else {
-      // this.storeComputableParts();
+    if (this.state.computableParts !== nextState.computableParts) {
       this.doTheMath();
+    }
+
+    if (this.state.userInput !== nextState.userInput) {
+      this.parseUserInput();
       return true;
     }
   }
@@ -351,8 +173,8 @@ class Calculator extends Component {
     // console.log("347: handleClick");
     e.target.blur();
     // console.log(e);
-    const keyClicked = this.state.utilityKeys
-      .concat(this.state.numberKeys, this.state.functionKeys)
+    const keyClicked = this.utilityKeys
+      .concat(this.numberKeys, this.functionKeys)
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
@@ -361,8 +183,8 @@ class Calculator extends Component {
       ctrlKey: false,
       shiftKey: false,
     };
-    // this.parseUserInput(clickData);
-    this.routeInput(clickData);
+    this.handleUserInput(clickData);
+    // this.routeInput(clickData);
   };
 
   handleKeyPress = (e) => {
@@ -380,7 +202,8 @@ class Calculator extends Component {
           shiftKey: e.shiftKey,
         };
         this.handleActiveClass(e);
-        this.routeInput(pressData);
+        this.handleUserInput(pressData);
+        // this.routeInput(pressData);
       }
     }
   };
@@ -401,7 +224,7 @@ class Calculator extends Component {
         "401: utilOpRgxNonGreedy.test(key)",
         utilOpRgxNonGreedy.test(key)
       );
-      this.doUtilityFunction(inputData);
+      this.handleUtilityOperator(inputData);
       return;
     }
 
@@ -410,7 +233,7 @@ class Calculator extends Component {
         "410: mathOpRgxNonGreedy.test(key)",
         mathOpRgxNonGreedy.test(key)
       );
-      this.doMathFunction(inputData);
+      this.handleMathOperator(inputData);
       return;
     }
 
@@ -419,13 +242,13 @@ class Calculator extends Component {
         "419: numberRgxNonGreedy.test(key)",
         numberRgxNonGreedy.test(key)
       );
-      this.doNumberFunction(inputData);
+      this.handleNumberOperator(inputData);
       return;
     }
   };
 
-  doUtilityFunction = (inputData) => {
-    console.log("428: doUtilityFunction inputData:", inputData);
+  handleUtilityOperator = (inputData) => {
+    console.log("428: handleUtilityOperator inputData:", inputData);
     // return;
     const key = inputData.key;
     let resultData = { ...this.state.resultData };
@@ -449,10 +272,11 @@ class Calculator extends Component {
     }
     if (key === "=") {
     }
+    this.setState({ userInput: "" });
   };
 
-  doMathFunction = (inputData) => {
-    console.log("454: doMathFunction inputData:", inputData);
+  handleMathOperator = (inputData) => {
+    console.log("454: handleMathOperator inputData:", inputData);
     let computableParts = { ...this.state.computableParts };
     const key = inputData.key;
     if (!computableParts.op1 || computableParts.op1 === "") {
@@ -468,8 +292,8 @@ class Calculator extends Component {
     return;
   };
 
-  doNumberFunction = (inputData) => {
-    console.log("458: doNumberFunction inputData:", inputData);
+  handleNumberOperator = (inputData) => {
+    console.log("458: handleNumberOperator inputData:", inputData);
     let computableParts = { ...this.state.computableParts };
     const key = inputData.key;
     if (!computableParts.num1 || computableParts.num1 === "") {
@@ -483,40 +307,69 @@ class Calculator extends Component {
     return;
   };
 
-  parseUserInput = (inputData) => {
-    console.log(
-      "465: parseUserInputparseUserInputparseUserInputparseUserInputparseUserInput",
-      inputData
-    );
-
-    const key = inputData.key;
-    delete inputData["key"];
-    // const { userInput } = this.state;
-    const mathOpRgxNonGreedy = this.state.mathOpRgxNonGreedy;
+  parseUserInput = () => {
+    // console.log("465: parseUserInput parseUserInput parseUserInput");
     const utilOpRgxNonGreedy = this.state.utilOpRgxNonGreedy;
+    const mathOpRgxNonGreedy = this.state.mathOpRgxNonGreedy;
+    const numberRgxNonGreedy = this.state.numberRgxNonGreedy;
 
-    if (utilOpRgxNonGreedy.test(key)) {
+    const { userInput } = this.state;
+
+    let _userInput, op, num;
+    _userInput = userInput;
+
+    if (utilOpRgxNonGreedy.test(userInput)) {
       console.log(
-        "477: utilOpRgxNonGreedy.test(key)",
-        utilOpRgxNonGreedy.test(key)
+        "323: utilOpRgxNonGreedy.test(userInput)",
+        utilOpRgxNonGreedy.test(userInput),
+        userInput
       );
-      this.doUtilityFunction(key);
+      this.handleUtilityOperator(userInput);
       return;
     }
 
-    if (mathOpRgxNonGreedy.test(key)) {
+    if (mathOpRgxNonGreedy.test(userInput)) {
       console.log(
-        "486: mathOpRgxNonGreedy.test(key)",
-        mathOpRgxNonGreedy.test(key)
+        "333: mathOpRgxNonGreedy.test(userInput)",
+        mathOpRgxNonGreedy.test(userInput),
+        userInput
       );
-      inputData.op = key;
-    } else {
-      inputData.num = key;
+      op = userInput;
+      console.log(op);
+      return;
     }
-    this.storeComputableParts(inputData);
+
+    if (numberRgxNonGreedy.test(userInput)) {
+      console.log(
+        "344: numberRgxNonGreedy.test(userInput)",
+        numberRgxNonGreedy.test(userInput),
+        userInput
+      );
+      num = userInput;
+      console.log(num);
+      return;
+    }
+    // this.storeComputableParts(inputData);
+  };
+
+  handleUserInput = (inputData) => {
+    console.log("535: handleUserInput handleUserInput", inputData);
+    let _userInput;
     let { userInput } = this.state;
-    // userInput += key;
-    this.setState({ userInput: (userInput += key) });
+    const key = inputData.key;
+    const shiftKey = inputData.shiftKey;
+    const ctrlKey = inputData.ctrlKey;
+    _userInput = userInput;
+
+    // handle shift & ctrl
+    if (!shiftKey && !ctrlKey) {
+      _userInput += key;
+    }
+    if (shiftKey && key === "+") {
+      _userInput += key;
+    }
+
+    this.setState({ userInput: _userInput });
   };
 
   storeComputableParts = (partData) => {
@@ -827,20 +680,20 @@ class Calculator extends Component {
                     <div
                       className={`col keyboard ${this.state.numberKeyboardClass}`}>
                       <Keyboard
-                        keys={this.state.numberKeys}
+                        keys={this.numberKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                     </div>
                     <div
                       className={`col keyboard ${this.state.functionKeyboardClass}`}>
                       <Keyboard
-                        keys={this.state.functionKeys}
+                        keys={this.functionKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                       <div
                         className={`row keyboard ${this.state.utilityKeyboardClass}`}>
                         <Keyboard
-                          keys={this.state.utilityKeys}
+                          keys={this.utilityKeys}
                           passClickHandler={(e) => this.handleClick(e)}
                         />
                       </div>
