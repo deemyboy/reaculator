@@ -117,7 +117,7 @@ $themes: (
     primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
     secondaryButtonColor: complement($ocean_btn_bg),
-    secondaryButtonTextColor: complement($ocean_btn_color),
+    secondaryButtonTextColor: lighten(complement($ocean_btn_color), 10%),
     secondaryButtonBorderColor: complement($ocean_btn_border),
     secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%),

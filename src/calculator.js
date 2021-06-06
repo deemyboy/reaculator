@@ -121,7 +121,6 @@ class Calculator extends Component {
         keycode: 187,
         kbCode: "Equal",
         type: "func",
-        shiftKey: true,
       },
       {
         id: 12,
@@ -130,7 +129,6 @@ class Calculator extends Component {
         keycode: 189,
         kbCode: "Minus",
         type: "func",
-        shiftKey: false,
       },
       {
         id: 13,
@@ -186,7 +184,6 @@ class Calculator extends Component {
         keycode: 187,
         kbCode: "Equal",
         type: "func",
-        shiftKey: false,
       },
     ],
     utilityKeys: [
@@ -212,10 +209,9 @@ class Calculator extends Component {
     ],
     calculationData: {
       calculationClass: "calculation",
-      calculationValue: "0",
+      calculationValue: "",
     },
-    userInput: "",
-    resultData: { resultClass: "result", resultValue: "50000" },
+    resultData: { resultClass: "result", resultValue: "0" },
     sidebarData: {
       sidebarClass: "sidebar",
       sidebarValue: "Settings",
@@ -247,23 +243,18 @@ class Calculator extends Component {
       num2: "",
       op1: "",
       op2: "",
-      shiftKey: false,
-      ctrlKey: false,
-      numOp: false,
-      snglOp: false,
-      dblOp: false,
-      utilOp: false,
     },
-    operators: ["+", "-", "x", "/", "s", "r", "y", "=", "c", "a", "m", "."],
-    funcOpRgx: /[sr+\/\-xy.ac=m]/g,
-    utilOpRgx: /[.ac=m]/g,
-    dblMathOpRgx: /[+\/\-xy=]/g,
+    numberRgx: /[0123456789]/g,
+    mathOpRgx: /[=+-x/\\ysr]/g,
+    utilOpRgx: /[ac]/g,
+    dblMathOpRgx: /[=+-x/\\y]/g,
     snglMathOpRgx: /[sr]/g,
-    mathOpRgxNonGreedy: /[sr+\/\-xy.ac=m]/,
-    utilOpRgxNonGreedy: /[.ac=m]/,
-    dblMathOpRgxNonGreedy: /[+\/\-xy=]/,
+    numberRgxNonGreedy: /[0123456789]/,
+    mathOpRgxNonGreedy: /[=+-x/\\ysr]/,
+    utilOpRgxNonGreedy: /[ac]/,
+    dblMathOpRgxNonGreedy: /[=+-x/\\y]/,
     snglMathOpRgxNonGreedy: /[sr]/,
-    matchCount: 0,
+    userInput: "",
   };
 
   componentDidMount() {
@@ -272,10 +263,11 @@ class Calculator extends Component {
 
   // componentDidUpdate() {
   componentDidUpdate(nextProps, nextState) {
-    if (this.state.userInput === nextState.userInput) {
+    if (this.state.computableParts === nextState.computableParts) {
       return false;
     } else {
       // this.storeComputableParts();
+      this.doTheMath();
       return true;
     }
   }
@@ -364,19 +356,20 @@ class Calculator extends Component {
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
-    let clickData = {};
-    clickData.key = keyClicked[0].value ? keyClicked[0].value : "";
-    clickData.ctrlKey = false;
-    clickData.shiftKey = false;
+    let clickData = {
+      key: keyClicked[0].value ? keyClicked[0].value : "",
+      ctrlKey: false,
+      shiftKey: false,
+    };
     this.parseUserInput(clickData);
   };
 
   handleKeyPress = (e) => {
-    console.log("376: handleKeyPress");
-    console.log(e, e.repeat);
+    // console.log("376: handleKeyPress");
+    // console.log(e);
     const allowedKeys = [
-      16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 190, 189, 187, 189, 88,
-      191, 83, 82, 89, 187, 67, 65,
+      16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83, 88,
+      89, 187, 189, 190, 191,
     ];
     if (!e.repeat) {
       if (allowedKeys.includes(e.keyCode)) {
@@ -386,197 +379,365 @@ class Calculator extends Component {
           shiftKey: e.shiftKey,
         };
         this.handleActiveClass(e);
-        // this.handleUserInput(pressData);
         this.parseUserInput(pressData);
       }
     }
   };
 
   handleActiveClass = (e) => {
-    console.log("adding and removing active class");
+    // console.log("adding and removing active class");
+  };
+
+  routeInput = (input) => {
+    const mathOpRgxNonGreedy = this.state.mathOpRgxNonGreedy;
+    const utilOpRgxNonGreedy = this.state.utilOpRgxNonGreedy;
+
+    if (utilOpRgxNonGreedy.test(key)) {
+      console.log(
+        "440: utilOpRgxNonGreedy.test(key)",
+        utilOpRgxNonGreedy.test(key)
+      );
+      this.doUtilityFunction(key);
+      return;
+    }
+  };
+
+  doUtilityFunction = (key) => {
+    console.log("395: doUtilityFunction key:", key);
+    let resultData = { ...this.state.resultData };
+    let computableParts = { ...this.state.computableParts };
+
+    if (key === "a") {
+      resultData.resultValue = "0";
+      computableParts.num1 = "";
+      computableParts.num2 = "";
+      computableParts.op1 = "";
+      computableParts.op2 = "";
+
+      console.log("ac pressed", computableParts);
+      this.setState({ computableParts }, () => {
+        this.setCalculationData();
+        this.setResultData(resultData);
+      });
+    }
+    if (key === "c") {
+      let { userInput } = this.state;
+    }
+    if (key === "=") {
+    }
   };
 
   parseUserInput = (inputData) => {
-    console.log("417: parseUserInput", inputData);
-
-    const packageIndividualParts = (part) => {
-      console.log(`420: part: ${JSON.stringify(part)}`);
-      let _individualParts = {};
-      if (part.num1) {
-        _individualParts.num1 = part.num1;
-      }
-      if (part.op1) {
-        _individualParts.op1 = part.op1;
-      }
-      if (part.num2) {
-        _individualParts.num2 = part.num2;
-      }
-      if (part.op2) {
-        _individualParts.op2 = part.op2;
-      }
-      if (part.ctrlKey) {
-        _individualParts.ctrlKey = part.ctrlKey;
-      }
-      if (part.shiftKey) {
-        _individualParts.shiftKey = part.shiftKey;
-      }
-      return _individualParts;
-    };
+    console.log(
+      "423: parseUserInputparseUserInputparseUserInputparseUserInputparseUserInput",
+      inputData
+    );
 
     const key = inputData.key;
+    delete inputData["key"];
     // const { userInput } = this.state;
-    const funcOpRgx = this.state.funcOpRgx;
-    const utilOpRgx = this.state.utilOpRgx;
-    const snglMathOpRgx = this.state.snglMathOpRgx;
-    const dblMathOpRgx = this.state.dblMathOpRgx;
-
     const mathOpRgxNonGreedy = this.state.mathOpRgxNonGreedy;
     const utilOpRgxNonGreedy = this.state.utilOpRgxNonGreedy;
-    const snglMathOpRgxNonGreedy = this.state.snglMathOpRgxNonGreedy;
-    const dblMathOpRgxNonGreedy = this.state.dblMathOpRgxNonGreedy;
 
-    let individualParts = {};
+    if (utilOpRgxNonGreedy.test(key)) {
+      console.log(
+        "440: utilOpRgxNonGreedy.test(key)",
+        utilOpRgxNonGreedy.test(key)
+      );
+      this.doUtilityFunction(key);
+      return;
+    }
 
-    if (key.match(funcOpRgx)) {
-      console.log("key.match(funcOpRgx)", key.match(funcOpRgx));
+    if (mathOpRgxNonGreedy.test(key)) {
+      console.log(
+        "449: mathOpRgxNonGreedy.test(key)",
+        mathOpRgxNonGreedy.test(key)
+      );
       inputData.op = key;
-      // if (key.match(utilOpRgx)) {
-      //   console.log("utilOp", key.match(utilOpRgx));
-      //   inputData.utilOp = true;
-      //   // this.storeComputableParts(inputData);
-      // } else if (key.match(snglMathOpRgx)) {
-      //   console.log("snglMathOp", key.match(snglMathOpRgx));
-      //   inputData.snglOp = true;
-      //   // this.storeComputableParts(inputData);
-      // } else if (key.match(dblMathOpRgx)) {
-      //   console.log("dblMathOp:", key.match(dblMathOpRgx));
-      //   inputData.dblOp = true;
-      // }
     } else {
-      console.log(`key - just digits: ${key}`);
       inputData.num = key;
     }
     this.storeComputableParts(inputData);
+    let { userInput } = this.state;
+    // userInput += key;
+    this.setState({ userInput: (userInput += key) });
+  };
+
+  storeComputableParts = (partData) => {
+    console.log("463: storeComputableParts partData: ", partData);
+
+    let computableParts = { ...this.state.computableParts };
+
+    const num1 = computableParts.num1;
+    const num2 = computableParts.num2;
+    const op1 = computableParts.op1;
+    const op2 = computableParts.op2;
+
+    const handleDecimal = () => {
+      let numToProcess = null;
+      if (!computableParts.op1) {
+        numToProcess = computableParts.num1;
+      } else {
+        numToProcess = computableParts.num2;
+      }
+      if (numToProcess === "") {
+        return "0.";
+      }
+      if (numToProcess.indexOf(".") < 0) {
+        console.log('numToProcess.indexOf(".")', numToProcess.indexOf("."));
+        return ".";
+      }
+      if (numToProcess.indexOf(".") > 0) {
+        console.log('numToProcess.indexOf(".")', numToProcess.indexOf("."));
+        return "";
+      }
+    };
+
+    const storeNum = (num) => {
+      // console.log("567: storeNum", num);
+      if (computableParts.op1 === "y") {
+        computableParts.num2 += num;
+      }
+      if (num === ".") {
+        num = handleDecimal();
+      }
+      if (!computableParts.op1) {
+        computableParts.num1 += num;
+      } else {
+        computableParts.num2 += num;
+      }
+    };
+
+    const storeOp = (op) => {
+      // console.log("582: storeOp");
+      if (!num1) {
+        console.log("584: cannot store any ops. when num1 not present");
+        return;
+      }
+      if (!op1) {
+        op1 = op;
+        return;
+      }
+      if (!num2) {
+        console.log("592: cannot add op when num2 not present");
+        return;
+      }
+      if (!op2) {
+        op2 = op;
+      }
+    };
+
+    // console.log("599: storeComputableParts partData: ", partData);
+    if (num1 && num2 && op1 && op2) {
+      // do. nothing
+      console.log("607: do nothing -  all 4 parts are set.");
+      return;
+    }
+
+    if (!partData.ctrlKey && !partData.shiftKey) {
+      // no shift or ctrl.
+      // do num or op storage
+      if (partData.num) {
+        // store num
+        storeNum(partData.num);
+      } else if (partData.op) {
+        // store op
+        storeOp(partData.op);
+      }
+    }
+    if (partData.shiftKey && partData.op === "+") {
+    }
+    if (partData.ctrlKey) {
+      // ctrlKey = partData.ctrlKey;
+    }
+    if (!partData.ctrlKey) {
+      // ctrlKey = false;
+    }
+    if (partData.shiftKey) {
+      // shiftKey = partData.shiftKey;
+    }
+    if (!partData.shiftKey) {
+      // shiftKey = false;
+    }
+
+    computableParts.num1 = num1;
+    computableParts.num2 = num2;
+    computableParts.op1 = op1;
+    computableParts.op2 = op2;
+    this.setState({ computableParts }, this.setCalculationData);
     return;
   };
 
   setCalculationData = (data) => {
+    const computableParts = { ...this.state.computableParts };
+    // console.log("457: setCalculationData computableParts: ", computableParts);
+    let calcDataObj = {};
+    calcDataObj.calculationClass = this.state.calculationData.calculationClass; // default class
+    const num1 = computableParts.num1;
+    const num2 = computableParts.num2;
+    const op1 = computableParts.op1;
+    const op2 = computableParts.op2;
+
     let calculationData = { ...this.state.calculationData };
-    if (data.calculationClass) {
-      calculationData.calculationClass = data.calculationClass;
+    console.log(
+      "469: setCalculationData calcDataObj: ",
+      calcDataObj,
+      "calculationData: ",
+      calculationData
+    );
+
+    if (data) {
+      if (data.calculationClass) {
+        calcDataObj.calculationClass = data.calculationClass;
+      }
     }
-    if (data.calculationValue) {
-      calculationData.calculationValue = data.calculationValue;
-    }
+
+    // // default
+    // if (!op1) {
+    //   calcDataObj.calculationValue = num1;
+    // }
+    // calcDataObj.calculationValue = num2;
+
+    calcDataObj.calculationValue = num1 + op1 + num2 + op2;
+
+    calculationData = calcDataObj;
+    console.log("489: ", calculationData);
     this.setState({ calculationData });
   };
 
-  storeComputableParts = (partData) => {
-    let _computableParts = {
-      num1: "",
-      num2: "",
-      op1: "",
-      op2: "",
-      shiftKey: false,
-      ctrlKey: false,
-      numOp: false,
-      snglOp: false,
-      dblOp: false,
-      utilOp: false,
+  doTheMath = () => {
+    let operator = null;
+
+    const calculateDbleOpResult = (op) => {
+      switch (op) {
+        case "+": {
+          console.log("+");
+          return num1 + num2;
+        }
+        case "-": {
+          console.log("-");
+          return num1 - num2;
+        }
+        case "x": {
+          console.log("x");
+          return num1 * num2;
+        }
+        case "y": {
+          console.log("y");
+          return Math.pow(num1, num2);
+        }
+        case "/": {
+          console.log("/");
+          return num1 / num2;
+        }
+        default: {
+          return null;
+        }
+      }
     };
 
-    let num;
-    let op;
-    let computableParts = { ...this.state.computableParts };
-    console.log(
-      "501: storeComputableParts partData: ",
-      partData,
-      " computableParts: ",
-      computableParts
-    );
-    console.log(
-      "!partData.ctrlKey && !partData.shiftKey && (partData.num || partData.op)",
-      !partData.ctrlKey && !partData.shiftKey && (partData.num || partData.op)
-    );
-    console.log("end");
-    if (
-      (!partData.ctrlKey &&
-        !partData.shiftKey &&
-        (partData.num || partData.op)) ||
-      ((partData.ctrlKey || partData.shiftKey) && (partData.num || partData.op))
-    ) {
-      if (partData.num) {
-        if (!computableParts.op1) {
-          computableParts.num1 += partData.num;
-        } else {
-          computableParts.num2 += partData.num;
+    const calculateSnglOpResult = (op) => {
+      switch (op) {
+        case "r": {
+          console.log("r");
+          return Math.sqrt(num1);
         }
-      } else if (partData.op) {
-        if (!computableParts.op1) {
-          computableParts.op1 = partData.op;
-        } else {
-          computableParts.op2 = partData.op;
+        case "s": {
+          console.log("s");
+          if (num1 === 0) return 1;
+          return num1 * num1;
+        }
+        default: {
+          return null;
         }
       }
-    } else if (partData.ctrlKey) {
-      computableParts.ctrlKey = partData.ctrlKey;
-    } else if (!partData.ctrlKey) {
-      computableParts.ctrlKey = false;
-    } else if (partData.shiftKey) {
-      computableParts.shiftKey = partData.shiftKey;
-    } else if (!partData.shiftKey) {
-      computableParts.shiftKey = false;
+    };
+
+    const computableParts = { ...this.state.computableParts };
+    // console.log("667: doTheMath - trying to do maths", computableParts);
+
+    // console.log(
+    //   "670",
+    //   computableParts.num1,
+    //   typeof computableParts.num1,
+    //   typeof Number(computableParts.num1)
+    // );
+
+    // let num1 = Number(computableParts.num1)
+    //   ? Number(computableParts.num1)
+    //   : computableParts.num1;
+    let num1, num2, op1, op2;
+    if (computableParts.num1) {
+      num1 = Number(computableParts.num1);
     }
-    console.log("557: ", computableParts);
-    this.setState({ computableParts });
-    return;
+    if (computableParts.num1) {
+      num2 = Number(computableParts.num2);
+    }
+
+    op1 = computableParts.op1;
+    op2 = computableParts.op2;
+
+    // console.log(num1, num2, op1, op2);
+    let resultData = { ...this.state.resultData };
+
+    // check parts
+    if (!num1) {
+      // console.log("num1 not present: maths not possible");
+      return;
+    }
+    if (!op1) {
+      // console.log(
+      //   num1,
+      //   " <- num1,  op1 not present: maths not possible",
+      //   typeof num1
+      // );
+      return;
+    }
+
+    if (this.state.snglMathOpRgxNonGreedy.test(op1)) {
+      console.log("758: single maths op detected");
+      // operator = op1;
+      if (resultData.resultValue !== "0") {
+        num1 = resultData.resultValue;
+        num2 = num1;
+        computableParts.num1 = num1;
+        // this.setState({ computableParts });.
+      }
+      num2 = num1;
+      op2 = op1;
+      resultData.resultValue = calculateSnglOpResult(op1);
+      this.setState({ resultData });
+      return;
+    }
+
+    if (!num2) {
+      // console.log("no num2");
+      return;
+    }
+
+    if (!op2) {
+      // console.log('!op2 && !op1 === "y"', !op2 && !op1 === "y");
+      // console.log("no op 2");
+      return;
+    }
+
+    // console.log(calculateResult(op1));
+    resultData.resultValue = calculateDbleOpResult(op1);
+    this.setState({ resultData });
+    // let result =
   };
 
-  doTheMath = () => {};
+  setResultData = (data) => {
+    // console.log("452: setResultData ");
 
-  calculateResult = (op) => {
-    switch (op) {
-      case "+": {
-        return num1 + num2;
-      }
-      case "-": {
-        return num1 - num2;
-      }
-      case "x": {
-        return num1 * num2;
-      }
-      case "y": {
-        return Math.pow(num1, num2);
-      }
-      case "r": {
-        return Math.sqrt(num1);
-      }
-      case "/": {
-        return num1 / num2;
-      }
-      case "s": {
-        if (num1 === 0) return 1;
-        return num1 * num1;
-      }
-      default: {
-        return null;
-      }
-    }
-  };
+    let resultData = { ...this.state.resultData };
 
-  handleNumber = (numberData) => {
-    console.log(`handleNumber: ${JSON.stringify(numberData)}`);
-    let _keys = Object.keys(numberData);
-    console.log(_keys);
-    return;
-    if (Number(Number(parameters.num1) !== NaN)) {
-      // store it
-      this.setState({ number1: parameters.num1 });
+    if (data.resultClass) {
+      resultData.resultClass = data.resultClass;
     }
-    // else
-    // // handleDecimalPoint
-    // // handlePlusMinus
-    // }
+
+    resultData.resultValue = data.resultValue;
+    this.setState({ resultData });
   };
 
   render = () => {
