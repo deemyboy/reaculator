@@ -244,15 +244,15 @@ class Calculator extends Component {
       op1: "",
       op2: "",
     },
-    numberRgx: /[0123456789]/g,
-    mathOpRgx: /[=+-x/\\ysr]/g,
-    utilOpRgx: /[ac]/g,
-    dblMathOpRgx: /[=+-x/\\y]/g,
+    numberRgx: /[0-9]/g,
+    mathOpRgx: /[+\-x/ysr]/g,
+    utilOpRgx: /[acm.=]/g,
+    dblMathOpRgx: /[+\-x/y]/g,
     snglMathOpRgx: /[sr]/g,
-    numberRgxNonGreedy: /[0123456789]/,
-    mathOpRgxNonGreedy: /[=+-x/\\ysr]/,
-    utilOpRgxNonGreedy: /[ac]/,
-    dblMathOpRgxNonGreedy: /[=+-x/\\y]/,
+    numberRgxNonGreedy: /[0-9]/,
+    mathOpRgxNonGreedy: /[+\-x/ysr]/,
+    utilOpRgxNonGreedy: /[acm.=]/,
+    dblMathOpRgxNonGreedy: /[+\-x/y]/,
     snglMathOpRgxNonGreedy: /[sr]/,
     userInput: "",
   };
@@ -361,7 +361,8 @@ class Calculator extends Component {
       ctrlKey: false,
       shiftKey: false,
     };
-    this.parseUserInput(clickData);
+    // this.parseUserInput(clickData);
+    this.routeInput(clickData);
   };
 
   handleKeyPress = (e) => {
@@ -379,7 +380,7 @@ class Calculator extends Component {
           shiftKey: e.shiftKey,
         };
         this.handleActiveClass(e);
-        this.parseUserInput(pressData);
+        this.routeInput(pressData);
       }
     }
   };
@@ -388,22 +389,45 @@ class Calculator extends Component {
     // console.log("adding and removing active class");
   };
 
-  routeInput = (input) => {
+  routeInput = (inputData) => {
     const mathOpRgxNonGreedy = this.state.mathOpRgxNonGreedy;
     const utilOpRgxNonGreedy = this.state.utilOpRgxNonGreedy;
+    const numberRgxNonGreedy = this.state.numberRgxNonGreedy;
+    const key = inputData.key;
+    console.log("397: routeInput inputData: ", inputData);
 
     if (utilOpRgxNonGreedy.test(key)) {
       console.log(
-        "440: utilOpRgxNonGreedy.test(key)",
+        "401: utilOpRgxNonGreedy.test(key)",
         utilOpRgxNonGreedy.test(key)
       );
-      this.doUtilityFunction(key);
+      this.doUtilityFunction(inputData);
+      return;
+    }
+
+    if (mathOpRgxNonGreedy.test(key)) {
+      console.log(
+        "410: mathOpRgxNonGreedy.test(key)",
+        mathOpRgxNonGreedy.test(key)
+      );
+      this.doMathFunction(inputData);
+      return;
+    }
+
+    if (numberRgxNonGreedy.test(key)) {
+      console.log(
+        "419: numberRgxNonGreedy.test(key)",
+        numberRgxNonGreedy.test(key)
+      );
+      this.doNumberFunction(inputData);
       return;
     }
   };
 
-  doUtilityFunction = (key) => {
-    console.log("395: doUtilityFunction key:", key);
+  doUtilityFunction = (inputData) => {
+    console.log("428: doUtilityFunction inputData:", inputData);
+    // return;
+    const key = inputData.key;
     let resultData = { ...this.state.resultData };
     let computableParts = { ...this.state.computableParts };
 
@@ -414,11 +438,11 @@ class Calculator extends Component {
       computableParts.op1 = "";
       computableParts.op2 = "";
 
-      console.log("ac pressed", computableParts);
-      this.setState({ computableParts }, () => {
-        this.setCalculationData();
-        this.setResultData(resultData);
-      });
+      // console.log("ac pressed", computableParts);
+      // this.setState({ computableParts }, () => {
+      //   this.setCalculationData();
+      //   this.setResultData(resultData);
+      // });
     }
     if (key === "c") {
       let { userInput } = this.state;
@@ -427,9 +451,41 @@ class Calculator extends Component {
     }
   };
 
+  doMathFunction = (inputData) => {
+    console.log("454: doMathFunction inputData:", inputData);
+    let computableParts = { ...this.state.computableParts };
+    const key = inputData.key;
+    if (!computableParts.op1 || computableParts.op1 === "") {
+      console.log(true);
+      computableParts.op1 = key;
+      console.log("computableParts", computableParts);
+      this.setState({ computableParts });
+      return;
+    }
+    computableParts.op2 = key;
+    this.setState({ computableParts });
+    // let
+    return;
+  };
+
+  doNumberFunction = (inputData) => {
+    console.log("458: doNumberFunction inputData:", inputData);
+    let computableParts = { ...this.state.computableParts };
+    const key = inputData.key;
+    if (!computableParts.num1 || computableParts.num1 === "") {
+      computableParts.num1 = key;
+      this.setState({ computableParts });
+      return;
+    }
+    computableParts.num2 = key;
+    this.setState({ computableParts });
+    // let
+    return;
+  };
+
   parseUserInput = (inputData) => {
     console.log(
-      "423: parseUserInputparseUserInputparseUserInputparseUserInputparseUserInput",
+      "465: parseUserInputparseUserInputparseUserInputparseUserInputparseUserInput",
       inputData
     );
 
@@ -441,7 +497,7 @@ class Calculator extends Component {
 
     if (utilOpRgxNonGreedy.test(key)) {
       console.log(
-        "440: utilOpRgxNonGreedy.test(key)",
+        "477: utilOpRgxNonGreedy.test(key)",
         utilOpRgxNonGreedy.test(key)
       );
       this.doUtilityFunction(key);
@@ -450,7 +506,7 @@ class Calculator extends Component {
 
     if (mathOpRgxNonGreedy.test(key)) {
       console.log(
-        "449: mathOpRgxNonGreedy.test(key)",
+        "486: mathOpRgxNonGreedy.test(key)",
         mathOpRgxNonGreedy.test(key)
       );
       inputData.op = key;
@@ -464,7 +520,7 @@ class Calculator extends Component {
   };
 
   storeComputableParts = (partData) => {
-    console.log("463: storeComputableParts partData: ", partData);
+    console.log("500: storeComputableParts partData: ", partData);
 
     let computableParts = { ...this.state.computableParts };
 
