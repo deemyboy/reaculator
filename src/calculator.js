@@ -65,15 +65,15 @@ class Calculator extends Component {
       op1: "",
       op2: "",
     },
-    numberRgx: /[0-9]/g,
-    mathOpRgx: /[+\-x\\ysr]/g,
-    utilOpRgx: /[acm.=]/g,
-    dblMathOpRgx: /[+\-x\\y]/g,
+    numberRgx: /[0-9\.]*/g,
+    mathOpRgx: /[+\-x\/ysr]/g,
+    utilOpRgx: /[acm\.=]/g,
+    dblMathOpRgx: /[+\-x\/y]/g,
     snglMathOpRgx: /[sr]/g,
-    numberRgxNonGreedy: /[0-9]/,
-    mathOpRgxNonGreedy: /[+\-x\\ysr]/,
-    utilOpRgxNonGreedy: /[acm.=]/,
-    dblMathOpRgxNonGreedy: /[+\-x\\y]/,
+    numberRgxNonGreedy: /[0-9\.]/,
+    mathOpRgxNonGreedy: /[+\-x\/ysr]/,
+    utilOpRgxNonGreedy: /[acm\.=]/,
+    dblMathOpRgxNonGreedy: /[+\-x\/y]/,
     snglMathOpRgxNonGreedy: /[sr]/,
     userInput: "",
   };
@@ -317,38 +317,54 @@ class Calculator extends Component {
 
     let _userInput, op, num;
     _userInput = userInput;
+    console.log("347: userInput:", userInput);
 
-    if (utilOpRgxNonGreedy.test(userInput)) {
-      console.log(
-        "323: utilOpRgxNonGreedy.test(userInput)",
-        utilOpRgxNonGreedy.test(userInput),
-        userInput
-      );
-      this.handleUtilityOperator(userInput);
-      return;
-    }
+    const handleDecimal = (number) => {
+      const dotRgx = /\./g;
+      const numRgx = /\d/g;
+      // console.log("325: handleDecimal number: ", number);
+      let matches = number.matchAll(dotRgx) ? [...number.matchAll(dotRgx)] : [];
+      // console.log(matches, matches.length);
+      let dotMatches = [...number.matchAll(dotRgx)];
+      let numMatches = [...number.matchAll(numRgx)];
+      // console.log("330: ", dotMatches.length, numMatches.length);
 
-    if (mathOpRgxNonGreedy.test(userInput)) {
-      console.log(
-        "333: mathOpRgxNonGreedy.test(userInput)",
-        mathOpRgxNonGreedy.test(userInput),
-        userInput
-      );
-      op = userInput;
-      console.log(op);
-      return;
-    }
+      if (number === ".") {
+        return "0.";
+      }
+      if (dotMatches.length > 1) {
+        let prefix = "";
+        let frstDotIdx = dotMatches[0].index;
+        let numMatchesJoined = numMatches.join("");
 
-    if (numberRgxNonGreedy.test(userInput)) {
-      console.log(
-        "344: numberRgxNonGreedy.test(userInput)",
-        numberRgxNonGreedy.test(userInput),
-        userInput
-      );
-      num = userInput;
-      console.log(num);
-      return;
-    }
+        let numMatchesIntPart = numMatchesJoined.substr(0, frstDotIdx);
+        let numMatchesDecPart = numMatchesJoined.substr(frstDotIdx);
+        // console.log("342: ", numMatchesIntPart, numMatchesDecPart);
+        if (numMatchesIntPart == "") {
+          prefix = "0";
+        }
+        number = prefix + numMatchesIntPart + "." + numMatchesDecPart;
+        // console.log("347: dec friendly number: ", number);
+      }
+      return number;
+    };
+
+    const extractNumbers = (inputData) => {
+      // let matches = [...userInput.matchAll(this.state.numberRgx)];
+      return Array.from(
+        inputData.matchAll(this.state.numberRgx),
+        (m) => m[0]
+      ).filter((item) => item);
+    };
+
+    let decimalFriendlyUserInput = handleDecimal(userInput);
+    // this.setState({ userInput: decimalFriendlyUserInput });
+
+    console.log("363: decimalFriendlyUserInput: ", decimalFriendlyUserInput);
+    // return;
+    let matches = extractNumbers(decimalFriendlyUserInput);
+    console.log("363: matches: ", matches);
+
     // this.storeComputableParts(inputData);
   };
 
