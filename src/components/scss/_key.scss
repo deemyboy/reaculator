@@ -8,7 +8,10 @@
     align-items: center;
     justify-content: center;
     transform: scale(1);
-    @include transition(0.15s, all);
-    cursor: pointer;
+    @include transition(0.25s, all);
+  }
+  .btn-lg,
+  .btn-group-lg > .btn {
+    font-size: 1.5rem;
   }
 }

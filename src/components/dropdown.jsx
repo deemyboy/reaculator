@@ -16,7 +16,7 @@ const Dropdown = React.forwardRef((props, ref) => {
   return (
     <React.Fragment>
       <div className="title">{props.dropdownData.labelForDropdown}</div>
-      <div className={`dropdown ${props.dropdownData.classForDropdown}`}>
+      <div className="dropdown">
         <a
           className="btn btn-dropdown dropdown-toggle"
           href="#"

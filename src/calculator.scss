@@ -1,10 +1,11 @@
 $imp: #{"!"}important;
+@import "./components/scss/_colors";
+@import "./components/scss/_themes_map";
 @import "~bootstrap/scss/bootstrap";
 @import "./components/scss/_spacers", "./components/scss/_transitions",
-  "./components/scss/_calculation", "./components/scss/_display",
-  "./components/scss/_key", "./components/scss/_keyboard",
-  "./components/scss/_result", "./components/scss/_themes",
-  "./components/scss/_sidebar", "./components/scss/_dropdown";
+  "./components/scss/_display", "./components/scss/_key",
+  "./components/scss/_keyboard", "./components/scss/_result",
+  "./components/scss/_sidebar";
 
 #calculator {
   > .container {
@@ -12,59 +13,22 @@ $imp: #{"!"}important;
     margin-top: $s-3r;
     .calculator {
       transform: scaleX(1);
-      @include transition(0.15s, all);
-    }
-    &.open {
-      .calculator {
-        width: 540px;
+      @include transition(0.25s, all);
+      padding: 10px;
+      border: 2px solid silver;
+      border-radius: $s-05r;
+      max-width: 540px;
+      .title {
+        font-size: $s-2r;
+        color: white;
       }
-      .sidebar {
-        z-index: 2;
-        transform: scaleX(2);
-        transform-origin: right;
-        > div:first-of-type,
-        div.dropdown,
-        .title {
-          transform: scaleX(0.5);
-        }
-        div.dropdown {
-          transform-origin: left;
-        }
-      }
-      .menu-icon {
-        // transform-origin: center;
-        // transform: translate(-600%, 0%) scale(1.2);
-        .icon-bar {
-          &:nth-of-type(1) {
-            transform-origin: center;
-            transform: translate(0%, 200%) rotate(45deg);
-          }
-          &:nth-of-type(2) {
-            opacity: 0;
-          }
-          &:nth-of-type(3) {
-            transform-origin: center;
-            transform: translate(0%, -180%) rotate(-45deg);
-          }
-        }
+      .body {
+        width: 100%;
       }
     }
   }
-}
-.flex-row {
-  display: flex;
 }
 
-.calculator {
-  padding: 10px;
-  border: 2px solid silver;
-  border-radius: $s-05r;
-  max-width: 540px;
-  .title {
-    font-size: $s-2r;
-    color: white;
-  }
-  .body {
-    width: 100%;
-  }
+.flex-row {
+  display: flex;
 }

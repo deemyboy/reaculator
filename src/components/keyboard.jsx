@@ -3,14 +3,16 @@ import Key from "./key";
 
 class Keyboard extends Component {
   render = () => {
+    const ref = React.createRef();
     return (
       <React.Fragment>
         {this.props.keys.map((ky) => {
           return (
             <Key
+              ref={ref}
               key={ky.id}
               kObj={ky}
-              handleKeyClick={(e) => this.props.passClickHandler(e)}
+              handleClick={(e) => this.props.passClickHandler(e)}
             />
           );
         })}

@@ -15,6 +15,7 @@
     }
     .calculation {
       font-size: 1.7em;
+      min-height: 3rem;
     }
     .clearIt {
       margin: 0;
@@ -22,5 +23,16 @@
     .result {
       font-size: 2.7em;
     }
+  }
+  sup {
+    top: -0.8em;
+  }
+  sub,
+  sup {
+    position: relative;
+    font-size: 0.6em;
+    font-weight: 600;
+    line-height: 0;
+    vertical-align: baseline;
   }
 }
