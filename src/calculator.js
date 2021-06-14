@@ -52,13 +52,13 @@ class Calculator extends Component {
     utilityKeyboardClass: "utilityKeyboard",
     title: "Calculator",
     dotRgx: /\./g,
-    numRgx: /[0-9]/g,
+    numRgx: /(\d+)/g,
     mathOpRgx: /[+\-x\/ysr]/g,
     utilOpRgx: /[acm=]/g,
     dblMthOpRgx: /[+\-x\/y]/g,
     snglMthOpRgx: /[sr]/g,
     dotRgxNnGr: /\./,
-    numRgxNnGr: /[0-9]/,
+    numRgxNnGr: /(\d+)/g,
     mathOpRgxNnGr: /[+\-x\/ysr]/,
     utilOpRgxNnGr: /[acm=]/,
     dblMthOpRgxNnGr: /[+\-x\/y]/,
@@ -334,7 +334,7 @@ class Calculator extends Component {
   };
 
   parseUserInput = () => {
-    console.log("328: ######### parseUserInput #########");
+    console.log("338: ######### parseUserInput #########");
     const utilOpRgxNnGr = this.state.utilOpRgxNnGr;
     const snglMthOpRgxNnGr = this.state.snglMthOpRgxNnGr;
     const dblMthOpRgxNnGr = this.state.dblMthOpRgxNnGr;
@@ -359,144 +359,64 @@ class Calculator extends Component {
     let mathMatches = [..._userInput.matchAll(mathRgx)];
     let numMatches = [..._userInput.matchAll(numRgx)];
 
-    const handleDot = (input) => {
-      // console.log("358: handleDot input: ", input);
-      // let dotMatches = [..._userInput.matchAll(dotRgx)];
-      // let mathMatches = [..._userInput.matchAll(mathRgx)];
-      // let numMatches = [..._userInput.matchAll(numRgx)];
+    const handleDecimal = (input) => {
+      console.log("358: handleDecimal input: ", input);
 
       const _dot = ".";
 
-      // handle "." plus maths op
-      // if
-      if (
-        numMatches.length === 0 &&
-        // dotMatches.length > 0 &&
-        mathMatches.length > 0
-      ) {
-        console.log("367 hit no numbers but hit maths op");
-        // this.setState({ userInput: "" });
-        return "0." + mathMatches[0][0];
-      }
-
-      if (
-        numMatches.length === 0 &&
-        dotMatches.length >= 1 &&
-        mathMatches.length === 0
-      ) {
-        console.log("385 hit . - input:", input);
-        // this.setState({ userInput: "" });
-        input = "0.";
-      }
-
       if (numMatches.length > 0) {
-        // console.log("373: numbers hit input: ", input);
-        // this.setState({ userInput: "" });
-
-        // dot index, joined in a string, final result, int, decimal part, digit char matches array
-        let _didx, _joined, _res, _resInt, _resDec, _matches;
-        const numrgx = /(\d+)/g; // digit regex
-        _matches = input.match(numRgx);
-        _joined = _matches.join("");
-
-        _didx = input.indexOf(_dot);
-        _resInt = _joined.substr(0, _didx);
-        _resDec = _joined.substr(_didx);
-        _res = _resInt + _dot + _resDec;
-
-        // if .934 is returned prepend 0 | .934 -> 0.934
-        if (_res.charAt(0) === _dot) {
-          _res = "0" + _res;
-          // console.log("390 _res: ", _res);
-        }
-        // if 76. returned append 0 | 76. -> 76.0
-        else if (_res.charAt(_res.length - 1) === _dot) {
-          //
-          _res = _res + "0";
-        }
-        console.log(
-          "397: ",
-          "_didx",
-          _didx,
-          "_joined",
-          _joined,
-          "_res",
+        /*
+          _didx  - dot index
+          _matches - array of regex matches for numbers 0-9
+          _joined - numbers extracted from _matches back into a string,
+          _res - final result,
+          _resInt - intger part of final result
+          _resFloat - decimal part
+          _firstNumIdx - index of first number found
+        */
+        let _matches = input.match(numRgx),
+          _joined = _matches.join(""),
+          _didx = 0,
           _res,
-          "_resInt",
-          _resInt,
-          "_resDec",
-          _resDec,
-          "_matches",
-          _matches
-        );
+          _resInt = 0, // default
+          _resFloat,
+          _firstNumIdx = 0;
 
-        input = _res;
-      }
-
-      if (
-        numMatches &&
-        numMatches.length === 0 &&
-        mathMatches &&
-        mathMatches.length > 0
-      ) {
-        console.log("hit 421");
-        this.setState({ userInput: "" });
-        return "0";
-      }
-
-      // handle input 5. or 2. && repeated ...
-      //    WITHOUT maths operator
-      if (
-        numMatches.length === 1 &&
-        dotMatches &&
-        dotMatches.length > 1 &&
-        mathMatches &&
-        mathMatches.length === 0
-      ) {
-        console.log("435: hit");
-        return input.substr(0, 2);
-      }
-
-      // handle input 5. or 2. with maths operator
-      if (
-        numMatches.length === 1 &&
-        dotMatches &&
-        dotMatches.length > 0 &&
-        mathMatches &&
-        mathMatches.length > 0
-      ) {
-        console.log("447: hit");
-        return input.substr(0, mathMatches[0].index - 1) + mathMatches[0][0];
-      }
-
-      // handle input 5. or 2. with maths operator
-      if (numMatches.length === 1 && mathMatches && mathMatches.length > 0) {
-        return input.substr(0, mathMatches[0].index - 1) + mathMatches[0][0];
-      }
-
-      if (numMatches.length > 0 && mathMatches && mathMatches.length > 0) {
-        let _op = mathMatches[0][0];
-        let prefix = "";
-        let frstDotIdx = dotMatches[0].index;
-        let numMatchesJoined = numMatches.join("");
-
-        let numMatchesIntPart = numMatchesJoined.substr(0, frstDotIdx);
-        let numMatchesDecPart = numMatchesJoined.substr(frstDotIdx);
-        console.log("377: ", numMatchesIntPart, numMatchesDecPart);
-        if (numMatchesIntPart == "") {
-          prefix = "0";
+        // first char is a .
+        if (input.charAt(0) === _dot) {
+          _firstNumIdx = input.search(numRgx);
+          _didx = input.search(numRgx) - 1;
+          _resInt = 0;
+          _resFloat = _joined;
         }
-        input = prefix + numMatchesIntPart + "." + numMatchesDecPart + _op;
+        // first char was a number
+        if (input.charAt(0) !== _dot) {
+          // repeated zeros
+          // if - only 0s eg. 0000
+          if (Number(_joined) === 0) {
+            _didx = input.lastIndexOf("0");
+            _resInt = 0;
+            _resFloat = "";
+          }
+          // else - different number after 0s eg 0009
+          else if (Number(_matches[0]) === 0) {
+            _didx = input.indexOf(_dot);
+            _resInt = 0;
+            _resFloat = _joined.substr(_didx);
+          } else {
+            _didx = input.indexOf(_dot);
+            // casting to Number and back to string removes lead 0s
+            // eg. 09090. -> 9090.
+            _resInt = Number(_joined.substr(0, _didx)).toString();
+            _resFloat = _joined.substr(_didx);
+          }
+        }
+
+        _res = _resInt + _dot + _resFloat;
+
+        return _res;
       }
-      console.log(
-        "470: input after handleDot: input: ",
-        input,
-        "and after  String(parseFloat(input)",
-        String(parseFloat(input))
-      );
-      // final check
-      // return String(parseFloat(input));
-      return input;
+      return "0" + input.charAt(0);
     };
 
     const extractComputationParts = (input, opType) => {
@@ -537,8 +457,8 @@ class Calculator extends Component {
         extractions.op = opMatches[0][0];
       extractions.num = input.substr(0, mathMatches[0].index);
       // console.log("429: extractions:", extractions);
-      // if (dotMatches && dotMatches.length > 0) {
-      //   extractions.num = handleDot(extractions.num);
+      // if ( dotMatches.length > 0) {
+      //   extractions.num = handleDecimal(extractions.num);
       //   console.log("input after handle decimal", extractions.num);
       // }
       return extractions;
@@ -600,19 +520,25 @@ class Calculator extends Component {
     // console.log("554: all numbers and dots after here");
 
     // handle repeated zero
-    if (numRgxNnGr.test(_userInput) && Number(_userInput) === 0) {
+    if (
+      numRgxNnGr.test(_userInput) &&
+      Number(_userInput) === 0 &&
+      !dotRgxNnGr.test(_userInput)
+    ) {
       console.log("552: hit - 0 entered: _userInput: ", _userInput);
       // this.setState({ userInput: parseInt(Number(_userInput)) });
       // this.setState({ userInput: "0" });
       _userInput = "0";
+      return "0";
+      console.log("590:AFTER hit - 0 entered: _userInput: ", _userInput);
     }
 
     // handle decimal numbers
     if (dotRgxNnGr.test(_userInput)) {
       // console.log("559: dotRgx op found");
-      _userInput = handleDot(_userInput);
+      _userInput = handleDecimal(_userInput);
       console.log(
-        `i just came back from handledecimal, i was ${userInput} but now I'm ${_userInput}`
+        `i just came back from handleDecimal, i was ${userInput} but now I'm ${_userInput}`
       );
     }
 
@@ -821,11 +747,13 @@ class Calculator extends Component {
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
-        }`}>
+        }`}
+      >
         <div className="flex-row row">
           <div
             className={`calculator ${this.state.theme.toLowerCase()}`}
-            onClick={(e) => this.toggleSidebar(e)}>
+            onClick={(e) => this.toggleSidebar(e)}
+          >
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>
@@ -845,20 +773,23 @@ class Calculator extends Component {
                   </div>
                   <div className="row">
                     <div
-                      className={`col keyboard ${this.state.numberKeyboardClass}`}>
+                      className={`col keyboard ${this.state.numberKeyboardClass}`}
+                    >
                       <Keyboard
                         keys={this.numberKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                     </div>
                     <div
-                      className={`col keyboard ${this.state.functionKeyboardClass}`}>
+                      className={`col keyboard ${this.state.functionKeyboardClass}`}
+                    >
                       <Keyboard
                         keys={this.functionKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                       <div
-                        className={`row keyboard ${this.state.utilityKeyboardClass}`}>
+                        className={`row keyboard ${this.state.utilityKeyboardClass}`}
+                      >
                         <Keyboard
                           keys={this.utilityKeys}
                           passClickHandler={(e) => this.handleClick(e)}
@@ -872,9 +803,8 @@ class Calculator extends Component {
           </div>
           <Sidebar
             sidebarData={this.state.sidebarData}
-            dropdownData={this.packageDropdownData(
-              this.state.themesData
-            )}></Sidebar>
+            dropdownData={this.packageDropdownData(this.state.themesData)}
+          ></Sidebar>
         </div>
       </div>
     );
