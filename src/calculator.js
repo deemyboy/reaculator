@@ -367,9 +367,10 @@ class Calculator extends Component {
         extractedNums = extractedNums.slice(0, frstDtIdx);
       }
       // handle numbers less than 0
+      // .0 or 0. 0000.
       if (
         (frstNumIdx !== undefined && frstNumIdx > 0 && frstDtIdx === 0) ||
-        frstDtIdx === input.length
+        (frstDtIdx === input.length - 1 && Number(extractedNums) === 0)
       ) {
         return handleFltsLssThnZero(extractedNums, frstDtIdx, frstNumIdx);
       }
@@ -395,17 +396,25 @@ class Calculator extends Component {
       );
 
       if (
-        // input.charAt(0) === "0" &&
+        // 0. or 0000.
         (extractedNums.match(zeroRgx) &&
-          extractedNums.match(zeroRgx).index === 0) ||
-        (extractedNums.match(oneToNineRgx) &&
-          extractedNums.match(oneToNineRgx).index > 0)
+          Number(extractedNums) === 0 &&
+          frstDtIdx > 0) ||
+        // 0. exactly
+        (extractedNums.match(zeroRgx) &&
+          extractedNums.match(zeroRgx).index === 0 &&
+          extractedNums.length === 1 &&
+          frstDtIdx > 0) ||
+        // 098. or 000098.
+        (extractedNums.match(zeroRgx) &&
+          extractedNums.match(zeroRgx).index === 0 &&
+          extractedNums.match(oneToNineRgx) &&
+          extractedNums.match(oneToNineRgx).index > 0 &&
+          frstDtIdx > 0)
       ) {
         input = this.handleLeadingZero(input);
         console.log("input after return from handleLeadingZero", input);
       }
-
-      // if (Number(input.substr(1) === 0)) return "0." + input.substr(1);
       return "0" + dot + extractedNums.substr(frstDtIdx);
     };
 
