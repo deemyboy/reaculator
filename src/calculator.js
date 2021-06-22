@@ -53,14 +53,14 @@ class Calculator extends Component {
     title: "Calculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
-    mathOpRgx: /[+\-x\/ysr]/g,
-    utilOpRgx: /[acm=]/g,
-    dblMthOpRgx: /[+\-x\/y]/g,
-    snglMthOpRgx: /[sr]/g,
+    mathOpRgx: /([\+\-x\/ysr=])/gi,
+    utilOpRgx: /[acm]/gi,
+    dblMthOpRgx: /[+\-x\/y]/gi,
+    snglMthOpRgx: /[sr]/gi,
     dotRgxNnGr: /\./,
-    numRgxNnGr: /(\d+)/g,
-    mathOpRgxNnGr: /[+\-x\/ysr]/,
-    utilOpRgxNnGr: /[acm=]/,
+    numRgxNnGr: /(\d+)/,
+    mathOpRgxNnGr: /[\+\-x\/ysr=]/,
+    utilOpRgxNnGr: /[acm]/,
     dblMthOpRgxNnGr: /[+\-x\/y]/,
     snglMthOpRgxNnGr: /[sr]/,
     userInput: "",
@@ -273,6 +273,222 @@ class Calculator extends Component {
     this.setState({ userInput: _userInput }, this.parseUserInput);
   };
 
+  parseUserInput = () => {
+    const utilOpRgxNnGr = this.state.utilOpRgxNnGr;
+    const snglMthOpRgxNnGr = this.state.snglMthOpRgxNnGr;
+    const dblMthOpRgxNnGr = this.state.dblMthOpRgxNnGr;
+
+    const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
+    const numRgxNnGr = this.state.numRgxNnGr;
+    const dotRgxNnGr = this.state.dotRgxNnGr;
+    const mathOpRgx = this.state.mathOpRgx;
+    const numRgx = this.state.numRgx;
+    const dotRgx = this.state.dotRgx;
+
+    const num1 = this.state.num1;
+    const num2 = this.state.num2;
+    const op1 = this.state.op1;
+    const op2 = this.state.op2;
+    const dot = ".";
+
+    const { userInput } = this.state;
+
+    console.log(`338: ######### parseUserInput ${userInput} #########`);
+    let _userInput = userInput;
+
+    let dotMatchesNG = _userInput.match(dotRgxNnGr);
+    let mathMatchesNG = _userInput.match(mathOpRgxNnGr);
+    let greedyDotMatches = _userInput.match(dotRgx);
+    let greedyMathMatches = _userInput.match(mathOpRgx);
+    let dotMatches = [..._userInput.matchAll(dotRgx)];
+    let mathMatches = [..._userInput.matchAll(mathOpRgx)];
+    let numMatches = [..._userInput.matchAll(numRgx)];
+
+    const handleMathsOp = (input) => {
+      //
+    };
+
+    const handleNumber = (input) => {
+      //
+      console.log(`handleNumber input ${input}`);
+      // return;
+      let _input = input;
+
+      //removes leading 0000s
+      // also returns an integer as no decimal point detected
+      if (!dotRgxNnGr.test(input)) {
+        console.log("no dots");
+        return Number(_input).toString();
+      }
+
+      if (dotRgxNnGr.test(input)) {
+        _input = this.handleDecimal(input);
+        console.log("returned from handleDecimal _input: ", _input);
+        return;
+      }
+    };
+
+    // this.storeComputableParts(inputData);
+
+    if (
+      (numRgxNnGr.test(userInput) || dotRgxNnGr.test(userInput)) &&
+      !mathOpRgxNnGr.test(userInput)
+    ) {
+      _userInput = handleNumber(userInput);
+      console.log("_userInput on return from handleNumber: ", _userInput);
+    }
+    return;
+  };
+
+  handleDecimal = (input) => {
+    console.log("handleDecimal: ", input);
+
+    const numRgx = this.state.numRgx;
+    const dotRgx = this.state.dotRgx;
+    const dotRgxNnGr = this.state.dotRgxNnGr;
+    const numRgxNnGr = this.state.numRgxNnGr;
+    const frstDtIdx = input.match(dotRgxNnGr).index;
+    const numDots = input.match(dotRgx).length;
+    const oneToNineRgx = /[1-9]/;
+    const zeroRgx = /[0]/;
+    const dot = ".";
+
+    let frstNumIdx, numMatches, extractedNums;
+
+    const handleUnaryDots = () => {
+      console.log("handleUnaryDots");
+      return "0.";
+    };
+
+    const handlePerfectDecimal = (input) => {
+      console.log("handlePerfectDecimal");
+
+      if (parseInt(input.slice(0, frstDtIdx)) === 0) {
+        extractedNums = extractedNums.slice(0, frstDtIdx);
+      }
+      // handle numbers less than 0
+      if (
+        (frstNumIdx !== undefined && frstNumIdx > 0 && frstDtIdx === 0) ||
+        frstDtIdx === input.length
+      ) {
+        return handleFltsLssThnZero(extractedNums, frstDtIdx, frstNumIdx);
+      }
+
+      // handle numbers greater than 0
+      if (
+        frstNumIdx !== undefined &&
+        frstNumIdx === 0 &&
+        parseInt(input.slice(0, frstDtIdx)) !== 0
+      ) {
+        return handleFltsGrtrThnZero(extractedNums, frstDtIdx, frstNumIdx);
+      }
+    };
+
+    const handleFltsLssThnZero = (extractedNums, frstDtIdx, frstNumIdx) => {
+      console.log(
+        "handleFltsLssThnZero extractedNums",
+        extractedNums,
+        "frstDtIdx",
+        frstDtIdx,
+        "frstNumIdx",
+        frstNumIdx
+      );
+
+      if (
+        // input.charAt(0) === "0" &&
+        (extractedNums.match(zeroRgx) &&
+          extractedNums.match(zeroRgx).index === 0) ||
+        (extractedNums.match(oneToNineRgx) &&
+          extractedNums.match(oneToNineRgx).index > 0)
+      ) {
+        input = this.handleLeadingZero(input);
+        console.log("input after return from handleLeadingZero", input);
+      }
+
+      // if (Number(input.substr(1) === 0)) return "0." + input.substr(1);
+      return "0" + dot + extractedNums.substr(frstDtIdx);
+    };
+
+    const handleFltsGrtrThnZero = (extractedNums, frstDtIdx, frstNumIdx) => {
+      console.log(
+        "handleFltsGrtrThnZero extractedNums",
+        extractedNums,
+        "frstDtIdx",
+        frstDtIdx,
+        "frstNumIdx",
+        frstNumIdx
+      );
+      // if (Number(input.substr(1) === 0)) return "0." + input.substr(1);
+      return (
+        extractedNums.slice(frstNumIdx, frstDtIdx) +
+        dot +
+        extractedNums.slice(frstDtIdx)
+      );
+    };
+
+    const handleExtraDots = (input) => {
+      console.log("handleExtraDots: need to handle extra decimal points");
+
+      let zeroData;
+    };
+
+    // no numbers upto this point
+    // handle "." "...." entered
+    if (numDots === input.length) {
+      console.log(`handle only dots "." or "...." entered`);
+      return handleUnaryDots();
+    }
+
+    // numbers and dots
+
+    if (numRgxNnGr.test(input)) {
+      console.log(`numbers and dots entered`);
+      frstNumIdx = input.match(numRgxNnGr).index;
+      numMatches = input.match(numRgx);
+      extractedNums = numMatches.join("");
+
+      // single dot
+      // handle "913." or ".903" or "0093."
+      // or ".00093" or "0.34" entered
+      if (numDots === 1 && input.length > 1) {
+        return handlePerfectDecimal(input);
+      }
+
+      // handle more than 1 dot eg. "..90" or "9.0..0"
+      if (numDots > 1 && input.length > 1) {
+        console.log("MORE than 0 extractedNums", extractedNums);
+        return handleExtraDots(input);
+      }
+    }
+  };
+
+  handleLeadingZero = (input) => {
+    console.log("handleLeadingZero", input);
+    const oneToNineRgx = /[1-9]/;
+    const zeroRgx = /[0]/;
+    const dot = ".";
+    const numRgx = this.state.numRgx;
+    let zeroIdx, nonZeroIdx;
+    let numMatches = input.match(numRgx);
+    let extractedNums = numMatches.join("");
+
+    zeroIdx = input.match(zeroRgx).index;
+    if (oneToNineRgx.test(input)) {
+      nonZeroIdx = input.match(oneToNineRgx).index;
+    }
+    if (input.charAt(0) !== "0") {
+      return (
+        extractedNums.slice(0, zeroIdx) + dot + extractedNums.slice(zeroIdx)
+      );
+    } else {
+      return (
+        extractedNums.slice(0, nonZeroIdx) +
+        dot +
+        extractedNums.slice(nonZeroIdx)
+      );
+    }
+  };
+
   handleUtilityOperator = (inputData) => {
     const key = inputData.key;
     let resultData = { ...this.state.resultData };
@@ -315,276 +531,6 @@ class Calculator extends Component {
       }
     }
     // this.setState({ userInput: "" });
-  };
-
-  updateNumber = (num) => {
-    if (!this.state.num1) {
-      this.setState({ num1: num });
-    } else if (!this.state.num2) {
-      this.setState({ num2: num });
-    }
-  };
-
-  updateOperator = (op) => {
-    if (!this.state.op1) {
-      this.setState({ op1: op });
-    } else if (!this.state.op2) {
-      this.setState({ op2: op });
-    }
-  };
-
-  parseUserInput = () => {
-    console.log("338: ######### parseUserInput #########");
-    const utilOpRgxNnGr = this.state.utilOpRgxNnGr;
-    const snglMthOpRgxNnGr = this.state.snglMthOpRgxNnGr;
-    const dblMthOpRgxNnGr = this.state.dblMthOpRgxNnGr;
-
-    const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
-    const numRgxNnGr = this.state.numRgxNnGr;
-    const dotRgxNnGr = this.state.dotRgxNnGr;
-    const mathRgx = this.state.mathOpRgx;
-    const numRgx = this.state.numRgx;
-    const dotRgx = this.state.dotRgx;
-
-    const num1 = this.state.num1;
-    const num2 = this.state.num2;
-    const op1 = this.state.op1;
-    const op2 = this.state.op2;
-
-    const { userInput } = this.state;
-
-    let _userInput = userInput;
-
-    let dotMatches = [..._userInput.matchAll(dotRgx)];
-    let mathMatches = [..._userInput.matchAll(mathRgx)];
-    let numMatches = [..._userInput.matchAll(numRgx)];
-
-    const handleDecimal = (input) => {
-      console.log("358: handleDecimal input: ", input);
-
-      const _dot = ".";
-
-      if (numMatches.length > 0) {
-        /*
-          _didx  - dot index
-          _matches - array of regex matches for numbers 0-9
-          _joined - numbers extracted from _matches back into a string,
-          _res - final result,
-          _resInt - intger part of final result
-          _resFloat - decimal part
-          _firstNumIdx - index of first number found
-        */
-        let _matches = input.match(numRgx),
-          _joined = _matches.join(""),
-          _didx = 0,
-          _res,
-          _resInt = 0, // default
-          _resFloat,
-          _firstNumIdx = 0;
-
-        // first char is a .
-        if (input.charAt(0) === _dot) {
-          _firstNumIdx = input.search(numRgx);
-          _didx = input.search(numRgx) - 1;
-          _resInt = 0;
-          _resFloat = _joined;
-        }
-        // first char was a number
-        if (input.charAt(0) !== _dot) {
-          // repeated zeros
-          // if - only 0s eg. 0000
-          if (Number(_joined) === 0) {
-            _didx = input.lastIndexOf("0");
-            _resInt = 0;
-            _resFloat = "";
-          }
-          // else - different number after 0s eg 0009
-          else if (Number(_matches[0]) === 0) {
-            _didx = input.indexOf(_dot);
-            _resInt = 0;
-            _resFloat = _joined.substr(_didx);
-          } else {
-            _didx = input.indexOf(_dot);
-            // casting to Number and back to string removes lead 0s
-            // eg. 09090. -> 9090.
-            _resInt = Number(_joined.substr(0, _didx)).toString();
-            _resFloat = _joined.substr(_didx);
-          }
-        }
-
-        _res = _resInt + _dot + _resFloat;
-
-        return _res;
-      }
-      return "0" + input.charAt(0);
-    };
-
-    const extractComputationParts = (input, opType) => {
-      console.log(
-        "502: extractComputationParts: input:",
-        "input: ",
-        input,
-        "dotMatches: ",
-        dotMatches,
-        "numMatches: ",
-        numMatches,
-        "mathMatches: ",
-        mathMatches
-      );
-
-      let opMatches;
-      let extractions = {};
-      if (opType === "sngl")
-        opMatches = [...input.matchAll(this.state.snglMthOpRgx)];
-      if (opType === "dbl")
-        opMatches = [...input.matchAll(this.state.dblMthOpRgx)];
-      // console.log(
-      //   "466: input: ",
-      //   input,
-      //   "opMatches: ",
-      //   opMatches,
-      //   "numMatches: ",
-      //   numMatches
-      // );
-
-      if (numMatches.length > 0)
-        // console.log(
-        //   `422 extractComputationParts: opType: ${opType} num: ${numMatches[0][0]} op: ${opMatches[0][0]}`
-        // );
-
-        // console.log(input.substr(0, mathMatches[0].index));
-
-        extractions.op = opMatches[0][0];
-      extractions.num = input.substr(0, mathMatches[0].index);
-      // console.log("429: extractions:", extractions);
-      // if ( dotMatches.length > 0) {
-      //   extractions.num = handleDecimal(extractions.num);
-      //   console.log("input after handle decimal", extractions.num);
-      // }
-      return extractions;
-    };
-
-    const handleOperator = () => {
-      console.log("handleOperator hit mathMatches: ", mathMatches);
-      let _resultData = { ...this.state.resultData };
-      let op = mathMatches[mathMatches.length - 1][0];
-      let stateProp;
-
-      if (this.state.num1 && !this.state.num2) {
-        stateProp = "op1";
-      }
-      if (this.state.num1 && this.state.num2) {
-        stateProp = "op2";
-      }
-
-      console.log("handleOperator hit, op set was ", op, "into ", stateProp);
-      this.setState({ [stateProp]: op, userInput: "" });
-      return;
-    };
-
-    // handle a maths op change after num1 was set
-    if (
-      mathOpRgxNnGr.test(_userInput) &&
-      !numRgxNnGr.test(_userInput) &&
-      !dotRgxNnGr.test(_userInput)
-    ) {
-      console.log("543: hit - math function: _userInput: ", _userInput);
-
-      handleOperator();
-      // clear the user input
-
-      return;
-    }
-
-    // handle a maths op being repeatedly entered first
-
-    if (
-      mathOpRgxNnGr.test(_userInput) &&
-      !numRgxNnGr.test(_userInput) &&
-      !dotRgxNnGr.test(_userInput) &&
-      !this.resultData.resultValue
-    ) {
-      console.log(
-        "543: hit - math function: _userInput: ",
-        _userInput,
-        " - removing"
-      );
-      // clear the user input
-      this.setState({ userInput: "" });
-
-      return;
-    }
-
-    // all numbers after here
-
-    // console.log("554: all numbers and dots after here");
-
-    // handle repeated zero
-    if (
-      numRgxNnGr.test(_userInput) &&
-      Number(_userInput) === 0 &&
-      !dotRgxNnGr.test(_userInput)
-    ) {
-      console.log("552: hit - 0 entered: _userInput: ", _userInput);
-      // this.setState({ userInput: parseInt(Number(_userInput)) });
-      // this.setState({ userInput: "0" });
-      _userInput = "0";
-      return "0";
-      console.log("590:AFTER hit - 0 entered: _userInput: ", _userInput);
-    }
-
-    // handle decimal numbers
-    if (dotRgxNnGr.test(_userInput)) {
-      // console.log("559: dotRgx op found");
-      _userInput = handleDecimal(_userInput);
-      console.log(
-        `i just came back from handleDecimal, i was ${userInput} but now I'm ${_userInput}`
-      );
-    }
-
-    // console.log(
-    //   "570: checking if an operator has been hit: _userInput currently: ",
-    //   _userInput
-    // );
-
-    // console.log(
-    //   "570: (snglMthOpRgxNnGr.test(_userInput)): ",
-    //   snglMthOpRgxNnGr.test(_userInput)
-    // );
-
-    if (snglMthOpRgxNnGr.test(_userInput)) {
-      console.log("580: snglMthOpRgxNnGr op found");
-      let _compParts = extractComputationParts(_userInput, "sngl");
-      console.log("582", _compParts, _compParts.num, _compParts.op);
-      this.updateOperator(_compParts.op);
-      this.updateNumber(_compParts.num);
-      this.setState({ userInput: "" });
-      return;
-    }
-
-    // console.log(
-    //   "585: (dblMthOpRgxNnGr.test(_userInput)): ",
-    //   dblMthOpRgxNnGr.test(_userInput)
-    // );
-
-    if (dblMthOpRgxNnGr.test(_userInput)) {
-      // console.log("590: dblMthOpRgxNnGr op found");
-      let _compParts = extractComputationParts(_userInput, "dbl");
-      // console.log("597", _compParts, _compParts.num, _compParts.op);
-      this.updateOperator(_compParts.op);
-      this.updateNumber(_compParts.num);
-      this.setState({ userInput: "" });
-      return;
-    }
-    // console.log(
-    //   "599: returning at end of parseUserInput _userInput: ",
-    //   _userInput,
-    //   "typeof _userInput: ",
-    //   typeof _userInput
-    // );
-    return;
-
-    // this.storeComputableParts(inputData);
   };
 
   setCalculationData = (data) => {
