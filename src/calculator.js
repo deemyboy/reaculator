@@ -347,7 +347,7 @@ class Calculator extends Component {
     const dotRgx = this.state.dotRgx;
     const dotRgxNnGr = this.state.dotRgxNnGr;
     const numRgxNnGr = this.state.numRgxNnGr;
-    const frstDtIdx = input.match(dotRgxNnGr).index;
+    const dtIdx = input.match(dotRgxNnGr).index;
     const numDots = input.match(dotRgx).length;
     const oneToNineRgx = /[1-9]/;
     const zeroRgx = /[0]/;
@@ -363,75 +363,75 @@ class Calculator extends Component {
     const handlePerfectDecimal = (input) => {
       console.log("handlePerfectDecimal");
 
-      if (parseInt(input.slice(0, frstDtIdx)) === 0) {
-        extractedNums = extractedNums.slice(0, frstDtIdx);
+      if (parseInt(input.slice(0, dtIdx)) === 0) {
+        extractedNums = extractedNums.slice(0, dtIdx);
       }
       // handle numbers less than 0
       // .0 or 0. 0000.
       if (
-        (frstNumIdx !== undefined && frstNumIdx > 0 && frstDtIdx === 0) ||
-        (frstDtIdx === input.length - 1 && Number(extractedNums) === 0)
+        (frstNumIdx !== undefined && frstNumIdx > 0 && dtIdx === 0) ||
+        (dtIdx === input.length - 1 && Number(extractedNums) === 0) ||
+        Number(extractedNums.slice(dtIdx)) === 0
       ) {
-        return handleFltsLssThnZero(extractedNums, frstDtIdx, frstNumIdx);
+        return handleFltsLssThnZero(extractedNums, dtIdx, frstNumIdx);
       }
 
       // handle numbers greater than 0
       if (
         frstNumIdx !== undefined &&
         frstNumIdx === 0 &&
-        parseInt(input.slice(0, frstDtIdx)) !== 0
+        parseInt(input.slice(0, dtIdx)) !== 0
       ) {
-        return handleFltsGrtrThnZero(extractedNums, frstDtIdx, frstNumIdx);
+        return handleFltsGrtrThnZero(extractedNums, dtIdx, frstNumIdx);
       }
     };
 
-    const handleFltsLssThnZero = (extractedNums, frstDtIdx, frstNumIdx) => {
+    const handleFltsLssThnZero = (extractedNums, dtIdx, frstNumIdx) => {
       console.log(
         "handleFltsLssThnZero extractedNums",
         extractedNums,
-        "frstDtIdx",
-        frstDtIdx,
+        "dtIdx",
+        dtIdx,
         "frstNumIdx",
         frstNumIdx
       );
 
       if (
         // 0. or 0000.
-        (extractedNums.match(zeroRgx) &&
-          Number(extractedNums) === 0 &&
-          frstDtIdx > 0) ||
-        // 0. exactly
-        (extractedNums.match(zeroRgx) &&
-          extractedNums.match(zeroRgx).index === 0 &&
-          extractedNums.length === 1 &&
-          frstDtIdx > 0) ||
-        // 098. or 000098.
-        (extractedNums.match(zeroRgx) &&
-          extractedNums.match(zeroRgx).index === 0 &&
-          extractedNums.match(oneToNineRgx) &&
-          extractedNums.match(oneToNineRgx).index > 0 &&
-          frstDtIdx > 0)
+        extractedNums.match(zeroRgx) &&
+        Number(extractedNums) === 0 &&
+        dtIdx > 0
       ) {
-        input = this.handleLeadingZero(input);
+        // ||
+        // 0. exactly
+        //   (extractedNums.match(zeroRgx) &&
+        //     extractedNums.match(zeroRgx).index === 0 &&
+        //     extractedNums.length === 1 &&
+        //     dtIdx > 0)
+        // )
+        return this.handleLeadingZero(input);
         console.log("input after return from handleLeadingZero", input);
       }
-      return "0" + dot + extractedNums.substr(frstDtIdx);
+      // if (Number(extractedNums) !== 0) {
+      // return "0" + dot + extractedNums.substr(dtIdx);
+      // }
+      return "0" + dot + extractedNums.substr(dtIdx);
     };
 
-    const handleFltsGrtrThnZero = (extractedNums, frstDtIdx, frstNumIdx) => {
+    const handleFltsGrtrThnZero = (extractedNums, dtIdx, frstNumIdx) => {
       console.log(
         "handleFltsGrtrThnZero extractedNums",
         extractedNums,
-        "frstDtIdx",
-        frstDtIdx,
+        "dtIdx",
+        dtIdx,
         "frstNumIdx",
         frstNumIdx
       );
       // if (Number(input.substr(1) === 0)) return "0." + input.substr(1);
       return (
-        extractedNums.slice(frstNumIdx, frstDtIdx) +
+        extractedNums.slice(frstNumIdx, dtIdx) +
         dot +
-        extractedNums.slice(frstDtIdx)
+        extractedNums.slice(dtIdx)
       );
     };
 
@@ -473,15 +473,22 @@ class Calculator extends Component {
 
   handleLeadingZero = (input) => {
     console.log("handleLeadingZero", input);
+    const dotRgxNnGr = this.state.dotRgxNnGr;
     const oneToNineRgx = /[1-9]/;
     const zeroRgx = /[0]/;
     const dot = ".";
+    const dtIdx = input.match(dotRgxNnGr).index;
     const numRgx = this.state.numRgx;
     let zeroIdx, nonZeroIdx;
     let numMatches = input.match(numRgx);
     let extractedNums = numMatches.join("");
 
-    zeroIdx = input.match(zeroRgx).index;
+    if (Number(extractedNums) === 0) {
+      zeroIdx = extractedNums.length;
+      return "0" + input.slice(extractedNums.length);
+    } else {
+      zeroIdx = input.match(zeroRgx).index;
+    }
     if (oneToNineRgx.test(input)) {
       nonZeroIdx = input.match(oneToNineRgx).index;
     }
@@ -702,13 +709,11 @@ class Calculator extends Component {
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
-        }`}
-      >
+        }`}>
         <div className="flex-row row">
           <div
             className={`calculator ${this.state.theme.toLowerCase()}`}
-            onClick={(e) => this.toggleSidebar(e)}
-          >
+            onClick={(e) => this.toggleSidebar(e)}>
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>
@@ -728,23 +733,20 @@ class Calculator extends Component {
                   </div>
                   <div className="row">
                     <div
-                      className={`col keyboard ${this.state.numberKeyboardClass}`}
-                    >
+                      className={`col keyboard ${this.state.numberKeyboardClass}`}>
                       <Keyboard
                         keys={this.numberKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                     </div>
                     <div
-                      className={`col keyboard ${this.state.functionKeyboardClass}`}
-                    >
+                      className={`col keyboard ${this.state.functionKeyboardClass}`}>
                       <Keyboard
                         keys={this.functionKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                       <div
-                        className={`row keyboard ${this.state.utilityKeyboardClass}`}
-                      >
+                        className={`row keyboard ${this.state.utilityKeyboardClass}`}>
                         <Keyboard
                           keys={this.utilityKeys}
                           passClickHandler={(e) => this.handleClick(e)}
@@ -758,8 +760,9 @@ class Calculator extends Component {
           </div>
           <Sidebar
             sidebarData={this.state.sidebarData}
-            dropdownData={this.packageDropdownData(this.state.themesData)}
-          ></Sidebar>
+            dropdownData={this.packageDropdownData(
+              this.state.themesData
+            )}></Sidebar>
         </div>
       </div>
     );
