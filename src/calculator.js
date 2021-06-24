@@ -213,7 +213,8 @@ class Calculator extends Component {
     // console.log("207: handleKeyPress");
     const allowedKeys = [
       16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83, 88,
-      89, 187, 189, 190, 191,
+      89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110,
+      111, 187, 189, 190, 191,
     ];
     if (!e.repeat) {
       if (allowedKeys.includes(e.keyCode)) {
