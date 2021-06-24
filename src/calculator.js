@@ -384,8 +384,17 @@ class Calculator extends Component {
       return "0.";
     };
 
-    const handlePerfectDecimal = (input) => {
-      console.log("handlePerfectDecimal");
+    const handleSingleDotFound = (input) => {
+      console.log(
+        "handleSingleDotFound input:",
+        input,
+        "extractedNums",
+        extractedNums,
+        "frstNumIdx",
+        frstNumIdx,
+        "dtIdx",
+        dtIdx
+      );
 
       if (parseInt(input.slice(0, dtIdx)) === 0) {
         extractedNums = extractedNums.slice(0, dtIdx);
@@ -393,7 +402,9 @@ class Calculator extends Component {
       // handle numbers less than 0
       // .0 or 0. 0000.
       if (
+        // .xyz or .908 or .0
         (frstNumIdx !== undefined && frstNumIdx > 0 && dtIdx === 0) ||
+        //
         (dtIdx === input.length - 1 && Number(extractedNums) === 0) ||
         Number(extractedNums.slice(dtIdx)) === 0
       ) {
@@ -484,7 +495,7 @@ class Calculator extends Component {
       // handle "913." or ".903" or "0093."
       // or ".00093" or "0.34" entered
       if (numDots === 1 && input.length > 1) {
-        return handlePerfectDecimal(input);
+        return handleSingleDotFound(input);
       }
 
       // handle more than 1 dot eg. "..90" or "9.0..0"
