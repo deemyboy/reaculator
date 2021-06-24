@@ -318,15 +318,17 @@ class Calculator extends Component {
       //removes leading 0000s
       // also returns an integer as no decimal point detected
       if (!dotRgxNnGr.test(input)) {
-        console.log("no dots");
-        return Number(_input).toString();
+        console.log("integer"), input;
+        _input = this.handleInteger(input);
+        console.log("returned from handleInteger: _input", _input);
       }
 
       if (dotRgxNnGr.test(input)) {
+        console.log("decimal"), input;
         _input = this.handleDecimal(input);
         console.log("returned from handleDecimal _input: ", _input);
-        return;
       }
+      return _input;
     };
 
     // this.storeComputableParts(inputData);
@@ -339,6 +341,27 @@ class Calculator extends Component {
       console.log("_userInput on return from handleNumber: ", _userInput);
     }
     return;
+  };
+
+  handleInteger = (input) => {
+    //
+    console.log(`handleInteger input ${input}`);
+    // return;
+    let _input;
+
+    //removes leading 0000s
+    // also returns an integer as no decimal point detected
+    if (Number(input) === 0) {
+      console.log("ONLY 0 or 0000s"), input;
+      return "0";
+    }
+
+    if (input.charAt(0) === "0") {
+      console.log("not only 0 or 0000s"), input;
+      return this.handleLeadingZero(input);
+    }
+
+    return input;
   };
 
   handleDecimal = (input) => {
@@ -374,7 +397,7 @@ class Calculator extends Component {
         (dtIdx === input.length - 1 && Number(extractedNums) === 0) ||
         Number(extractedNums.slice(dtIdx)) === 0
       ) {
-        return handleFltsLssThnZero(extractedNums, dtIdx, frstNumIdx);
+        return handleFltsLssThnOne(extractedNums, dtIdx, frstNumIdx);
       }
 
       // handle numbers greater than 0
@@ -383,13 +406,13 @@ class Calculator extends Component {
         frstNumIdx === 0 &&
         parseInt(input.slice(0, dtIdx)) !== 0
       ) {
-        return handleFltsGrtrThnZero(extractedNums, dtIdx, frstNumIdx);
+        return handleFltsGrtrThnOne(extractedNums, dtIdx, frstNumIdx);
       }
     };
 
-    const handleFltsLssThnZero = (extractedNums, dtIdx, frstNumIdx) => {
+    const handleFltsLssThnOne = (extractedNums, dtIdx, frstNumIdx) => {
       console.log(
-        "handleFltsLssThnZero extractedNums",
+        "handleFltsLssThnOne extractedNums",
         extractedNums,
         "dtIdx",
         dtIdx,
@@ -419,9 +442,9 @@ class Calculator extends Component {
       return "0" + dot + extractedNums.substr(dtIdx);
     };
 
-    const handleFltsGrtrThnZero = (extractedNums, dtIdx, frstNumIdx) => {
+    const handleFltsGrtrThnOne = (extractedNums, dtIdx, frstNumIdx) => {
       console.log(
-        "handleFltsGrtrThnZero extractedNums",
+        "handleFltsGrtrThnOne extractedNums",
         extractedNums,
         "dtIdx",
         dtIdx,
@@ -474,36 +497,49 @@ class Calculator extends Component {
 
   handleLeadingZero = (input) => {
     console.log("handleLeadingZero", input);
-    const dotRgxNnGr = this.state.dotRgxNnGr;
-    const oneToNineRgx = /[1-9]/;
-    const zeroRgx = /[0]/;
-    const dot = ".";
-    const dtIdx = input.match(dotRgxNnGr).index;
+    const oneToNineRgx = /[1-9]/g;
+    const oneToNineRgxNGr = /[1-9]/;
+    const zeroRgxNGr = /[0]/;
+    const zeroRgx = /[0]/g;
     const numRgx = this.state.numRgx;
-    let zeroIdx, nonZeroIdx;
+    let zeroIdx,
+      lastZeroIdx,
+      nonZeroIdx,
+      oneToNineMatches,
+      extractedNonZeroDigits;
     let numMatches = input.match(numRgx);
-    let extractedNums = numMatches.join("");
 
-    if (Number(extractedNums) === 0) {
-      zeroIdx = extractedNums.length;
-      return "0" + input.slice(extractedNums.length);
-    } else {
-      zeroIdx = input.match(zeroRgx).index;
+    if (oneToNineRgxNGr.test(input)) {
+      nonZeroIdx = input.match(oneToNineRgxNGr).index;
+      oneToNineMatches = input.match(oneToNineRgx);
+      extractedNonZeroDigits = oneToNineMatches.join("");
     }
-    if (oneToNineRgx.test(input)) {
-      nonZeroIdx = input.match(oneToNineRgx).index;
-    }
-    if (input.charAt(0) !== "0") {
-      return (
-        extractedNums.slice(0, zeroIdx) + dot + extractedNums.slice(zeroIdx)
-      );
-    } else {
-      return (
-        extractedNums.slice(0, nonZeroIdx) +
-        dot +
-        extractedNums.slice(nonZeroIdx)
-      );
-    }
+
+    zeroIdx = input.match(zeroRgx)[0].index;
+
+    /**
+     * @input.matchAll
+     *  - only matchAll gives an index for all matches
+     * to get the last match index:
+     *    1. get and array of all 0 matches
+     *       - the last 0 will be the last array element at index: array[array.length -1]
+     *    2. use the "index" value of last array element to determine last index of 0
+     */
+    lastZeroIdx = [...input.matchAll(zeroRgx)][nonZeroIdx - 1].index;
+
+    console.log(
+      "numMatches",
+      numMatches,
+      "extractedNonZeroDigits",
+      extractedNonZeroDigits,
+      "zeroIdx",
+      zeroIdx,
+      "lastZeroIdx",
+      lastZeroIdx,
+      "nonZeroIdx",
+      nonZeroIdx
+    );
+    return input.slice(nonZeroIdx);
   };
 
   handleUtilityOperator = (inputData) => {
@@ -710,11 +746,13 @@ class Calculator extends Component {
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
-        }`}>
+        }`}
+      >
         <div className="flex-row row">
           <div
             className={`calculator ${this.state.theme.toLowerCase()}`}
-            onClick={(e) => this.toggleSidebar(e)}>
+            onClick={(e) => this.toggleSidebar(e)}
+          >
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>
@@ -734,20 +772,23 @@ class Calculator extends Component {
                   </div>
                   <div className="row">
                     <div
-                      className={`col keyboard ${this.state.numberKeyboardClass}`}>
+                      className={`col keyboard ${this.state.numberKeyboardClass}`}
+                    >
                       <Keyboard
                         keys={this.numberKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                     </div>
                     <div
-                      className={`col keyboard ${this.state.functionKeyboardClass}`}>
+                      className={`col keyboard ${this.state.functionKeyboardClass}`}
+                    >
                       <Keyboard
                         keys={this.functionKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                       <div
-                        className={`row keyboard ${this.state.utilityKeyboardClass}`}>
+                        className={`row keyboard ${this.state.utilityKeyboardClass}`}
+                      >
                         <Keyboard
                           keys={this.utilityKeys}
                           passClickHandler={(e) => this.handleClick(e)}
@@ -761,9 +802,8 @@ class Calculator extends Component {
           </div>
           <Sidebar
             sidebarData={this.state.sidebarData}
-            dropdownData={this.packageDropdownData(
-              this.state.themesData
-            )}></Sidebar>
+            dropdownData={this.packageDropdownData(this.state.themesData)}
+          ></Sidebar>
         </div>
       </div>
     );
