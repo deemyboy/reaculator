@@ -317,10 +317,9 @@ class Calculator extends Component {
 
       //removes leading 0000s
       // also returns an integer as no decimal point detected
-      if (!dotRgxNnGr.test(input)) {
-        console.log("integer"), input;
-        _input = this.handleInteger(input);
-        console.log("returned from handleInteger: _input", _input);
+      if (!dotRgxNnGr.test(input) && input.charAt(0) === "0") {
+        _input = this.handleLeadingZero(input);
+        console.log("returned from handleLeadingZero: _input", _input);
       }
 
       if (dotRgxNnGr.test(input)) {
@@ -377,79 +376,42 @@ class Calculator extends Component {
     const zeroRgx = /[0]/;
     const dot = ".";
 
-    let frstNumIdx, numMatches, extractedNums, int, flt;
+    let frstNumIdx, numMatches, extractedNums, int, flt, _input;
 
-    const handleUnaryDots = () => {
-      console.log("handleUnaryDots");
-      return "0.";
-    };
+    if (numRgxNnGr.test(input)) {
+      extractedNums = input.match(numRgx).join("");
+    }
 
-    const handleSingleDotFound = (input) => {
-      console.log(
-        "handleSingleDotFound input:",
-        input,
-        "extractedNums",
-        extractedNums,
-        "frstNumIdx",
-        frstNumIdx,
-        "dtIdx",
-        dtIdx
-      );
-      // handle numbers less than 1
-
-      // int part cast to number === 0
-      // 0. or 0000.
-      if (Number(input.slice(0, dtIdx)) === 0) {
-        extractedNums = extractedNums.slice(0, dtIdx); // 0 or 0000
+    const handleProperFraction = (integer, float) => {
+      console.log("integer", integer, "float", float);
+      if (integer.charAt(0) === "0") {
+        integer = this.handleLeadingZero(integer);
       }
-
-      // .0 or 0. 0000.
       if (
-        // .xyz or .908 or .0
-        input.charAt(0) === dot ||
-        // 0. or 0000.
-        Number(extractedNums) === 0 ||
-        // 0.098
-        Number(extractedNums.slice(1, dtIdx)) === 0
+        // .0 or .0000
+        (integer === "" && float !== "") ||
+        // 0.023 or 0000.023
+        (Number(integer) === 0 && float !== "")
       ) {
-        return handleProperFraction(extractedNums, dtIdx, frstNumIdx);
+        return "0." + float;
       }
-
-      // handle numbers equal or greater than 1
-      if (
-        // there are numbers
-        frstNumIdx !== undefined &&
-        // begins with a number not a dot
-        frstNumIdx === 0 &&
-        // the first number of the int part is not 0 ie. a decimal with an integer part
-        Number(input.slice(0, dtIdx)) !== 0
-      ) {
-        return handleMixedNumber(extractedNums, dtIdx, frstNumIdx);
-      }
-    };
-
-    const handleProperFraction = (float) => {
-      console.log("float", float);
       if (
         // 0. or 0000.
-        Number(extractedNums) === 0
+        Number(int) === 0 &&
+        float === ""
       ) {
         return "0.";
       }
-      // if (Number(extractedNums) !== 0) {
-      // return "0" + dot + extractedNums.substr(dtIdx);
-      // }
+
       return "0" + dot + extractedNums.substr(dtIdx);
     };
 
     const handleMixedNumber = (integer, float) => {
       console.log("integer", integer, "float", float);
-      // if (Number(input.substr(1) === 0)) return "0." + input.substr(1);
-      return (
-        extractedNums.slice(frstNumIdx, dtIdx) +
-        dot +
-        extractedNums.slice(dtIdx)
-      );
+      if (integer.charAt(0) === "0") {
+        integer = this.handleLeadingZero(integer);
+      }
+      return integer + dot + float;
     };
 
     const handleExtraDots = (input) => {
@@ -462,7 +424,11 @@ class Calculator extends Component {
     // handle "." "...." entered
     if (numDots === input.length) {
       console.log(`handle only dots "." or "...." entered`);
-      return handleUnaryDots();
+      return "0.";
+    }
+
+    if (numDots > 1) {
+      _input = handleExtraDots();
     }
 
     // numbers and dots
@@ -473,34 +439,19 @@ class Calculator extends Component {
     console.log(typeof int, typeof flt);
     console.log(int === "", flt === "");
 
-    if (int === "" || (Number(int) === 0 && flt !== "")) {
+    if (
+      int === "" ||
+      (Number(int) === 0 && flt !== "") ||
+      input.charAt(input.length - 1) === dot
+    ) {
       console.log("we've got a proper decimal");
-      handleProperFraction(flt);
+      _input = handleProperFraction(int, flt);
     }
     if (int !== "" && Number(int) !== 0) {
       console.log("we've got a mixed");
-      handleMixedNumber(int, flt);
+      _input = handleMixedNumber(int, flt);
     }
-
-    if (numRgxNnGr.test(input)) {
-      console.log(`numbers and dots entered`);
-      frstNumIdx = input.match(numRgxNnGr).index;
-      numMatches = input.match(numRgx);
-      extractedNums = numMatches.join("");
-
-      // single dot
-      // handle "913." or ".903" or "0093."
-      // or ".00093" or "0.34" entered
-      if (numDots === 1 && input.length > 1) {
-        return handleSingleDotFound(input);
-      }
-
-      // handle more than 1 dot eg. "..90" or "9.0..0"
-      if (numDots > 1 && input.length > 1) {
-        console.log("MORE than 0 extractedNums", extractedNums);
-        return handleExtraDots(input);
-      }
-    }
+    return _input;
   };
 
   handleLeadingZero = (input) => {
@@ -510,11 +461,7 @@ class Calculator extends Component {
     const zeroRgxNGr = /[0]/;
     const zeroRgx = /[0]/g;
     const numRgx = this.state.numRgx;
-    let zeroIdx,
-      lastZeroIdx,
-      nonZeroIdx,
-      oneToNineMatches,
-      extractedNonZeroDigits;
+    let lastZeroIdx, nonZeroIdx, oneToNineMatches, extractedNonZeroDigits;
     let numMatches = input.match(numRgx);
 
     if (oneToNineRgxNGr.test(input)) {
@@ -525,8 +472,6 @@ class Calculator extends Component {
       // all zeros
       return "0";
     }
-
-    zeroIdx = input.match(zeroRgx)[0].index;
 
     /**
      * @input.matchAll
@@ -543,8 +488,6 @@ class Calculator extends Component {
       numMatches,
       "extractedNonZeroDigits",
       extractedNonZeroDigits,
-      "zeroIdx",
-      zeroIdx,
       "lastZeroIdx",
       lastZeroIdx,
       "nonZeroIdx",
