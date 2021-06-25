@@ -377,7 +377,7 @@ class Calculator extends Component {
     const zeroRgx = /[0]/;
     const dot = ".";
 
-    let frstNumIdx, numMatches, extractedNums;
+    let frstNumIdx, numMatches, extractedNums, int, flt;
 
     const handleUnaryDots = () => {
       console.log("handleUnaryDots");
@@ -395,57 +395,46 @@ class Calculator extends Component {
         "dtIdx",
         dtIdx
       );
+      // handle numbers less than 1
 
-      if (parseInt(input.slice(0, dtIdx)) === 0) {
-        extractedNums = extractedNums.slice(0, dtIdx);
+      // int part cast to number === 0
+      // 0. or 0000.
+      if (Number(input.slice(0, dtIdx)) === 0) {
+        extractedNums = extractedNums.slice(0, dtIdx); // 0 or 0000
       }
-      // handle numbers less than 0
+
       // .0 or 0. 0000.
       if (
         // .xyz or .908 or .0
-        (frstNumIdx !== undefined && frstNumIdx > 0 && dtIdx === 0) ||
-        //
-        (dtIdx === input.length - 1 && Number(extractedNums) === 0) ||
-        Number(extractedNums.slice(dtIdx)) === 0
+        input.charAt(0) === dot ||
+        // 0. or 0000.
+        Number(extractedNums) === 0 ||
+        // 0.098
+        Number(extractedNums.slice(1, dtIdx)) === 0
       ) {
-        return handleFltsLssThnOne(extractedNums, dtIdx, frstNumIdx);
+        return handleProperFraction(extractedNums, dtIdx, frstNumIdx);
       }
 
-      // handle numbers greater than 0
+      // handle numbers equal or greater than 1
       if (
+        // there are numbers
         frstNumIdx !== undefined &&
+        // begins with a number not a dot
         frstNumIdx === 0 &&
-        parseInt(input.slice(0, dtIdx)) !== 0
+        // the first number of the int part is not 0 ie. a decimal with an integer part
+        Number(input.slice(0, dtIdx)) !== 0
       ) {
-        return handleFltsGrtrThnOne(extractedNums, dtIdx, frstNumIdx);
+        return handleMixedNumber(extractedNums, dtIdx, frstNumIdx);
       }
     };
 
-    const handleFltsLssThnOne = (extractedNums, dtIdx, frstNumIdx) => {
-      console.log(
-        "handleFltsLssThnOne extractedNums",
-        extractedNums,
-        "dtIdx",
-        dtIdx,
-        "frstNumIdx",
-        frstNumIdx
-      );
-
+    const handleProperFraction = (float) => {
+      console.log("float", float);
       if (
         // 0. or 0000.
-        extractedNums.match(zeroRgx) &&
-        Number(extractedNums) === 0 &&
-        dtIdx > 0
+        Number(extractedNums) === 0
       ) {
-        // ||
-        // 0. exactly
-        //   (extractedNums.match(zeroRgx) &&
-        //     extractedNums.match(zeroRgx).index === 0 &&
-        //     extractedNums.length === 1 &&
-        //     dtIdx > 0)
-        // )
-        return this.handleLeadingZero(input);
-        console.log("input after return from handleLeadingZero", input);
+        return "0.";
       }
       // if (Number(extractedNums) !== 0) {
       // return "0" + dot + extractedNums.substr(dtIdx);
@@ -453,15 +442,8 @@ class Calculator extends Component {
       return "0" + dot + extractedNums.substr(dtIdx);
     };
 
-    const handleFltsGrtrThnOne = (extractedNums, dtIdx, frstNumIdx) => {
-      console.log(
-        "handleFltsGrtrThnOne extractedNums",
-        extractedNums,
-        "dtIdx",
-        dtIdx,
-        "frstNumIdx",
-        frstNumIdx
-      );
+    const handleMixedNumber = (integer, float) => {
+      console.log("integer", integer, "float", float);
       // if (Number(input.substr(1) === 0)) return "0." + input.substr(1);
       return (
         extractedNums.slice(frstNumIdx, dtIdx) +
@@ -484,6 +466,21 @@ class Calculator extends Component {
     }
 
     // numbers and dots
+    int = input.slice(0, dtIdx);
+    flt = input.slice(dtIdx + 1);
+
+    console.log("int", int, "|", flt, "flt");
+    console.log(typeof int, typeof flt);
+    console.log(int === "", flt === "");
+
+    if (int === "" || (Number(int) === 0 && flt !== "")) {
+      console.log("we've got a proper decimal");
+      handleProperFraction(flt);
+    }
+    if (int !== "" && Number(int) !== 0) {
+      console.log("we've got a mixed");
+      handleMixedNumber(int, flt);
+    }
 
     if (numRgxNnGr.test(input)) {
       console.log(`numbers and dots entered`);
@@ -524,6 +521,9 @@ class Calculator extends Component {
       nonZeroIdx = input.match(oneToNineRgxNGr).index;
       oneToNineMatches = input.match(oneToNineRgx);
       extractedNonZeroDigits = oneToNineMatches.join("");
+    } else if (zeroRgxNGr.test(input) && !oneToNineRgxNGr.test(input)) {
+      // all zeros
+      return "0";
     }
 
     zeroIdx = input.match(zeroRgx)[0].index;
