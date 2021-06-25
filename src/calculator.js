@@ -194,7 +194,6 @@ class Calculator extends Component {
   handleClick = (e) => {
     // console.log("189: handleClick");
     e.target.blur();
-    // console.log(e);
     const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
       .filter((k) => {
@@ -206,16 +205,16 @@ class Calculator extends Component {
       shiftKey: false,
     };
     this.handleUserInput(clickData);
-    // this.routeInput(clickData);
   };
 
   handleKeyPress = (e) => {
-    // console.log("207: handleKeyPress");
+    // console.log("207: handleKeyPress", e);
     const allowedKeys = [
-      16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83, 88,
-      89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110,
-      111, 187, 189, 190, 191,
+      13, 16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83,
+      88, 89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109,
+      110, 111, 187, 189, 190, 191,
     ];
+
     if (!e.repeat) {
       if (allowedKeys.includes(e.keyCode)) {
         let pressData = {
@@ -223,9 +222,16 @@ class Calculator extends Component {
           ctrlKey: e.ctrlKey,
           shiftKey: e.shiftKey,
         };
+        // quick hack to get enter key to do = function
+        if (e.key === "Enter") {
+          pressData.key = "=";
+        }
+
+        if (e.key === "*") {
+          pressData.key = "x";
+        }
         this.handleActiveClass(e);
         this.handleUserInput(pressData);
-        // this.routeInput(pressData);
       }
     }
   };
@@ -235,7 +241,7 @@ class Calculator extends Component {
   };
 
   handleUserInput = (inputData) => {
-    // console.log("229: handleUserInput inputData: ", inputData);
+    console.log("229: handleUserInput inputData: ", inputData);
     const resultData = { ...this.state.resultData };
     if (resultData.resultCount > 0) {
       this.clearResultCount();
@@ -244,12 +250,12 @@ class Calculator extends Component {
     let _userInput;
     let { userInput } = this.state;
     const key = inputData.key;
+
     const shiftKey = inputData.shiftKey;
     const ctrlKey = inputData.ctrlKey;
     _userInput = userInput;
 
-    // handle shift & ctrl keys to stop Control and Shift
-    // being inserted into userInput
+    // handle shift & ctrl keys to stop Control and Shift being inserted into userInput
     if (ctrlKey && key !== "") {
       return;
     }
@@ -305,62 +311,52 @@ class Calculator extends Component {
     let mathMatches = [..._userInput.matchAll(mathOpRgx)];
     let numMatches = [..._userInput.matchAll(numRgx)];
 
-    const handleMathsOp = (input) => {
-      //
-    };
-
-    const handleNumber = (input) => {
-      //
-      console.log(`handleNumber input ${input}`);
-      // return;
-      let _input = input;
-
-      //removes leading 0000s
-      // also returns an integer as no decimal point detected
-      if (!dotRgxNnGr.test(input) && input.charAt(0) === "0") {
-        _input = this.handleLeadingZero(input);
-        console.log("returned from handleLeadingZero: _input", _input);
-      }
-
-      if (dotRgxNnGr.test(input)) {
-        console.log("decimal"), input;
-        _input = this.handleDecimal(input);
-        console.log("returned from handleDecimal _input: ", _input);
-      }
-      return _input;
-    };
-
+    
     // this.storeComputableParts(inputData);
 
+    if(mathOpRgxNnGr.test(userInput) {
+
+    }
+    
     if (
       (numRgxNnGr.test(userInput) || dotRgxNnGr.test(userInput)) &&
       !mathOpRgxNnGr.test(userInput)
     ) {
-      _userInput = handleNumber(userInput);
+      _userInput = this.handleNumber(userInput);
       console.log("_userInput on return from handleNumber: ", _userInput);
     }
-    return;
+    this.storeNumber(_userInput);
   };
 
-  handleInteger = (input) => {
+  handleMathsOp = (input) => {
     //
-    console.log(`handleInteger input ${input}`);
-    // return;
-    let _input;
+  };
 
-    //removes leading 0000s
+  handleNumber = (input) => {
+    //
+    console.log(`handleNumber input ${input}`);
+    const dotRgxNnGr = this.state.dotRgxNnGr;
+
+    const num1 = this.state.num1;
+    const num2 = this.state.num2;
+    const op1 = this.state.op1;
+    const op2 = this.state.op2;
+    const dot = ".";
+    let _input = input;
+
+    // removes leading 0000s
     // also returns an integer as no decimal point detected
-    if (Number(input) === 0) {
-      console.log("ONLY 0 or 0000s"), input;
-      return "0";
+    if (!dotRgxNnGr.test(input) && input.charAt(0) === "0") {
+      _input = this.handleLeadingZero(input);
+      console.log("returned from handleLeadingZero: _input", _input);
     }
 
-    if (input.charAt(0) === "0") {
-      console.log("not only 0 or 0000s"), input;
-      return this.handleLeadingZero(input);
+    if (dotRgxNnGr.test(input)) {
+      console.log("decimal"), input;
+      _input = this.handleDecimal(input);
+      console.log("returned from handleDecimal _input: ", _input);
     }
-
-    return input;
+    return _input;
   };
 
   handleDecimal = (input) => {
@@ -407,7 +403,6 @@ class Calculator extends Component {
     };
 
     const handleMixedNumber = (integer, float) => {
-      console.log("integer", integer, "float", float);
       if (integer.charAt(0) === "0") {
         integer = this.handleLeadingZero(integer);
       }
@@ -435,20 +430,14 @@ class Calculator extends Component {
     int = input.slice(0, dtIdx);
     flt = input.slice(dtIdx + 1);
 
-    console.log("int", int, "|", flt, "flt");
-    console.log(typeof int, typeof flt);
-    console.log(int === "", flt === "");
-
     if (
       int === "" ||
       (Number(int) === 0 && flt !== "") ||
       input.charAt(input.length - 1) === dot
     ) {
-      console.log("we've got a proper decimal");
       _input = handleProperFraction(int, flt);
     }
     if (int !== "" && Number(int) !== 0) {
-      console.log("we've got a mixed");
       _input = handleMixedNumber(int, flt);
     }
     return _input;
@@ -460,14 +449,11 @@ class Calculator extends Component {
     const oneToNineRgxNGr = /[1-9]/;
     const zeroRgxNGr = /[0]/;
     const zeroRgx = /[0]/g;
-    const numRgx = this.state.numRgx;
-    let lastZeroIdx, nonZeroIdx, oneToNineMatches, extractedNonZeroDigits;
-    let numMatches = input.match(numRgx);
+    let lastZeroIdx, nonZeroIdx, oneToNineMatches;
 
     if (oneToNineRgxNGr.test(input)) {
       nonZeroIdx = input.match(oneToNineRgxNGr).index;
       oneToNineMatches = input.match(oneToNineRgx);
-      extractedNonZeroDigits = oneToNineMatches.join("");
     } else if (zeroRgxNGr.test(input) && !oneToNineRgxNGr.test(input)) {
       // all zeros
       return "0";
@@ -483,23 +469,29 @@ class Calculator extends Component {
      */
     lastZeroIdx = [...input.matchAll(zeroRgx)][nonZeroIdx - 1].index;
 
-    console.log(
-      "numMatches",
-      numMatches,
-      "extractedNonZeroDigits",
-      extractedNonZeroDigits,
-      "lastZeroIdx",
-      lastZeroIdx,
-      "nonZeroIdx",
-      nonZeroIdx
-    );
     return input.slice(nonZeroIdx);
+  };
+
+  storeNumber = (number) => {
+    //
+    console.log(`storeNumber number ${number}`);
+    const { num1 } = this.state;
+    const { num2 } = this.state;
+    const { op1 } = this.state;
+    const { op2 } = this.state;
+
+    console.log("num1", num1, "num2", num2);
+    if (!op1) {
+      this.setState({ num1: number });
+    } else {
+      this.setState({ num2: number });
+    }
   };
 
   handleUtilityOperator = (inputData) => {
     const key = inputData.key;
     let resultData = { ...this.state.resultData };
-    console.log("268: handleUtilityOperator inputData:", inputData);
+    console.log("466: handleUtilityOperator inputData:", inputData);
 
     if (key === "a") {
       console.log("ac pressed");
