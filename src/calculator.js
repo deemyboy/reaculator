@@ -7,6 +7,7 @@ import Cookies from "universal-cookie";
 import { numberKeys } from "./keys";
 import { functionKeys } from "./keys";
 import { utilityKeys } from "./keys";
+import { allowedKeys } from "./keys";
 
 class Calculator extends Component {
   displayRef = React.createRef();
@@ -18,6 +19,7 @@ class Calculator extends Component {
     this.numberKeys = numberKeys;
     this.functionKeys = functionKeys;
     this.utilityKeys = utilityKeys;
+    this.allowedKeys = allowedKeys;
   }
 
   state = {
@@ -72,8 +74,6 @@ class Calculator extends Component {
 
   componentDidUpdate(nextProps, nextState) {
     let resultData = { ...this.state.resultData };
-    let clearUpData = {};
-    resultData.callback = this.postResultClearUp;
     if (
       this.state.num1 &&
       this.state.num1 !== "" &&
@@ -84,11 +84,15 @@ class Calculator extends Component {
     ) {
       resultData.resultValue = this.doSnglOpMath();
       resultData.resultCount++;
-      clearUpData.opType = "sngl";
-      clearUpData.callback = this.postResultClearUp;
-      resultData.callbackData = clearUpData;
-
       this.setResultData(resultData);
+      console.log(
+        "after setResultData sngl",
+        this.state.resultData,
+        nextState.resultData
+      );
+      if (this.state.resultData !== nextState.resultData) {
+        this.postResultClearUp("sngl");
+      }
     }
 
     if (
@@ -109,10 +113,16 @@ class Calculator extends Component {
         resultData.resultValue = "err";
       }
       resultData.resultCount++;
-      clearUpData.opType = "dbl";
-      clearUpData.callback = this.postResultClearUp;
-      resultData.callbackData = clearUpData;
       this.setResultData(resultData);
+
+      console.log(
+        "after setResultData dbl",
+        this.state.resultData,
+        nextState.resultData
+      );
+      if (this.state.resultData !== nextState.resultData) {
+        this.postResultClearUp("dbl");
+      }
     }
   }
 
@@ -209,14 +219,9 @@ class Calculator extends Component {
 
   handleKeyPress = (e) => {
     // console.log("207: handleKeyPress", e);
-    const allowedKeys = [
-      13, 16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83,
-      88, 89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109,
-      110, 111, 187, 189, 190, 191,
-    ];
 
     if (!e.repeat) {
-      if (allowedKeys.includes(e.keyCode)) {
+      if (this.allowedKeys.includes(e.keyCode)) {
         let pressData = {
           key: e.key,
           ctrlKey: e.ctrlKey,
@@ -281,35 +286,14 @@ class Calculator extends Component {
   };
 
   parseUserInput = () => {
-    // const utilOpRgxNnGr = this.state.utilOpRgxNnGr;
-    // const snglMthOpRgxNnGr = this.state.snglMthOpRgxNnGr;
-    // const dblMthOpRgxNnGr = this.state.dblMthOpRgxNnGr;
-
     const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
     const numRgxNnGr = this.state.numRgxNnGr;
     const dotRgxNnGr = this.state.dotRgxNnGr;
-    // const mathOpRgx = this.state.mathOpRgx;
-    // const numRgx = this.state.numRgx;
-    // const dotRgx = this.state.dotRgx;
-
-    // const num1 = this.state.num1;
-    // const num2 = this.state.num2;
-    // const op1 = this.state.op1;
-    // const op2 = this.state.op2;
-    // const dot = ".";
 
     const { userInput } = this.state;
 
     console.log(`338: ######### parseUserInput ${userInput} #########`);
     let _userInput = userInput;
-
-    // let dotMatchesNG = _userInput.match(dotRgxNnGr);
-    // let mathMatchesNG = _userInput.match(mathOpRgxNnGr);
-    // let greedyDotMatches = _userInput.match(dotRgx);
-    // let greedyMathMatches = _userInput.match(mathOpRgx);
-    // let dotMatches = [..._userInput.matchAll(dotRgx)];
-    // let mathMatches = [..._userInput.matchAll(mathOpRgx)];
-    // let numMatches = [..._userInput.matchAll(numRgx)];
 
     if (mathOpRgxNnGr.test(userInput)) {
       this.handleMathsOp(_userInput);
@@ -333,9 +317,13 @@ class Calculator extends Component {
     let op = input.match(mathOpRgxNnGr)[0];
 
     if (!num2) {
-      this.setState({ op1: op, userInput: "" });
+      this.setState({ op1: op, userInput: "" }, () =>
+        this.setCalculationValue()
+      );
     } else {
-      this.setState({ op2: op, userInput: "" });
+      this.setState({ op2: op, userInput: "" }, () =>
+        this.setCalculationValue()
+      );
     }
   };
 
@@ -492,25 +480,21 @@ class Calculator extends Component {
   };
 
   storeNumber = (number) => {
-    //
     console.log(`storeNumber number ${number}`);
-    // const { num1 } = this.state;
-    // const { num2 } = this.state;
     const { op1 } = this.state;
-    // const { op2 } = this.state;
-
-    // console.log("num1", num1, "num2", num2);
+    let numKey;
     if (!op1) {
-      this.setState({ num1: number });
+      numKey = "num1";
     } else {
-      this.setState({ num2: number });
+      numKey = "num2";
     }
+    this.setState({ [numKey]: number }, () => this.setCalculationValue());
   };
 
   handleUtilityOperator = (inputData) => {
     const key = inputData.key;
     let resultData = { ...this.state.resultData };
-    console.log("466: handleUtilityOperator inputData:", inputData);
+    console.log("490: handleUtilityOperator inputData:", inputData);
 
     if (key === "a") {
       console.log("ac pressed");
@@ -527,7 +511,7 @@ class Calculator extends Component {
           userInput: "",
         },
         () => {
-          // this.setCalculationData();
+          this.setCalculationValue();
         }
       );
     }
@@ -548,43 +532,56 @@ class Calculator extends Component {
         this.updateOperator("=");
       }
     }
-    // this.setState({ userInput: "" });
   };
 
-  setCalculationData = (data) => {
-    const computableParts = { ...this.state.computableParts };
-    console.log("611: setCalculationData computableParts: ", computableParts);
+  setCalculationValue = () => {
     let calcDataObj = {};
-    calcDataObj.calculationClass = this.state.calculationData.calculationClass; // default class
-    const num1 = computableParts.num1;
-    const num2 = computableParts.num2;
-    const op1 = computableParts.op1;
-    const op2 = computableParts.op2;
+    const num1 = this.state.num1;
+    const num2 = this.state.num2;
+    const op1 = this.state.op1;
+    const op2 = this.state.op2;
 
     let calculationData = { ...this.state.calculationData };
     console.log(
-      "621: setCalculationData calcDataObj: ",
+      "621: setCalculationValue calcDataObj: ",
       calcDataObj,
       "calculationData: ",
       calculationData
     );
 
-    if (data) {
-      if (data.calculationClass) {
-        calcDataObj.calculationClass = data.calculationClass;
-      }
+    const setCalculationDisplayChar = (op) => {
+      return this.functionKeys
+        .filter((k) => k.value === op)
+        .filter((k) => {
+          if ("calculationDisplayChar" in k) return k;
+        });
+    };
+
+    let _op1;
+
+    if (op1) {
+      _op1 =
+        setCalculationDisplayChar(op1).length > 0
+          ? setCalculationDisplayChar(op1)[0].calculationDisplayChar
+          : op1;
     }
 
-    // // default
-    // if (!op1) {
-    //   calcDataObj.calculationValue = num1;
-    // }
-    // calcDataObj.calculationValue = num2;
+    if (calcDataObj.calculationValue === undefined) {
+      calcDataObj.calculationValue = "";
+    }
+    calcDataObj.calculationValue += num1 ? num1 : "";
+    if (!_op1) {
+      calcDataObj.calculationValue += op1 ? op1 : "";
+    } else {
+      calcDataObj.calculationValue += _op1;
+    }
+    calcDataObj.calculationValue += num2 ? num2 : "";
 
-    calcDataObj.calculationValue = num1 + op1 + num2 + op2;
+    if (calculationData.calculationClass) {
+      calcDataObj.calculationClass = calculationData.calculationClass;
+    }
 
     calculationData = calcDataObj;
-    console.log("642: ", calculationData);
     this.setState({ calculationData });
   };
 
@@ -649,56 +646,49 @@ class Calculator extends Component {
 
   setResultData = (data) => {
     console.log("711: setResultData data: ", data);
-    let callback, callbackData;
     let resultData = { ...this.state.resultData };
 
     if (data.resultClass) {
       resultData.resultClass = data.resultClass;
     }
-    if (data.callback) {
-      callback = data.callback;
-      callbackData = data.callbackData;
-    }
-    console.log("770: callback: ", callback);
-    delete data.callback;
-    delete data.callbackData;
     resultData.resultValue = data.resultValue;
     resultData.resultCount = data.resultCount;
-    if (!callback) {
-      this.setState({ resultData });
-    } else {
-      this.setState({ resultData }, () => callback(callbackData));
-    }
+    this.setState({ resultData });
   };
 
   clearResultCount = () => {
     let resultData = { ...this.state.resultData };
     resultData.resultCount = 0;
-    console.log("741: clearResultCount", resultData);
+    // console.log("741: clearResultCount", resultData);
     this.setState({ resultData });
   };
 
-  postResultClearUp = (clearUpData) => {
-    console.log("790: postResultClearUp clearUpData: ", clearUpData);
+  postResultClearUp = (operationType) => {
     let _num1, _num2, _op1, _op2;
     let resultData = { ...this.state.resultData };
-    delete resultData.callback;
-    delete resultData.callbackData;
+    console.log(
+      "668: postResultClearUp operationType: ",
+      operationType,
+      "current resultData",
+      resultData
+    );
 
     resultData.resultCount = 0;
 
-    if (clearUpData.opType === "sngl") {
+    if (operationType === "sngl") {
       // op1 = "";
       // _num1 = "";
 
-      this.setState({ op1: "", userInput: "", num1: "", resultData });
-    } else if (clearUpData.opType === "dbl") {
+      console.log("676 s: postResultClearUp resultData: ", resultData);
+      this.setState({ op1: "", num1: "", resultData });
+    } else if (operationType === "dbl") {
       //
       _op2 = this.state.op2;
+      console.log("681 d: postResultClearUp resultData: ", resultData);
+
       this.setState({
         op1: _op2,
         op2: "",
-        // userInput: ,
         num1: resultData.resultValue,
         num2: "",
         resultData,
