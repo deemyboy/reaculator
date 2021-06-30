@@ -55,13 +55,13 @@ class Calculator extends Component {
     title: "Calculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
-    mathOpRgx: /([\+\-x\/ysr=])/gi,
+    mathOpRgx: /([+\-x\/ysr=])/gi,
     utilOpRgx: /[acm]/gi,
     dblMthOpRgx: /[+\-x\/y]/gi,
     snglMthOpRgx: /[sr]/gi,
     dotRgxNnGr: /\./,
     numRgxNnGr: /(\d+)/,
-    mathOpRgxNnGr: /[\+\-x\/ysr=]/,
+    mathOpRgxNnGr: /[+\-x\/ysr=]/,
     utilOpRgxNnGr: /[acm]/,
     dblMthOpRgxNnGr: /[+\-x\/y]/,
     snglMthOpRgxNnGr: /[sr]/,
@@ -74,41 +74,65 @@ class Calculator extends Component {
 
   componentDidUpdate(nextProps, nextState) {
     let resultData = { ...this.state.resultData };
+
     if (
-      this.state.num1 &&
-      this.state.num1 !== "" &&
-      this.state.op1 &&
-      this.state.op1 !== "" &&
-      this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+      this.state.mathOpRgxNnGr.test(this.state.op1) &&
       resultData.resultCount < 1
     ) {
-      resultData.resultValue = this.doSnglOpMath().toString();
-      resultData.resultCount++;
-      resultData.mathOpType = "sngl";
-
-      this.setResultData(resultData);
+      if (
+        (this.state.num1 &&
+          this.state.num1 !== "" &&
+          this.state.op1 &&
+          this.state.op1 !== "") ||
+        (this.state.num1 &&
+          this.state.num1 !== "" &&
+          this.state.op1 &&
+          this.state.op1 !== "" &&
+          this.state.num2 &&
+          this.state.num2 !== "" &&
+          this.state.op2 &&
+          this.state.op2 !== "")
+      ) {
+        var res = {};
+        var rv = this.doMath(),
+          resultValue = rv !== undefined ? rv : undefined;
+        console.log(rv);
+        if (resultValue) resultData.resultValue = resultValue;
+        if (resultData.resultValue !== undefined) {
+          if (isNaN(resultData.resultValue)) {
+            resultData.resultValue = "err";
+          }
+          if (this.state.snglMthOpRgxNnGr.test(this.state.op1)) {
+            resultData.mathOpType = "sngl";
+          } else {
+            resultData.mathOpType = "dbl";
+          }
+          resultData.resultCount++;
+          this.setResultData(resultData);
+        }
+      }
     }
 
+    console.log(
+      "113",
+      this.state.num1 !== nextState.num1 ||
+        this.state.num2 !== nextState.num2 ||
+        this.state.op1 !== nextState.op1
+    );
     if (
-      this.state.num1 &&
-      this.state.num1 !== "" &&
-      this.state.op1 &&
-      this.state.op1 !== "" &&
-      this.state.num2 &&
-      this.state.num2 !== "" &&
-      this.state.op2 &&
-      this.state.op2 !== "" &&
-      (this.state.dblMthOpRgxNnGr.test(this.state.op1) ||
-        this.state.op2 === "=") &&
-      resultData.resultCount < 1
+      this.state.num1 !== nextState.num1 ||
+      this.state.num2 !== nextState.num2 ||
+      this.state.op1 !== nextState.op1
     ) {
-      resultData.resultValue = this.doDblOpMath().toString();
-      if (isNaN(resultData.resultValue)) {
-        resultData.resultValue = "err";
+      this.setCalculationValue();
+    }
+    if (resultData.resultCount === 1) {
+      console.log("128", resultData);
+      if (this.state.op2 && this.state.op2 !== "") {
+        this.postResultClearUp("dbl");
+      } else {
+        this.postResultClearUp("sngl");
       }
-      resultData.resultCount++;
-      resultData.mathOpType = "dbl";
-      this.setResultData(resultData);
     }
   }
 
@@ -232,11 +256,8 @@ class Calculator extends Component {
   };
 
   handleUserInput = (inputData) => {
-    console.log("229: handleUserInput inputData: ", inputData);
+    // console.log("229: handleUserInput inputData: ", inputData);
     const resultData = { ...this.state.resultData };
-    if (resultData.resultCount > 0) {
-      this.clearResultCount();
-    }
 
     let _userInput;
     let { userInput } = this.state;
@@ -303,13 +324,9 @@ class Calculator extends Component {
     let op = input.match(mathOpRgxNnGr)[0];
 
     if (!num2) {
-      this.setState({ op1: op, userInput: "" }, () =>
-        this.setCalculationValue()
-      );
+      this.setState({ op1: op, userInput: "" });
     } else {
-      this.setState({ op2: op, userInput: "" }, () =>
-        this.setCalculationValue()
-      );
+      this.setState({ op2: op, userInput: "" });
     }
   };
 
@@ -474,7 +491,7 @@ class Calculator extends Component {
     } else {
       numKey = "num2";
     }
-    this.setState({ [numKey]: number }, () => this.setCalculationValue());
+    this.setState({ [numKey]: number });
   };
 
   handleUtilityOperator = (inputData) => {
@@ -487,19 +504,14 @@ class Calculator extends Component {
       resultData.resultValue = "0";
       resultData.resultCount = "0";
 
-      this.setState(
-        {
-          num1: "",
-          num2: "",
-          op1: "",
-          op2: "",
-          resultData,
-          userInput: "",
-        },
-        () => {
-          this.setCalculationValue();
-        }
-      );
+      this.setState({
+        num1: "",
+        num2: "",
+        op1: "",
+        op2: "",
+        resultData,
+        userInput: "",
+      });
     }
     if (key === "c") {
       let { userInput } = this.state;
@@ -571,42 +583,28 @@ class Calculator extends Component {
     this.setState({ calculationData });
   };
 
-  doSnglOpMath = () => {
+  doMath = () => {
     let resultData = { ...this.state.resultData };
-    const op = this.state.op1;
-    const num = Number(this.state.num1);
-    console.log("650  : doSnglOpMath: op", op);
-
-    if (!op || op == "") return;
-
-    switch (op) {
-      case "r": {
-        console.log("656: r");
-        return Math.sqrt(num);
-      }
-      case "s": {
-        console.log("660: s");
-        if (num === 0) return 1;
-        return Math.pow(num, 2);
-      }
-      default: {
-        break;
-      }
-    }
-    resultData.resultCount += 1;
-    return resultData;
-  };
-
-  doDblOpMath = () => {
-    console.log("673: double maths op: ", this.state.op1);
-    let resultData = { ...this.state.resultData };
-
     const op = this.state.op1;
     const num1 = Number(this.state.num1);
     const num2 = Number(this.state.num2);
+    console.log("674  : doMath: op", op);
 
-    console.log(`680: doDblOpMath op: ${op} num1: ${num1} num2: ${num2}`);
+    if (!op || op == "") return;
+
+    if (this.state.dblMthOpRgxNnGr.test(op) && (!num2 || num2 === "")) {
+      return;
+    }
     switch (op) {
+      case "r": {
+        console.log("589: r");
+        return Math.sqrt(num1);
+      }
+      case "s": {
+        console.log("593: s");
+        if (num1 === 0) return 1;
+        return Math.pow(num1, 2);
+      }
       case "+": {
         return num1 + num2;
       }
@@ -631,47 +629,66 @@ class Calculator extends Component {
   };
 
   setResultData = (data) => {
-    console.log("711: setResultData data: ", data);
-    let resultData = { ...this.state.resultData };
+    console.log("639: setResultData data: ", data);
+    let resultData = { ...this.state.resultData },
+      _resultData = {};
 
     if (data.resultClass) {
-      resultData.resultClass = data.resultClass;
+      _resultData.resultClass = data.resultClass;
+    } else {
+      _resultData.resultClass = resultData.resultClass;
     }
-    resultData.resultValue = data.resultValue;
-    resultData.resultCount = data.resultCount;
-    this.setState({ resultData }, this.postResultClearUp(data.mathOpType));
-  };
-
-  clearResultCount = () => {
-    let resultData = { ...this.state.resultData };
-    resultData.resultCount = 0;
-    // console.log("741: clearResultCount", resultData);
-    this.setState({ resultData });
+    if (data.resultValue) {
+      _resultData.resultValue = data.resultValue;
+    } else {
+      _resultData.resultValue = resultData.resultValue;
+    }
+    if (data.resultCount) {
+      _resultData.resultCount = data.resultCount;
+    } else {
+      _resultData.resultCount = resultData.resultCount;
+    }
+    this.setState({ resultData: _resultData });
   };
 
   postResultClearUp = (operationType) => {
-    let _num1, _num2, _op1, _op2;
+    let _num1,
+      _num2,
+      _op1,
+      _op2,
+      _resultData = {};
     let resultData = { ...this.state.resultData };
     console.log(
-      "656: postResultClearUp operationType: ",
+      "666: postResultClearUp operationType: ",
       operationType,
-      "current resultData",
+      "current resultData b4 rescnt 0",
       resultData
     );
 
-    resultData.resultCount = 0;
+    if (resultData.resultClass) {
+      _resultData.resultClass = resultData.resultClass;
+    }
+    if (resultData.resultValue) {
+      _resultData.resultValue = resultData.resultValue;
+    }
+    _resultData.resultCount = 0;
+    // _resultData.resultCount = 0;
+    console.log(
+      "674: after rescnt 0 - current resultData",
+      resultData,
+      "_resultData",
+      _resultData
+    );
+    // return;
 
     if (operationType === "sngl") {
-      // op1 = "";
-      // _num1 = "";
-
-      console.log("668 s: postResultClearUp resultData: ", resultData);
-      this.setState({ op1: "", num1: "", resultData });
+      console.log("677 s: resultData: ", resultData);
+      this.setResultData({ resultData: _resultData });
     } else if (operationType === "dbl") {
       // save the 2nd operator to the 1st operatr
       // before blanking the 2nd operator
       _op1 = this.state.op2;
-      console.log("674 d: postResultClearUp resultData: ", resultData);
+      console.log("683 d: resultData: ", resultData);
 
       this.setState(
         {
@@ -679,9 +696,8 @@ class Calculator extends Component {
           op2: "",
           num1: resultData.resultValue,
           num2: "",
-          resultData,
-        }
-        // () => this.setCalculationValue()
+        },
+        this.setResultData({ resultData })
       );
     }
   };
