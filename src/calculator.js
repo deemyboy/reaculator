@@ -74,51 +74,73 @@ class Calculator extends Component {
 
   componentDidUpdate(nextProps, nextState) {
     let resultData = { ...this.state.resultData };
-
-    if (
-      this.state.mathOpRgxNnGr.test(this.state.op1) &&
-      resultData.resultCount < 1
-    ) {
-      if (
-        (this.state.num1 &&
-          this.state.num1 !== "" &&
-          this.state.op1 &&
-          this.state.op1 !== "") ||
-        (this.state.num1 &&
-          this.state.num1 !== "" &&
-          this.state.op1 &&
-          this.state.op1 !== "" &&
-          this.state.num2 &&
-          this.state.num2 !== "" &&
-          this.state.op2 &&
-          this.state.op2 !== "")
-      ) {
-        var res = {};
-        var rv = this.doMath(),
-          resultValue = rv !== undefined ? rv : undefined;
-        console.log(rv);
-        if (resultValue) resultData.resultValue = resultValue;
-        if (resultData.resultValue !== undefined) {
-          if (isNaN(resultData.resultValue)) {
-            resultData.resultValue = "err";
-          }
-          if (this.state.snglMthOpRgxNnGr.test(this.state.op1)) {
-            resultData.mathOpType = "sngl";
-          } else {
-            resultData.mathOpType = "dbl";
-          }
-          resultData.resultCount++;
-          this.setResultData(resultData);
-        }
-      }
-    }
+    // console.log("78 (resultData.resultCount === 1)",(resultData.resultCount === 1));
+    console.log(
+      "single maths t/f: ",
+      this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1
+    );
 
     console.log(
-      "113",
-      this.state.num1 !== nextState.num1 ||
-        this.state.num2 !== nextState.num2 ||
-        this.state.op1 !== nextState.op1
+      "double maths t/f: ",
+      this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.num2 !== undefined &&
+        this.state.num2 !== "" &&
+        this.state.op2 !== undefined &&
+        this.state.op2 !== "" &&
+        this.state.dblMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1
     );
+    if (
+      (this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1) ||
+      (this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.num2 !== undefined &&
+        this.state.num2 !== "" &&
+        this.state.op2 !== undefined &&
+        this.state.op2 !== "" &&
+        this.state.dblMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1) ||
+      (this.state.snglMthOpRgxNnGr.test(this.state.prevOp) &&
+        this.state.mathOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1)
+    ) {
+      var res = {};
+      var rv = this.doMath(),
+        resultValue = rv !== undefined ? rv : undefined;
+      console.log("135 resultValue", resultValue, "rv", rv);
+      if (resultValue) resultData.resultValue = resultValue;
+      if (resultData.resultValue !== undefined) {
+        if (isNaN(resultData.resultValue)) {
+          resultData.resultValue = "err";
+        }
+        resultData.resultCount++;
+        // console.log("116 resultData", resultData);
+        this.setResultData(resultData);
+      }
+    }
+    // }
+
+    // console.log(
+    //   "140",
+    //   this.state.num1 !== nextState.num1 ||
+    //     this.state.num2 !== nextState.num2 ||
+    //     this.state.op1 !== nextState.op1
+    // );
     if (
       this.state.num1 !== nextState.num1 ||
       this.state.num2 !== nextState.num2 ||
@@ -126,13 +148,19 @@ class Calculator extends Component {
     ) {
       this.setCalculationValue();
     }
+
+    // console.log(`resultData.resultCount === 1 ${resultData.resultCount === 1}`);
     if (resultData.resultCount === 1) {
-      console.log("128", resultData);
-      if (this.state.op2 && this.state.op2 !== "") {
-        this.postResultClearUp("dbl");
-      } else {
-        this.postResultClearUp("sngl");
-      }
+      // console.log("137", resultData);
+      this.postResultClearUp();
+    }
+
+    // console.log("142", this.state.userInput !== nextState.userInput);
+    if (
+      this.state.userInput !== nextState.userInput &&
+      this.state.userInput !== ""
+    ) {
+      this.parseUserInput();
     }
   }
 
@@ -242,6 +270,7 @@ class Calculator extends Component {
           pressData.key = "=";
         }
 
+        // quick hack to get * key to do x function
         if (e.key === "*") {
           pressData.key = "x";
         }
@@ -252,11 +281,11 @@ class Calculator extends Component {
   };
 
   handleActiveClass = (e) => {
-    // console.log("228: handleActiveClass adding and removing active class");
+    // console.log("265: handleActiveClass adding and removing active class");
   };
 
   handleUserInput = (inputData) => {
-    // console.log("229: handleUserInput inputData: ", inputData);
+    // console.log("269: handleUserInput inputData: ", inputData);
     const resultData = { ...this.state.resultData };
 
     let _userInput;
@@ -279,17 +308,17 @@ class Calculator extends Component {
     }
 
     if (this.state.utilOpRgxNnGr.test(key)) {
-      console.log(
-        "256: utilOpRgxNnGr.test(key): ",
-        this.state.utilOpRgxNnGr.test(key),
-        _userInput
-      );
+      // console.log(
+      //   "256: utilOpRgxNnGr.test(key): ",
+      //   this.state.utilOpRgxNnGr.test(key),
+      //   _userInput
+      // );
 
-      this.handleUtilityOperator(_userInput);
+      this.handleUtilityOperator(key);
       return;
     }
 
-    this.setState({ userInput: _userInput }, this.parseUserInput);
+    this.setState({ userInput: _userInput });
   };
 
   parseUserInput = () => {
@@ -300,28 +329,51 @@ class Calculator extends Component {
     const { userInput } = this.state;
 
     console.log(`338: ######### parseUserInput ${userInput} #########`);
-    let _userInput = userInput;
+    // let _userInput;
 
-    if (mathOpRgxNnGr.test(userInput)) {
-      this.handleMathsOp(_userInput);
+    // handle operator before number
+    if (
+      mathOpRgxNnGr.test(userInput) &&
+      (!this.state.num1 || this.state.num1 === "")
+    ) {
+      this.setState({ userInput: "" });
+      return;
+    } else if (
+      mathOpRgxNnGr.test(userInput) &&
+      (this.state.num1 || this.state.num1 !== "")
+    ) {
+      this.handleMathsOp(userInput.match(mathOpRgxNnGr)[0]);
     } else if (
       (numRgxNnGr.test(userInput) || dotRgxNnGr.test(userInput)) &&
       !mathOpRgxNnGr.test(userInput)
     ) {
-      _userInput = this.handleNumber(userInput);
-      console.log("_userInput on return from handleNumber: ", _userInput);
-      this.storeNumber(_userInput);
+      // _userInput = this.handleNumber(userInput);
+      // this.storeNumber(this.handleNumber(userInput));
+      this.handleNumber(userInput);
     }
   };
 
-  handleMathsOp = (input) => {
-    // console.log(`338:handleMathsOp ${input}`);
-
+  handleMathsOp = (op) => {
+    console.log(`357:handleMathsOp ${op} `);
+    let resultData = { ...this.state.resultData };
     const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
+
+    // handle operator
+    // if (!this.state.num1 || this.state.num1 === "") {
+    //   this.setState({ userInput: "" });
+    //   return;
+    // }
 
     const { num2 } = this.state;
 
-    let op = input.match(mathOpRgxNnGr)[0];
+    if (
+      this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+      resultData.resultValue &&
+      resultData.resultValue !== "" &&
+      resultData.resultValue !== undefined
+    ) {
+      this.setState({ prevOp: this.state.op1 });
+    }
 
     if (!num2) {
       this.setState({ op1: op, userInput: "" });
@@ -332,7 +384,7 @@ class Calculator extends Component {
 
   handleNumber = (input) => {
     //
-    console.log(`handleNumber input ${input}`);
+    // console.log(`handleNumber input ${input}`);
     const dotRgxNnGr = this.state.dotRgxNnGr;
 
     const num1 = this.state.num1;
@@ -346,19 +398,28 @@ class Calculator extends Component {
     // also returns an integer as no decimal point detected
     if (!dotRgxNnGr.test(input) && input.charAt(0) === "0") {
       _input = this.handleLeadingZero(input);
-      console.log("returned from handleLeadingZero: _input", _input);
+      // console.log("returned from handleLeadingZero: _input", _input);
     }
 
     if (dotRgxNnGr.test(input)) {
-      console.log("decimal"), input;
+      // console.log("decimal"), input;
       _input = this.handleDecimal(input);
-      console.log("returned from handleDecimal _input: ", _input);
+      // console.log("returned from handleDecimal _input: ", _input);
     }
-    return _input;
+
+    // return _input;
+    // console.log(`final number to store ${_input}`);
+    let numKey;
+    if (!op1) {
+      numKey = "num1";
+    } else {
+      numKey = "num2";
+    }
+    this.setState({ [numKey]: _input });
   };
 
   handleDecimal = (input) => {
-    console.log("handleDecimal: ", input);
+    // console.log("handleDecimal: ", input);
 
     const numRgx = this.state.numRgx;
     const dotRgx = this.state.dotRgx;
@@ -482,27 +543,26 @@ class Calculator extends Component {
     return input.slice(nonZeroIdx);
   };
 
-  storeNumber = (number) => {
-    console.log(`storeNumber number ${number}`);
-    const { op1 } = this.state;
-    let numKey;
-    if (!op1) {
-      numKey = "num1";
-    } else {
-      numKey = "num2";
-    }
-    this.setState({ [numKey]: number });
-  };
+  // storeNumber = (number) => {
+  //   console.log(`storeNumber number ${number}`);
+  //   const { op1 } = this.state;
+  //   let numKey;
+  //   if (!op1) {
+  //     numKey = "num1";
+  //   } else {
+  //     numKey = "num2";
+  //   }
+  //   this.setState({ [numKey]: number });
+  // };
 
-  handleUtilityOperator = (inputData) => {
-    const key = inputData.key;
+  handleUtilityOperator = (key) => {
     let resultData = { ...this.state.resultData };
-    console.log("490: handleUtilityOperator inputData:", inputData);
+    console.log("490: handleUtilityOperator key:", key, "key", key);
 
     if (key === "a") {
       console.log("ac pressed");
       resultData.resultValue = "0";
-      resultData.resultCount = "0";
+      resultData.resultCount = 0;
 
       this.setState({
         num1: "",
@@ -516,20 +576,20 @@ class Calculator extends Component {
     if (key === "c") {
       let { userInput } = this.state;
     }
-    if (key === "=") {
-      console.log(
-        `297: num1: ${this.state.num1} num2: ${this.state.num2} op1: ${this.state.op1} op2: ${this.state.op2}`
-      );
-      if (
-        this.state.num1 &&
-        this.state.num1 !== "" &&
-        this.state.num2 &&
-        this.state.num2 !== ""
-      ) {
-        console.log("304: hit");
-        this.updateOperator("=");
-      }
-    }
+    // if (key === "=") {
+    //   console.log(
+    //     `297: num1: ${this.state.num1} num2: ${this.state.num2} op1: ${this.state.op1} op2: ${this.state.op2}`
+    //   );
+    //   if (
+    //     this.state.num1 &&
+    //     this.state.num1 !== "" &&
+    //     this.state.num2 &&
+    //     this.state.num2 !== ""
+    //   ) {
+    //     console.log("304: hit");
+    //     this.updateOperator("=");
+    //   }
+    // }
   };
 
   setCalculationValue = () => {
@@ -540,12 +600,6 @@ class Calculator extends Component {
     const op2 = this.state.op2;
 
     let calculationData = { ...this.state.calculationData };
-    console.log(
-      "532: setCalculationValue calcDataObj: ",
-      calcDataObj
-      // "calculationData: ",
-      // calculationData
-    );
 
     const setCalculationDisplayChar = (op) => {
       return this.functionKeys
@@ -579,6 +633,12 @@ class Calculator extends Component {
       calcDataObj.calculationClass = calculationData.calculationClass;
     }
 
+    console.log(
+      "570: setCalculationValue calcDataObj: ",
+      calcDataObj,
+      "calculationData: ",
+      calculationData
+    );
     calculationData = calcDataObj;
     this.setState({ calculationData });
   };
@@ -588,7 +648,7 @@ class Calculator extends Component {
     const op = this.state.op1;
     const num1 = Number(this.state.num1);
     const num2 = Number(this.state.num2);
-    console.log("674  : doMath: op", op);
+    // console.log("674  : doMath: op", op);
 
     if (!op || op == "") return;
 
@@ -597,11 +657,9 @@ class Calculator extends Component {
     }
     switch (op) {
       case "r": {
-        console.log("589: r");
         return Math.sqrt(num1);
       }
       case "s": {
-        console.log("593: s");
         if (num1 === 0) return 1;
         return Math.pow(num1, 2);
       }
@@ -629,7 +687,6 @@ class Calculator extends Component {
   };
 
   setResultData = (data) => {
-    console.log("639: setResultData data: ", data);
     let resultData = { ...this.state.resultData },
       _resultData = {};
 
@@ -645,25 +702,28 @@ class Calculator extends Component {
     }
     if (data.resultCount) {
       _resultData.resultCount = data.resultCount;
-    } else {
-      _resultData.resultCount = resultData.resultCount;
     }
+    // else {
+    //   _resultData.resultCount = resultData.resultCount;
+    // }
     this.setState({ resultData: _resultData });
   };
 
-  postResultClearUp = (operationType) => {
+  postResultClearUp = () => {
+    return;
+
+    console.log("701 postResultClearUp");
     let _num1,
       _num2,
       _op1,
       _op2,
+      { num1 } = this.state,
+      { num2 } = this.state,
+      { op1 } = this.state,
+      { op2 } = this.state,
       _resultData = {};
     let resultData = { ...this.state.resultData };
-    console.log(
-      "666: postResultClearUp operationType: ",
-      operationType,
-      "current resultData b4 rescnt 0",
-      resultData
-    );
+    console.log("713 resultData", resultData);
 
     if (resultData.resultClass) {
       _resultData.resultClass = resultData.resultClass;
@@ -672,34 +732,18 @@ class Calculator extends Component {
       _resultData.resultValue = resultData.resultValue;
     }
     _resultData.resultCount = 0;
-    // _resultData.resultCount = 0;
-    console.log(
-      "674: after rescnt 0 - current resultData",
-      resultData,
-      "_resultData",
-      _resultData
-    );
-    // return;
 
-    if (operationType === "sngl") {
-      console.log("677 s: resultData: ", resultData);
-      this.setResultData({ resultData: _resultData });
-    } else if (operationType === "dbl") {
-      // save the 2nd operator to the 1st operatr
-      // before blanking the 2nd operator
-      _op1 = this.state.op2;
-      console.log("683 d: resultData: ", resultData);
-
-      this.setState(
-        {
-          op1: _op1,
-          op2: "",
-          num1: resultData.resultValue,
-          num2: "",
-        },
-        this.setResultData({ resultData })
-      );
-    }
+    // save the 2nd operator to the 1st operatr
+    // before blanking the 2nd operator
+    console.log("724 _resultData", _resultData);
+    _op1 = op2;
+    this.setState({
+      op1: _op1,
+      op2: "",
+      num1: resultData.resultValue,
+      num2: "",
+      resultData: _resultData,
+    });
   };
 
   render = () => {

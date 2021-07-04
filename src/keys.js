@@ -70,6 +70,13 @@ export const numberKeys = [
     keycode: 51,
     kbCode: "Digit3",
     type: "num",
+  },  {
+    id: 10,
+    value: ".",
+    title: "dot",
+    keycode: 190,
+    kbCode: "Period",
+    type: "num",
   },
   {
     id: 0,
@@ -79,14 +86,7 @@ export const numberKeys = [
       kbCode: "Digit0",
       type: "num",
     },
-  {
-    id: 10,
-    value: ".",
-    title: "dot",
-    keycode: 190,
-    kbCode: "Period",
-    type: "num",
-  },
+
   {
     id: 11,
     value: "m",
