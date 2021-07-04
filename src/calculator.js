@@ -7,6 +7,7 @@ import Cookies from "universal-cookie";
 import { numberKeys } from "./keys";
 import { functionKeys } from "./keys";
 import { utilityKeys } from "./keys";
+import { allowedKeys } from "./keys";
 
 class Calculator extends Component {
   displayRef = React.createRef();
@@ -18,6 +19,7 @@ class Calculator extends Component {
     this.numberKeys = numberKeys;
     this.functionKeys = functionKeys;
     this.utilityKeys = utilityKeys;
+    this.allowedKeys = allowedKeys;
   }
 
   state = {
@@ -53,14 +55,14 @@ class Calculator extends Component {
     title: "Calculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
-    mathOpRgx: /[+\-x\/ysr]/g,
-    utilOpRgx: /[acm=]/g,
-    dblMthOpRgx: /[+\-x\/y]/g,
-    snglMthOpRgx: /[sr]/g,
+    mathOpRgx: /([+\-x\/ysr=])/gi,
+    utilOpRgx: /[acm]/gi,
+    dblMthOpRgx: /[+\-x\/y]/gi,
+    snglMthOpRgx: /[sr]/gi,
     dotRgxNnGr: /\./,
-    numRgxNnGr: /(\d+)/g,
-    mathOpRgxNnGr: /[+\-x\/ysr]/,
-    utilOpRgxNnGr: /[acm=]/,
+    numRgxNnGr: /(\d+)/,
+    mathOpRgxNnGr: /[+\-x\/ysr=]/,
+    utilOpRgxNnGr: /[acm]/,
     dblMthOpRgxNnGr: /[+\-x\/y]/,
     snglMthOpRgxNnGr: /[sr]/,
     userInput: "",
@@ -72,47 +74,93 @@ class Calculator extends Component {
 
   componentDidUpdate(nextProps, nextState) {
     let resultData = { ...this.state.resultData };
-    let clearUpData = {};
-    resultData.callback = this.postResultClearUp;
-    if (
-      this.state.num1 &&
-      this.state.num1 !== "" &&
-      this.state.op1 &&
-      this.state.op1 !== "" &&
-      this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
-      resultData.resultCount < 1
-    ) {
-      resultData.resultValue = this.doSnglOpMath();
-      resultData.resultCount++;
-      clearUpData.opType = "sngl";
-      clearUpData.callback = this.postResultClearUp;
-      resultData.callbackData = clearUpData;
+    // console.log("78 (resultData.resultCount === 1)",(resultData.resultCount === 1));
+    console.log(
+      "single maths t/f: ",
+      this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1
+    );
 
-      this.setResultData(resultData);
+    console.log(
+      "double maths t/f: ",
+      this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.num2 !== undefined &&
+        this.state.num2 !== "" &&
+        this.state.op2 !== undefined &&
+        this.state.op2 !== "" &&
+        this.state.dblMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1
+    );
+    if (
+      (this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1) ||
+      (this.state.num1 !== undefined &&
+        this.state.num1 !== "" &&
+        this.state.op1 !== undefined &&
+        this.state.op1 !== "" &&
+        this.state.num2 !== undefined &&
+        this.state.num2 !== "" &&
+        this.state.op2 !== undefined &&
+        this.state.op2 !== "" &&
+        this.state.dblMthOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1) ||
+      (this.state.snglMthOpRgxNnGr.test(this.state.prevOp) &&
+        this.state.mathOpRgxNnGr.test(this.state.op1) &&
+        resultData.resultCount < 1)
+    ) {
+      var res = {};
+      var rv = this.doMath(),
+        resultValue = rv !== undefined ? rv : undefined;
+      console.log("135 resultValue", resultValue, "rv", rv);
+      if (resultValue) resultData.resultValue = resultValue;
+      if (resultData.resultValue !== undefined) {
+        if (isNaN(resultData.resultValue)) {
+          resultData.resultValue = "err";
+        }
+        resultData.resultCount++;
+        // console.log("116 resultData", resultData);
+        this.setResultData(resultData);
+      }
+    }
+    // }
+
+    // console.log(
+    //   "140",
+    //   this.state.num1 !== nextState.num1 ||
+    //     this.state.num2 !== nextState.num2 ||
+    //     this.state.op1 !== nextState.op1
+    // );
+    if (
+      this.state.num1 !== nextState.num1 ||
+      this.state.num2 !== nextState.num2 ||
+      this.state.op1 !== nextState.op1
+    ) {
+      this.setCalculationValue();
     }
 
+    // console.log(`resultData.resultCount === 1 ${resultData.resultCount === 1}`);
+    if (resultData.resultCount === 1) {
+      // console.log("137", resultData);
+      this.postResultClearUp();
+    }
+
+    // console.log("142", this.state.userInput !== nextState.userInput);
     if (
-      this.state.num1 &&
-      this.state.num1 !== "" &&
-      this.state.op1 &&
-      this.state.op1 !== "" &&
-      this.state.num2 &&
-      this.state.num2 !== "" &&
-      this.state.op2 &&
-      this.state.op2 !== "" &&
-      (this.state.dblMthOpRgxNnGr.test(this.state.op1) ||
-        this.state.op2 === "=") &&
-      resultData.resultCount < 1
+      this.state.userInput !== nextState.userInput &&
+      this.state.userInput !== ""
     ) {
-      resultData.resultValue = this.doDblOpMath();
-      if (isNaN(resultData.resultValue)) {
-        resultData.resultValue = "err";
-      }
-      resultData.resultCount++;
-      clearUpData.opType = "dbl";
-      clearUpData.callback = this.postResultClearUp;
-      resultData.callbackData = clearUpData;
-      this.setResultData(resultData);
+      this.parseUserInput();
     }
   }
 
@@ -194,7 +242,6 @@ class Calculator extends Component {
   handleClick = (e) => {
     // console.log("189: handleClick");
     e.target.blur();
-    // console.log(e);
     const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
       .filter((k) => {
@@ -206,50 +253,50 @@ class Calculator extends Component {
       shiftKey: false,
     };
     this.handleUserInput(clickData);
-    // this.routeInput(clickData);
   };
 
   handleKeyPress = (e) => {
-    // console.log("207: handleKeyPress");
-    const allowedKeys = [
-      16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83, 88,
-      89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110,
-      111, 187, 189, 190, 191,
-    ];
+    // console.log("207: handleKeyPress", e);
+
     if (!e.repeat) {
-      if (allowedKeys.includes(e.keyCode)) {
+      if (this.allowedKeys.includes(e.keyCode)) {
         let pressData = {
           key: e.key,
           ctrlKey: e.ctrlKey,
           shiftKey: e.shiftKey,
         };
+        // quick hack to get enter key to do = function
+        if (e.key === "Enter") {
+          pressData.key = "=";
+        }
+
+        // quick hack to get * key to do x function
+        if (e.key === "*") {
+          pressData.key = "x";
+        }
         this.handleActiveClass(e);
         this.handleUserInput(pressData);
-        // this.routeInput(pressData);
       }
     }
   };
 
   handleActiveClass = (e) => {
-    // console.log("228: handleActiveClass adding and removing active class");
+    // console.log("265: handleActiveClass adding and removing active class");
   };
 
   handleUserInput = (inputData) => {
-    // console.log("229: handleUserInput inputData: ", inputData);
+    // console.log("269: handleUserInput inputData: ", inputData);
     const resultData = { ...this.state.resultData };
-    if (resultData.resultCount > 0) {
-      this.clearResultCount();
-    }
 
     let _userInput;
     let { userInput } = this.state;
     const key = inputData.key;
+
     const shiftKey = inputData.shiftKey;
     const ctrlKey = inputData.ctrlKey;
     _userInput = userInput;
 
-    // handle shift & ctrl keys to stop Control and Shift
-    // being inserted into userInput
+    // handle shift & ctrl keys to stop Control and Shift being inserted into userInput
     if (ctrlKey && key !== "") {
       return;
     }
@@ -261,406 +308,361 @@ class Calculator extends Component {
     }
 
     if (this.state.utilOpRgxNnGr.test(key)) {
-      console.log(
-        "256: utilOpRgxNnGr.test(key): ",
-        this.state.utilOpRgxNnGr.test(key),
-        _userInput
-      );
+      // console.log(
+      //   "256: utilOpRgxNnGr.test(key): ",
+      //   this.state.utilOpRgxNnGr.test(key),
+      //   _userInput
+      // );
 
-      this.handleUtilityOperator(_userInput);
+      this.handleUtilityOperator(key);
       return;
     }
 
-    this.setState({ userInput: _userInput }, this.parseUserInput);
-  };
-
-  handleUtilityOperator = (inputData) => {
-    const key = inputData.key;
-    let resultData = { ...this.state.resultData };
-    console.log("268: handleUtilityOperator inputData:", inputData);
-
-    if (key === "a") {
-      console.log("ac pressed");
-      resultData.resultValue = "0";
-      resultData.resultCount = "0";
-
-      this.setState(
-        {
-          num1: "",
-          num2: "",
-          op1: "",
-          op2: "",
-          resultData,
-          userInput: "",
-        },
-        () => {
-          // this.setCalculationData();
-        }
-      );
-    }
-    if (key === "c") {
-      let { userInput } = this.state;
-    }
-    if (key === "=") {
-      console.log(
-        `297: num1: ${this.state.num1} num2: ${this.state.num2} op1: ${this.state.op1} op2: ${this.state.op2}`
-      );
-      if (
-        this.state.num1 &&
-        this.state.num1 !== "" &&
-        this.state.num2 &&
-        this.state.num2 !== ""
-      ) {
-        console.log("304: hit");
-        this.updateOperator("=");
-      }
-    }
-    // this.setState({ userInput: "" });
-  };
-
-  updateNumber = (num) => {
-    if (!this.state.num1) {
-      this.setState({ num1: num });
-    } else if (!this.state.num2) {
-      this.setState({ num2: num });
-    }
-  };
-
-  updateOperator = (op) => {
-    if (!this.state.op1) {
-      this.setState({ op1: op });
-    } else if (!this.state.op2) {
-      this.setState({ op2: op });
-    }
+    this.setState({ userInput: _userInput });
   };
 
   parseUserInput = () => {
-    console.log("338: ######### parseUserInput #########");
-    const utilOpRgxNnGr = this.state.utilOpRgxNnGr;
-    const snglMthOpRgxNnGr = this.state.snglMthOpRgxNnGr;
-    const dblMthOpRgxNnGr = this.state.dblMthOpRgxNnGr;
-
     const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
     const numRgxNnGr = this.state.numRgxNnGr;
     const dotRgxNnGr = this.state.dotRgxNnGr;
-    const mathRgx = this.state.mathOpRgx;
-    const numRgx = this.state.numRgx;
-    const dotRgx = this.state.dotRgx;
+
+    const { userInput } = this.state;
+
+    console.log(`338: ######### parseUserInput ${userInput} #########`);
+    // let _userInput;
+
+    // handle operator before number
+    if (
+      mathOpRgxNnGr.test(userInput) &&
+      (!this.state.num1 || this.state.num1 === "")
+    ) {
+      this.setState({ userInput: "" });
+      return;
+    } else if (
+      mathOpRgxNnGr.test(userInput) &&
+      (this.state.num1 || this.state.num1 !== "")
+    ) {
+      this.handleMathsOp(userInput.match(mathOpRgxNnGr)[0]);
+    } else if (
+      (numRgxNnGr.test(userInput) || dotRgxNnGr.test(userInput)) &&
+      !mathOpRgxNnGr.test(userInput)
+    ) {
+      // _userInput = this.handleNumber(userInput);
+      // this.storeNumber(this.handleNumber(userInput));
+      this.handleNumber(userInput);
+    }
+  };
+
+  handleMathsOp = (op) => {
+    console.log(`357:handleMathsOp ${op} `);
+    let resultData = { ...this.state.resultData };
+    const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
+
+    // handle operator
+    // if (!this.state.num1 || this.state.num1 === "") {
+    //   this.setState({ userInput: "" });
+    //   return;
+    // }
+
+    const { num2 } = this.state;
+
+    if (
+      this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+      resultData.resultValue &&
+      resultData.resultValue !== "" &&
+      resultData.resultValue !== undefined
+    ) {
+      this.setState({ prevOp: this.state.op1 });
+    }
+
+    if (!num2) {
+      this.setState({ op1: op, userInput: "" });
+    } else {
+      this.setState({ op2: op, userInput: "" });
+    }
+  };
+
+  handleNumber = (input) => {
+    //
+    // console.log(`handleNumber input ${input}`);
+    const dotRgxNnGr = this.state.dotRgxNnGr;
 
     const num1 = this.state.num1;
     const num2 = this.state.num2;
     const op1 = this.state.op1;
     const op2 = this.state.op2;
+    const dot = ".";
+    let _input = input;
 
-    const { userInput } = this.state;
-
-    let _userInput = userInput;
-
-    let dotMatches = [..._userInput.matchAll(dotRgx)];
-    let mathMatches = [..._userInput.matchAll(mathRgx)];
-    let numMatches = [..._userInput.matchAll(numRgx)];
-
-    const handleDecimal = (input) => {
-      console.log("358: handleDecimal input: ", input);
-
-      const _dot = ".";
-
-      if (numMatches.length > 0) {
-        /*
-          _didx  - dot index
-          _matches - array of regex matches for numbers 0-9
-          _joined - numbers extracted from _matches back into a string,
-          _res - final result,
-          _resInt - intger part of final result
-          _resFloat - decimal part
-          _firstNumIdx - index of first number found
-        */
-        let _matches = input.match(numRgx),
-          _joined = _matches.join(""),
-          _didx = 0,
-          _res,
-          _resInt = 0, // default
-          _resFloat,
-          _firstNumIdx = 0;
-
-        // first char is a .
-        if (input.charAt(0) === _dot) {
-          _firstNumIdx = input.search(numRgx);
-          _didx = input.search(numRgx) - 1;
-          _resInt = 0;
-          _resFloat = _joined;
-        }
-        // first char was a number
-        if (input.charAt(0) !== _dot) {
-          // repeated zeros
-          // if - only 0s eg. 0000
-          if (Number(_joined) === 0) {
-            _didx = input.lastIndexOf("0");
-            _resInt = 0;
-            _resFloat = "";
-          }
-          // else - different number after 0s eg 0009
-          else if (Number(_matches[0]) === 0) {
-            _didx = input.indexOf(_dot);
-            _resInt = 0;
-            _resFloat = _joined.substr(_didx);
-          } else {
-            _didx = input.indexOf(_dot);
-            // casting to Number and back to string removes lead 0s
-            // eg. 09090. -> 9090.
-            _resInt = Number(_joined.substr(0, _didx)).toString();
-            _resFloat = _joined.substr(_didx);
-          }
-        }
-
-        _res = _resInt + _dot + _resFloat;
-
-        return _res;
-      }
-      return "0" + input.charAt(0);
-    };
-
-    const extractComputationParts = (input, opType) => {
-      console.log(
-        "502: extractComputationParts: input:",
-        "input: ",
-        input,
-        "dotMatches: ",
-        dotMatches,
-        "numMatches: ",
-        numMatches,
-        "mathMatches: ",
-        mathMatches
-      );
-
-      let opMatches;
-      let extractions = {};
-      if (opType === "sngl")
-        opMatches = [...input.matchAll(this.state.snglMthOpRgx)];
-      if (opType === "dbl")
-        opMatches = [...input.matchAll(this.state.dblMthOpRgx)];
-      // console.log(
-      //   "466: input: ",
-      //   input,
-      //   "opMatches: ",
-      //   opMatches,
-      //   "numMatches: ",
-      //   numMatches
-      // );
-
-      if (numMatches.length > 0)
-        // console.log(
-        //   `422 extractComputationParts: opType: ${opType} num: ${numMatches[0][0]} op: ${opMatches[0][0]}`
-        // );
-
-        // console.log(input.substr(0, mathMatches[0].index));
-
-        extractions.op = opMatches[0][0];
-      extractions.num = input.substr(0, mathMatches[0].index);
-      // console.log("429: extractions:", extractions);
-      // if ( dotMatches.length > 0) {
-      //   extractions.num = handleDecimal(extractions.num);
-      //   console.log("input after handle decimal", extractions.num);
-      // }
-      return extractions;
-    };
-
-    const handleOperator = () => {
-      console.log("handleOperator hit mathMatches: ", mathMatches);
-      let _resultData = { ...this.state.resultData };
-      let op = mathMatches[mathMatches.length - 1][0];
-      let stateProp;
-
-      if (this.state.num1 && !this.state.num2) {
-        stateProp = "op1";
-      }
-      if (this.state.num1 && this.state.num2) {
-        stateProp = "op2";
-      }
-
-      console.log("handleOperator hit, op set was ", op, "into ", stateProp);
-      this.setState({ [stateProp]: op, userInput: "" });
-      return;
-    };
-
-    // handle a maths op change after num1 was set
-    if (
-      mathOpRgxNnGr.test(_userInput) &&
-      !numRgxNnGr.test(_userInput) &&
-      !dotRgxNnGr.test(_userInput)
-    ) {
-      console.log("543: hit - math function: _userInput: ", _userInput);
-
-      handleOperator();
-      // clear the user input
-
-      return;
+    // removes leading 0000s
+    // also returns an integer as no decimal point detected
+    if (!dotRgxNnGr.test(input) && input.charAt(0) === "0") {
+      _input = this.handleLeadingZero(input);
+      // console.log("returned from handleLeadingZero: _input", _input);
     }
 
-    // handle a maths op being repeatedly entered first
-
-    if (
-      mathOpRgxNnGr.test(_userInput) &&
-      !numRgxNnGr.test(_userInput) &&
-      !dotRgxNnGr.test(_userInput) &&
-      !this.resultData.resultValue
-    ) {
-      console.log(
-        "543: hit - math function: _userInput: ",
-        _userInput,
-        " - removing"
-      );
-      // clear the user input
-      this.setState({ userInput: "" });
-
-      return;
+    if (dotRgxNnGr.test(input)) {
+      // console.log("decimal"), input;
+      _input = this.handleDecimal(input);
+      // console.log("returned from handleDecimal _input: ", _input);
     }
 
-    // all numbers after here
-
-    // console.log("554: all numbers and dots after here");
-
-    // handle repeated zero
-    if (
-      numRgxNnGr.test(_userInput) &&
-      Number(_userInput) === 0 &&
-      !dotRgxNnGr.test(_userInput)
-    ) {
-      console.log("552: hit - 0 entered: _userInput: ", _userInput);
-      // this.setState({ userInput: parseInt(Number(_userInput)) });
-      // this.setState({ userInput: "0" });
-      _userInput = "0";
-      return "0";
-      console.log("590:AFTER hit - 0 entered: _userInput: ", _userInput);
+    // return _input;
+    // console.log(`final number to store ${_input}`);
+    let numKey;
+    if (!op1) {
+      numKey = "num1";
+    } else {
+      numKey = "num2";
     }
-
-    // handle decimal numbers
-    if (dotRgxNnGr.test(_userInput)) {
-      // console.log("559: dotRgx op found");
-      _userInput = handleDecimal(_userInput);
-      console.log(
-        `i just came back from handleDecimal, i was ${userInput} but now I'm ${_userInput}`
-      );
-    }
-
-    // console.log(
-    //   "570: checking if an operator has been hit: _userInput currently: ",
-    //   _userInput
-    // );
-
-    // console.log(
-    //   "570: (snglMthOpRgxNnGr.test(_userInput)): ",
-    //   snglMthOpRgxNnGr.test(_userInput)
-    // );
-
-    if (snglMthOpRgxNnGr.test(_userInput)) {
-      console.log("580: snglMthOpRgxNnGr op found");
-      let _compParts = extractComputationParts(_userInput, "sngl");
-      console.log("582", _compParts, _compParts.num, _compParts.op);
-      this.updateOperator(_compParts.op);
-      this.updateNumber(_compParts.num);
-      this.setState({ userInput: "" });
-      return;
-    }
-
-    // console.log(
-    //   "585: (dblMthOpRgxNnGr.test(_userInput)): ",
-    //   dblMthOpRgxNnGr.test(_userInput)
-    // );
-
-    if (dblMthOpRgxNnGr.test(_userInput)) {
-      // console.log("590: dblMthOpRgxNnGr op found");
-      let _compParts = extractComputationParts(_userInput, "dbl");
-      // console.log("597", _compParts, _compParts.num, _compParts.op);
-      this.updateOperator(_compParts.op);
-      this.updateNumber(_compParts.num);
-      this.setState({ userInput: "" });
-      return;
-    }
-    // console.log(
-    //   "599: returning at end of parseUserInput _userInput: ",
-    //   _userInput,
-    //   "typeof _userInput: ",
-    //   typeof _userInput
-    // );
-    return;
-
-    // this.storeComputableParts(inputData);
+    this.setState({ [numKey]: _input });
   };
 
-  setCalculationData = (data) => {
-    const computableParts = { ...this.state.computableParts };
-    // console.log("611: setCalculationData computableParts: ", computableParts);
+  handleDecimal = (input) => {
+    // console.log("handleDecimal: ", input);
+
+    const numRgx = this.state.numRgx;
+    const dotRgx = this.state.dotRgx;
+    const dotRgxNnGr = this.state.dotRgxNnGr;
+    const numRgxNnGr = this.state.numRgxNnGr;
+    const dtIdx = input.match(dotRgxNnGr).index;
+    const numDots = input.match(dotRgx).length;
+    const oneToNineRgx = /[1-9]/;
+    const zeroRgx = /[0]/;
+    const dot = ".";
+
+    let frstNumIdx, numMatches, extractedNums, int, flt, _input;
+
+    if (numRgxNnGr.test(input)) {
+      extractedNums = input.match(numRgx).join("");
+    }
+
+    const handleProperFraction = (integer, float) => {
+      // console.log("handleProperFraction: integer", integer, "float", float);
+      if (integer.charAt(0) === "0") {
+        integer = this.handleLeadingZero(integer);
+      }
+      if (
+        // .0 or .0000
+        (integer === "" && float !== "") ||
+        // 0.023 or 0000.023
+        (Number(integer) === 0 && float !== "")
+      ) {
+        return "0." + float;
+      }
+      if (
+        // 0. or 0000.
+        Number(int) === 0 &&
+        float === ""
+      ) {
+        return "0.";
+      }
+
+      return "0" + dot + extractedNums.substr(dtIdx);
+    };
+
+    const handleMixedNumber = (integer, float) => {
+      // console.log("handleMixedNumber: integer", integer, "float", float);
+      if (integer.charAt(0) === "0") {
+        integer = this.handleLeadingZero(integer);
+      }
+      return integer + dot + float;
+    };
+
+    const handleExtraDots = (input) => {
+      // console.log("handleExtraDots: input", input);
+      let frstDtIdx, frstNumIdx;
+
+      frstDtIdx = input.search(dotRgx);
+      frstNumIdx = input.search(numRgx);
+
+      if (frstDtIdx < frstNumIdx) {
+        return dot + extractedNums;
+      } else {
+        return extractedNums.slice(0, dtIdx) + dot + extractedNums.slice(dtIdx);
+      }
+    };
+
+    // no numbers upto this point
+    // handle "." "...." entered
+    if (numDots === input.length) {
+      // console.log(`handle only dots "." or "...." entered`);
+      return "0.";
+    }
+
+    // numbers and dots
+
+    // need to provide lower expressions with single decimal numbers
+    // must process and remove extra dots
+    if (numDots > 1) {
+      input = handleExtraDots(input);
+    }
+
+    int = input.slice(0, dtIdx);
+    flt = input.slice(dtIdx + 1);
+
+    if (
+      int === "" ||
+      (Number(int) === 0 && flt !== "") ||
+      input.charAt(input.length - 1) === dot
+    ) {
+      _input = handleProperFraction(int, flt);
+    }
+    if (int !== "" && Number(int) !== 0) {
+      _input = handleMixedNumber(int, flt);
+    }
+    return _input;
+  };
+
+  handleLeadingZero = (input) => {
+    console.log("handleLeadingZero", input);
+    const oneToNineRgx = /[1-9]/g;
+    const oneToNineRgxNGr = /[1-9]/;
+    const zeroRgxNGr = /[0]/;
+    const zeroRgx = /[0]/g;
+    let lastZeroIdx, nonZeroIdx, oneToNineMatches;
+
+    if (oneToNineRgxNGr.test(input)) {
+      nonZeroIdx = input.match(oneToNineRgxNGr).index;
+      oneToNineMatches = input.match(oneToNineRgx);
+    } else if (zeroRgxNGr.test(input) && !oneToNineRgxNGr.test(input)) {
+      // all zeros
+      return "0";
+    }
+
+    /**
+     * @input.matchAll
+     *  - only matchAll gives an index for all matches
+     * to get the last match index:
+     *    1. get and array of all 0 matches
+     *       - the last 0 will be the last array element at index: array[array.length -1]
+     *    2. use the "index" value of last array element to determine last index of 0
+     */
+    lastZeroIdx = [...input.matchAll(zeroRgx)][nonZeroIdx - 1].index;
+
+    return input.slice(nonZeroIdx);
+  };
+
+  // storeNumber = (number) => {
+  //   console.log(`storeNumber number ${number}`);
+  //   const { op1 } = this.state;
+  //   let numKey;
+  //   if (!op1) {
+  //     numKey = "num1";
+  //   } else {
+  //     numKey = "num2";
+  //   }
+  //   this.setState({ [numKey]: number });
+  // };
+
+  handleUtilityOperator = (key) => {
+    let resultData = { ...this.state.resultData };
+    console.log("490: handleUtilityOperator key:", key, "key", key);
+
+    if (key === "a") {
+      console.log("ac pressed");
+      resultData.resultValue = "0";
+      resultData.resultCount = 0;
+
+      this.setState({
+        num1: "",
+        num2: "",
+        op1: "",
+        op2: "",
+        resultData,
+        userInput: "",
+      });
+    }
+    if (key === "c") {
+      let { userInput } = this.state;
+    }
+    // if (key === "=") {
+    //   console.log(
+    //     `297: num1: ${this.state.num1} num2: ${this.state.num2} op1: ${this.state.op1} op2: ${this.state.op2}`
+    //   );
+    //   if (
+    //     this.state.num1 &&
+    //     this.state.num1 !== "" &&
+    //     this.state.num2 &&
+    //     this.state.num2 !== ""
+    //   ) {
+    //     console.log("304: hit");
+    //     this.updateOperator("=");
+    //   }
+    // }
+  };
+
+  setCalculationValue = () => {
     let calcDataObj = {};
-    calcDataObj.calculationClass = this.state.calculationData.calculationClass; // default class
-    const num1 = computableParts.num1;
-    const num2 = computableParts.num2;
-    const op1 = computableParts.op1;
-    const op2 = computableParts.op2;
+    const num1 = this.state.num1;
+    const num2 = this.state.num2;
+    const op1 = this.state.op1;
+    const op2 = this.state.op2;
 
     let calculationData = { ...this.state.calculationData };
+
+    const setCalculationDisplayChar = (op) => {
+      return this.functionKeys
+        .filter((k) => k.value === op)
+        .filter((k) => {
+          if ("calculationDisplayChar" in k) return k;
+        });
+    };
+
+    let _op1;
+
+    if (op1) {
+      _op1 =
+        setCalculationDisplayChar(op1).length > 0
+          ? setCalculationDisplayChar(op1)[0].calculationDisplayChar
+          : op1;
+    }
+
+    if (calcDataObj.calculationValue === undefined) {
+      calcDataObj.calculationValue = "";
+    }
+    calcDataObj.calculationValue += num1 ? num1 : "";
+    if (!_op1) {
+      calcDataObj.calculationValue += op1 ? op1 : "";
+    } else {
+      calcDataObj.calculationValue += _op1;
+    }
+    calcDataObj.calculationValue += num2 ? num2 : "";
+
+    if (calculationData.calculationClass) {
+      calcDataObj.calculationClass = calculationData.calculationClass;
+    }
+
     console.log(
-      "621: setCalculationData calcDataObj: ",
+      "570: setCalculationValue calcDataObj: ",
       calcDataObj,
       "calculationData: ",
       calculationData
     );
-
-    if (data) {
-      if (data.calculationClass) {
-        calcDataObj.calculationClass = data.calculationClass;
-      }
-    }
-
-    // // default
-    // if (!op1) {
-    //   calcDataObj.calculationValue = num1;
-    // }
-    // calcDataObj.calculationValue = num2;
-
-    calcDataObj.calculationValue = num1 + op1 + num2 + op2;
-
     calculationData = calcDataObj;
-    console.log("642: ", calculationData);
     this.setState({ calculationData });
   };
 
-  doSnglOpMath = () => {
+  doMath = () => {
     let resultData = { ...this.state.resultData };
-    const op = this.state.op1;
-    const num = Number(this.state.num1);
-    console.log("650  : doSnglOpMath: op", op);
-
-    if (!op || op == "") return;
-
-    switch (op) {
-      case "r": {
-        console.log("656: r");
-        return Math.sqrt(num);
-      }
-      case "s": {
-        console.log("660: s");
-        if (num === 0) return 1;
-        return Math.pow(num, 2);
-      }
-      default: {
-        break;
-      }
-    }
-    resultData.resultCount += 1;
-    return resultData;
-  };
-
-  doDblOpMath = () => {
-    console.log("673: double maths op: ", this.state.op1);
-    let resultData = { ...this.state.resultData };
-
     const op = this.state.op1;
     const num1 = Number(this.state.num1);
     const num2 = Number(this.state.num2);
+    // console.log("674  : doMath: op", op);
 
-    console.log(`680: doDblOpMath op: ${op} num1: ${num1} num2: ${num2}`);
+    if (!op || op == "") return;
+
+    if (this.state.dblMthOpRgxNnGr.test(op) && (!num2 || num2 === "")) {
+      return;
+    }
     switch (op) {
+      case "r": {
+        return Math.sqrt(num1);
+      }
+      case "s": {
+        if (num1 === 0) return 1;
+        return Math.pow(num1, 2);
+      }
       case "+": {
         return num1 + num2;
       }
@@ -685,62 +687,63 @@ class Calculator extends Component {
   };
 
   setResultData = (data) => {
-    console.log("711: setResultData data: ", data);
-    let callback, callbackData;
-    let resultData = { ...this.state.resultData };
+    let resultData = { ...this.state.resultData },
+      _resultData = {};
 
     if (data.resultClass) {
-      resultData.resultClass = data.resultClass;
-    }
-    if (data.callback) {
-      callback = data.callback;
-      callbackData = data.callbackData;
-    }
-    console.log("770: callback: ", callback);
-    delete data.callback;
-    delete data.callbackData;
-    resultData.resultValue = data.resultValue;
-    resultData.resultCount = data.resultCount;
-    if (!callback) {
-      this.setState({ resultData });
+      _resultData.resultClass = data.resultClass;
     } else {
-      this.setState({ resultData }, () => callback(callbackData));
+      _resultData.resultClass = resultData.resultClass;
     }
+    if (data.resultValue) {
+      _resultData.resultValue = data.resultValue;
+    } else {
+      _resultData.resultValue = resultData.resultValue;
+    }
+    if (data.resultCount) {
+      _resultData.resultCount = data.resultCount;
+    }
+    // else {
+    //   _resultData.resultCount = resultData.resultCount;
+    // }
+    this.setState({ resultData: _resultData });
   };
 
-  clearResultCount = () => {
+  postResultClearUp = () => {
+    return;
+
+    console.log("701 postResultClearUp");
+    let _num1,
+      _num2,
+      _op1,
+      _op2,
+      { num1 } = this.state,
+      { num2 } = this.state,
+      { op1 } = this.state,
+      { op2 } = this.state,
+      _resultData = {};
     let resultData = { ...this.state.resultData };
-    resultData.resultCount = 0;
-    console.log("741: clearResultCount", resultData);
-    this.setState({ resultData });
-  };
+    console.log("713 resultData", resultData);
 
-  postResultClearUp = (clearUpData) => {
-    console.log("790: postResultClearUp clearUpData: ", clearUpData);
-    let _num1, _num2, _op1, _op2;
-    let resultData = { ...this.state.resultData };
-    delete resultData.callback;
-    delete resultData.callbackData;
-
-    resultData.resultCount = 0;
-
-    if (clearUpData.opType === "sngl") {
-      // op1 = "";
-      // _num1 = "";
-
-      this.setState({ op1: "", userInput: "", num1: "", resultData });
-    } else if (clearUpData.opType === "dbl") {
-      //
-      _op2 = this.state.op2;
-      this.setState({
-        op1: _op2,
-        op2: "",
-        // userInput: ,
-        num1: resultData.resultValue,
-        num2: "",
-        resultData,
-      });
+    if (resultData.resultClass) {
+      _resultData.resultClass = resultData.resultClass;
     }
+    if (resultData.resultValue) {
+      _resultData.resultValue = resultData.resultValue;
+    }
+    _resultData.resultCount = 0;
+
+    // save the 2nd operator to the 1st operatr
+    // before blanking the 2nd operator
+    console.log("724 _resultData", _resultData);
+    _op1 = op2;
+    this.setState({
+      op1: _op1,
+      op2: "",
+      num1: resultData.resultValue,
+      num2: "",
+      resultData: _resultData,
+    });
   };
 
   render = () => {
