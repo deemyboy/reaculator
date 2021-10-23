@@ -74,94 +74,6 @@ class Calculator extends Component {
 
   componentDidUpdate(nextProps, nextState) {
     let resultData = { ...this.state.resultData };
-    // console.log("78 (resultData.resultCount === 1)",(resultData.resultCount === 1));
-    console.log(
-      "single maths t/f: ",
-      this.state.num1 !== undefined &&
-        this.state.num1 !== "" &&
-        this.state.op1 !== undefined &&
-        this.state.op1 !== "" &&
-        this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
-        resultData.resultCount < 1
-    );
-
-    console.log(
-      "double maths t/f: ",
-      this.state.num1 !== undefined &&
-        this.state.num1 !== "" &&
-        this.state.op1 !== undefined &&
-        this.state.op1 !== "" &&
-        this.state.num2 !== undefined &&
-        this.state.num2 !== "" &&
-        this.state.op2 !== undefined &&
-        this.state.op2 !== "" &&
-        this.state.dblMthOpRgxNnGr.test(this.state.op1) &&
-        resultData.resultCount < 1
-    );
-    if (
-      (this.state.num1 !== undefined &&
-        this.state.num1 !== "" &&
-        this.state.op1 !== undefined &&
-        this.state.op1 !== "" &&
-        this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
-        resultData.resultCount < 1) ||
-      (this.state.num1 !== undefined &&
-        this.state.num1 !== "" &&
-        this.state.op1 !== undefined &&
-        this.state.op1 !== "" &&
-        this.state.num2 !== undefined &&
-        this.state.num2 !== "" &&
-        this.state.op2 !== undefined &&
-        this.state.op2 !== "" &&
-        this.state.dblMthOpRgxNnGr.test(this.state.op1) &&
-        resultData.resultCount < 1) ||
-      (this.state.snglMthOpRgxNnGr.test(this.state.prevOp) &&
-        this.state.mathOpRgxNnGr.test(this.state.op1) &&
-        resultData.resultCount < 1)
-    ) {
-      var res = {};
-      var rv = this.doMath(),
-        resultValue = rv !== undefined ? rv : undefined;
-      console.log("135 resultValue", resultValue, "rv", rv);
-      if (resultValue) resultData.resultValue = resultValue;
-      if (resultData.resultValue !== undefined) {
-        if (isNaN(resultData.resultValue)) {
-          resultData.resultValue = "err";
-        }
-        resultData.resultCount++;
-        // console.log("116 resultData", resultData);
-        this.setResultData(resultData);
-      }
-    }
-    // }
-
-    // console.log(
-    //   "140",
-    //   this.state.num1 !== nextState.num1 ||
-    //     this.state.num2 !== nextState.num2 ||
-    //     this.state.op1 !== nextState.op1
-    // );
-    if (
-      this.state.num1 !== nextState.num1 ||
-      this.state.num2 !== nextState.num2 ||
-      this.state.op1 !== nextState.op1
-    ) {
-      this.setCalculationValue();
-    }
-
-    // console.log(`resultData.resultCount === 1 ${resultData.resultCount === 1}`);
-    if (resultData.resultCount === 1) {
-      // console.log("137", resultData);
-      this.postResultClearUp();
-    }
-
-    // console.log("142", this.state.userInput !== nextState.userInput);
-    if (
-      this.state.userInput !== nextState.userInput &&
-      this.state.userInput !== ""
-    ) {
-      this.parseUserInput();
-    }
   }
 
   componentWillUnmount() {
@@ -239,6 +151,10 @@ class Calculator extends Component {
       : this.state.theme;
   };
 
+  handleActiveClass = (inputData) => {
+    // console.log("265: handleActiveClass adding and removing active class");
+  };
+
   handleClick = (e) => {
     // console.log("189: handleClick");
     e.target.blur();
@@ -256,44 +172,40 @@ class Calculator extends Component {
   };
 
   handleKeyPress = (e) => {
-    // console.log("207: handleKeyPress", e);
+    console.log("207: handleKeyPress", e);
 
     if (!e.repeat) {
       if (this.allowedKeys.includes(e.keyCode)) {
-        let pressData = {
+        let keyData = {
           key: e.key,
           ctrlKey: e.ctrlKey,
           shiftKey: e.shiftKey,
+          keyCode: e.keyCode,
         };
         // quick hack to get enter key to do = function
         if (e.key === "Enter") {
-          pressData.key = "=";
+          keyData.key = "=";
         }
 
         // quick hack to get * key to do x function
         if (e.key === "*") {
-          pressData.key = "x";
+          keyData.key = "x";
         }
-        this.handleActiveClass(e);
-        this.handleUserInput(pressData);
+        this.handleActiveClass(keyData);
+        this.handleUserInput(keyData);
       }
     }
   };
 
-  handleActiveClass = (e) => {
-    // console.log("265: handleActiveClass adding and removing active class");
-  };
-
   handleUserInput = (inputData) => {
-    // console.log("269: handleUserInput inputData: ", inputData);
-    const resultData = { ...this.state.resultData };
-
+    console.log("269: handleUserInput inputData: ", inputData);
     let _userInput;
     let { userInput } = this.state;
-    const key = inputData.key;
 
+    const key = inputData.key;
     const shiftKey = inputData.shiftKey;
     const ctrlKey = inputData.ctrlKey;
+    const keyCode = inputData.keyCode;
     _userInput = userInput;
 
     // handle shift & ctrl keys to stop Control and Shift being inserted into userInput
@@ -303,7 +215,7 @@ class Calculator extends Component {
     if (!shiftKey && !ctrlKey) {
       _userInput += key;
     }
-    if (shiftKey && key === "+") {
+    if (shiftKey && keyCode === 187) {
       _userInput += key;
     }
 
@@ -318,10 +230,11 @@ class Calculator extends Component {
       return;
     }
 
-    this.setState({ userInput: _userInput });
+    this.setState({ userInput: _userInput }, this.parseUserInput);
   };
 
   parseUserInput = () => {
+    let _parsedInput;
     const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
     const numRgxNnGr = this.state.numRgxNnGr;
     const dotRgxNnGr = this.state.dotRgxNnGr;
@@ -331,25 +244,10 @@ class Calculator extends Component {
     console.log(`338: ######### parseUserInput ${userInput} #########`);
     // let _userInput;
 
-    // handle operator before number
-    if (
-      mathOpRgxNnGr.test(userInput) &&
-      (!this.state.num1 || this.state.num1 === "")
-    ) {
+    if (isNaN(userInput.charAt(0))) {
+      console.log("hit NaN");
       this.setState({ userInput: "" });
       return;
-    } else if (
-      mathOpRgxNnGr.test(userInput) &&
-      (this.state.num1 || this.state.num1 !== "")
-    ) {
-      this.handleMathsOp(userInput.match(mathOpRgxNnGr)[0]);
-    } else if (
-      (numRgxNnGr.test(userInput) || dotRgxNnGr.test(userInput)) &&
-      !mathOpRgxNnGr.test(userInput)
-    ) {
-      // _userInput = this.handleNumber(userInput);
-      // this.storeNumber(this.handleNumber(userInput));
-      this.handleNumber(userInput);
     }
   };
 
@@ -751,13 +649,11 @@ class Calculator extends Component {
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
-        }`}
-      >
+        }`}>
         <div className="flex-row row">
           <div
             className={`calculator ${this.state.theme.toLowerCase()}`}
-            onClick={(e) => this.toggleSidebar(e)}
-          >
+            onClick={(e) => this.toggleSidebar(e)}>
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>
@@ -777,23 +673,20 @@ class Calculator extends Component {
                   </div>
                   <div className="row">
                     <div
-                      className={`col keyboard ${this.state.numberKeyboardClass}`}
-                    >
+                      className={`col keyboard ${this.state.numberKeyboardClass}`}>
                       <Keyboard
                         keys={this.numberKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                     </div>
                     <div
-                      className={`col keyboard ${this.state.functionKeyboardClass}`}
-                    >
+                      className={`col keyboard ${this.state.functionKeyboardClass}`}>
                       <Keyboard
                         keys={this.functionKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                       <div
-                        className={`row keyboard ${this.state.utilityKeyboardClass}`}
-                      >
+                        className={`row keyboard ${this.state.utilityKeyboardClass}`}>
                         <Keyboard
                           keys={this.utilityKeys}
                           passClickHandler={(e) => this.handleClick(e)}
@@ -807,8 +700,9 @@ class Calculator extends Component {
           </div>
           <Sidebar
             sidebarData={this.state.sidebarData}
-            dropdownData={this.packageDropdownData(this.state.themesData)}
-          ></Sidebar>
+            dropdownData={this.packageDropdownData(
+              this.state.themesData
+            )}></Sidebar>
         </div>
       </div>
     );
