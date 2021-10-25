@@ -156,7 +156,7 @@ class Calculator extends Component {
   };
 
   handleClick = (e) => {
-    // console.log("189: handleClick");
+    console.log("189: handleClick",e);
     e.target.blur();
     const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
@@ -173,8 +173,12 @@ class Calculator extends Component {
 
   handleKeyPress = (e) => {
     console.log("207: handleKeyPress", e);
-
+    var local_button = document.getElementById(e.key)
     if (!e.repeat) {
+      local_button.focus(timeout)
+      var timeout = setTimeout(() => console.log(e.value),  5000);
+      local_button.blur();
+      // e.target.blur();
       if (this.allowedKeys.includes(e.keyCode)) {
         let keyData = {
           key: e.key,
