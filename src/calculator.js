@@ -151,12 +151,8 @@ class Calculator extends Component {
       : this.state.theme;
   };
 
-  handleActiveClass = (inputData) => {
-    // console.log("265: handleActiveClass adding and removing active class");
-  };
-
   handleClick = (e) => {
-    console.log("189: handleClick",e);
+    console.log("189: handleClick", e);
     e.target.blur();
     const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
@@ -173,12 +169,15 @@ class Calculator extends Component {
 
   handleKeyPress = (e) => {
     console.log("207: handleKeyPress", e);
-    var local_button = document.getElementById(e.key)
+    var local_button = document.getElementById(e.key);
+    console.log(local_button);
     if (!e.repeat) {
-      local_button.focus(timeout)
-      var timeout = setTimeout(() => console.log(e.value),  5000);
-      local_button.blur();
-      // e.target.blur();
+      if (local_button === null || local_button === undefined) {
+        // console.log("local_button equals null"); // do thing
+      } else if (local_button !== null || local_button !== undefined) {
+        local_button.focus(timeout);
+        var timeout = setTimeout(() => local_button.blur(), 200);
+      }
       if (this.allowedKeys.includes(e.keyCode)) {
         let keyData = {
           key: e.key,
@@ -195,7 +194,6 @@ class Calculator extends Component {
         if (e.key === "*") {
           keyData.key = "x";
         }
-        this.handleActiveClass(keyData);
         this.handleUserInput(keyData);
       }
     }
@@ -234,25 +232,82 @@ class Calculator extends Component {
       return;
     }
 
-    this.setState({ userInput: _userInput }, this.parseUserInput);
+    this.setState({ userInput: _userInput }, this.parseUserInput2);
   };
 
   parseUserInput = () => {
-    let _parsedInput;
     const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
     const numRgxNnGr = this.state.numRgxNnGr;
     const dotRgxNnGr = this.state.dotRgxNnGr;
 
     const { userInput } = this.state;
 
-    console.log(`338: ######### parseUserInput ${userInput} #########`);
-    // let _userInput;
+    console.log(`246: ######### parseUserInput ${userInput} #########`);
 
-    if (isNaN(userInput.charAt(0))) {
+    // exceptions
+    //
+    // 1. handle operators entered before numerals
+    // reset user input
+    // if a . then handle decimal
+    if (isNaN(userInput.charAt(0)) && userInput.charAt(0) !== ".") {
       console.log("hit NaN");
       this.setState({ userInput: "" });
       return;
     }
+
+    // exceptions
+    //
+    // 2. handle single leading dot
+    if (userInput.charAt(0) === ".") {
+      this.handleDecimal(userInput);
+    }
+  };
+
+  // no exceptions
+  parseUserInput2 = () => {
+    const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
+    const numRgxNnGr = this.state.numRgxNnGr;
+    const dotRgxNnGr = this.state.dotRgxNnGr;
+
+    const { userInput } = this.state;
+
+    console.log(`246: ######### parseUserInput ${userInput} #########`);
+
+    let _num1, _num2, _op1, _op2;
+
+    // exceptions
+    //
+    // 1. handle operators entered before numerals
+    // reset user input
+    // if a . then handle decimal
+    if (isNaN(userInput.charAt(0)) && userInput.charAt(0) !== ".") {
+      console.log("hit NaN");
+      this.setState({ userInput: "" });
+      return;
+    }
+
+    // exceptions
+    //
+    // 2. handle single leading dot
+    if (this.state.dotRgxNnGr.exec(userInput) !== null) {
+      this.formatDecimal(userInput);
+    }
+  };
+
+  formatDecimal = (decimal) => {
+    let formattedDecimal;
+    let count = 0;
+    if (decimal.length === 1) {
+      formattedDecimal = "0.";
+    }
+
+    while (this.state.dotRgxNnGr.exec(decimal) !== null) {
+      count++;
+    }
+
+    if (count > 1) {
+    }
+    return formattedDecimal;
   };
 
   handleMathsOp = (op) => {
