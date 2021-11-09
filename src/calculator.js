@@ -27,15 +27,19 @@ class Calculator extends Component {
       calculationClass: "calculation",
       calculationValue: "",
     },
+    dropdownData: {
+      dropdownClass: "dropdown",
+    },
     resultData: { resultClass: "result", resultCount: 0, resultValue: "0" },
     sidebarData: {
       sidebarClass: "sidebar",
       sidebarValue: "Settings",
       isOpen: false,
     },
-    dropdownData: {
-      dropdownClass: "dropdown",
-    },
+    num1: "",
+    num2: "",
+    op1: "",
+    op2: "",
     themesData: {
       labelForDropdown: "Theme",
       currentSetting: "Ocean",
@@ -232,42 +236,14 @@ class Calculator extends Component {
       return;
     }
 
-    this.setState({ userInput: _userInput }, this.parseUserInput2);
+    this.setState({ userInput: _userInput }, this.parseUserInput);
   };
 
   parseUserInput = () => {
     const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
     const numRgxNnGr = this.state.numRgxNnGr;
     const dotRgxNnGr = this.state.dotRgxNnGr;
-
-    const { userInput } = this.state;
-
-    console.log(`246: ######### parseUserInput ${userInput} #########`);
-
-    // exceptions
-    //
-    // 1. handle operators entered before numerals
-    // reset user input
-    // if a . then handle decimal
-    if (isNaN(userInput.charAt(0)) && userInput.charAt(0) !== ".") {
-      console.log("hit NaN");
-      this.setState({ userInput: "" });
-      return;
-    }
-
-    // exceptions
-    //
-    // 2. handle single leading dot
-    if (userInput.charAt(0) === ".") {
-      this.handleDecimal(userInput);
-    }
-  };
-
-  // no exceptions
-  parseUserInput2 = () => {
-    const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
-    const numRgxNnGr = this.state.numRgxNnGr;
-    const dotRgxNnGr = this.state.dotRgxNnGr;
+    let _userInput;
 
     const { userInput } = this.state;
 
@@ -277,7 +253,7 @@ class Calculator extends Component {
 
     // exceptions
     //
-    // 1. handle operators entered before numerals
+    // handle operators entered before numerals
     // reset user input
     // if a . then handle decimal
     if (isNaN(userInput.charAt(0)) && userInput.charAt(0) !== ".") {
@@ -285,29 +261,120 @@ class Calculator extends Component {
       this.setState({ userInput: "" });
       return;
     }
-
     // exceptions
     //
-    // 2. handle single leading dot
-    if (this.state.dotRgxNnGr.exec(userInput) !== null) {
-      this.formatDecimal(userInput);
+    // repeated 0
+    if (+userInput === 0) {
+      this.setState({ userInput: "0" });
     }
+    // exceptions
+    //
+    // handle single leading dot
+    // if (this.state.dotRgxNnGr.exec(userInput) !== null) {
+    //   this.setState({ userInput: this.formatDecimal(userInput) });
+    // }
+
+    // if (this.state.mathOpRgxNnGr.exec(userInput) !== null) {
+    this.makeNumbersAndOperators(userInput);
+    // }
+    // this.setCalculationValue()
+  };
+
+  makeNumbersAndOperators = (input) => {
+    let _opRgx = this.state.mathOpRgx,
+      dotRgxNnGr = this.state.dotRgxNnGr,
+      _count = 0,
+      _frstOpIdx,
+      _scndOpIdx,
+      _num1,
+      _num2,
+      _op1,
+      _op2,
+      matches;
+
+    if (input.match(_opRgx) === null) {
+      _num1 = input;
+    } else {
+      while ((matches = _opRgx.exec(input)) !== null) {
+        _count++;
+        console.log(_count, matches.index, matches, input.length);
+        if (_count === 1) {
+          if (!_frstOpIdx) {
+            _frstOpIdx = matches.index;
+          }
+          if (!_num1) {
+            _num1 = input.substring(0, matches.index);
+          }
+          if (!_op1) {
+            _op1 = input.charAt(matches.index);
+          }
+          if (input.length > matches.index + 1 && !_num2) {
+            _num2 = input.substring(matches.index + 1);
+            if (_num2.charAt(_num2.length - 1).match(_opRgx) !== null) {
+              _num2 = _num2.substring(0, _num2.length - 1);
+            }
+          }
+        } else if (_count === 2) {
+          if (!_scndOpIdx) {
+            _scndOpIdx = matches.index;
+          }
+          _num2 = input.substring(_frstOpIdx + 1, _scndOpIdx);
+          _op2 = input.charAt(matches.index);
+        }
+      }
+    }
+    if (typeof _num1 !== "undefined") {
+      if (_num1.match(dotRgxNnGr) !== null) {
+        _num1 = this.formatDecimal(_num1);
+      }
+    }
+    if (typeof _num2 !== "undefined") {
+      if (_num2.match(dotRgxNnGr) !== null) {
+        _num2 = this.formatDecimal(_num2);
+      }
+    }
+    this.setState(
+      { num1: _num1, num2: _num2, op1: _op1, op2: _op2 },
+      this.setCalculationValue
+    );
+  };
+
+  getOperator = (input, idx) => {
+    return input.charAt(idx);
   };
 
   formatDecimal = (decimal) => {
-    let formattedDecimal;
-    let count = 0;
+    let _formattedDecimal,
+      dotRgx = this.state.dotRgx;
+    let _count = 0;
+
     if (decimal.length === 1) {
-      formattedDecimal = "0.";
-    }
+      return "0.";
+    } else {
+      if (decimal.charAt(0) === ".") {
+        return "0" + decimal;
+      }
+      while (dotRgx.exec(decimal) !== null) {
+        _count++;
+        console.log(_count);
+      }
 
-    while (this.state.dotRgxNnGr.exec(decimal) !== null) {
-      count++;
-    }
+      if (_count > 1) {
+        _formattedDecimal = decimal.substring(0, decimal.length - (_count - 1));
+      }
 
-    if (count > 1) {
+      if (typeof _formattedDecimal !== "undefined") {
+        this.setState({ userInput: _formattedDecimal });
+        return _formattedDecimal;
+      } else {
+        this.setState({ userInput: decimal });
+        return decimal;
+      }
     }
-    return formattedDecimal;
+  };
+
+  removeDecimalPoints = (decimal) => {
+    return decimal.split(".").join("");
   };
 
   handleMathsOp = (op) => {
@@ -708,11 +775,13 @@ class Calculator extends Component {
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
-        }`}>
+        }`}
+      >
         <div className="flex-row row">
           <div
             className={`calculator ${this.state.theme.toLowerCase()}`}
-            onClick={(e) => this.toggleSidebar(e)}>
+            onClick={(e) => this.toggleSidebar(e)}
+          >
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>
@@ -732,20 +801,23 @@ class Calculator extends Component {
                   </div>
                   <div className="row">
                     <div
-                      className={`col keyboard ${this.state.numberKeyboardClass}`}>
+                      className={`col keyboard ${this.state.numberKeyboardClass}`}
+                    >
                       <Keyboard
                         keys={this.numberKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                     </div>
                     <div
-                      className={`col keyboard ${this.state.functionKeyboardClass}`}>
+                      className={`col keyboard ${this.state.functionKeyboardClass}`}
+                    >
                       <Keyboard
                         keys={this.functionKeys}
                         passClickHandler={(e) => this.handleClick(e)}
                       />
                       <div
-                        className={`row keyboard ${this.state.utilityKeyboardClass}`}>
+                        className={`row keyboard ${this.state.utilityKeyboardClass}`}
+                      >
                         <Keyboard
                           keys={this.utilityKeys}
                           passClickHandler={(e) => this.handleClick(e)}
@@ -759,9 +831,8 @@ class Calculator extends Component {
           </div>
           <Sidebar
             sidebarData={this.state.sidebarData}
-            dropdownData={this.packageDropdownData(
-              this.state.themesData
-            )}></Sidebar>
+            dropdownData={this.packageDropdownData(this.state.themesData)}
+          ></Sidebar>
         </div>
       </div>
     );
