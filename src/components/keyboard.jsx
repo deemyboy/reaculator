@@ -13,6 +13,7 @@ class Keyboard extends Component {
               key={ky.id}
               kObj={ky}
               handleClick={(e) => this.props.passClickHandler(e)}
+              keyErr={this.props.keyErr}
             />
           );
         })}
