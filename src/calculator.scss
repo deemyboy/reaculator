@@ -1,4 +1,5 @@
-$imp: #{"!"}important;
+$theme-map: null;
+$i: #{"!"}important;
 @import "./components/scss/_colors";
 @import "./components/scss/_themes_map";
 @import "~bootstrap/scss/bootstrap";

@@ -33,8 +33,8 @@ class Calculator extends Component {
     resultData: {
       resultClass: "result",
       resultCount: 0,
-      resultValue: "0",
-      continuousMath: false,
+      resultValue: "",
+      resultInitValue: "0",
     },
     resultDefaultClass: "result",
     resultErrorClass: "result_err",
@@ -66,16 +66,16 @@ class Calculator extends Component {
     title: "Calculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
-    mathOpRgx: /([+\-x\/ysr])/gi,
+    mathOpRgx: /([+\-x\/ysr=])/gi,
     utilOpRgx: /[acm]/gi,
     dblMthOpRgx: /[+\-x\/y]/gi,
     snglMthOpRgx: /[sr]/gi,
     dotRgxNnGr: /\./,
     numRgxNnGr: /(\d+)/,
-    mathOpRgxNnGr: /[+\-x\/ysr]/,
-    utilOpRgxNnGr: /[acm]/,
-    dblMthOpRgxNnGr: /[+\-x\/y]/,
-    snglMthOpRgxNnGr: /[sr]/,
+    mathOpRgxNnGr: /[+\-x\/ysr=]/i,
+    utilOpRgxNnGr: /[acm]/i,
+    dblMthOpRgxNnGr: /[+\-x\/y]/i,
+    snglMthOpRgxNnGr: /[sr]/i,
     userInput: "",
   };
 
@@ -95,11 +95,6 @@ class Calculator extends Component {
     let resultData = { ...this.state.resultData },
       _resultData = {};
 
-    if (data.continuousMath) {
-      _resultData.continuousMath = data.continuousMath;
-    } else {
-      _resultData.continuousMath = resultData.continuousMath;
-    }
     if (data.resultClass) {
       _resultData.resultClass = data.resultClass;
     } else {
@@ -210,9 +205,8 @@ class Calculator extends Component {
   };
 
   handleKeyPress = (e) => {
-    console.log("207: handleKeyPress", e);
+    // console.log("207: handleKeyPress", e);
     var local_button = document.getElementById(e.key);
-    console.log(local_button);
     if (!e.repeat) {
       if (local_button === null || local_button === undefined) {
         // console.log("local_button equals null"); // do thing
@@ -242,7 +236,7 @@ class Calculator extends Component {
   };
 
   handleUserInput = (inputData) => {
-    console.log("269: handleUserInput inputData: ", inputData);
+    // console.log("269: handleUserInput inputData: ", inputData);
     let _userInput;
     let { userInput } = this.state;
 
@@ -264,240 +258,10 @@ class Calculator extends Component {
     }
 
     if (this.state.utilOpRgxNnGr.test(key)) {
-      // console.log(
-      //   "256: utilOpRgxNnGr.test(key): ",
-      //   this.state.utilOpRgxNnGr.test(key),
-      //   _userInput
-      // );
-
       this.handleUtilityOperator(key);
       return;
     }
-
     this.setState({ userInput: _userInput }, this.parseUserInput);
-  };
-
-  parseUserInput = () => {
-    const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
-    const numRgxNnGr = this.state.numRgxNnGr;
-    const dotRgxNnGr = this.state.dotRgxNnGr;
-    // const resultData = {...this.state.resultData}
-    let _userInput,
-      _resultData = {};
-
-    let { userInput } = this.state;
-
-    console.log(`246: ######### parseUserInput ${userInput} #########`);
-
-    let _num1, _num2, _op1, _op2;
-
-    // exceptions
-    //
-    // handle operators entered before numerals
-    // reset user input
-    // if a . then handle decimal
-
-    // check if "=" was pressed to get a result followed by a number
-    // if it is then the previous function (post Result clearup)
-    // has put the previous result into userInput
-    // ** this is not desirable
-    //
-    // so we:
-    // 1. isolate the last char entered
-    // 2. replace userInput with it
-    // 3. wipe clean the result - set it "0"
-    if (
-      this.state.resultData.continuousMath === false &&
-      this.state.op2 === "=" &&
-      userInput.charAt(userInput.length - 1).match(this.state.mathOpRgxNnGr) ===
-        null
-    ) {
-      _userInput = userInput.charAt(userInput.length - 1);
-      this.setState({ userInput: _userInput });
-      _resultData.resultValue = "0";
-      this.setResultData(_resultData, null);
-    }
-    if (
-      this.state.resultData.continuousMath === false &&
-      this.state.op2 === "=" &&
-      userInput.charAt(userInput.length - 1).match(this.state.mathOpRgxNnGr) !==
-        null
-    ) {
-      const opIdx = userInput.length - 1;
-      _op1 = userInput.substr(opIdx);
-      _userInput = this.state.resultData.resultValue + _op1;
-      this.setState({ userInput: _userInput });
-      _resultData.resultValue = "0";
-      this.setResultData(_resultData, null);
-    }
-
-    if (isNaN(userInput.charAt(0)) && userInput.charAt(0) !== ".") {
-      console.log("hit NaN");
-      this.setState({ userInput: "" });
-      return;
-    }
-    // exceptions
-    //
-    // repeated 0
-    if (+userInput === 0) {
-      this.setState({ userInput: "0" });
-    }
-
-    // if (this.state.op2 === "=") {
-    //   this.setState({ userInput: "", num2: "" });
-    //   return;
-    // }
-    // exceptions
-    //
-    // handle single leading dot
-    // if (this.state.dotRgxNnGr.exec(userInput) !== null) {
-    //   this.setState({ userInput: this.formatDecimal(userInput) });
-    // }
-
-    // if (this.state.mathOpRgxNnGr.exec(userInput) !== null) {
-    if (!_userInput) {
-      this.makeNumbersAndOperators(userInput);
-    } else {
-      this.makeNumbersAndOperators(_userInput);
-    }
-  };
-
-  makeNumbersAndOperators = (input) => {
-    let _opRgxOuter = /[+\-x\/ysr=]/i,
-      _opRgxLoop = /[+\-x\/ysr=]/gi,
-      _opRgxLoopInnerTest = /[+\-x\/ysr=]/gi,
-      dotRgxNnGr = this.state.dotRgxNnGr,
-      _count = 0,
-      _frstOpIdx,
-      _scndOpIdx,
-      _num1,
-      _num2,
-      _op1,
-      _op2,
-      matches;
-
-    if (!_opRgxOuter.test(input)) {
-      _num1 = input;
-    } else {
-      while ((matches = _opRgxLoop.exec(input)) !== null) {
-        _count++;
-        console.log(
-          _count,
-          matches.index,
-          matches,
-          input.length,
-          _opRgxLoop.lastIndex,
-          _opRgxOuter.lastIndex
-        );
-        if (_count === 1) {
-          if (!_frstOpIdx) {
-            _frstOpIdx = matches.index;
-          }
-          if (!_num1) {
-            _num1 = input.substring(0, matches.index);
-          }
-          if (!_op1) {
-            _op1 = input.charAt(matches.index);
-          }
-          if (input.length > matches.index + 1 && !_num2) {
-            _num2 = input.substring(matches.index + 1);
-            if (
-              _num2.charAt(_num2.length - 1).match(_opRgxLoopInnerTest) !== null
-            ) {
-              _num2 = _num2.substring(0, _num2.length - 1);
-            }
-          }
-        } else if (_count === 2) {
-          if (!_scndOpIdx) {
-            _scndOpIdx = matches.index;
-          }
-          _num2 = input.substring(_frstOpIdx + 1, _scndOpIdx);
-          _op2 = input.charAt(matches.index);
-        }
-      }
-    }
-    if (typeof _num1 !== "undefined") {
-      if (_num1.match(dotRgxNnGr) !== null) {
-        _num1 = this.formatDecimal(_num1);
-      }
-    }
-    if (typeof _num2 !== "undefined") {
-      if (_num2.match(dotRgxNnGr) !== null) {
-        _num2 = this.formatDecimal(_num2);
-      }
-    }
-    this.setState(
-      { num1: _num1, num2: _num2, op1: _op1, op2: _op2 },
-      this.goForMath
-    );
-  };
-
-  goForMath = () => {
-    this.setCalculationValue();
-    let mathObj = {};
-    if (
-      typeof this.state.num1 !== "undefined" &&
-      typeof this.state.op1 !== "undefined" &&
-      this.state.op1.match(this.state.snglMthOpRgx)
-    ) {
-      mathObj.type = "single";
-      mathObj.continuousMath = false;
-      this.doMath(mathObj);
-    } else if (
-      typeof this.state.num1 !== "undefined" &&
-      typeof this.state.op1 !== "undefined" &&
-      typeof this.state.num2 !== "undefined" &&
-      typeof this.state.op2 !== "undefined" &&
-      this.state.op1.match(this.state.dblMthOpRgx) &&
-      this.state.op2.match(this.state.dblMthOpRgx)
-    ) {
-      mathObj.type = "double";
-      mathObj.continuousMath = true;
-      this.doMath(mathObj);
-    } else if (
-      typeof this.state.num1 !== "undefined" &&
-      typeof this.state.op1 !== "undefined" &&
-      typeof this.state.num2 !== "undefined" &&
-      typeof this.state.op2 !== "undefined" &&
-      this.state.op1.match(this.state.dblMthOpRgx) &&
-      this.state.op2 === "="
-    ) {
-      mathObj.type = "double";
-      mathObj.continuousMath = false;
-      this.doMath(mathObj);
-    }
-  };
-
-  formatDecimal = (decimal) => {
-    let _formattedDecimal,
-      dotRgx = this.state.dotRgx;
-    let _count = 0;
-
-    if (decimal.length === 1) {
-      return "0.";
-    } else {
-      if (decimal.charAt(0) === ".") {
-        return "0" + decimal;
-      }
-      while (dotRgx.exec(decimal) !== null) {
-        _count++;
-        console.log(_count);
-      }
-
-      if (_count > 1) {
-        _formattedDecimal = decimal.substring(0, decimal.length - (_count - 1));
-      }
-
-      if (typeof _formattedDecimal !== "undefined") {
-        return _formattedDecimal;
-      } else {
-        return decimal;
-      }
-    }
-  };
-
-  removeDecimalPoints = (decimal) => {
-    return decimal.split(".").join("");
   };
 
   handleUtilityOperator = (key) => {
@@ -542,6 +306,307 @@ class Calculator extends Component {
     // }
   };
 
+  parseUserInput = () => {
+    const mathOpRgxNnGr = this.state.mathOpRgxNnGr;
+    const numRgxNnGr = this.state.numRgxNnGr;
+    const dotRgxNnGr = this.state.dotRgxNnGr;
+    // const resultData = {...this.state.resultData}
+    let _userInput;
+
+    let { userInput } = this.state;
+
+    console.log(`346: ######### parseUserInput ${userInput} #########`);
+
+    let _num1, _num2, _op1, _op2;
+
+    if (this.state.resultData.resultValue) {
+      // _userInput = userInput;
+      // input = this.preProcessUserInput(input);
+    }
+
+    // exceptions
+    //
+    // handle operators entered before numerals
+    // reset user input
+    // if a . then handle decimal
+
+    if (isNaN(userInput.charAt(0)) && userInput.charAt(0) !== ".") {
+      console.log("hit NaN");
+      this.setState({ userInput: "" });
+      // return;
+    }
+    // exceptions
+    //
+    // repeated 0
+    if (+userInput === 0 && this.state.dotRgx.test(userInput) === null) {
+      userInput = "0";
+      this.setState({ userInput: "0" });
+    }
+
+    // if (this.state.op2 === "=") {
+    //   this.setState({ userInput: "", num2: "" });
+    //   return;
+    // }
+    // exceptions
+    //
+    // handle single leading dot
+    // if (this.state.dotRgxNnGr.exec(userInput) !== null) {
+    //   this.setState({ userInput: this.formatDecimal(userInput) });
+    // }
+
+    // if (this.state.mathOpRgxNnGr.exec(userInput) !== null) {
+    // if (!_userInput) {
+    this.makeNumbersAndOperators(userInput);
+    // } else {
+    //   this.makeNumbersAndOperators(_userInput);
+    // }
+  };
+
+  /**
+   *
+   * @param input
+   *
+   * set correct values for
+   *
+   * num1
+   * num2
+   * op1
+   * op2
+   * resultData
+   * -  resultValue
+   * -  condtinuousMaths
+   * userinput
+   *
+   * dependencies
+   * -  was equals last pressed
+   */
+  preProcessUserInput = (input) => {
+    // check if "=" was pressed to get a result followed by a number
+    // if it is then the previous function (post Result clearup)
+    // has put the previous result into userInput
+    // ** this is not desirable
+    //
+    // so we:
+    // 1. isolate the last char entered
+    // 2. replace userInput with it
+    // 3. wipe clean the result - set it "0"
+
+    // he user has entered = after result
+    // delete last char
+    //set userInput as result
+    if (this.state.resultData.resultValue) {
+      if (input.length > 0 && input.charAt(input.length - 1) === "=") {
+        this.setState({ userInput: input.substr(0, input.length - 1) });
+        return;
+      }
+      if (
+        this.state.op2 === "=" &&
+        userInput
+          .charAt(userInput.length - 1)
+          .match(this.state.mathOpRgxNnGr) === null
+      ) {
+        _userInput = userInput.charAt(userInput.length - 1);
+        this.setState({ userInput: _userInput });
+        _resultData.resultValue = "0";
+        this.setResultData(_resultData, null);
+      }
+
+      if (
+        this.state.op2 === "=" &&
+        userInput
+          .charAt(userInput.length - 1)
+          .match(this.state.mathOpRgxNnGr) !== null
+      ) {
+        const opIdx = userInput.length - 1;
+        _op1 = userInput.substr(opIdx);
+        _userInput = this.state.resultData.resultValue + _op1;
+        this.setState({ userInput: _userInput });
+        _resultData.resultValue = "0";
+        this.setResultData(_resultData, null);
+      }
+    }
+  };
+
+  makeNumbersAndOperators = (input) => {
+    let _opRgxOuter = /[+\-x\/ysr=]/i,
+      _opRgxLoop = /[+\-x\/ysr=]/gi,
+      _opRgxLoopInnerTest = /[+\-x\/ysr=]/gi,
+      dotRgxNnGr = this.state.dotRgxNnGr,
+      _count = 0,
+      _frstOpIdx,
+      _scndOpIdx,
+      _num1,
+      _num2,
+      _op1,
+      _op2,
+      { num1 } = this.state,
+      { num2 } = this.state,
+      { op1 } = this.state,
+      { op2 } = this.state,
+      matches = [],
+      match;
+
+    if (!_opRgxOuter.test(input)) {
+      _num1 = input;
+    } else {
+      while ((match = _opRgxLoop.exec(input))) {
+        matches.push(match);
+        if (_count === 0) {
+          if (!_frstOpIdx) {
+            _frstOpIdx = matches[0].index;
+          }
+          if (!_num1) {
+            _num1 = input.substring(0, _frstOpIdx);
+          }
+          if (!_op1 && input.charAt(_frstOpIdx) !== "=") {
+            _op1 = input.charAt(_frstOpIdx);
+          } else if (input.charAt(_frstOpIdx) === "=") {
+            this.setState({ userInput: input.substr(0, _frstOpIdx) });
+            // return;
+          }
+          if (
+            input.length > _frstOpIdx + 1 &&
+            !_num2 &&
+            ! /[+\-x\/ysr=]/i.test(input.charAt(input.length - 1))
+          ) {
+            _num2 = input.substring(_frstOpIdx + 1);
+            if (
+              _num2.charAt(_num2.length - 1).match(_opRgxLoopInnerTest) !== null
+            ) {
+              _num2 = _num2.substring(0, _num2.length - 1);
+            }
+          }
+        }
+        if (_count === 1) {
+          if (!_scndOpIdx) {
+            _scndOpIdx = matches[1].index;
+            if (/\d+/.test(input.substring(_frstOpIdx + 1, _scndOpIdx))) {
+              _num2 = input.substring(_frstOpIdx + 1, _scndOpIdx);
+              if (_num2) {
+                _op2 = input.charAt(_scndOpIdx);
+              }
+            }
+          }
+        }
+        _count++;
+      }
+      if (matches.length > 0) {
+      }
+      if (matches.length > 1) {
+      }
+    }
+    if (typeof _num1 !== "undefined") {
+      if (
+        _num1.match(dotRgxNnGr) !== null &&
+        this.state.numRgxNnGr.test(_num1)
+      ) {
+        _num1 = this.formatDecimal(_num1);
+      } else if (
+        _num1.match(dotRgxNnGr) !== null &&
+        !this.state.numRgxNnGr.test(_num1)
+      ) {
+        _num1 = this.formatDots(_num1);
+      }
+    }
+    if (typeof _num2 !== "undefined") {
+      if (
+        _num2.match(dotRgxNnGr) !== null &&
+        this.state.numRgxNnGr.test(_num2)
+      ) {
+        _num2 = this.formatDecimal(_num2);
+      } else if (
+        _num2.match(dotRgxNnGr) !== null &&
+        !this.state.numRgxNnGr.test(_num2)
+      ) {
+        _num2 = this.formatDots(_num2);
+      }
+    }
+    if (_op1 && +_num1 === 0) {
+      _num1 = "0";
+    }
+    this.setState(
+      { num1: _num1, num2: _num2, op1: _op1, op2: _op2 },
+      this.goForMath
+    );
+  };
+
+  formatDecimal = (decimal) => {
+    let _formattedDecimal,
+      dotRgx = /\./g,
+      _count = 0,
+      matches;
+
+    if (decimal.length === 1) {
+      console.log("con 1");
+      return "0.";
+    } else {
+      while ((matches = dotRgx.exec(decimal)) !== null) {
+        console.log(matches, matches.length);
+        _count++;
+      }
+      if (_count === 1) {
+        if (decimal.charAt(0) === ".") {
+          console.log("con 2", _count, decimal);
+          return "0" + decimal;
+        }
+        console.log(_count, matches);
+      }
+
+      if (_count > 1) {
+        console.log("con 3", _count, decimal);
+
+        _formattedDecimal = decimal.substring(0, decimal.length - (_count - 1));
+      }
+
+      if (typeof _formattedDecimal !== "undefined") {
+        return _formattedDecimal;
+      } else {
+        return decimal;
+      }
+    }
+  };
+
+  formatDots = (decimal) => {
+    //
+    let _formattedDecimal,
+      dotRgx = /\./g,
+      _count = 0;
+    return "0.";
+  };
+
+  goForMath = () => {
+    this.setCalculationValue();
+    let mathObj = {};
+    if (
+      typeof this.state.num1 !== "undefined" &&
+      typeof this.state.op1 !== "undefined" &&
+      this.state.op1.match(this.state.snglMthOpRgx)
+    ) {
+      mathObj.type = "single";
+      this.doMath(mathObj);
+    } else if (
+      typeof this.state.num1 !== "undefined" &&
+      typeof this.state.op1 !== "undefined" &&
+      typeof this.state.num2 !== "undefined" &&
+      typeof this.state.op2 !== "undefined" &&
+      this.state.op1.match(this.state.dblMthOpRgx) &&
+      this.state.op2.match(this.state.dblMthOpRgx)
+    ) {
+      mathObj.type = "double";
+      this.doMath(mathObj);
+    } else if (
+      typeof this.state.num1 !== "undefined" &&
+      typeof this.state.op1 !== "undefined" &&
+      typeof this.state.num2 !== "undefined" &&
+      typeof this.state.op2 !== "undefined" &&
+      this.state.op1.match(this.state.dblMthOpRgx) &&
+      this.state.op2 === "="
+    ) {
+      mathObj.type = "double";
+      this.doMath(mathObj);
+    }
+  };
+
   setCalculationValue = () => {
     let calcDataObj = {};
 
@@ -582,21 +647,19 @@ class Calculator extends Component {
       calcDataObj.calculationClass = calculationData.calculationClass;
     }
 
-    console.log(
-      "715: setCalculationValue calcDataObj: ",
-      calcDataObj,
-      "calculationData: ",
-      calculationData
-    );
+    // console.log(
+    //   "715: setCalculationValue calcDataObj: ",
+    //   calcDataObj,
+    //   "calculationData: ",
+    //   calculationData
+    // );
     calculationData = calcDataObj;
     this.setState({ calculationData });
   };
 
   //  resultData: { resultClass: "result", resultCount: 0, resultValue: "0" }
   doMath = (mathObj) => {
-    console.log(
-      `yaaay we're doing ${mathObj.type} continuous maths = ${mathObj.continuousMath}!`
-    );
+    console.log(`yaaay we're doing ${mathObj.type} math!`);
 
     let resultData = { ...this.state.resultData };
     const op = this.state.op1;
@@ -662,8 +725,7 @@ class Calculator extends Component {
         break;
       }
     }
-    _resultData.resultCount += 1;
-    _resultData.continuousMath = mathObj.continuousMath;
+    _resultData.resultCount = 1;
     // _resultData.resultValue = this.formatResult(_resultData.resultValue);
     this.setResultData(_resultData, () => this.postResultClearUp(mathObj));
   };
@@ -672,7 +734,7 @@ class Calculator extends Component {
     if (resValue.length > 13) {
       return resValue.toExponetial();
     } else {
-      resValue;
+      return resValue;
     }
   };
 
@@ -684,8 +746,7 @@ class Calculator extends Component {
       _op1,
       _op2,
       _resultData = {},
-      _continuousMath = mathObj.continuousMath;
-    let resultData = { ...this.state.resultData };
+      resultData = { ...this.state.resultData };
     if (!isFinite(resultData.resultValue)) {
       this.setResultErrorClass("result");
       this.setState({ keyErr: true });
@@ -696,9 +757,9 @@ class Calculator extends Component {
       { op1 } = this.state,
       { op2 } = this.state;
 
-    console.log("713 resultData", resultData);
+    // console.log("713 resultData", resultData);
 
-    if (_continuousMath) {
+    if (op2 !== "=") {
       _op2 = "";
       _num1 = resultData.resultValue;
       _num2 = "";
@@ -719,11 +780,10 @@ class Calculator extends Component {
       _resultData.resultValue = resultData.resultValue;
     }
     _resultData.resultCount = 0;
-    _resultData.continuousMath;
 
     // save the 2nd operator to the 1st operatr
     // before blanking the 2nd operator
-    console.log("824 _resultData", _resultData);
+    // console.log("824 _resultData", _resultData);
     this.setState(
       {
         op1: _op1,

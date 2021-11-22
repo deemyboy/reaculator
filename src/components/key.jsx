@@ -6,6 +6,7 @@ const Key = React.forwardRef((props, ref) => {
     const numClass = "btn-primary";
     const funcClass = "btn-secondary";
     const errClass = "btn-error";
+    const useMeClass = "btn-use-me";
     const specialClass = keyObj.specialClass ? keyObj.specialClass : "";
     const errState = props.keyErr ? props.keyErr : "";
 
@@ -17,9 +18,11 @@ const Key = React.forwardRef((props, ref) => {
     if (specialClass) {
       classes += " " + specialClass;
     }
+    if (errState) {
     if (keyObj.value !== "a") {
-      if (errState) {
         classes += " " + errClass;
+      }else {
+        classes += " " + useMeClass;
       }
     }
 

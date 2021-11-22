@@ -1,10 +1,12 @@
 import React from "react";
 
 const Result = React.forwardRef((props, ref) => {
+  let resVal = props.resultData.resultValue ? props.resultData.resultValue :props.resultData.resultInitValue
+  
   return (
     <React.Fragment>
       <p className={props.resultData.resultClass}>
-        {props.resultData.resultValue}
+        {resVal}
       </p>
     </React.Fragment>
   );

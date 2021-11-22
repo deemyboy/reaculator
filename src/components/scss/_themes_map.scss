@@ -268,6 +268,7 @@ $themes: (
       //buttons
       $prm-btn-bg-color: themed(primaryButtonColor);
       $btn-primary-text-color: themed(primaryButtonTextColor);
+      $btn-primary-border-color: themed(primaryButtonBorderColor);
       .btn-primary {
         background-color: themed(primaryButtonColor);
         color: themed(primaryButtonTextColor);
@@ -285,10 +286,12 @@ $themes: (
         &.btn-error {
           background-color: darken($prm-btn-bg-color, 15%);
           color:darken($btn-primary-text-color, 50%);
+          border-color:darken($btn-primary-border-color, 90%);
         }
       }
       $scnd-btn-bg-color: themed(secondaryButtonColor);
       $btn-secondary-text-color: themed(secondaryButtonTextColor);
+      $btn-secondary-border-color: themed(secondaryButtonBorderColor);
       .btn-secondary {
         background-color: themed(secondaryButtonColor);
         color: themed(secondaryButtonTextColor);
@@ -306,6 +309,7 @@ $themes: (
         &.btn-error {
           background-color: darken($scnd-btn-bg-color, 15%);
           color:darken($btn-secondary-text-color, 50%);
+          border-color:darken($btn-secondary-border-color, 90%);
         }
       }
       $btn-danger-bg-color: #DC3545;
@@ -330,6 +334,10 @@ $themes: (
         &.btn-error {
           background-color: darken($btn-danger-bg-color, 15%);
         }
+        &.btn-use-me {
+          border-color: #eddfe0;
+          border-width: 2px;
+          box-shadow: 0px 0px 9px 0px;}
       }
       $btn-success-bg-color: #198754;
       .btn-success {
