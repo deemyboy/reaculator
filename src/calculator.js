@@ -16,7 +16,7 @@ class Calculator extends Component {
     super(props);
 
     this.state.theme = this.getCookie("currentTheme");
-    this.state.themesData.currentSetting = this.getCookie("currentTheme");
+    this.state.themesDataKeyboard.currentSetting = this.getCookie("currentTheme");
     this.sidebarKeys = sidebarKeys;
     this.numberKeys = numberKeys;
     this.functionKeys = functionKeys;
@@ -28,9 +28,6 @@ class Calculator extends Component {
     calculationData: {
       calculationClass: "calculation",
       calculationValue: "",
-    },
-    dropdownData: {
-      dropdownClass: "dropdown",
     },
     themeKeyboardData: {
       themeKeyboardClass: "themeKeyboard",
@@ -52,18 +49,6 @@ class Calculator extends Component {
     num2: "",
     op1: "",
     op2: "",
-    themesData: {
-      labelForDropdown: "Theme",
-      currentSetting: "Ocean",
-      callbackForDropdown: (e) => this.onSelectTheme(e),
-      itemsForDropdown: [
-        { itemName: "Fire" },
-        { itemName: "Midnight" },
-        { itemName: "Ocean" },
-        { itemName: "Storm" },
-        { itemName: "Jungle" },
-      ],
-    },
     themesDataKeyboard: {
       labelForThemeKeyboard: "Theme",
       currentSetting: "Ocean",
@@ -155,15 +140,7 @@ class Calculator extends Component {
     this.setState({ sidebarData });
   };
 
-  packageDropdownData = (dropdownUser) => {
-    let dropdownData = { ...this.state.dropdownData };
-    dropdownData.labelForDropdown = dropdownUser.labelForDropdown;
-    dropdownData.itemsForDropdown = dropdownUser.itemsForDropdown;
-    dropdownData.currentSetting = dropdownUser.currentSetting;
-    dropdownData.onClick = dropdownUser.callbackForDropdown;
-    return dropdownData;
-  };
-  
+
   packageThemeKeyboardData = (themeKeyboardUser) => {
     let themeKeyboardData = { ...this.state.themeKeyboardData };
     themeKeyboardData.labelForThemeKeyboard = themeKeyboardUser.labelForThemeKeyboard;

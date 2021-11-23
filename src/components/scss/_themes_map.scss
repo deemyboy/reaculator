@@ -32,12 +32,12 @@ $themes: (
     iconBarColor: $fire_color,
     sidebarBackground: transparentize($fire_bg, 0.2),
     sidebarBorderColor: $fire_border,
-    sidebarDropdownBackground: $fire_bg,
-    sidebarDropdownHoverBackground: darken($fire_bg, 5%),
-    dropdownBackgroundColor: darken($fire_bg, 5%),
-    dropdownItemBackgroundColor: $fire_bg,
-    dropdownItemBackgroundHoverColor: lighten($fire_bg, 10%),
-    dropdownTextColor: $fire_color,
+    sidebarKeyboardBackground: $fire_bg,
+    sidebarKeyboardHoverBackground: darken($fire_bg, 5%),
+    keyboardBackgroundColor: darken($fire_bg, 5%),
+    keyboardItemBackgroundColor: $fire_bg,
+    keyboardItemBackgroundHoverColor: lighten($fire_bg, 10%),
+    keyboardTextColor: $fire_color,
     keyboardBackground: transparentize(darken($fire_bg, 10%), 0.5),
     keyboardBorderColor: $fire_border,
     primaryButtonBgColor: $fire_btn_bg,
@@ -66,12 +66,12 @@ $themes: (
     iconBarColor: $midnight_color,
     sidebarBackground: transparentize($midnight_bg, 0.2),
     sidebarBorderColor: $midnight_border,
-    sidebarDropdownBackground: $midnight_bg,
-    sidebarDropdownHoverBackground: darken($midnight_bg, 5%),
-    dropdownBackgroundColor: darken($midnight_bg, 5%),
-    dropdownItemBackgroundColor: $midnight_bg,
-    dropdownItemBackgroundHoverColor: lighten($midnight_bg, 10%),
-    dropdownTextColor: $midnight_color,
+    sidebarKeyboardBackground: $midnight_bg,
+    sidebarKeyboardHoverBackground: darken($midnight_bg, 5%),
+    keyboardBackgroundColor: darken($midnight_bg, 5%),
+    keyboardItemBackgroundColor: $midnight_bg,
+    keyboardItemBackgroundHoverColor: lighten($midnight_bg, 10%),
+    keyboardTextColor: $midnight_color,
     keyboardBackground: transparentize(lighten($midnight_bg, 5%), 0.5),
     keyboardBorderColor: $midnight_border,
     primaryButtonBgColor: $midnight_btn_bg,
@@ -101,12 +101,12 @@ $themes: (
     iconBarColor: $ocean_color,
     sidebarBackground: transparentize($ocean_bg, 0.2),
     sidebarBorderColor: $ocean_border,
-    sidebarDropdownBackground: $ocean_bg,
-    sidebarDropdownHoverBackground: darken($ocean_bg, 5%),
-    dropdownBackgroundColor: darken($ocean_bg, 5%),
-    dropdownItemBackgroundColor: $ocean_bg,
-    dropdownItemBackgroundHoverColor: lighten($ocean_bg, 10%),
-    dropdownTextColor: $ocean_color,
+    sidebarKeyboardBackground: $ocean_bg,
+    sidebarKeyboardHoverBackground: darken($ocean_bg, 5%),
+    keyboardBackgroundColor: darken($ocean_bg, 5%),
+    keyboardItemBackgroundColor: $ocean_bg,
+    keyboardItemBackgroundHoverColor: lighten($ocean_bg, 10%),
+    keyboardTextColor: $ocean_color,
     keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5),
     keyboardBorderColor: $ocean_border,
     primaryButtonBgColor: $ocean_btn_bg,
@@ -135,12 +135,12 @@ $themes: (
     iconBarColor: $storm_color,
     sidebarBackground: transparentize($storm_bg, 0.2),
     sidebarBorderColor: $storm_border,
-    sidebarDropdownBackground: $storm_bg,
-    sidebarDropdownHoverBackground: darken($storm_bg, 5%),
-    dropdownBackgroundColor: darken($storm_bg, 5%),
-    dropdownItemBackgroundColor: $storm_bg,
-    dropdownItemBackgroundHoverColor: lighten($storm_bg, 10%),
-    dropdownTextColor: $storm_color,
+    sidebarKeyboardBackground: $storm_bg,
+    sidebarKeyboardHoverBackground: darken($storm_bg, 5%),
+    keyboardBackgroundColor: darken($storm_bg, 5%),
+    keyboardItemBackgroundColor: $storm_bg,
+    keyboardItemBackgroundHoverColor: lighten($storm_bg, 10%),
+    keyboardTextColor: $storm_color,
     keyboardBackground: transparentize(lighten($storm_bg, 10%), 0.5),
     keyboardBorderColor: $storm_border,
     primaryButtonBgColor: $storm_btn_bg,
@@ -169,12 +169,12 @@ $themes: (
     iconBarColor: $jungle_color,
     sidebarBackground: transparentize($jungle_bg, 0.2),
     sidebarBorderColor: $jungle_border,
-    sidebarDropdownBackground: $jungle_bg,
-    sidebarDropdownHoverBackground: darken($jungle_bg, 5%),
-    dropdownBackgroundColor: darken($jungle_bg, 5%),
-    dropdownItemBackgroundColor: $jungle_bg,
-    dropdownItemBackgroundHoverColor: lighten($jungle_bg, 10%),
-    dropdownTextColor: $jungle_color,
+    sidebarKeyboardBackground: $jungle_bg,
+    sidebarKeyboardHoverBackground: darken($jungle_bg, 5%),
+    keyboardBackgroundColor: darken($jungle_bg, 5%),
+    keyboardItemBackgroundColor: $jungle_bg,
+    keyboardItemBackgroundHoverColor: lighten($jungle_bg, 10%),
+    keyboardTextColor: $jungle_color,
     keyboardBackground: transparentize(lighten($jungle_bg, 10%), 0.5),
     keyboardBorderColor: $jungle_border,
     primaryButtonBgColor: $jungle_btn_bg,
@@ -185,11 +185,12 @@ $themes: (
     primaryButtonTextTransform: none,
     primaryButtonBoxShadowColor:
       darken(transparentize($jungle_btn_bg, 0.5), 10%),
-    secondaryButtonBgColor: adjust-color(darken($jungle_btn_bg,15%),$green: -90),
-    secondaryButtonTextColor: lighten($jungle_btn_color,35%),
-    secondaryButtonBorderColor: darken($jungle_btn_border,15%),
-    secondaryButtonHoverColor: darken($jungle_btn_bg,5%),
-    secondaryButtonActiveColor: darken($jungle_btn_bg,10%),
+    secondaryButtonBgColor:
+      adjust-color(darken($jungle_btn_bg, 15%), $green: -90),
+    secondaryButtonTextColor: lighten($jungle_btn_color, 35%),
+    secondaryButtonBorderColor: darken($jungle_btn_border, 15%),
+    secondaryButtonHoverColor: darken($jungle_btn_bg, 5%),
+    secondaryButtonActiveColor: darken($jungle_btn_bg, 10%),
     secondaryButtonBoxShadowColor:
       darken(transparentize(complement($jungle_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
@@ -222,6 +223,8 @@ $themes: (
   @return map-get($theme-map, $key);
 }
 
+$open: ".open";
+
 #calculator {
   > .container {
     @include themify($themes) {
@@ -234,37 +237,86 @@ $themes: (
       .menu-icon {
         background-color: themed(menuIconBackgroundColor);
         border-color: themed(menuIconBorderColor);
+
         &:hover {
           background-color: themed(menuIconBackgroundHoverColor);
           transform: scale(1.05);
         }
-        .icon-bar {
-          background-color: themed(iconBarColor);
-        }
-        transition: all 0.25s;
       }
-
+      .icon-bar {
+        background-color: themed(iconBarColor);
+      }
+      transition: all 0.25s;
+    }
+    &#{$open} {
+      @include themify($themes) {
+        .menu-icon {
+          transform-origin: center;
+          transform: translate(-620%, 0%) scale(1.05);
+          background-color: themed(menuIconBackgroundHoverColor);
+        }
+      }
+    }
+    @include themify($themes) {
       + .sidebar {
         background: themed(sidebarBackground);
         border-color: themed(sidebarBorderColor);
+        // transition: .15s all;
         .title {
           color: themed(textColor);
         }
-        .btn-dropdown {
-          background: themed(sidebarDropdownBackground);
+        .btn-keyboard {
+          background: themed(sidebarKeyboardBackground);
           color: themed(textColor);
           border-color: themed(borderColor);
           &:hover {
-            background: themed(sidebarDropdownHoverBackground);
+            background: themed(sidebarKeyboardHoverBackground);
+          }
+        }
+        .keyboard {
+          transition-duration: .05s;
+          background-color: themed(keyboardBackground);
+          border-color: themed(keyboardBorderColor);
+        }
+      }
+    }
+    
+    &#{$open} {
+      @include themify($themes) {
+        + .sidebar {
+          z-index: 2;
+          transform: scaleX(2);
+          transform-origin: right;
+          > div:first-of-type,
+          .keyboard,
+          .title {
+            transform: scaleX(0.5);
+          }
+          .keyboard {
+            border-radius: 4px;
+            $kb-bg: themed(keyboardBackground);
+            background-color: rgba($kb-bg, .1);
+            border-color: themed(keyboardBorderColor);
+            border: none;
+            .keyboard-menu {
+              background-color: themed(keyboardBackgroundColor);
+              border: 1px solid rgba(0, 0, 0, 0.15);
+              color: themed(keyboardTextColor);
+              padding: 0;
+              .keyboard-item {
+                background-color: themed(keyboardItemBackgroundColor);
+                color: themed(keyboardTextColor);
+                margin: 2px 0;
+                &:hover {
+                  background-color: themed(keyboardItemBackgroundHoverColor);
+                }
+              }
+            }
           }
         }
       }
-
-      .keyboard {
-        background-color: themed(keyboardBackground);
-        border-color: themed(keyboardBorderColor);
-      }
-
+    }
+    @include themify($themes) {
       //buttons
       $btn-primary-bg-color: themed(primaryButtonBgColor);
       $btn-primary-text-color: themed(primaryButtonTextColor);
@@ -361,67 +413,6 @@ $themes: (
         }
         &.btn-error {
           background-color: darken($btn-success-bg-color, 15%);
-        }
-      }
-    }
-  }
-}
-
-// handle .open
-// .sidebar .menu-icon and .icon-bar
-#calculator {
-  > .container.open {
-    @include themify($themes) {
-      .menu-icon {
-        transform-origin: center;
-        transform: translate(-620%, 0%) scale(1.05);
-        background-color: themed(menuIconBackgroundHoverColor);
-
-        .icon-bar {
-          &:nth-of-type(1) {
-            transform-origin: center;
-            transform: translate(0%, 180%) rotate(45deg) scale(1.3);
-          }
-          &:nth-of-type(2) {
-            opacity: 0;
-          }
-          &:nth-of-type(3) {
-            transform-origin: center;
-            transform: translate(0%, -180%) rotate(-45deg) scale(1.3);
-          }
-        }
-      }
-      + .sidebar {
-        z-index: 2;
-        transform: scaleX(2);
-        transform-origin: right;
-        > div:first-of-type,
-        .dropdown,
-        .title {
-          transform: scaleX(0.5);
-        }
-        .dropdown {
-          transform-origin: left;
-          .dropdown-menu {
-            background-color: themed(dropdownBackgroundColor);
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            color: themed(dropdownTextColor);
-            padding: 0;
-            .dropdown-item {
-              background-color: themed(dropdownItemBackgroundColor);
-              color: themed(dropdownTextColor);
-              margin: 2px 0;
-              &:hover {
-                background-color: themed(dropdownItemBackgroundHoverColor);
-              }
-            }
-          }
-        }
-        .keyboard {
-          // border-radius: 50px;
-          $kb-bg: themed(keyboardBackground);
-          background-color: darken($kb-bg, 10%);
-          border-color: themed(keyboardBorderColor);
         }
       }
     }
