@@ -1,3 +1,51 @@
+export const sidebarKeys = [
+  {
+    id: "Fire",
+    value: "Fire",
+    specialClass: "btn-fire",
+    title: "Fire",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Midnight",
+    value: "Midnight",
+    specialClass: "btn-midnight",
+    title: "Midnight",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Ocean",
+    value: "Ocean",
+    specialClass: "btn-ocean",
+    title: "Ocean",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Storm",
+    value: "Storm",
+    specialClass: "btn-storm",
+    title: "Storm",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Jungle",
+    value: "Jungle",
+    specialClass: "btn-jungle",
+    title: "Jungle",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+];
+
 export const numberKeys = [
   {
     id: 7,
@@ -187,8 +235,8 @@ export const utilityKeys = [
   {
     id: 18,
     value: "a",
-    uniChar: "\u0061\u0063",
     specialClass: "btn-danger",
+    uniChar: "\u0061\u0063",
     title: "all clear (a)",
     keycode: 65,
     kbCode: "KeyA",

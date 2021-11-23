@@ -14,4 +14,38 @@
   .btn-group-lg > .btn {
     font-size: 1.5rem;
   }
+  .btn-theme {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 0.2rem;
+    font-weight: 400;
+    width: 50px;
+  }
+  .btn-fire {
+    color: $fire_color;
+    background-color: $fire_btn_bg;
+    border-color: $fire_btn_border;
+    padding: .25rem 1rem;
+  }
+  .btn-midnight {
+    color: lighten($midnight_color,30%);
+    background-color: $midnight_btn_bg;
+    border-color: $midnight_btn_border;
+    font-size: 0.65rem;
+  }
+  .btn-ocean {
+    color: $ocean_color;
+    background-color: $ocean_btn_bg;
+    border-color: $ocean_btn_border;
+  }
+  .btn-storm {
+    color: $storm_color;
+    background-color: $storm_btn_bg;
+    border-color: $storm_btn_border;
+  }
+  .btn-jungle {
+    color: $jungle_color;
+    background-color: $jungle_btn_bg;
+    border-color: $jungle_btn_border;
+  }
 }

@@ -40,14 +40,14 @@ $themes: (
     dropdownTextColor: $fire_color,
     keyboardBackground: transparentize(darken($fire_bg, 10%), 0.5),
     keyboardBorderColor: $fire_border,
-    primaryButtonColor: $fire_btn_bg,
+    primaryButtonBgColor: $fire_btn_bg,
     primaryButtonTextColor: $fire_btn_color,
     primaryButtonBorderColor: $fire_btn_border,
     primaryButtonHoverColor: darken($fire_btn_bg, 5%),
     primaryButtonActiveColor: darken($fire_btn_bg, 10%),
     primaryButtonBoxShadowColor: darken(transparentize($fire_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
-    secondaryButtonColor: complement($fire_btn_bg),
+    secondaryButtonBgColor: complement($fire_btn_bg),
     secondaryButtonTextColor: complement($fire_btn_color),
     secondaryButtonBorderColor: complement($fire_btn_border),
     secondaryButtonHoverColor: darken(complement($fire_btn_bg), 5%),
@@ -74,7 +74,7 @@ $themes: (
     dropdownTextColor: $midnight_color,
     keyboardBackground: transparentize(lighten($midnight_bg, 5%), 0.5),
     keyboardBorderColor: $midnight_border,
-    primaryButtonColor: $midnight_btn_bg,
+    primaryButtonBgColor: $midnight_btn_bg,
     primaryButtonTextColor: $midnight_btn_color,
     primaryButtonBorderColor: $midnight_btn_border,
     primaryButtonHoverColor: darken($midnight_btn_bg, 5%),
@@ -82,7 +82,7 @@ $themes: (
     primaryButtonBoxShadowColor:
       darken(transparentize($midnight_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
-    secondaryButtonColor: complement($midnight_btn_bg),
+    secondaryButtonBgColor: complement($midnight_btn_bg),
     secondaryButtonTextColor: complement($midnight_btn_color),
     secondaryButtonBorderColor: complement($midnight_btn_border),
     secondaryButtonHoverColor: darken(complement($midnight_btn_bg), 5%),
@@ -109,14 +109,14 @@ $themes: (
     dropdownTextColor: $ocean_color,
     keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5),
     keyboardBorderColor: $ocean_border,
-    primaryButtonColor: $ocean_btn_bg,
+    primaryButtonBgColor: $ocean_btn_bg,
     primaryButtonTextColor: $ocean_btn_color,
     primaryButtonBorderColor: $ocean_btn_border,
     primaryButtonHoverColor: darken($ocean_btn_bg, 5%),
     primaryButtonActiveColor: darken($ocean_btn_bg, 10%),
     primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
-    secondaryButtonColor: complement($ocean_btn_bg),
+    secondaryButtonBgColor: complement($ocean_btn_bg),
     secondaryButtonTextColor: lighten(complement($ocean_btn_color), 10%),
     secondaryButtonBorderColor: complement($ocean_btn_border),
     secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
@@ -143,14 +143,14 @@ $themes: (
     dropdownTextColor: $storm_color,
     keyboardBackground: transparentize(lighten($storm_bg, 10%), 0.5),
     keyboardBorderColor: $storm_border,
-    primaryButtonColor: $storm_btn_bg,
+    primaryButtonBgColor: $storm_btn_bg,
     primaryButtonTextColor: $storm_btn_color,
     primaryButtonBorderColor: $storm_btn_border,
     primaryButtonHoverColor: darken($storm_btn_bg, 5%),
     primaryButtonActiveColor: darken($storm_btn_bg, 10%),
     primaryButtonBoxShadowColor: darken(transparentize($storm_btn_bg, 0.6), 10%),
     primaryButtonTextTransform: none,
-    secondaryButtonColor: complement($storm_btn_bg),
+    secondaryButtonBgColor: complement($storm_btn_bg),
     secondaryButtonTextColor: complement($storm_btn_color),
     secondaryButtonBorderColor: complement($storm_btn_border),
     secondaryButtonHoverColor: darken(complement($storm_btn_bg), 5%),
@@ -177,7 +177,7 @@ $themes: (
     dropdownTextColor: $jungle_color,
     keyboardBackground: transparentize(lighten($jungle_bg, 10%), 0.5),
     keyboardBorderColor: $jungle_border,
-    primaryButtonColor: $jungle_btn_bg,
+    primaryButtonBgColor: $jungle_btn_bg,
     primaryButtonTextColor: $jungle_btn_color,
     primaryButtonBorderColor: $jungle_btn_border,
     primaryButtonHoverColor: darken($jungle_btn_bg, 5%),
@@ -185,11 +185,11 @@ $themes: (
     primaryButtonTextTransform: none,
     primaryButtonBoxShadowColor:
       darken(transparentize($jungle_btn_bg, 0.5), 10%),
-    secondaryButtonColor: complement($jungle_btn_bg),
-    secondaryButtonTextColor: complement($jungle_btn_color),
-    secondaryButtonBorderColor: complement($jungle_btn_border),
-    secondaryButtonHoverColor: darken(complement($jungle_btn_bg), 5%),
-    secondaryButtonActiveColor: darken(complement($jungle_btn_bg), 10%),
+    secondaryButtonBgColor: adjust-color(darken($jungle_btn_bg,15%),$green: -90),
+    secondaryButtonTextColor: lighten($jungle_btn_color,35%),
+    secondaryButtonBorderColor: darken($jungle_btn_border,15%),
+    secondaryButtonHoverColor: darken($jungle_btn_bg,5%),
+    secondaryButtonActiveColor: darken($jungle_btn_bg,10%),
     secondaryButtonBoxShadowColor:
       darken(transparentize(complement($jungle_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
@@ -266,11 +266,11 @@ $themes: (
       }
 
       //buttons
-      $prm-btn-bg-color: themed(primaryButtonColor);
+      $btn-primary-bg-color: themed(primaryButtonBgColor);
       $btn-primary-text-color: themed(primaryButtonTextColor);
       $btn-primary-border-color: themed(primaryButtonBorderColor);
       .btn-primary {
-        background-color: themed(primaryButtonColor);
+        background-color: themed(primaryButtonBgColor);
         color: themed(primaryButtonTextColor);
         border-color: themed(primaryButtonBorderColor);
         &:hover,
@@ -284,16 +284,16 @@ $themes: (
           background-color: themed(primaryButtonActiveColor);
         }
         &.btn-error {
-          background-color: darken($prm-btn-bg-color, 15%);
-          color:darken($btn-primary-text-color, 50%);
-          border-color:darken($btn-primary-border-color, 90%);
+          background-color: darken($btn-primary-bg-color, 15%);
+          color: darken($btn-primary-text-color, 50%);
+          border-color: darken($btn-primary-border-color, 90%);
         }
       }
-      $scnd-btn-bg-color: themed(secondaryButtonColor);
+      $btn-secondary-bg-color: themed(secondaryButtonBgColor);
       $btn-secondary-text-color: themed(secondaryButtonTextColor);
       $btn-secondary-border-color: themed(secondaryButtonBorderColor);
       .btn-secondary {
-        background-color: themed(secondaryButtonColor);
+        background-color: themed(secondaryButtonBgColor);
         color: themed(secondaryButtonTextColor);
         border-color: themed(secondaryButtonBorderColor);
         &:hover,
@@ -307,12 +307,12 @@ $themes: (
           background-color: themed(secondaryButtonActiveColor);
         }
         &.btn-error {
-          background-color: darken($scnd-btn-bg-color, 15%);
-          color:darken($btn-secondary-text-color, 50%);
-          border-color:darken($btn-secondary-border-color, 90%);
+          background-color: darken($btn-secondary-bg-color, 15%);
+          color: darken($btn-secondary-text-color, 50%);
+          border-color: darken($btn-secondary-border-color, 90%);
         }
       }
-      $btn-danger-bg-color: #DC3545;
+      $btn-danger-bg-color: #dc3545;
       .btn-danger {
         color: #fff;
         background-color: $btn-danger-bg-color;
@@ -337,7 +337,8 @@ $themes: (
         &.btn-use-me {
           border-color: #eddfe0;
           border-width: 2px;
-          box-shadow: 0px 0px 9px 0px;}
+          box-shadow: 0px 0px 9px 0px;
+        }
       }
       $btn-success-bg-color: #198754;
       .btn-success {
@@ -415,6 +416,12 @@ $themes: (
               }
             }
           }
+        }
+        .keyboard {
+          // border-radius: 50px;
+          $kb-bg: themed(keyboardBackground);
+          background-color: darken($kb-bg, 10%);
+          border-color: themed(keyboardBorderColor);
         }
       }
     }
