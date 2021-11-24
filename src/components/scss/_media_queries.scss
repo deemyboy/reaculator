@@ -1,0 +1,49 @@
+// A map of breakpoints.
+$breakpoints: (
+  xs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+);
+
+@mixin respond-above($bp) {
+  @if map-has-key($breakpoints, $bp) {
+    $bp-val: map-get($breakpoints, $bp);
+
+    @media (min-width: $bp-val) {
+      @content;
+    }
+  } @else {
+    // Log a warning.
+    @warn 'Invalid breakpoint: #{$bp}.';
+  }
+}
+
+@include respond-above(xs) {
+  .body {
+    display: table;
+  }
+}
+
+@mixin respond-below($bp) {
+  @if map-has-key($breakpoints, $bp) {
+    $bp-val: map-get($breakpoints, $bp);
+
+    @media (max-width: $bp-val) {
+      @content;
+    }
+  } @else {
+    // Log a warning.
+    @warn 'Invalid breakpoint: #{$bp}.';
+  }
+}
+
+@include respond-below(xs) {
+    #calculator > .row >.container {
+    width: 100%;
+    .calculator {
+        width: 100%;
+
+    }
+  }
+}
