@@ -4,6 +4,7 @@ import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Sidebar from "./components/sidebar";
 import Cookies from "universal-cookie";
+import { sidebarKeys } from "./keys";
 import { numberKeys } from "./keys";
 import { functionKeys } from "./keys";
 import { utilityKeys } from "./keys";
@@ -15,7 +16,8 @@ class Calculator extends Component {
     super(props);
 
     this.state.theme = this.getCookie("currentTheme");
-    this.state.themesData.currentSetting = this.getCookie("currentTheme");
+    this.state.themesDataKeyboard.currentSetting = this.getCookie("currentTheme");
+    this.sidebarKeys = sidebarKeys;
     this.numberKeys = numberKeys;
     this.functionKeys = functionKeys;
     this.utilityKeys = utilityKeys;
@@ -27,8 +29,8 @@ class Calculator extends Component {
       calculationClass: "calculation",
       calculationValue: "",
     },
-    dropdownData: {
-      dropdownClass: "dropdown",
+    themeKeyboardData: {
+      themeKeyboardClass: "themeKeyboard",
     },
     resultData: {
       resultClass: "result",
@@ -47,17 +49,11 @@ class Calculator extends Component {
     num2: "",
     op1: "",
     op2: "",
-    themesData: {
-      labelForDropdown: "Theme",
+    themesDataKeyboard: {
+      labelForThemeKeyboard: "Theme",
       currentSetting: "Ocean",
-      callbackForDropdown: (e) => this.onSelectTheme(e),
-      itemsForDropdown: [
-        { itemName: "Fire" },
-        { itemName: "Midnight" },
-        { itemName: "Ocean" },
-        { itemName: "Storm" },
-        { itemName: "Jungle" },
-      ],
+      callbackForThemeKeyboard: (e) => this.onSelectTheme(e),
+      itemsForThemeKeyboard: sidebarKeys
     },
     theme: "ocean",
     numberKeyboardClass: "numberKeyboard",
@@ -144,18 +140,19 @@ class Calculator extends Component {
     this.setState({ sidebarData });
   };
 
-  packageDropdownData = (dropdownUser) => {
-    let dropdownData = { ...this.state.dropdownData };
-    dropdownData.labelForDropdown = dropdownUser.labelForDropdown;
-    dropdownData.itemsForDropdown = dropdownUser.itemsForDropdown;
-    dropdownData.currentSetting = dropdownUser.currentSetting;
-    dropdownData.onClick = dropdownUser.callbackForDropdown;
-    return dropdownData;
+
+  packageThemeKeyboardData = (themeKeyboardUser) => {
+    let themeKeyboardData = { ...this.state.themeKeyboardData };
+    themeKeyboardData.labelForThemeKeyboard = themeKeyboardUser.labelForThemeKeyboard;
+    themeKeyboardData.itemsForThemeKeyboard = themeKeyboardUser.itemsForThemeKeyboard;
+    themeKeyboardData.currentSetting = themeKeyboardUser.currentSetting;
+    themeKeyboardData.onClick = themeKeyboardUser.callbackForThemeKeyboard;
+    return themeKeyboardData;
   };
 
   onSelectTheme = (e) => {
     let cookieData = {};
-    let themesData = { ...this.state.themesData };
+    let themesData = { ...this.state.themesDataKeyboard };
     themesData.currentSetting = e.target.innerHTML;
     cookieData.cookieLabel = "currentTheme";
     cookieData.cookieValue = themesData.currentSetting;
@@ -164,7 +161,7 @@ class Calculator extends Component {
     this.setCookie(cookieData);
     this.toggleSidebar(e);
   };
-
+  
   setCookie = (cookieData) => {
     let d = new Date();
     let year = d.getFullYear();
@@ -189,7 +186,7 @@ class Calculator extends Component {
   };
 
   handleClick = (e) => {
-    console.log("189: handleClick", e);
+    // console.log("189: handleClick", e);
     e.target.blur();
     const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
@@ -805,6 +802,12 @@ class Calculator extends Component {
   };
 
   render = () => {
+    let sideBarKeyboardData = {};
+
+    sideBarKeyboardData.keys = this.sidebarKeys;
+    sideBarKeyboardData.passClickHandler = this.onSelectTheme;
+
+
     return (
       <div
         className={`container ${
@@ -868,7 +871,7 @@ class Calculator extends Component {
           </div>
           <Sidebar
             sidebarData={this.state.sidebarData}
-            dropdownData={this.packageDropdownData(this.state.themesData)}
+            keyboardData={this.packageThemeKeyboardData(this.state.themesDataKeyboard)}
           ></Sidebar>
         </div>
       </div>
