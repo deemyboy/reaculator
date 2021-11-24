@@ -1,29 +1,37 @@
 // .fire
-// background-repeat: no-repeat no-repeat;
 // background-position: bottom center;
 // light ring
 // background-image: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
 // candles
 // background-image: url("https://c.pxhere.com/photos/0d/48/candle_flame_flame_fire_light_burn_wax_candle_candlelight_heat-1058201.jpg!a");
-// background-size: cover;
 
 // .midnight
-// <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+// https://c.pxhere.com/photos/13/41/milky_way_stars_night_sky_landscape_scenic_galaxy_space-674805.jpg!d
+// https://c.pxhere.com/photos/f9/a8/planet_moon_space_space_travel_universe_all_astronomy_sky-1068224.jpg!d
+// https://get.pxhere.com/photo/sky-night-star-milky-way-atmosphere-galaxy-outer-space-astronomy-midnight-astronomical-object-175288.jpg
 
 // .ocean
+// https://c.pxhere.com/photos/6a/14/beach_dawn_dusk_ocean_sea_seascape_sun_sunrise-1364695.jpg!d
 
 // .storm
 // https://get.pxhere.com/photo/night-city-weather-storm-lightning-thunder-thunderstorm-phenomenon-city-at-night-flashes-1023959.jpg
 // https://c.pxhere.com/photos/65/cf/barn_lightning_bolt_storm_thunderstorm_clouds_night_shack-804994.jpg!a
-// background-size: cover;
-// background-repeat: no-repeat;
-// background-position: bottom;
+// https://c.pxhere.com/photos/7a/92/lightning_storm_arizona_monsoon_lightning_storm_electricity_weather_sky-1323288.jpg!d
+// https://c.pxhere.com/photos/0b/18/tree_storm_sky_lightning_rain_weather_nature_danger-1023510.jpg!d
+// https://c.pxhere.com/photos/e7/d6/cloud_water_sea_ocean_lightning-39263.jpg!d
 
 // .jungle
+// https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d
 
+$fire_url: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
+$midnight_url: url("https://get.pxhere.com/photo/sky-night-star-milky-way-atmosphere-galaxy-outer-space-astronomy-midnight-astronomical-object-175288.jpg");
+$ocean_url: url("https://c.pxhere.com/photos/6a/14/beach_dawn_dusk_ocean_sea_seascape_sun_sunrise-1364695.jpg!d");
+$storm_url: url("https://get.pxhere.com/photo/night-city-weather-storm-lightning-thunder-thunderstorm-phenomenon-city-at-night-flashes-1023959.jpg");
+$jungle_url: url("https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d");
 $themes: (
   fire: (
     backgroundColor: $fire_bg,
+    backgroundUrl: $fire_url,
     textColor: $fire_color,
     borderColor: $fire_border,
     menuIconBackgroundColor: darken($fire_bg, 5%),
@@ -58,6 +66,7 @@ $themes: (
   ),
   midnight: (
     backgroundColor: $midnight_bg,
+    backgroundUrl: $midnight_url,
     textColor: $midnight_color,
     borderColor: $midnight_border,
     menuIconBackgroundColor: darken($midnight_bg, 5%),
@@ -93,6 +102,7 @@ $themes: (
   ),
   ocean: (
     backgroundColor: $ocean_bg,
+    backgroundUrl: $ocean_url,
     textColor: $ocean_color,
     borderColor: $ocean_border,
     menuIconBackgroundColor: darken($ocean_bg, 5%),
@@ -127,6 +137,7 @@ $themes: (
   ),
   storm: (
     backgroundColor: $storm_bg,
+    backgroundUrl: $storm_url,
     textColor: $storm_color,
     borderColor: $storm_border,
     menuIconBackgroundColor: darken($storm_bg, 5%),
@@ -161,6 +172,7 @@ $themes: (
   ),
   jungle: (
     backgroundColor: $jungle_bg,
+    backgroundUrl: $jungle_url,
     textColor: $jungle_color,
     borderColor: $jungle_border,
     menuIconBackgroundColor: darken($jungle_bg, 5%),
@@ -224,7 +236,31 @@ $themes: (
 }
 
 $open: ".open";
+$picture: ".picture";
+$color: ".color";
 
+#calculator {
+  > .container {
+    &#{$picture} {
+      @include themify($themes) {
+        // background-position: bottom center;
+        // light ring
+        background-image: themed(backgroundUrl);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: bottom;
+        // candles
+        // background-image: url("https://c.pxhere.com/photos/0d/48/candle_flame_flame_fire_light_burn_wax_candle_candlelight_heat-1058201.jpg!a");
+
+        // background-url: themed(backgroundColor);
+        // border-color: themed(borderColor);
+      }
+      .numberKeyboard, .functionKeyboard {
+        background-color: #faebd729;
+      }
+    }
+  }
+}
 #calculator {
   > .container {
     @include themify($themes) {
@@ -252,7 +288,7 @@ $open: ".open";
       @include themify($themes) {
         .menu-icon {
           transform-origin: center;
-          transform: translate(-620%, 0%) scale(1.05);
+          transform: translate(-300%, 0%) scale(1.05);
           background-color: themed(menuIconBackgroundHoverColor);
         }
       }
@@ -274,28 +310,24 @@ $open: ".open";
           }
         }
         .keyboard {
-          transition-duration: .05s;
+          transition-duration: 0.05s;
           background-color: themed(keyboardBackground);
           border-color: themed(keyboardBorderColor);
         }
       }
     }
-    
+
     &#{$open} {
       @include themify($themes) {
         + .sidebar {
           z-index: 2;
-          transform: scaleX(2);
+          transform: scaleX(1);
           transform-origin: right;
           > div:first-of-type,
-          .keyboard,
-          .title {
-            transform: scaleX(0.5);
-          }
           .keyboard {
             border-radius: 4px;
             $kb-bg: themed(keyboardBackground);
-            background-color: rgba($kb-bg, .1);
+            background-color: rgba($kb-bg, 0.1);
             border-color: themed(keyboardBorderColor);
             border: none;
             .keyboard-menu {

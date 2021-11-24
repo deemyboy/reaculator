@@ -154,11 +154,6 @@ class Calculator extends Component {
     this.setState({ sidebarData });
   };
   
-  selectThemeType = (e) => {
-    let themeTypeData = { ...this.state.themeTypeData };
-    //
-  };
-
   packageKeyboardData = (keyboardUser) => {
     return this.state[keyboardUser];
     // keyboardData.labelForKeyboard = keyboardUser.labelForKeyboard;
@@ -167,7 +162,7 @@ class Calculator extends Component {
     // keyboardData.onClick = keyboardUser.onClick;
     return keyboardData;
   };
-
+  
   onSelectTheme = (e) => {
     let cookieData = {};
     let themesData = { ...this.state.themesKeyboardData };
@@ -179,11 +174,11 @@ class Calculator extends Component {
     this.setCookie(cookieData);
     this.toggleSidebar(e);
   };
-
+  
   onSelectThemeType = (e) => {
     let cookieData = {};
     let _themeTypeData = { ...this.state.themeTypeKeyboardData };
-    _themeTypeData.currentSetting = e.target.innerHTML;
+    _themeTypeData.currentSetting = e.target.value;
     cookieData.cookieLabel = "currentThemeType";
     cookieData.cookieValue = _themeTypeData.currentSetting;
     cookieData.cookiePath = { path: "/" };
@@ -193,17 +188,18 @@ class Calculator extends Component {
     });
     this.setCookie(cookieData);
     this.selectThemeType(e);
+    this.toggleSidebar(e);
   };
-
+  
   setCookie = (cookieData) => {
     let d = new Date();
     let year = d.getFullYear();
     let month = d.getMonth();
     let day = d.getDate();
     let expires = new Date(year + 1, month, day);
-
+    
     const cookies = new Cookies();
-
+    
     const path = cookieData.cookiePath;
     cookies.set(cookieData.cookieLabel, cookieData.cookieValue, {
       path,
@@ -216,20 +212,25 @@ class Calculator extends Component {
     return cookies.get(cookieLabel)
       ? cookies.get(cookieLabel)
       : this.state[cookieDefault];
-  };
-
-  handleClick = (e) => {
-    // console.log("189: handleClick", e);
-    e.target.blur();
-    const keyClicked = this.utilityKeys
+    };
+    
+    selectThemeType = (e) => {
+      let themeTypeData = { ...this.state.themeTypeKeyboardData };
+      //
+    };
+    
+    handleClick = (e) => {
+      // console.log("189: handleClick", e);
+      e.target.blur();
+      const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
-    let clickData = {
-      key: keyClicked[0].value ? keyClicked[0].value : "",
-      ctrlKey: false,
-      shiftKey: false,
+      let clickData = {
+        key: keyClicked[0].value ? keyClicked[0].value : "",
+        ctrlKey: false,
+        shiftKey: false,
     };
     this.handleUserInput(clickData);
   };
@@ -839,7 +840,7 @@ class Calculator extends Component {
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
-        }`}
+        } ${this.state.themeType}`}
       >
         <div className="flex-row row">
           <div

@@ -2,7 +2,6 @@ import React from "react";
 import Keyboard from "./keyboard";
 
 const Sidebar = React.forwardRef((props, ref) => {
-  console.log(props)
   return (
     <div className={props.sidebarData.sidebarClass}>
       <div className="title">{props.sidebarData.sidebarValue}</div>
