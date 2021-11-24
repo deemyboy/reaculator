@@ -22,12 +22,13 @@
 
 // .jungle
 // https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d
+// $jungle_url: url("https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d");
 
 $fire_url: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
 $midnight_url: url("https://get.pxhere.com/photo/sky-night-star-milky-way-atmosphere-galaxy-outer-space-astronomy-midnight-astronomical-object-175288.jpg");
 $ocean_url: url("https://c.pxhere.com/photos/6a/14/beach_dawn_dusk_ocean_sea_seascape_sun_sunrise-1364695.jpg!d");
 $storm_url: url("https://get.pxhere.com/photo/night-city-weather-storm-lightning-thunder-thunderstorm-phenomenon-city-at-night-flashes-1023959.jpg");
-$jungle_url: url("https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d");
+$jungle_url: url("https://c.pxhere.com/photos/4a/e6/spring_tree_flowers_meadow_wood_forest_sun_summer-985038.jpg!d");
 $themes: (
   fire: (
     backgroundColor: $fire_bg,
@@ -255,7 +256,7 @@ $color: ".color";
         // background-url: themed(backgroundColor);
         // border-color: themed(borderColor);
       }
-      .numberKeyboard, .functionKeyboard {
+      .keyboard  {
         background-color: #faebd729;
       }
     }
@@ -315,6 +316,10 @@ $color: ".color";
           border-color: themed(keyboardBorderColor);
         }
       }
+      .keyboard{
+      background-color: transparentize(lighten(themed(keyboardBackground),0%),.35);
+      border-color: themed(keyboardBorderColor);
+    }
     }
 
     &#{$open} {
