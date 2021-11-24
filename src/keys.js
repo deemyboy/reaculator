@@ -118,7 +118,8 @@ export const numberKeys = [
     keycode: 51,
     kbCode: "Digit3",
     type: "num",
-  },  {
+  },
+  {
     id: 10,
     value: ".",
     title: "dot",
@@ -130,10 +131,10 @@ export const numberKeys = [
     id: 0,
     value: "0",
     title: "zero",
-      keycode: 48,
-      kbCode: "Digit0",
-      type: "num",
-    },
+    keycode: 48,
+    kbCode: "Digit0",
+    type: "num",
+  },
 
   {
     id: 11,
@@ -246,7 +247,29 @@ export const utilityKeys = [
 
 // allowed key codes for keyPress event handler
 export const allowedKeys = [
-  13, 16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83,
-  88, 89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109,
-  110, 111, 187, 189, 190, 191,
+  13, 16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83, 88,
+  89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110, 111,
+  187, 189, 190, 191,
+];
+export const themeTypeKeys = [
+  {
+    id: "picture",
+    value: "a",
+    specialClass: "btn-theme-type",
+    uniChar: "\uD83D\uDCF7",
+    title: "all clear (a)",
+    keycode: 65,
+    kbCode: "KeyA",
+    type: "thype",
+  },
+  {
+    id: "color",
+    value: "a",
+    specialClass: "btn-theme-type",
+    uniChar: "\uD83C\uDF08",
+    title: "all clear (a)",
+    keycode: 65,
+    kbCode: "KeyA",
+    type: "thype",
+  },
 ];

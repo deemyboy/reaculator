@@ -19,3 +19,7 @@
     justify-content: center;
   }
 }
+.theme-type-keyboard {
+  @extend .keyboard
+  
+}
