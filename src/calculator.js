@@ -186,7 +186,7 @@ class Calculator extends Component {
   };
 
   handleClick = (e) => {
-    console.log("189: handleClick", e);
+    // console.log("189: handleClick", e);
     e.target.blur();
     const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
