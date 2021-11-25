@@ -46,6 +46,9 @@ $breakpoints: (
       width: 100%;
       border: none;
       border-radius: 0;
+      .menu-icon {
+          left: 92%;
+      }
     }
     .sidebar {
       position: absolute;

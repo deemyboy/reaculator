@@ -256,7 +256,7 @@ $color: ".color";
         // background-url: themed(backgroundColor);
         // border-color: themed(borderColor);
       }
-      .keyboard  {
+      .keyboard {
         background-color: #faebd729;
       }
     }
@@ -291,14 +291,27 @@ $color: ".color";
           transform-origin: center;
           transform: translate(-300%, 0%) scale(1.05);
           background-color: themed(menuIconBackgroundHoverColor);
+          .icon-bar:nth-of-type(2) {
+            opacity: 0;
+          }
+
+          .icon-bar:nth-of-type(1) {
+            transform-origin: center;
+            transform: translate(0%, 180%) rotate(45deg) scale(1.3);
+          }
+
+          .icon-bar:nth-of-type(3) {
+            transform-origin: center;
+            transform: translate(0%, -180%) rotate(-45deg) scale(1.3);
+          }
         }
       }
     }
     @include themify($themes) {
       + .sidebar {
-        background: transparentize(themed(sidebarBackground),.45);
+        background: transparentize(themed(sidebarBackground), 0.45);
         border-color: themed(sidebarBorderColor);
-        // transition: .15s all;
+        padding-bottom: 15px;
         .title {
           color: themed(textColor);
         }
@@ -316,10 +329,13 @@ $color: ".color";
           border-color: themed(keyboardBorderColor);
         }
       }
-      .keyboard{
-      background-color: transparentize(lighten(themed(keyboardBackground),0%),.35);
-      border-color: themed(keyboardBorderColor);
-    }
+      .keyboard {
+        background-color: transparentize(
+          lighten(themed(keyboardBackground), 0%),
+          0.35
+        );
+        border-color: themed(keyboardBorderColor);
+      }
     }
 
     &#{$open} {
@@ -330,9 +346,9 @@ $color: ".color";
           transform-origin: right;
           > div:first-of-type,
           .keyboard {
-            border-radius: 4px;
-            $kb-bg: themed(keyboardBackground);
-            background-color: rgba($kb-bg, 0.1);
+            border-radius: .25rem;
+            // $kb-bg: themed(keyboardBackground);
+            background-color: rgba(themed(keyboardBackground), 0.1);
             border-color: themed(keyboardBorderColor);
             border: none;
             .keyboard-menu {
@@ -353,6 +369,7 @@ $color: ".color";
         }
       }
     }
+    
     @include themify($themes) {
       //buttons
       $btn-primary-bg-color: themed(primaryButtonBgColor);

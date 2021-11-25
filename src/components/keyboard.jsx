@@ -5,7 +5,8 @@ class Keyboard extends Component {
   render = () => {
     const ref = React.createRef();
     return (
-      <React.Fragment>
+      <React.Fragment>      
+        <div className="title">{this.props.label}</div>
         {this.props.keys.map((ky) => {
           return (
             <Key

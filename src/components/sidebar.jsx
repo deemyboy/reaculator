@@ -7,12 +7,14 @@ const Sidebar = React.forwardRef((props, ref) => {
       <div className="title">{props.sidebarData.sidebarValue}</div>
       <div className="theme-type-keyboard">
         <Keyboard
+          label={props.themeTypeKbData.labelForKeyboard}
           keys={props.themeTypeKbData.itemsForKeyboard}
           passClickHandler={props.themeTypeKbData.onClick}
         ></Keyboard>
       </div>
-      <div className="keyboard">
+      <div className="theme-keyboard">
         <Keyboard
+          label={props.themesKbData.labelForKeyboard}
           keys={props.themesKbData.itemsForKeyboard}
           passClickHandler={props.themesKbData.onClick}
         ></Keyboard>

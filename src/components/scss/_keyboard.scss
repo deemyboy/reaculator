@@ -20,6 +20,11 @@
   }
 }
 .theme-type-keyboard {
-  @extend .keyboard
+  @extend .keyboard;
   
+}
+
+.theme-keyboard {
+  @extend .keyboard;
+
 }

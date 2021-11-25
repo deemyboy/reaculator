@@ -11,14 +11,14 @@ $i: #{"!"}important;
 #calculator {
   > .container {
     max-width: 640px;
-    margin-top: $s-3r;
+    // margin-top: $s-3r;
     .calculator {
-      transform: scaleX(1);
+      // transform: scaleX(1);
       @include transition(0.25s, all);
       padding: 10px;
       border: 2px solid silver;
       border-radius: $s-05r;
-      max-width: 540px;
+      // max-width: 540px;
       .title {
         font-size: $s-2r;
         color: white;

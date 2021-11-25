@@ -68,7 +68,7 @@ class Calculator extends Component {
       onClick: (e) => this.onSelectThemeType(e),
       itemsForKeyboard: themeTypeKeys,
     },
-    theme: "ocean",
+    theme: "Ocean",
     themeType: "color",
     numberKeyboardClass: "numberKeyboard",
     functionKeyboardClass: "functionKeyboard",
@@ -130,13 +130,13 @@ class Calculator extends Component {
   toggleSidebar = (e) => {
     let sidebarData = { ...this.state.sidebarData };
     let isOpen = sidebarData.isOpen;
-    
+
     // test if body touched (not menu icon)
     if (
       e.target.className !== "menu-icon" &&
       e.target.className !== "icon-bar"
-      ) {
-        // if sidebar open allow touch on calculator body  to close sidebar
+    ) {
+      // if sidebar open allow touch on calculator body  to close sidebar
       if (isOpen) {
         isOpen = false;
         sidebarData.isOpen = isOpen;
@@ -148,33 +148,31 @@ class Calculator extends Component {
       } else {
         isOpen = false;
       }
-      
+
       sidebarData.isOpen = isOpen;
     }
     this.setState({ sidebarData });
   };
-  
+
   packageKeyboardData = (keyboardUser) => {
     return this.state[keyboardUser];
-    // keyboardData.labelForKeyboard = keyboardUser.labelForKeyboard;
-    // keyboardData.itemsForKeyboard = keyboardUser.itemsForKeyboard;
-    // keyboardData.currentSetting = keyboardUser.currentSetting;
-    // keyboardData.onClick = keyboardUser.onClick;
-    return keyboardData;
   };
-  
+
   onSelectTheme = (e) => {
     let cookieData = {};
-    let themesData = { ...this.state.themesKeyboardData };
-    themesData.currentSetting = e.target.innerHTML;
+    let _themesData = { ...this.state.themesKeyboardData };
+    _themesData.currentSetting = e.target.innerHTML;
     cookieData.cookieLabel = "currentTheme";
-    cookieData.cookieValue = themesData.currentSetting;
+    cookieData.cookieValue = _themesData.currentSetting;
     cookieData.cookiePath = { path: "/" };
-    this.setState({ themesData, theme: themesData.currentSetting });
+    this.setState({
+      themesData: _themesData,
+      theme: _themesData.currentSetting,
+    });
     this.setCookie(cookieData);
     this.toggleSidebar(e);
   };
-  
+
   onSelectThemeType = (e) => {
     let cookieData = {};
     let _themeTypeData = { ...this.state.themeTypeKeyboardData };
@@ -187,19 +185,19 @@ class Calculator extends Component {
       themeType: _themeTypeData.currentSetting,
     });
     this.setCookie(cookieData);
-    this.selectThemeType(e);
+    // this.selectThemeType(e);
     this.toggleSidebar(e);
   };
-  
+
   setCookie = (cookieData) => {
     let d = new Date();
     let year = d.getFullYear();
     let month = d.getMonth();
     let day = d.getDate();
     let expires = new Date(year + 1, month, day);
-    
+
     const cookies = new Cookies();
-    
+
     const path = cookieData.cookiePath;
     cookies.set(cookieData.cookieLabel, cookieData.cookieValue, {
       path,
@@ -212,25 +210,25 @@ class Calculator extends Component {
     return cookies.get(cookieLabel)
       ? cookies.get(cookieLabel)
       : this.state[cookieDefault];
-    };
-    
-    selectThemeType = (e) => {
-      let themeTypeData = { ...this.state.themeTypeKeyboardData };
-      //
-    };
-    
-    handleClick = (e) => {
-      // console.log("189: handleClick", e);
-      e.target.blur();
-      const keyClicked = this.utilityKeys
+  };
+
+  // selectThemeType = (e) => {
+  //   let themeTypeData = { ...this.state.themeTypeKeyboardData };
+  //   //
+  // };
+
+  handleClick = (e) => {
+    // console.log("189: handleClick", e);
+    e.target.blur();
+    const keyClicked = this.utilityKeys
       .concat(this.numberKeys, this.functionKeys)
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
-      let clickData = {
-        key: keyClicked[0].value ? keyClicked[0].value : "",
-        ctrlKey: false,
-        shiftKey: false,
+    let clickData = {
+      key: keyClicked[0].value ? keyClicked[0].value : "",
+      ctrlKey: false,
+      shiftKey: false,
     };
     this.handleUserInput(clickData);
   };
@@ -842,9 +840,9 @@ class Calculator extends Component {
           this.state.sidebarData.isOpen === true ? "open" : ""
         } ${this.state.themeType}`}
       >
-        <div className="flex-row row">
+        <div className="">
           <div
-            className={`calculator ${this.state.theme.toLowerCase()}`}
+            className={`flex-row row calculator ${this.state.theme.toLowerCase()}`}
             onClick={(e) => this.toggleSidebar(e)}
           >
             <div className="title">{this.state.title}</div>
