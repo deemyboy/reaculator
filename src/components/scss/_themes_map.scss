@@ -296,7 +296,7 @@ $color: ".color";
     }
     @include themify($themes) {
       + .sidebar {
-        background: themed(sidebarBackground);
+        background: transparentize(themed(sidebarBackground),.45);
         border-color: themed(sidebarBorderColor);
         // transition: .15s all;
         .title {

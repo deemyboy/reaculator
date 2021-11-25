@@ -39,11 +39,24 @@ $breakpoints: (
 }
 
 @include respond-below(xs) {
-    #calculator > .row >.container {
+  #calculator > div.container {
     width: 100%;
+    margin-top: 0;
     .calculator {
-        width: 100%;
-
+      width: 100%;
+      border: none;
+      border-radius: 0;
+    }
+    .sidebar {
+      position: absolute;
+      right: -100px;
+      transform: scaleX(1);
+    }
+  }
+  #calculator > div.container {
+    &#{$open} .sidebar {
+      right: 0px;
+      transform: scaleX(1);
     }
   }
 }
