@@ -840,9 +840,9 @@ class Calculator extends Component {
           this.state.sidebarData.isOpen === true ? "open" : ""
         } ${this.state.themeType}`}
       >
-        <div className="">
+        <div className="flex-row row">
           <div
-            className={`flex-row row calculator ${this.state.theme.toLowerCase()}`}
+            className={`calculator ${this.state.theme.toLowerCase()}`}
             onClick={(e) => this.toggleSidebar(e)}
           >
             <div className="title">{this.state.title}</div>

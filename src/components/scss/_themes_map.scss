@@ -236,37 +236,23 @@ $themes: (
   @return map-get($theme-map, $key);
 }
 
-$open: ".open";
-$picture: ".picture";
-$color: ".color";
-
 #calculator {
   > .container {
-    &#{$picture} {
-      @include themify($themes) {
-        // background-position: bottom center;
-        // light ring
-        background-image: themed(backgroundUrl);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: bottom;
-        // candles
-        // background-image: url("https://c.pxhere.com/photos/0d/48/candle_flame_flame_fire_light_burn_wax_candle_candlelight_heat-1058201.jpg!a");
-
-        // background-url: themed(backgroundColor);
-        // border-color: themed(borderColor);
-      }
-      .keyboard {
-        background-color: #faebd729;
+    @include respond-below(xs) {
+      //
+      & {
+        width: 100%;
+        margin-top: $s-05r$i;
+        padding-left: $s-1r$i;
+        padding-right: $s-1r$i;
       }
     }
-  }
-}
-#calculator {
-  > .container {
+    // menu-icon+
+    // keyboard
     @include themify($themes) {
       background-color: themed(backgroundColor);
       border-color: themed(borderColor);
+      transition: all 0.25s;
       .title {
         color: themed(textColor);
       }
@@ -274,6 +260,7 @@ $color: ".color";
       .menu-icon {
         background-color: themed(menuIconBackgroundColor);
         border-color: themed(menuIconBorderColor);
+        transition: all 0.25s;
 
         &:hover {
           background-color: themed(menuIconBackgroundHoverColor);
@@ -283,8 +270,18 @@ $color: ".color";
       .icon-bar {
         background-color: themed(iconBarColor);
       }
-      transition: all 0.25s;
+
+      .keyboard {
+        background-color: transparentize(
+          lighten(themed(keyboardBackground), 0%),
+          0.35
+        );
+        border-color: themed(keyboardBorderColor);
+      }
     }
+
+    /***** open *****/
+    // menu-icon+
     &#{$open} {
       @include themify($themes) {
         .menu-icon {
@@ -307,34 +304,68 @@ $color: ".color";
         }
       }
     }
+    // menu-icon+
+    /***** end open *****/
+
+    //  sidebar
+    //    keyboard
     @include themify($themes) {
       + .sidebar {
-        background: transparentize(themed(sidebarBackground), 0.45);
+        background: transparentize(themed(sidebarBackground), 0.25);
+        border: 1px solid;
         border-color: themed(sidebarBorderColor);
         padding-bottom: 15px;
+        border-radius: $s-025r;
+        width: 100px;
+        position: relative;
+        right: 100px;
+        transform: scaleX(0);
+        transform-origin: right;
+        @include transition(0.25s, all);
+        z-index: -1;
         .title {
-          color: themed(textColor);
-        }
-        .btn-keyboard {
-          background: themed(sidebarKeyboardBackground);
-          color: themed(textColor);
-          border-color: themed(borderColor);
-          &:hover {
-            background: themed(sidebarKeyboardHoverBackground);
-          }
+          color: darken(themed(textColor),20%);
+          text-align: center;
+          font-size: 1rem;
+          padding: 10px 0;
         }
         .keyboard {
           transition-duration: 0.05s;
-          background-color: themed(keyboardBackground);
-          border-color: themed(keyboardBorderColor);
+          background-color: transparentize(themed(keyboardBackground), 0.95);
+          border-color: transparentize(themed(keyboardBorderColor), 0.95);
+          .title {
+            color: darken(themed(textColor), 20%);
+            text-align: center;
+            font-size: 1rem;
+            padding: 10px 6px;
+            border-radius: 6px;
+            font-weight: 600;
+            background: none;
+            border: 1px solid;
+          }
+          &.theme-keyboard,&.theme-type-keyboard {
+            background-color: themed(keyboardBackground);
+            border-color: themed(keyboardBorderColor);
+            border:none;
+          }
+          &.theme-type-keyboard {
+            margin-bottom: 10px;
+          }
         }
       }
-      .keyboard {
-        background-color: transparentize(
-          lighten(themed(keyboardBackground), 0%),
-          0.35
-        );
-        border-color: themed(keyboardBorderColor);
+
+      @include respond-below(xs) {
+        width: 100%;
+        border: none;
+        border-radius: 5;
+        .menu-icon {
+          left: 92%;
+        }
+        + .sidebar {
+          position: absolute;
+          right: 0;
+          transform: scaleX(0);
+        }
       }
     }
 
@@ -343,12 +374,12 @@ $color: ".color";
         + .sidebar {
           z-index: 2;
           transform: scaleX(1);
-          transform-origin: right;
-          > div:first-of-type,
+          > div:first-of-type {
+            background: none;
+          }
           .keyboard {
-            border-radius: .25rem;
-            // $kb-bg: themed(keyboardBackground);
-            background-color: rgba(themed(keyboardBackground), 0.1);
+            border-radius: $s-025r;
+            background-color: rgba(themed(keyboardBackground), 0.6);
             border-color: themed(keyboardBorderColor);
             border: none;
             .keyboard-menu {
@@ -367,14 +398,30 @@ $color: ".color";
             }
           }
         }
+        @include respond-below(xs) {
+          + .sidebar {
+            // position: absolute;
+            // right: 0;
+            transform: scaleX(1);
+          }
+        }
       }
     }
-    
+
+    &#{$picture} {
+      @include themify($themes) {
+        background-image: themed(backgroundUrl);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: bottom;
+      }
+      .keyboard {
+        background-color: #faebd729;
+      }
+    }
+
+    //buttons
     @include themify($themes) {
-      //buttons
-      $btn-primary-bg-color: themed(primaryButtonBgColor);
-      $btn-primary-text-color: themed(primaryButtonTextColor);
-      $btn-primary-border-color: themed(primaryButtonBorderColor);
       .btn-primary {
         background-color: themed(primaryButtonBgColor);
         color: themed(primaryButtonTextColor);
@@ -390,14 +437,11 @@ $color: ".color";
           background-color: themed(primaryButtonActiveColor);
         }
         &.btn-error {
-          background-color: darken($btn-primary-bg-color, 15%);
-          color: darken($btn-primary-text-color, 50%);
-          border-color: darken($btn-primary-border-color, 90%);
+          background-color: darken(themed(primaryButtonBgColor), 15%);
+          color: darken(themed(primaryButtonTextColor), 50%);
+          border-color: darken(themed(primaryButtonBorderColor), 90%);
         }
       }
-      $btn-secondary-bg-color: themed(secondaryButtonBgColor);
-      $btn-secondary-text-color: themed(secondaryButtonTextColor);
-      $btn-secondary-border-color: themed(secondaryButtonBorderColor);
       .btn-secondary {
         background-color: themed(secondaryButtonBgColor);
         color: themed(secondaryButtonTextColor);
@@ -413,9 +457,9 @@ $color: ".color";
           background-color: themed(secondaryButtonActiveColor);
         }
         &.btn-error {
-          background-color: darken($btn-secondary-bg-color, 15%);
-          color: darken($btn-secondary-text-color, 50%);
-          border-color: darken($btn-secondary-border-color, 90%);
+          background-color: darken(themed(secondaryButtonBgColor), 15%);
+          color: darken(themed(secondaryButtonTextColor), 50%);
+          border-color: darken(themed(secondaryButtonBorderColor), 90%);
         }
       }
       $btn-danger-bg-color: #dc3545;
@@ -468,6 +512,17 @@ $color: ".color";
         &.btn-error {
           background-color: darken($btn-success-bg-color, 15%);
         }
+      }
+      .btn-keyboard {
+        background-color: themed(primaryButtonBgColor);
+        color: themed(primaryButtonTextColor);
+        border-color: themed(primaryButtonBorderColor);
+        &:hover {
+          background-color: themed(primaryButtonHoverColor);
+        }
+      }
+      .btn-theme {
+        height: 30px$i;
       }
     }
   }

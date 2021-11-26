@@ -20,9 +20,6 @@ $breakpoints: (
 }
 
 @include respond-above(xs) {
-  .body {
-    display: table;
-  }
 }
 
 @mixin respond-below($bp) {
@@ -40,26 +37,28 @@ $breakpoints: (
 
 @include respond-below(xs) {
   #calculator > div.container {
-    width: 100%;
-    margin-top: 0;
-    .calculator {
-      width: 100%;
-      border: none;
-      border-radius: 0;
-      .menu-icon {
-          left: 92%;
-      }
-    }
-    .sidebar {
-      position: absolute;
-      right: -100px;
-      transform: scaleX(1);
-    }
+    // width: 100%;
+    // .calculator {
+    //   width: 100%;
+    //   border: none;
+    //   border-radius: 0;
+    //   .menu-icon {
+    //     left: 92%;
+    //   }
+    // }
+    // .sidebar {
+    //   position: absolute;
+    //   right: -100px;
+    //   transform: scaleX(1);
+    // }
   }
-  #calculator > div.container {
-    &#{$open} .sidebar {
-      right: 0px;
-      transform: scaleX(1);
-    }
-  }
+  // #calculator > div.container {
+  //   &#{$open} .calculator {
+  //     width: 100%;
+  //   }
+  //   + .sidebar {
+  //     right: 900px;
+  //     transform: scaleX(1);
+  //   }
+  // }
 }
