@@ -23,22 +23,26 @@
 // .jungle
 // https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d
 // $jungle_url: url("https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d");
+// https://get.pxhere.com/photo/tree-forest-branch-plant-leaf-flower-foliage-green-jungle-botany-fir-flora-fern-spruce-vegetation-rainforest-plant-stem-woody-plant-land-plant-ferns-and-horsetails-arecales-vascular-plant-ostrich-fern-24230.jpg
+// https://c.pxhere.com/photos/4a/e6/spring_tree_flowers_meadow_wood_forest_sun_summer-985038.jpg!d
 
 $fire_url: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
 $midnight_url: url("https://get.pxhere.com/photo/sky-night-star-milky-way-atmosphere-galaxy-outer-space-astronomy-midnight-astronomical-object-175288.jpg");
 $ocean_url: url("https://c.pxhere.com/photos/6a/14/beach_dawn_dusk_ocean_sea_seascape_sun_sunrise-1364695.jpg!d");
 $storm_url: url("https://get.pxhere.com/photo/night-city-weather-storm-lightning-thunder-thunderstorm-phenomenon-city-at-night-flashes-1023959.jpg");
-$jungle_url: url("https://c.pxhere.com/photos/4a/e6/spring_tree_flowers_meadow_wood_forest_sun_summer-985038.jpg!d");
+$jungle_url: url("https://get.pxhere.com/photo/tree-forest-branch-plant-leaf-flower-foliage-green-jungle-botany-fir-flora-fern-spruce-vegetation-rainforest-plant-stem-woody-plant-land-plant-ferns-and-horsetails-arecales-vascular-plant-ostrich-fern-24230.jpg");
 $themes: (
   fire: (
     backgroundColor: $fire_bg,
     backgroundUrl: $fire_url,
     textColor: $fire_color,
+    calculatorTitleTextColor: lighten($fire_color, 30%),
     borderColor: $fire_border,
     menuIconBackgroundColor: darken($fire_bg, 5%),
     menuIconBackgroundHoverColor: darken($fire_bg, 10%),
     menuIconBorderColor: $fire_border,
     iconBarColor: $fire_color,
+    sidebarTitleTextColor: lighten($fire_color, 30%),
     sidebarBackground: transparentize($fire_bg, 0.2),
     sidebarBorderColor: $fire_border,
     sidebarKeyboardBackground: $fire_bg,
@@ -69,11 +73,13 @@ $themes: (
     backgroundColor: $midnight_bg,
     backgroundUrl: $midnight_url,
     textColor: $midnight_color,
+    calculatorTitleTextColor: lighten($midnight_color, 30%),
     borderColor: $midnight_border,
     menuIconBackgroundColor: darken($midnight_bg, 5%),
     menuIconBackgroundHoverColor: darken($midnight_bg, 10%),
     menuIconBorderColor: $midnight_border,
     iconBarColor: $midnight_color,
+    sidebarTitleTextColor: lighten($midnight_color, 30%),
     sidebarBackground: transparentize($midnight_bg, 0.2),
     sidebarBorderColor: $midnight_border,
     sidebarKeyboardBackground: $midnight_bg,
@@ -105,11 +111,13 @@ $themes: (
     backgroundColor: $ocean_bg,
     backgroundUrl: $ocean_url,
     textColor: $ocean_color,
+    calculatorTitleTextColor: lighten($ocean_color, 30%),
     borderColor: $ocean_border,
     menuIconBackgroundColor: darken($ocean_bg, 5%),
     menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
     menuIconBorderColor: $ocean_border,
     iconBarColor: $ocean_color,
+    sidebarTitleTextColor: lighten($ocean_color, 30%),
     sidebarBackground: transparentize($ocean_bg, 0.2),
     sidebarBorderColor: $ocean_border,
     sidebarKeyboardBackground: $ocean_bg,
@@ -140,11 +148,13 @@ $themes: (
     backgroundColor: $storm_bg,
     backgroundUrl: $storm_url,
     textColor: $storm_color,
+    calculatorTitleTextColor: lighten($storm_color, 30%),
     borderColor: $storm_border,
     menuIconBackgroundColor: darken($storm_bg, 5%),
     menuIconBackgroundHoverColor: darken($storm_bg, 10%),
     menuIconBorderColor: $storm_border,
     iconBarColor: $storm_color,
+    sidebarTitleTextColor: lighten($storm_color, 30%),
     sidebarBackground: transparentize($storm_bg, 0.2),
     sidebarBorderColor: $storm_border,
     sidebarKeyboardBackground: $storm_bg,
@@ -175,11 +185,13 @@ $themes: (
     backgroundColor: $jungle_bg,
     backgroundUrl: $jungle_url,
     textColor: $jungle_color,
+    calculatorTitleTextColor: lighten($jungle_color, 60%),
     borderColor: $jungle_border,
     menuIconBackgroundColor: darken($jungle_bg, 5%),
     menuIconBackgroundHoverColor: darken($jungle_bg, 10%),
     menuIconBorderColor: $jungle_border,
     iconBarColor: $jungle_color,
+    sidebarTitleTextColor: lighten($jungle_color, 60%),
     sidebarBackground: transparentize($jungle_bg, 0.2),
     sidebarBorderColor: $jungle_border,
     sidebarKeyboardBackground: $jungle_bg,
@@ -193,7 +205,7 @@ $themes: (
     primaryButtonBgColor: $jungle_btn_bg,
     primaryButtonTextColor: $jungle_btn_color,
     primaryButtonBorderColor: $jungle_btn_border,
-    primaryButtonHoverColor: darken($jungle_btn_bg, 5%),
+    primaryButtonHoverColor: darken($jungle_btn_bg, 10%),
     primaryButtonActiveColor: darken($jungle_btn_bg, 10%),
     primaryButtonTextTransform: none,
     primaryButtonBoxShadowColor:
@@ -202,7 +214,8 @@ $themes: (
       adjust-color(darken($jungle_btn_bg, 15%), $green: -90),
     secondaryButtonTextColor: lighten($jungle_btn_color, 35%),
     secondaryButtonBorderColor: darken($jungle_btn_border, 15%),
-    secondaryButtonHoverColor: darken($jungle_btn_bg, 5%),
+    secondaryButtonHoverColor:
+      adjust-color(darken($jungle_btn_bg, 5%), $green: -90),
     secondaryButtonActiveColor: darken($jungle_btn_bg, 10%),
     secondaryButtonBoxShadowColor:
       darken(transparentize(complement($jungle_btn_bg), 0.5), 10%),
@@ -254,7 +267,7 @@ $themes: (
       border-color: themed(borderColor);
       transition: all 0.25s;
       .title {
-        color: themed(textColor);
+        color: themed(calculatorTitleTextColor);
       }
 
       .menu-icon {
@@ -324,7 +337,7 @@ $themes: (
         @include transition(0.25s, all);
         z-index: -1;
         .title {
-          color: darken(themed(textColor),20%);
+          color: themed(sidebarTitleTextColor);
           text-align: center;
           font-size: 1rem;
           padding: 10px 0;
@@ -334,7 +347,7 @@ $themes: (
           background-color: transparentize(themed(keyboardBackground), 0.95);
           border-color: transparentize(themed(keyboardBorderColor), 0.95);
           .title {
-            color: darken(themed(textColor), 20%);
+            color: darken(themed(textColor), 10%);
             text-align: center;
             font-size: 1rem;
             padding: 10px 6px;
@@ -343,21 +356,27 @@ $themes: (
             background: none;
             border: 1px solid;
           }
-          &.theme-keyboard,&.theme-type-keyboard {
+          &.theme-keyboard,
+          &.theme-type-keyboard {
             background-color: themed(keyboardBackground);
             border-color: themed(keyboardBorderColor);
-            border:none;
+            border: none;
           }
           &.theme-type-keyboard {
             margin-bottom: 10px;
           }
         }
+        // .btn-theme-type,
+        // .btn-theme {
+        //   transform: scale(1.05);
+        //   border: 2px solid darken(themed(primaryButtonBorderColor), 30%);
+        // }
       }
 
       @include respond-below(xs) {
         width: 100%;
         border: none;
-        border-radius: 5;
+        border-radius: 5px;
         .menu-icon {
           left: 92%;
         }
@@ -414,14 +433,38 @@ $themes: (
         background-size: cover;
         background-repeat: no-repeat;
         background-position: bottom;
+        .keyboard {
+          background-color: #faebd729;
+        }
+        + .sidebar {
+          .keyboard {
+            .btn-theme-type:nth-of-type(1) {
+              transform: scale(1.2);
+              border: 1px solid themed(keyboardBorderColor);
+            }
+          }
+        }
       }
-      .keyboard {
-        background-color: #faebd729;
+    }
+    &#{$color} {
+      @include themify($themes) {
+        + .sidebar {
+          .keyboard {
+            .btn-theme-type:nth-of-type(2) {
+              transform: scale(1.2);
+              border: 1px solid themed(keyboardBorderColor);
+            }
+          }
+        }
       }
     }
 
     //buttons
     @include themify($themes) {
+      .btn {
+        transition: 0.2s ease;
+        transition-property: background-color;
+      }
       .btn-primary {
         background-color: themed(primaryButtonBgColor);
         color: themed(primaryButtonTextColor);
@@ -523,6 +566,139 @@ $themes: (
       }
       .btn-theme {
         height: 30px$i;
+      }
+
+      //
+      .btn-primary {
+        //
+      }
+      &.btn-error {
+        //
+      }
+      .btn-secondary {
+        //
+      }
+      &.btn-error {
+        //
+      }
+      .btn-danger {
+        //
+      }
+      &.btn-error {
+        //
+      }
+      &.btn-use-me {
+        //
+      }
+      .btn-success {
+        //
+      }
+      &.btn-error {
+        //
+      }
+      .btn-keyboard {
+        //
+      }
+      .btn-theme-type,
+      .btn-theme {
+        &.#{selected} {
+          transform: scale(1.05);
+          border: 2px solid darken(themed(primaryButtonBorderColor), 90%);
+        }
+        //
+      }
+      // .btn-theme-type {
+      //   &.#{selected} {
+      //     transform: scale(1.05);
+      //   }
+      //   //
+      // }
+    }
+  }
+}
+
+@include respond-below(sm) {
+  @include orientation(landscape) {
+    body #calculator {
+      > .container {
+        margin-top: 0;
+        max-width: none;
+        width: 100%;
+        @include themify($themes) {
+          max-width: none;
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          border-radius: 0;
+          .title {
+            color: themed(calculatorTitleTextColor);
+            font-size: 2rem;
+            line-height: 1.2rem;
+            font-weight: 100;
+          }
+          .menu-icon {
+            // transform: translate(-600%, 0%) scale(1.05);
+            left: 95%;
+            top: -23px;
+          }
+          .body {
+            max-width: none;
+            .keyboard {
+              button {
+                margin: 5px;
+              }
+            }
+          }
+          + .sidebar {
+            position: absolute;
+            border-radius: 0;
+            transform: scaleX(0);
+            transform-origin: right;
+            right: 0;
+            height: 100%;
+            width: 200px;
+            .title {
+              color: themed(sidebarTitleTextColor);
+            }
+            .keyboard {
+              .title {
+                // font-size: 1rem;
+                padding: 4px 0;
+                border-radius: 6px;
+                margin: 5px;
+                width: 100%;
+              }
+            }
+            .theme-type-keyboard {
+              margin-bottom: 20px;
+              .btn-theme-type {
+                transform: scaleX(1);
+                margin: 5px;
+              }
+            }
+            .theme-keyboard {
+              .btn-theme {
+                transform: scaleX(1);
+              }
+            }
+          }
+        }
+        &#{$open} {
+          @include themify($themes) {
+            // @include respond-below(sm) {
+            // @include orientation(landscape) {
+            .menu-icon {
+              transform: translate(-600%, 0%) scale(1.05);
+            }
+            + .sidebar {
+              transform: scaleX(1);
+            }
+          }
+        }
+        //   }
+        // }
       }
     }
   }
