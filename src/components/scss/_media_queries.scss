@@ -19,9 +19,11 @@ $breakpoints: (
   }
 }
 
+/*  usage 
 @include respond-above(xs) {
+  styles here
 }
-
+*/
 @mixin respond-below($bp) {
   @if map-has-key($breakpoints, $bp) {
     $bp-val: map-get($breakpoints, $bp);
@@ -35,19 +37,21 @@ $breakpoints: (
   }
 }
 
-@mixin orientation($direction) { 
-
-  $orientation-landscape: "(orientation:landscape)"; 
+@mixin orientation($direction) {
+  $orientation-landscape: "(orientation:landscape)";
   $orientation-portrait: "(orientation:portrait)";
 
   @if $direction == landscape {
-    @media #{$orientation-landscape} { @content; } 
+    @media #{$orientation-landscape} {
+      @content;
+    }
   }
   @if $direction == portrait {
-    @media #{$orientation-portrait} { @content; } 
+    @media #{$orientation-portrait} {
+      @content;
+    }
   }
-} 
-
+}
 
 @include respond-below(xs) {
   #calculator > div.container {
@@ -75,4 +79,202 @@ $breakpoints: (
   //     transform: scaleX(1);
   //   }
   // }
+}
+
+@include respond-below(xs) {
+  #{$outer-wrapper} {
+    & {
+      width: 100%;
+      margin-top: $s-05r$i;
+      padding-left: $s-1r$i;
+      padding-right: $s-1r$i;
+    }
+    // sizes here
+    .calculator {
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      position: fixed;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      .menu-icon {
+        left: 92%;
+      }
+      .keyboard button {
+        height: 50px;
+        width: 50px;
+      }
+      + .sidebar {
+        position: absolute;
+        right: 0;
+        transform: scaleX(0);
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        margin-top: -8px;
+        justify-content: space-around;
+      }
+      // colors here
+      @include themify($themes) {
+      }
+    }
+  }
+}
+
+///////////// open styles
+
+@include respond-below(xs) {
+  #{$outer-wrapper} {
+    &#{$open} {
+      //sizes here
+      .calculator {
+      }
+      + .sidebar {
+      }
+      // colors here
+      @include themify($themes) {
+      }
+    }
+  }
+}
+
+///////////// landscape
+/////// xs
+@include respond-below(xs) {
+  @include orientation(landscape) {
+    #{$outer-wrapper} {
+      & {
+        width: 100%;
+        margin-top: $s-05r$i;
+        padding-left: $s-1r$i;
+        padding-right: $s-1r$i;
+      }
+      //sizes here
+      .calculator {
+      }
+      // colors here
+      @include themify($themes) {
+      }
+    }
+  }
+}
+
+///////////// landscape
+/////// xs
+/////// open
+@include respond-below(xs) {
+  @include orientation(landscape) {
+    #{$outer-wrapper} {
+      &#{$open} {
+        //sizes here
+        .calculator {
+        }
+        // colors here
+        @include themify($themes) {
+        }
+      }
+    }
+  }
+}
+
+///////////// landscape
+/////// sm
+@include respond-below(sm) {
+  @include orientation(landscape) {
+    #{$outer-wrapper} {
+      & {
+        width: 100%;
+        margin-top: 0;
+        padding-left: $s-1r$i;
+        padding-right: $s-1r$i;
+      }
+      .calculator {
+        margin-top: 0;
+        max-width: none;
+        width: 100%;
+        max-width: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        border-radius: 0;
+        .title {
+          font-size: 2.7rem;
+          line-height: 1.4rem;
+          font-weight: 100;
+          margin-top: 7px;
+        }
+        .menu-icon {
+          left: 95%;
+          top: -23px;
+        }
+        .body {
+          max-width: none;
+          .keyboard {
+            button {
+              margin: 5px;
+            }
+          }
+        }
+        + .sidebar {
+          position: absolute;
+          border-radius: 0;
+          transform: scaleX(0);
+          transform-origin: right;
+          right: 0;
+          height: 100%;
+          width: 200px;
+          .keyboard {
+            .title {
+              // font-size: 1rem;
+              padding: 4px 0;
+              border-radius: 6px;
+              margin: 5px;
+              width: 100%;
+            }
+            &.keyboard-theme-type {
+              margin-bottom: 20px;
+              .btn-theme-type {
+                transform: scaleX(1);
+                margin: 5px;
+              }
+            }
+            &.keyboard-theme {
+              .btn-theme {
+                transform: scaleX(1);
+                height: 30px !important;
+                transform: scale(1.05);
+                margin: 5px 20px;
+                width: 40%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+///////////// landscape
+/////// sm
+/////// open
+@include respond-below(sm) {
+  @include orientation(landscape) {
+    #{$outer-wrapper} {
+      &#{$open} {
+        //sizes here
+        .calculator {
+          .menu-icon {
+            transform: translate(-600%, 0%) scale(1.05);
+          }
+          + .sidebar {
+            transform: scaleX(1);
+          }
+        }
+      }
+    }
+  }
 }

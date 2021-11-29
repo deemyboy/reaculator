@@ -1,16 +1,17 @@
 .keyboard {
+  transition-duration: 0.05s;
   border: 1px solid;
-  border-radius: 10px;
+  border-radius: $s-025r;
   margin: 0;
   padding: 5px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  &:nth-of-type(1) {
+  &.keyboard-number {
     margin-right: 10px;
   }
-  &.utilityKeyboard {
+  &.keyboard-utility {
     border: 0;
     background: none$i;
     margin: 0;
@@ -19,12 +20,109 @@
     justify-content: center;
   }
 }
-.theme-type-keyboard {
-  @extend .keyboard;
-  
+.sidebar > .keyboard {
+  transition-duration: 0.05s;
 }
 
-.theme-keyboard {
-  @extend .keyboard;
+.sidebar {
+  .keyboard-theme,
+  .keyboard-theme-type {
+    margin-bottom: 10px;
+    .title {
+      display: none;
+      width: 100%;
+      text-align: center;
+      font-size: 1rem;
+      padding: 10px 6px;
+      border-radius: 6px;
+      font-weight: 600;
+      background: none;
+      border: 1px solid;
+    }
+  }
+}
 
+@include themify($themes) {
+  + .sidebar {
+    .keyboard-theme,
+    .keyboard-theme-type {
+      background-color: themed(keyboardBackground);
+      .title {
+        color: darken(themed(textColor), 10%);
+      }
+    }
+  }
+}
+
+.keyboard-theme-type {
+}
+.keyboard-theme {
+}
+// theme section colours
+@include themify($themes) {
+  + .sidebar {
+    .keyboard {
+      background-color: darken(transparentize(themed(keyboardBackground), 0.2),15%);
+      border-color: transparentize(themed(keyboardBorderColor), 0.2);
+    }
+  }
+}
+// open
+#{$open} {
+  @include themify($themes) {
+    .keyboard {
+    }
+  }
+}
+
+// backgroundColor: $ocean_bg,
+// backgroundUrl: $ocean_url,
+// textColor: $ocean_color,
+// calculatorTitleTextColor: lighten($ocean_color, 30%),
+// borderColor: $ocean_border,
+// menuIconBackgroundColor: darken($ocean_bg, 5%),
+// menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
+// menuIconBorderColor: $ocean_border,
+// iconBarColor: $ocean_color,
+// sidebarTitleTextColor: lighten($ocean_color, 30%),
+// sidebarBackground: transparentize($ocean_bg, 0.2),
+// sidebarBorderColor: $ocean_border,
+// sidebarKeyboardBackground: $ocean_bg,
+// sidebarKeyboardHoverBackground: darken($ocean_bg, 5%),
+// keyboardBackgroundColor: darken($ocean_bg, 5%),
+// keyboardItemBackgroundColor: $ocean_bg,
+// keyboardItemBackgroundHoverColor: lighten($ocean_bg, 10%),
+// keyboardTextColor: $ocean_color,
+// keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5),
+// keyboardBorderColor: $ocean_border,
+// primaryButtonBgColor: $ocean_btn_bg,
+// primaryButtonTextColor: $ocean_btn_color,
+// primaryButtonBorderColor: $ocean_btn_border,
+// primaryButtonHoverColor: darken($ocean_btn_bg, 5%),
+// primaryButtonActiveColor: darken($ocean_btn_bg, 10%),
+// primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%),
+// primaryButtonTextTransform: none,
+// secondaryButtonBgColor: complement($ocean_btn_bg),
+// secondaryButtonTextColor: lighten(complement($ocean_btn_color), 10%),
+// secondaryButtonBorderColor: complement($ocean_btn_border),
+// secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
+// secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%),
+// secondaryButtonBoxShadowColor:
+//   darken(transparentize(complement($ocean_btn_bg), 0.5), 10%),
+// secondaryButtonTextTransform: none,
+
+#{$picture} {
+  @include themify($themes) {
+    .keyboard {
+      background-color: #faebd729;
+    }
+    + .sidebar {
+      .keyboard {
+        .btn-theme-type:nth-of-type(1) {
+          transform: scale(1.2);
+          border: 1px solid themed(keyboardBorderColor);
+        }
+      }
+    }
+  }
 }

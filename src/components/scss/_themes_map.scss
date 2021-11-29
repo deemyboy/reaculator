@@ -36,13 +36,13 @@ $themes: (
     backgroundColor: $fire_bg,
     backgroundUrl: $fire_url,
     textColor: $fire_color,
-    calculatorTitleTextColor: lighten($fire_color, 30%),
+    calculatorTitleTextColor: $fire_color,
     borderColor: $fire_border,
     menuIconBackgroundColor: darken($fire_bg, 5%),
     menuIconBackgroundHoverColor: darken($fire_bg, 10%),
     menuIconBorderColor: $fire_border,
     iconBarColor: $fire_color,
-    sidebarTitleTextColor: lighten($fire_color, 30%),
+    sidebarTitleTextColor: darken($fire_color, 30%),
     sidebarBackground: transparentize($fire_bg, 0.2),
     sidebarBorderColor: $fire_border,
     sidebarKeyboardBackground: $fire_bg,
@@ -249,456 +249,152 @@ $themes: (
   @return map-get($theme-map, $key);
 }
 
-#calculator {
-  > .container {
-    @include respond-below(xs) {
-      //
-      & {
-        width: 100%;
-        margin-top: $s-05r$i;
-        padding-left: $s-1r$i;
-        padding-right: $s-1r$i;
-      }
+/*
+
+styles structure
+
+closed
+
+open
+
+
+media queries
+
+  xs - mobiles
+  sm - small tablets
+
+    xs
+      closed
+    xs
+      open
+    
+      sm
+      closed
+    sm
+      open
+
+
+
+*/
+
+#{$outer-wrapper} {
+  max-width: 640px;
+  margin-top: $s-3r;
+
+  // common sizes, lengths etc
+  .calculator {
+    @include transition(0.25s, all);
+    transition: all 0.25s;
+    padding: 10px;
+    border-radius: $s-05r;
+    max-width: 540px;
+    > .title {
+      font-size: $s-2r;
+      font-weight: 100;
+      padding-left: 1rem;
     }
-    // menu-icon+
-    // keyboard
-    @include themify($themes) {
-      background-color: themed(backgroundColor);
-      border-color: themed(borderColor);
+    .menu-icon {
       transition: all 0.25s;
-      .title {
-        color: themed(calculatorTitleTextColor);
-      }
 
-      .menu-icon {
-        background-color: themed(menuIconBackgroundColor);
-        border-color: themed(menuIconBorderColor);
-        transition: all 0.25s;
-
-        &:hover {
-          background-color: themed(menuIconBackgroundHoverColor);
-          transform: scale(1.05);
-        }
-      }
-      .icon-bar {
-        background-color: themed(iconBarColor);
-      }
-
-      .keyboard {
-        background-color: transparentize(
-          lighten(themed(keyboardBackground), 0%),
-          0.35
-        );
-        border-color: themed(keyboardBorderColor);
+      &:hover {
+        transform: scale(1.05);
       }
     }
-
-    /***** open *****/
-    // menu-icon+
-    &#{$open} {
-      @include themify($themes) {
-        .menu-icon {
-          transform-origin: center;
-          transform: translate(-300%, 0%) scale(1.05);
-          background-color: themed(menuIconBackgroundHoverColor);
-          .icon-bar:nth-of-type(2) {
-            opacity: 0;
-          }
-
-          .icon-bar:nth-of-type(1) {
-            transform-origin: center;
-            transform: translate(0%, 180%) rotate(45deg) scale(1.3);
-          }
-
-          .icon-bar:nth-of-type(3) {
-            transform-origin: center;
-            transform: translate(0%, -180%) rotate(-45deg) scale(1.3);
-          }
-        }
-      }
-    }
-    // menu-icon+
-    /***** end open *****/
-
-    //  sidebar
-    //    keyboard
-    @include themify($themes) {
-      + .sidebar {
-        background: transparentize(themed(sidebarBackground), 0.25);
-        border: 1px solid;
-        border-color: themed(sidebarBorderColor);
-        padding-bottom: 15px;
-        border-radius: $s-025r;
-        width: 100px;
-        position: relative;
-        right: 100px;
-        transform: scaleX(0);
-        transform-origin: right;
-        @include transition(0.25s, all);
-        z-index: -1;
-        .title {
-          color: themed(sidebarTitleTextColor);
-          text-align: center;
-          font-size: 1rem;
-          padding: 10px 0;
-        }
-        .keyboard {
-          transition-duration: 0.05s;
-          background-color: transparentize(themed(keyboardBackground), 0.95);
-          border-color: transparentize(themed(keyboardBorderColor), 0.95);
-          .title {
-            color: darken(themed(textColor), 10%);
-            text-align: center;
-            font-size: 1rem;
-            padding: 10px 6px;
-            border-radius: 6px;
-            font-weight: 600;
-            background: none;
-            border: 1px solid;
-          }
-          &.theme-keyboard,
-          &.theme-type-keyboard {
-            background-color: themed(keyboardBackground);
-            border-color: themed(keyboardBorderColor);
-            border: none;
-          }
-          &.theme-type-keyboard {
-            margin-bottom: 10px;
-          }
-        }
-        // .btn-theme-type,
-        // .btn-theme {
-        //   transform: scale(1.05);
-        //   border: 2px solid darken(themed(primaryButtonBorderColor), 30%);
-        // }
-      }
-
-      @include respond-below(xs) {
-        width: 100%;
-        border: none;
-        border-radius: 5px;
-        .menu-icon {
-          left: 92%;
-        }
-        + .sidebar {
-          position: absolute;
-          right: 0;
-          transform: scaleX(0);
-        }
-      }
-    }
-
-    &#{$open} {
-      @include themify($themes) {
-        + .sidebar {
-          z-index: 2;
-          transform: scaleX(1);
-          > div:first-of-type {
-            background: none;
-          }
-          .keyboard {
-            border-radius: $s-025r;
-            background-color: rgba(themed(keyboardBackground), 0.6);
-            border-color: themed(keyboardBorderColor);
-            border: none;
-            .keyboard-menu {
-              background-color: themed(keyboardBackgroundColor);
-              border: 1px solid rgba(0, 0, 0, 0.15);
-              color: themed(keyboardTextColor);
-              padding: 0;
-              .keyboard-item {
-                background-color: themed(keyboardItemBackgroundColor);
-                color: themed(keyboardTextColor);
-                margin: 2px 0;
-                &:hover {
-                  background-color: themed(keyboardItemBackgroundHoverColor);
-                }
-              }
-            }
-          }
-        }
-        @include respond-below(xs) {
-          + .sidebar {
-            // position: absolute;
-            // right: 0;
-            transform: scaleX(1);
-          }
-        }
-      }
-    }
-
-    &#{$picture} {
-      @include themify($themes) {
-        background-image: themed(backgroundUrl);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: bottom;
-        .keyboard {
-          background-color: #faebd729;
-        }
-        + .sidebar {
-          .keyboard {
-            .btn-theme-type:nth-of-type(1) {
-              transform: scale(1.2);
-              border: 1px solid themed(keyboardBorderColor);
-            }
-          }
-        }
-      }
-    }
-    &#{$color} {
-      @include themify($themes) {
-        + .sidebar {
-          .keyboard {
-            .btn-theme-type:nth-of-type(2) {
-              transform: scale(1.2);
-              border: 1px solid themed(keyboardBorderColor);
-            }
-          }
-        }
-      }
-    }
-
-    //buttons
-    @include themify($themes) {
-      .btn {
-        transition: 0.2s ease;
-        transition-property: background-color;
-      }
-      .btn-primary {
-        background-color: themed(primaryButtonBgColor);
-        color: themed(primaryButtonTextColor);
-        border-color: themed(primaryButtonBorderColor);
-        &:hover,
-        &:focus {
-          background-color: themed(primaryButtonHoverColor);
-        }
-        &:focus {
-          box-shadow: 0 0 0 0.1rem themed(primaryButtonBoxShadowColor);
-        }
-        &:active {
-          background-color: themed(primaryButtonActiveColor);
-        }
-        &.btn-error {
-          background-color: darken(themed(primaryButtonBgColor), 15%);
-          color: darken(themed(primaryButtonTextColor), 50%);
-          border-color: darken(themed(primaryButtonBorderColor), 90%);
-        }
-      }
-      .btn-secondary {
-        background-color: themed(secondaryButtonBgColor);
-        color: themed(secondaryButtonTextColor);
-        border-color: themed(secondaryButtonBorderColor);
-        &:hover,
-        &:focus {
-          background-color: themed(secondaryButtonHoverColor);
-        }
-        &:focus {
-          box-shadow: 0 0 0 0.1rem themed(secondaryButtonBoxShadowColor);
-        }
-        &:active {
-          background-color: themed(secondaryButtonActiveColor);
-        }
-        &.btn-error {
-          background-color: darken(themed(secondaryButtonBgColor), 15%);
-          color: darken(themed(secondaryButtonTextColor), 50%);
-          border-color: darken(themed(secondaryButtonBorderColor), 90%);
-        }
-      }
-      $btn-danger-bg-color: #dc3545;
-      .btn-danger {
-        color: #fff;
-        background-color: $btn-danger-bg-color;
-        border-color: #dc3545;
-        &:hover,
-        &:focus {
-          color: #fff;
-          background-color: #bb2d3b;
-          border-color: #b02a37;
-        }
-        &:focus {
-          box-shadow: 0 0 0 0.1rem rgb(225 83 97 / 50%);
-        }
-        &:active {
-          color: #fff;
-          background-color: #b02a37;
-          border-color: #a52834;
-        }
-        &.btn-error {
-          background-color: darken($btn-danger-bg-color, 15%);
-        }
-        &.btn-use-me {
-          border-color: #eddfe0;
-          border-width: 2px;
-          box-shadow: 0px 0px 9px 0px;
-        }
-      }
-      $btn-success-bg-color: #198754;
-      .btn-success {
-        color: #fff;
-        background-color: $btn-success-bg-color;
-        border-color: #198754;
-        &:hover,
-        &:focus {
-          color: #fff;
-          background-color: #157347;
-          border-color: #146c43;
-        }
-        &:focus {
-          box-shadow: 0 0 0 0.1rem rgb(60 153 110 / 50%);
-        }
-        &:active {
-          color: #fff;
-          background-color: #146c43;
-          border-color: #13653f;
-        }
-        &.btn-error {
-          background-color: darken($btn-success-bg-color, 15%);
-        }
-      }
-      .btn-keyboard {
-        background-color: themed(primaryButtonBgColor);
-        color: themed(primaryButtonTextColor);
-        border-color: themed(primaryButtonBorderColor);
-        &:hover {
-          background-color: themed(primaryButtonHoverColor);
-        }
-      }
-      .btn-theme {
-        height: 30px$i;
-      }
-
+    .icon-bar {
       //
-      .btn-primary {
-        //
-      }
-      &.btn-error {
-        //
-      }
-      .btn-secondary {
-        //
-      }
-      &.btn-error {
-        //
-      }
-      .btn-danger {
-        //
-      }
-      &.btn-error {
-        //
-      }
-      &.btn-use-me {
-        //
-      }
-      .btn-success {
-        //
-      }
-      &.btn-error {
-        //
-      }
-      .btn-keyboard {
-        //
-      }
-      .btn-theme-type,
-      .btn-theme {
-        &.#{selected} {
-          transform: scale(1.05);
-          border: 2px solid darken(themed(primaryButtonBorderColor), 90%);
-        }
-        //
-      }
-      // .btn-theme-type {
-      //   &.#{selected} {
-      //     transform: scale(1.05);
-      //   }
-      //   //
-      // }
+    }
+
+    .keyboard {
+      //
     }
   }
-}
 
-@include respond-below(sm) {
-  @include orientation(landscape) {
-    body #calculator {
-      > .container {
-        margin-top: 0;
-        max-width: none;
-        width: 100%;
-        @include themify($themes) {
-          max-width: none;
-          position: fixed;
-          top: 0;
-          bottom: 0;
-          right: 0;
-          left: 0;
-          border-radius: 0;
-          .title {
-            color: themed(calculatorTitleTextColor);
-            font-size: 2rem;
-            line-height: 1.2rem;
-            font-weight: 100;
-          }
-          .menu-icon {
-            // transform: translate(-600%, 0%) scale(1.05);
-            left: 95%;
-            top: -23px;
-          }
-          .body {
-            max-width: none;
-            .keyboard {
-              button {
-                margin: 5px;
-              }
-            }
-          }
-          + .sidebar {
-            position: absolute;
-            border-radius: 0;
-            transform: scaleX(0);
-            transform-origin: right;
-            right: 0;
-            height: 100%;
-            width: 200px;
-            .title {
-              color: themed(sidebarTitleTextColor);
-            }
-            .keyboard {
-              .title {
-                // font-size: 1rem;
-                padding: 4px 0;
-                border-radius: 6px;
-                margin: 5px;
-                width: 100%;
-              }
-            }
-            .theme-type-keyboard {
-              margin-bottom: 20px;
-              .btn-theme-type {
-                transform: scaleX(1);
-                margin: 5px;
-              }
-            }
-            .theme-keyboard {
-              .btn-theme {
-                transform: scaleX(1);
-              }
-            }
-          }
+  // colours
+  @include themify($themes) {
+    background-color: themed(backgroundColor);
+    border-color: themed(borderColor);
+    border: 2px solid themed(menuIconBorderColor);
+    > .title {
+      color: themed(calculatorTitleTextColor);
+    }
+
+    .menu-icon {
+      background-color: themed(menuIconBackgroundColor);
+      border-color: themed(menuIconBorderColor);
+      &:hover {
+        background-color: themed(menuIconBackgroundHoverColor);
+      }
+    }
+    .icon-bar {
+      background-color: themed(iconBarColor);
+    }
+
+    .keyboard {
+      background-color: transparentize(
+        lighten(themed(keyboardBackground), 0%),
+        0.35
+      );
+      border-color: themed(keyboardBorderColor);
+    }
+  }
+
+  /***** open *****/
+  // menu-icon+
+  &#{$open} {
+    .calculator {
+      .menu-icon {
+        transform: translate(-300%, 0%) scale(1.05);
         }
-        &#{$open} {
-          @include themify($themes) {
-            // @include respond-below(sm) {
-            // @include orientation(landscape) {
-            .menu-icon {
-              transform: translate(-600%, 0%) scale(1.05);
-            }
-            + .sidebar {
-              transform: scaleX(1);
-            }
-          }
-        }
-        //   }
-        // }
+      }
+    }
+
+  // menu-icon+
+  /***** end open *****/
+
+  //  sidebar
+  //    keyboard
+
+  .calculator {
+    + .sidebar {
+      border: 1px solid;
+      padding-bottom: 15px;
+      border-radius: $s-025r;
+      width: 100px;
+      position: relative;
+      right: 100px;
+      transform: scaleX(0);
+      transform-origin: right;
+      @include transition(0.25s, all);
+      z-index: -1;
+      > .title {
+        text-align: center;
+        font-size: 1.1rem;
+        padding: 10px 0;
+      }
+    }
+  }
+  &#{$open} {
+    .calculator {
+      + .sidebar {
+        z-index: 2;
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  @include themify($themes) {
+    + .sidebar {
+      background: transparentize(themed(sidebarBackground), 0.25);
+      border-color: themed(sidebarBorderColor);
+      > .title {
+        color: themed(sidebarTitleTextColor);
+      }
+    }
+  }
+
+  &#{$open} {
+    @include themify($themes) {
+      + .sidebar {
       }
     }
   }

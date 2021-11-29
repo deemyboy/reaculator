@@ -5,14 +5,14 @@ const Sidebar = React.forwardRef((props, ref) => {
   return (
     <div className={props.sidebarData.sidebarClass}>
       <div className="title">{props.sidebarData.sidebarValue}</div>
-      <div className="keyboard theme-type-keyboard">
+      <div className="keyboard keyboard-theme-type">
         <Keyboard
           label={props.themeTypeKbData.labelForKeyboard}
           keys={props.themeTypeKbData.itemsForKeyboard}
           passClickHandler={props.themeTypeKbData.onClick}
         ></Keyboard>
       </div>
-      <div className="keyboard theme-keyboard">
+      <div className="keyboard keyboard-theme">
         <Keyboard
           label={props.themesKbData.labelForKeyboard}
           keys={props.themesKbData.itemsForKeyboard}
