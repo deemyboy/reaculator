@@ -4,6 +4,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
   filename: "./index.html",
 });
 module.exports = {
+  devtool: "source-map",
   mode: "development",
   resolve: {
     extensions: [".js", ".jsx"],
@@ -19,7 +20,24 @@ module.exports = {
       },
       {
         test: /\.s[ac]ss$/i,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+              // sassOptions: {
+              //   outputStyle: "compressed",
+              // },
+            },
+          },
+        ],
       },
     ],
   },

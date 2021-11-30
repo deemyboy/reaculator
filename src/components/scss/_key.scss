@@ -10,6 +10,7 @@
     transform: scale(1);
     @include transition(0.25s, all);
   }
+
   .btn-lg,
   .btn-group-lg > .btn {
     font-size: 1.5rem;
@@ -19,34 +20,265 @@
     font-size: 0.8rem;
     border-radius: 0.2rem;
     font-weight: 400;
-    width: 50px;
+    width: 60px;
     height: 30px;
   }
-  .btn-fire {
-    color: $fire_color;
-    background-color: $fire_btn_bg;
-    border-color: $fire_btn_border;
-    padding: .25rem 1rem;
+  .btn {
+    transition: 0.2s ease;
+    transition-property: background-color;
   }
-  .btn-midnight {
-    color: lighten($midnight_color,30%);
-    background-color: $midnight_btn_bg;
-    border-color: $midnight_btn_border;
-    font-size: 0.65rem;
+
+  // common button properties
+  // shadows
+  // border sizes
+}
+
+//buttons
+// sizes
+.calculator {
+  + .sidebar {
+    .keyboard.keyboard-theme {
+      .btn-theme {
+        height: 30px$i;
+        transform: scale(1.05);
+        margin: 10px 0;
+      }
+
+    }
+    .keyboard.keyboard-theme {
+      .btn-fire {
+        background-color: $fire_bg;
+        color: $fire_color;
+        border-color: $fire_border;
+      }
+      .btn-midnight {
+        background-color: $midnight_bg;
+        color: $midnight_color;
+        border-color: $midnight_border;
+      }
+      .btn-ocean {
+        background-color: $ocean_bg;
+        color: $ocean_color;
+        border-color: $ocean_border;
+      }
+      .btn-storm {
+        background-color: $storm_bg;
+        color: $storm_color;
+        border-color: $storm_border;
+      }
+      .btn-jungle {
+        background-color: $jungle_bg;
+        color: $jungle_color;
+        border-color: $jungle_border;
+      }
+    }
   }
-  .btn-ocean {
-    color: $ocean_color;
-    background-color: $ocean_btn_bg;
-    border-color: $ocean_btn_border;
+}
+// colours
+@include themify($themes) {
+  + .sidebar {
+    .keyboard.keyboard-theme {
+      .btn-theme {
+        // background-color: themed(primaryButtonBgColor);
+        // color: themed(primaryButtonTextColor);
+        // border-color: themed(primaryButtonBorderColor);
+      }
+
+    }
   }
-  .btn-storm {
-    color: $storm_color;
-    background-color: $storm_btn_bg;
-    border-color: $storm_btn_border;
+}
+
+@include themify($themes) {
+  .btn-primary {
+    background-color: themed(primaryButtonBgColor);
+    color: themed(primaryButtonTextColor);
+    border-color: themed(primaryButtonBorderColor);
+    &:hover,
+    &:focus {
+      background-color: themed(primaryButtonHoverColor);
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.1rem themed(primaryButtonBoxShadowColor);
+    }
+    &:active {
+      background-color: themed(primaryButtonActiveColor);
+    }
+    &.btn-error {
+      background-color: darken(themed(primaryButtonBgColor), 15%);
+      color: darken(themed(primaryButtonTextColor), 50%);
+      border-color: darken(themed(primaryButtonBorderColor), 90%);
+    }
   }
-  .btn-jungle {
-    color: $jungle_color;
-    background-color: $jungle_btn_bg;
-    border-color: $jungle_btn_border;
+  .btn-secondary {
+    background-color: themed(secondaryButtonBgColor);
+    color: themed(secondaryButtonTextColor);
+    border-color: themed(secondaryButtonBorderColor);
+    &:hover,
+    &:focus {
+      background-color: themed(secondaryButtonHoverColor);
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.1rem themed(secondaryButtonBoxShadowColor);
+    }
+    &:active {
+      background-color: themed(secondaryButtonActiveColor);
+    }
+    &.btn-error {
+      background-color: darken(themed(secondaryButtonBgColor), 15%);
+      color: darken(themed(secondaryButtonTextColor), 50%);
+      border-color: darken(themed(secondaryButtonBorderColor), 90%);
+    }
+  }
+  $btn-danger-bg-color: #dc3545;
+  .btn-danger {
+    color: #fff;
+    background-color: $btn-danger-bg-color;
+    border-color: #dc3545;
+    &:hover,
+    &:focus {
+      color: #fff;
+      background-color: #bb2d3b;
+      border-color: #b02a37;
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.1rem rgb(225 83 97 / 50%);
+    }
+    &:active {
+      color: #fff;
+      background-color: #b02a37;
+      border-color: #a52834;
+    }
+    &.btn-error {
+      background-color: darken($btn-danger-bg-color, 15%);
+    }
+    &.btn-use-me {
+      border-color: #eddfe0;
+      border-width: 2px;
+      box-shadow: 0px 0px 9px 0px;
+    }
+  }
+  $btn-success-bg-color: #198754;
+  .btn-success {
+    color: #fff;
+    background-color: $btn-success-bg-color;
+    border-color: #198754;
+    &:hover,
+    &:focus {
+      color: #fff;
+      background-color: #157347;
+      border-color: #146c43;
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.1rem rgb(60 153 110 / 50%);
+    }
+    &:active {
+      color: #fff;
+      background-color: #146c43;
+      border-color: #13653f;
+    }
+    &.btn-error {
+      background-color: darken($btn-success-bg-color, 15%);
+    }
+  }
+  .calculator {
+    + .sidebar {
+      .keyboard.keyboard-theme {
+        .btn-fire {
+          background-color: $fire_bg;
+          color: $fire_color;
+          border-color: $fire_border;
+        }
+        .btn-midnight {
+          background-color: $midnight_bg;
+          color: $midnight_color;
+          border-color: $midnight_border;
+        }
+        .btn-ocean {
+          background-color: $ocean_bg;
+          color: $ocean_color;
+          border-color: $ocean_border;
+        }
+        .btn-storm {
+          background-color: $storm_bg;
+          color: $storm_color;
+          border-color: $storm_border;
+        }
+        .btn-jungle {
+          background-color: $jungle_bg;
+          color: $jungle_color;
+          border-color: $jungle_border;
+        }
+      }
+    }
+  }
+  //
+  // // .btn-theme-type,
+  // + .sidebar {
+  //   .keyboard.keyboard-theme-type {
+  //     .btn-theme-type {
+  //     }
+  //   }
+  // .keyboard.keyboard-theme {
+  // }
+  .btn-theme {
+    display: none$i;
+    border: 2px solid darken(themed(primaryButtonBorderColor), 90%);
+  }
+}
+
+
+#{$picture} {
+  // sizes
+  .calculator {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    .keyboard {
+      background-color: #faebd729;
+    }
+    + .sidebar {
+      .keyboard {
+        .btn-theme-type:nth-of-type(1) {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+  // colors
+  @include themify($themes) {
+    background-image: themed(backgroundUrl);
+    .keyboard {
+      background-color: #faebd729;
+    }
+    + .sidebar {
+      .keyboard {
+        .btn-theme-type:nth-of-type(1) {
+          border: 2px solid themed(keyboardBorderColor);
+        }
+      }
+    }
+  }
+}
+
+#{$color} {
+  // sizes
+  .calculator {
+    + .sidebar {
+      .keyboard {
+        .btn-theme-type:nth-of-type(2) {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+  // colors
+  @include themify($themes) {
+    + .sidebar {
+      .keyboard {
+        .btn-theme-type:nth-of-type(2) {
+          border: 2px solid themed(keyboardBorderColor);
+        }
+      }
+    }
   }
 }

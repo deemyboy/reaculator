@@ -70,9 +70,9 @@ class Calculator extends Component {
     },
     theme: "Ocean",
     themeType: "color",
-    numberKeyboardClass: "numberKeyboard",
-    functionKeyboardClass: "functionKeyboard",
-    utilityKeyboardClass: "utilityKeyboard",
+    numberKeyboardClass: "keyboard-number",
+    functionKeyboardClass: "keyboard-function",
+    utilityKeyboardClass: "keyboard-utility",
     title: "Calculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
@@ -170,7 +170,7 @@ class Calculator extends Component {
       theme: _themesData.currentSetting,
     });
     this.setCookie(cookieData);
-    this.toggleSidebar(e);
+    // this.toggleSidebar(e);
   };
 
   onSelectThemeType = (e) => {
@@ -186,7 +186,7 @@ class Calculator extends Component {
     });
     this.setCookie(cookieData);
     // this.selectThemeType(e);
-    this.toggleSidebar(e);
+    // this.toggleSidebar(e);
   };
 
   setCookie = (cookieData) => {
