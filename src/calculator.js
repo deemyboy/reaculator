@@ -1,8 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useEffect } from "react";
 import "./calculator.scss";
+// import anim from "./components/anim";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Sidebar from "./components/sidebar";
+import Canvas from "./components/canvas";
 import Cookies from "universal-cookie";
 import { sidebarKeys } from "./keys";
 import { numberKeys } from "./keys";
@@ -32,6 +34,13 @@ class Calculator extends Component {
     this.utilityKeys = utilityKeys;
     this.allowedKeys = allowedKeys;
     this.themeTypeKeys = themeTypeKeys;
+    this.canvasRef = React.createRef();
+    // const canvasRef = useRef();
+
+    // useEffect(() => {
+    //   const divElement = elementRef.current;
+    //   console.log(divElement); // logs <div>I'm an element</div>
+    // }, []);
   }
 
   state = {
@@ -89,8 +98,21 @@ class Calculator extends Component {
     userInput: "",
   };
 
+  // componentDidMount() {
+  //   document.addEventListener("keydown", (e) => this.handleKeyPress(e));
+  // }
+
   componentDidMount() {
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
+    // const script = document.createElement("script");    script.async = true;    script.src = "/animated_spheres.js";    document.body.appendChild(script);
+    anim();
+  }
+  render() {
+    // return (
+    //   // <div className="App" ref={el => (this.div = el)}>        <h1>Hello react</h1>
+    //   //   {/* Script is inserted here */}
+    //   // </div>
+    // );
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -834,12 +856,15 @@ class Calculator extends Component {
   };
 
   render = () => {
+    // anim();
     return (
+      // <canvas id={c}></canvas>
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
         } ${this.state.themeType}`}
       >
+        <Canvas ref={this.canvasRef} />
         <div className="flex-row row">
           <div
             className={`calculator ${this.state.theme.toLowerCase()}`}
