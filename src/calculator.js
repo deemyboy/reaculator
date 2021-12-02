@@ -1,6 +1,6 @@
 import React, { Component, useRef, useEffect } from "react";
 import "./calculator.scss";
-// import anim from "./components/anim";
+// import anim from "./static/anim";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Sidebar from "./components/sidebar";
@@ -13,11 +13,18 @@ import { utilityKeys } from "./keys";
 import { allowedKeys } from "./keys";
 import { themeTypeKeys } from "./keys";
 
+
 class Calculator extends Component {
   displayRef = React.createRef();
+  canvasRef = React.createRef();
+  // console.log("canvasRef",canvasRef);
+  // const canvasRef = useRef();
   constructor(props) {
     super(props);
 
+    this.handleLoad = this.handleLoad.bind(this);
+
+    
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
     this.state.themesKeyboardData.currentSetting = this.getCookie(
@@ -34,8 +41,6 @@ class Calculator extends Component {
     this.utilityKeys = utilityKeys;
     this.allowedKeys = allowedKeys;
     this.themeTypeKeys = themeTypeKeys;
-    this.canvasRef = React.createRef();
-    // const canvasRef = useRef();
 
     // useEffect(() => {
     //   const divElement = elementRef.current;
@@ -44,6 +49,7 @@ class Calculator extends Component {
   }
 
   state = {
+    canId:"cvs",
     calculationData: {
       calculationClass: "calculation",
       calculationValue: "",
@@ -98,21 +104,32 @@ class Calculator extends Component {
     userInput: "",
   };
 
-  // componentDidMount() {
-  //   document.addEventListener("keydown", (e) => this.handleKeyPress(e));
-  // }
+animate = (e) => {
+console.log("animate",e)
+// anim();
+}
 
   componentDidMount() {
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
-    // const script = document.createElement("script");    script.async = true;    script.src = "/animated_spheres.js";    document.body.appendChild(script);
-    anim();
-  }
-  render() {
-    // return (
-    //   // <div className="App" ref={el => (this.div = el)}>        <h1>Hello react</h1>
-    //   //   {/* Script is inserted here */}
-    //   // </div>
-    // );
+    // window.addEventListener('load', this.handleLoad);
+    // // anim();
+    // const script = document.createElement("script");
+
+    // script.src = "/static/anim.js";
+    // script.async = true;
+
+    // document.body.appendChild(script);
+
+    var loadScript = function (src) {
+      var tag = document.createElement('script');
+      tag.async = false;
+      tag.src = src;
+      var body = document.getElementsByTagName('body')[0];
+      body.appendChild(tag);
+    }
+
+    loadScript('./anim.js');
+    this.animate()
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -121,7 +138,13 @@ class Calculator extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
+    window.removeEventListener('load', this.handleLoad);
   }
+
+  
+ handleLoad() {
+  $("myclass") //  $ is available here
+ }
 
   setResultData = (data, callback) => {
     let resultData = { ...this.state.resultData },
@@ -856,20 +879,18 @@ class Calculator extends Component {
   };
 
   render = () => {
-    // anim();
     return (
-      // <canvas id={c}></canvas>
-      <div
+      <div 
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
         } ${this.state.themeType}`}
       >
-        <Canvas ref={this.canvasRef} />
         <div className="flex-row row">
-          <div
+          <div id="canvas-container"
             className={`calculator ${this.state.theme.toLowerCase()}`}
             onClick={(e) => this.toggleSidebar(e)}
           >
+        <Canvas ref={this.animate} canId={this.state.canId} />
             <div className="title">{this.state.title}</div>
             <div className="menu-icon" onClick={(e) => this.toggleSidebar(e)}>
               <div className="icon-bar"></div>
