@@ -8,7 +8,7 @@
     align-items: center;
     justify-content: center;
     transform: scale(1);
-    @include transition(0.25s, all);
+    @include transition(all 0.25s);
   }
 
   .btn-lg,
@@ -43,7 +43,6 @@
         transform: scale(1.05);
         margin: 10px 0;
       }
-
     }
     .keyboard.keyboard-theme {
       .btn-fire {
@@ -83,7 +82,6 @@
         // color: themed(primaryButtonTextColor);
         // border-color: themed(primaryButtonBorderColor);
       }
-
     }
   }
 }
@@ -225,7 +223,6 @@
     border: 2px solid darken(themed(primaryButtonBorderColor), 90%);
   }
 }
-
 
 #{$picture} {
   // sizes

@@ -266,8 +266,7 @@ $themes: (
       transition: all 0.5s ease-out;
       height: 100%;
     }
-    @include transition(0.25s, all);
-    transition: all 0.25s;
+    @include transition(all 0.25s);
     padding: 10px;
     border-radius: $s-05r;
     border-width: 2px;
@@ -329,7 +328,7 @@ $themes: (
       border: 1px solid;
       padding-bottom: 15px;
       border-radius: $s-025r;
-      @include transition(0.25s, all);
+      @include transition(all 0.25s);
       z-index: -1;
       > .title {
         text-align: center;
@@ -367,7 +366,6 @@ $themes: (
     }
   }
 }
-
 
 #{$picture} {
   // sizes

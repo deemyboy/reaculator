@@ -303,10 +303,6 @@ $breakpoints: (
         right: 0;
         transform: scaleX(0);
         transform-origin: right;
-        -webkit-transition: 0.25s all;
-        -moz-transition: 0.25s all;
-        -ms-transition: 0.25s all;
-        -o-transition: 0.25s all;
         transition: 0.25s all;
         z-index: -1;
         height: 100%;
