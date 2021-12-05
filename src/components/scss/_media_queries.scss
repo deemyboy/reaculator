@@ -155,18 +155,25 @@ $breakpoints: (
 /////// sm - md
 
 @include respond-between(sm, md) {
+  #calculator {
+    .container{
+      max-width: none;
+    }
+  }
   #{$outer-wrapper} {
     & {
+        max-width: 850px;
+        margin-top: 0;
     }
     // sizes here
     .calculator {
-      width: 100%;
-      position: fixed;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
-      max-width: none;
+      // width: 100%;
+      // position: fixed;
+      // top: 0px;
+      // right: 0px;
+      // bottom: 0px;
+      // left: 0px;
+      // max-width: 850px;
       .display {
         .calculation {
           font-size: 3.3em;
@@ -210,13 +217,12 @@ $breakpoints: (
         position: absolute;
         right: 0;
         top: 0;
-        width: 200px;
+        width: auto;
         transform: scaleX(0);
         display: flex;
         height: 100%;
-        flex-direction: column;
         justify-content: space-around;
-        flex-direction: column;
+        // flex-direction: column;
         > .title {
           font-size: 3rem;
           margin-top: -1.5rem;

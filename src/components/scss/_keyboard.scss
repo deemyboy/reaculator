@@ -4,10 +4,6 @@
   border-radius: $s-025r;
   margin: 0;
   padding: 5px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   &.keyboard-number {
     margin-right: 10px;
   }
@@ -17,14 +13,88 @@
     margin: 0;
     padding: 0;
     width: 100%;
-    justify-content: center;
   }
-}
-.sidebar > .keyboard {
-  transition-duration: 0.05s;
 }
 
 .sidebar {
+  float: right;
+  .keyboard-wrapper {
+    position: relative;
+    .circle {
+      &:hover {
+        // height: 4rem;
+        // width: 4rem;
+        transform: scale(1.5);
+        + .keyboard {
+          .btn {
+            transform: rotate(0deg);
+            width: 80%;
+            opacity: 1;
+            @for $i from 10 through 1 {
+              &:nth-of-type(#{$i}) {
+                top:  calc(#{$i } * 40px);
+              }
+            }
+          }
+        }
+      }
+      z-index: 100;
+      height: 2rem;
+      width: 2rem;
+      background-color: #c4faff6e;
+      position: absolute;
+      left: 90%;
+      top: 80%;
+      border: rebeccapurple 2px solid;
+      border-radius: 25px;
+      transition: all 0.25s ease-out;
+      transform-origin: center;
+    }
+    border: 1px dashed black;
+    .keyboard {
+      // transform: rotate(180deg);
+      border-radius: 50px;
+      height: 50%;
+      transform-origin: right;
+      transition: all 0.25s ease-out;
+      .btn {
+        z-index: 0;
+        transform: rotate(180deg);
+        transform-origin: right;
+        width: 100%;
+        opacity: 0.2;
+        position: relative;
+        @for $i from 1 through 10 {
+          &:nth-of-type(#{$i}) {
+            transition: transform #{$i * 0.25}s, opacity #{$i * 0.5}s, width #{$i * 0.25}s;
+            transition: top #{$i * 0.25}s;
+          }
+        }
+        @for $i from 10 through 1 {
+          &:nth-of-type(#{$i}) {
+            top:  calc(((#{$i } -1)* 40px) - 40px);
+          }
+        }
+      }
+    }
+    .keyboard:nth-of-type(2) {
+      .btn {
+        width: 100%;
+        opacity: 0.2;
+        position: relative;
+        @for $i from 1 through 10 {
+          &:nth-of-type(#{$i}) {
+            transition: transform #{$i * 0.25}s, opacity #{$i * 0.5}s, width #{$i * 0.25}s, top #{$i * 0.25}s ease 0s;
+          }
+        }
+        @for $i from 10 through 1 {
+          &:nth-of-type(#{$i}) {
+            top:  calc(190px - (#{$i } * 40px));
+          }
+        }
+      }
+    }
+  }
   .keyboard-theme,
   .keyboard-theme-type {
     margin-bottom: 10px;
@@ -57,12 +127,16 @@
 .keyboard-theme-type {
 }
 .keyboard-theme {
+  // display: none$i;
 }
 // theme section colours
 @include themify($themes) {
   + .sidebar {
     .keyboard {
-      background-color: darken(transparentize(themed(keyboardBackground), 0.2),15%);
+      background-color: darken(
+        transparentize(themed(keyboardBackground), 0.2),
+        15%
+      );
       border-color: transparentize(themed(keyboardBorderColor), 0.2);
     }
   }
@@ -75,53 +149,38 @@
   }
 }
 
-// backgroundColor: $ocean_bg,
-// backgroundUrl: $ocean_url,
-// textColor: $ocean_color,
-// calculatorTitleTextColor: lighten($ocean_color, 30%),
-// borderColor: $ocean_border,
-// menuIconBackgroundColor: darken($ocean_bg, 5%),
-// menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
-// menuIconBorderColor: $ocean_border,
-// iconBarColor: $ocean_color,
-// sidebarTitleTextColor: lighten($ocean_color, 30%),
-// sidebarBackground: transparentize($ocean_bg, 0.2),
-// sidebarBorderColor: $ocean_border,
-// sidebarKeyboardBackground: $ocean_bg,
-// sidebarKeyboardHoverBackground: darken($ocean_bg, 5%),
-// keyboardBackgroundColor: darken($ocean_bg, 5%),
-// keyboardItemBackgroundColor: $ocean_bg,
-// keyboardItemBackgroundHoverColor: lighten($ocean_bg, 10%),
-// keyboardTextColor: $ocean_color,
-// keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5),
-// keyboardBorderColor: $ocean_border,
-// primaryButtonBgColor: $ocean_btn_bg,
-// primaryButtonTextColor: $ocean_btn_color,
-// primaryButtonBorderColor: $ocean_btn_border,
-// primaryButtonHoverColor: darken($ocean_btn_bg, 5%),
-// primaryButtonActiveColor: darken($ocean_btn_bg, 10%),
-// primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%),
-// primaryButtonTextTransform: none,
-// secondaryButtonBgColor: complement($ocean_btn_bg),
-// secondaryButtonTextColor: lighten(complement($ocean_btn_color), 10%),
-// secondaryButtonBorderColor: complement($ocean_btn_border),
-// secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
-// secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%),
-// secondaryButtonBoxShadowColor:
-//   darken(transparentize(complement($ocean_btn_bg), 0.5), 10%),
-// secondaryButtonTextTransform: none,
-
 #{$picture} {
+  // sizes
+  .calculator {
+    + .sidebar {
+      .keyboard {
+      }
+    }
+  }
+  // colors
   @include themify($themes) {
     .keyboard {
       background-color: #faebd729;
     }
     + .sidebar {
       .keyboard {
-        .btn-theme-type:nth-of-type(1) {
-          transform: scale(1.2);
-          border: 1px solid themed(keyboardBorderColor);
-        }
+      }
+    }
+  }
+}
+
+#{$color} {
+  // sizes
+  .calculator {
+    + .sidebar {
+      .keyboard {
+      }
+    }
+  }
+  // colors
+  @include themify($themes) {
+    + .sidebar {
+      .keyboard {
       }
     }
   }

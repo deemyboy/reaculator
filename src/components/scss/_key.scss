@@ -221,7 +221,7 @@
   // .keyboard.keyboard-theme {
   // }
   .btn-theme {
-    display: none$i;
+    // display: none$i;
     border: 2px solid darken(themed(primaryButtonBorderColor), 90%);
   }
 }
@@ -230,11 +230,7 @@
 #{$picture} {
   // sizes
   .calculator {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: bottom;
     .keyboard {
-      background-color: #faebd729;
     }
     + .sidebar {
       .keyboard {
@@ -246,9 +242,7 @@
   }
   // colors
   @include themify($themes) {
-    background-image: themed(backgroundUrl);
     .keyboard {
-      background-color: #faebd729;
     }
     + .sidebar {
       .keyboard {

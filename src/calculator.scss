@@ -8,14 +8,3 @@ $i: #{"!"}important;
 @import "./components/scss/_display", "./components/scss/_key",
   "./components/scss/_keyboard",
   "./components/scss/_menu_icon";
-
-
-.flex-row {
-  display: flex;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}

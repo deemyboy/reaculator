@@ -143,7 +143,7 @@ export const numberKeys = [
     keycode: 189,
     kbCode: "KeyM",
     type: "num",
-  }
+  },
 ];
 
 export const functionKeys = [
@@ -267,6 +267,38 @@ export const themeTypeKeys = [
     specialClass: "btn-theme-type",
     uniChar: "\uD83C\uDFA8",
     title: "choose color theme",
+    keycode: 65,
+    kbCode: "KeyA",
+    type: "thype",
+  },
+];
+export const imageKeys = [
+  {
+    id: "trees",
+    value: "trees",
+    specialClass: "btn-image-choice",
+    uniChar: "\uD83D\uDCF7",
+    title: "choose picture image",
+    keycode: 65,
+    kbCode: "KeyA",
+    type: "thype",
+  },
+  {
+    id: "rays",
+    value: "rays",
+    specialClass: "btn-image-choice",
+    uniChar: "\uD83C\uDFA8",
+    title: "choose color image",
+    keycode: 65,
+    kbCode: "KeyA",
+    type: "thype",
+  },
+  {
+    id: "leaves",
+    value: "leaves",
+    specialClass: "btn-image-choice",
+    uniChar: "\uD83C\uDFA8",
+    title: "choose color image",
     keycode: 65,
     kbCode: "KeyA",
     type: "thype",
