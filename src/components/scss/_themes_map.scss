@@ -379,7 +379,7 @@ $themes: (
     background-image: themed(backgroundUrl);
     .keyboard {
     }
-    + .sidebar {
+     .sidebar {
       .keyboard {
       }
     }
@@ -389,14 +389,14 @@ $themes: (
 #{$color} {
   // sizes
   .calculator {
-    + .sidebar {
-      .keyboard {
-      }
+  }
+  .sidebar {
+    .keyboard {
     }
   }
   // colors
   @include themify($themes) {
-    + .sidebar {
+    .sidebar {
       .keyboard {
       }
     }

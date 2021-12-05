@@ -17,7 +17,6 @@
 }
 
 .sidebar {
-  float: right;
   .keyboard-wrapper {
     position: relative;
     .circle {
@@ -128,7 +127,7 @@
 }
 
 @include themify($themes) {
-  + .sidebar {
+   .sidebar {
     .keyboard-theme,
     .keyboard-theme-type {
       background-color: themed(keyboardBackground);
@@ -146,7 +145,7 @@
 }
 // theme section colours
 @include themify($themes) {
-  + .sidebar {
+   .sidebar {
     .keyboard {
       background-color: darken(
         transparentize(themed(keyboardBackground), 0.2),
@@ -166,8 +165,7 @@
 
 #{$picture} {
   // sizes
-  .calculator {
-    + .sidebar {
+     .sidebar {
       .keyboard {
       }
     }
@@ -177,26 +175,23 @@
     .keyboard {
       background-color: #faebd729;
     }
-    + .sidebar {
+     .sidebar {
       .keyboard {
       }
     }
   }
-}
 
 #{$color} {
   // sizes
-  .calculator {
-    + .sidebar {
+     .sidebar {
       .keyboard {
       }
     }
   }
   // colors
   @include themify($themes) {
-    + .sidebar {
+     .sidebar {
       .keyboard {
       }
     }
   }
-}
