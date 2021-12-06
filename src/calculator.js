@@ -76,7 +76,7 @@ class Calculator extends Component {
     numberKeyboardClass: "keyboard-number",
     functionKeyboardClass: "keyboard-function",
     utilityKeyboardClass: "keyboard-utility",
-    title: "Calculator",
+    title: "Reaculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
     mathOpRgx: /([+\-x\/ysr=])/gi,
@@ -841,16 +841,18 @@ class Calculator extends Component {
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
-        } ${this.state.themeType}`}
+        } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
       >
         <div className="row justify-content-center">
-          <div className="col-lg-8 col-md">
-            <div class="row">
-              <div class="col">
-                <div className={`calculator ${this.state.theme.toLowerCase()}`}>
+          <div className="col-lg-8 col-md" style={{ position: "relative" }}>
+            <div className="row" meta-name="calculator">
+              {/* ------------ calculator body ---------------- */}
+              <div className="col">
+                <div className={`calculator `}>
                   <p className="title">{this.state.title}</p>
                   <div className="row">
                     <div className="col">
+                      {/* ------------ display ---------------- */}
                       <div className="row" meta-name="display">
                         <div className="col">
                           <Display
@@ -860,42 +862,41 @@ class Calculator extends Component {
                           />
                         </div>
                       </div>
-                      <div
-                        className="row main-kb-wrapper"
-                        meta-name="main keyboards"
-                      >
-                        {" "}
-                        <div className="col">
-                          <Keyboard
-                            className={`keyboard ${this.state.numberKeyboardClass}`}
-                            keys={this.numberKeys}
-                            passClickHandler={(e) => this.handleClick(e)}
-                            keyErr={this.state.keyErr}
-                          />
-                        </div>
-                        <div className="col">
-                          {" "}
-                          <Keyboard
-                            className={`keyboard ${this.state.functionKeyboardClass}`}
-                            keys={this.functionKeys}
-                            passClickHandler={(e) => this.handleClick(e)}
-                            keyErr={this.state.keyErr}
-                          ></Keyboard>
-                          <Keyboard
-                            keys={this.utilityKeys}
-                            passClickHandler={(e) => this.handleClick(e)}
-                            keyErr={this.state.keyErr}
-                          ></Keyboard>
-                        </div>
-                      </div>
+                    </div>
+                  </div>
+                  {/* ------------ keyboards ---------------- */}
+                  <div className="row" meta-name="main keyboards">
+                    <div className="col">
+                      <Keyboard
+                        className={`keyboard ${this.state.numberKeyboardClass}`}
+                        keys={this.numberKeys}
+                        passClickHandler={(e) => this.handleClick(e)}
+                        keyErr={this.state.keyErr}
+                      ></Keyboard>
+                    </div>
+                    <div className="col">
+                      <Keyboard
+                        className={`keyboard ${this.state.functionKeyboardClass}`}
+                        keys={this.functionKeys}
+                        passClickHandler={(e) => this.handleClick(e)}
+                        keyErr={this.state.keyErr}
+                      ></Keyboard>
+                      <Keyboard
+                        className={`keyboard ${this.state.utilityKeyboardClass}`}
+                        keys={this.utilityKeys}
+                        passClickHandler={(e) => this.handleClick(e)}
+                        keyErr={this.state.keyErr}
+                      ></Keyboard>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="row" meta-name="sidebar">
               {/* ------------ sidebar ---------------- */}
-              <div class="col">
+              <div className="col">
                 <div className="sidebar">
-                  <div className="keyboard-wrapper">
+                  <div className="h-50 keyboard-wrapper">
                     <div className="circle"></div>
                     <Keyboard
                       className={`${this.state.themeTypeKeyboardData.className}`}
@@ -906,7 +907,7 @@ class Calculator extends Component {
                       }
                     ></Keyboard>
                   </div>
-                  <div className="keyboard-wrapper">
+                  <div className="h-50 keyboard-wrapper">
                     <div className="circle"></div>
                     <Keyboard
                       className={`${this.state.themesKeyboardData.className}`}
@@ -918,7 +919,7 @@ class Calculator extends Component {
                 </div>
               </div>
             </div>
-          </div>{" "}
+          </div>
         </div>
       </div>
     );

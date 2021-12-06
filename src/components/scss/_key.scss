@@ -10,6 +10,9 @@
     transform: scale(1);
     @include transition(all 0.25s);
   }
+  .btn-success {
+    width: 160px;
+  }
 
   .btn-lg,
   .btn-group-lg > .btn {
@@ -36,14 +39,12 @@
 //buttons
 // sizes
 .sidebar {
-  .keyboard.keyboard-theme {
+  .keyboard-theme {
     .btn-theme {
       height: 30px$i;
       transform: scale(1.05);
       margin: 10px 0;
     }
-  }
-  .keyboard.keyboard-theme {
     .btn-fire {
       background-color: $fire_bg;
       color: $fire_color;
@@ -74,7 +75,7 @@
 // colours
 @include themify($themes) {
   .sidebar {
-    .keyboard.keyboard-theme {
+    .keyboard-theme {
       .btn-theme {
         // background-color: themed(primaryButtonBgColor);
         // color: themed(primaryButtonTextColor);
@@ -176,46 +177,7 @@
       background-color: darken($btn-success-bg-color, 15%);
     }
   }
-  .sidebar {
-    .keyboard.keyboard-theme {
-      .btn-fire {
-        background-color: $fire_bg;
-        color: $fire_color;
-        border-color: $fire_border;
-      }
-      .btn-midnight {
-        background-color: $midnight_bg;
-        color: $midnight_color;
-        border-color: $midnight_border;
-      }
-      .btn-ocean {
-        background-color: $ocean_bg;
-        color: $ocean_color;
-        border-color: $ocean_border;
-      }
-      .btn-storm {
-        background-color: $storm_bg;
-        color: $storm_color;
-        border-color: $storm_border;
-      }
-      .btn-jungle {
-        background-color: $jungle_bg;
-        color: $jungle_color;
-        border-color: $jungle_border;
-      }
-    }
-  }
-  //
-  // // .btn-theme-type,
-  // .sidebar {
-  //   .keyboard.keyboard-theme-type {
-  //     .btn-theme-type {
-  //     }
-  //   }
-  // .keyboard.keyboard-theme {
-  // }
   .btn-theme {
-    // display: none$i;
     border: 2px solid darken(themed(primaryButtonBorderColor), 90%);
   }
 }
@@ -244,16 +206,15 @@
 
 #{$color} {
   // sizes
-    .sidebar {
-      .keyboard {
-        .btn-theme-type:nth-of-type(2) {
-          transform: scale(1.2);
-        }
+  .sidebar {
+    .keyboard {
+      .btn-theme-type:nth-of-type(2) {
       }
     }
+  }
   // colors
   @include themify($themes) {
-     .sidebar {
+    .sidebar {
       .keyboard {
         .btn-theme-type:nth-of-type(2) {
           border: 2px solid themed(keyboardBorderColor);

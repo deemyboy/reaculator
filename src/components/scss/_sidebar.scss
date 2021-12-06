@@ -1,0 +1,16 @@
+.sidebar {
+    &:after {
+        // content: "";
+        content:"\2039";
+        display: inline-block;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width:0;
+        border: 1px solid blanchedalmond;
+        color: blanchedalmond;
+        font-size: 3rem;
+
+    }
+}

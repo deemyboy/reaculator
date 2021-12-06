@@ -228,7 +228,7 @@ $themes: (
 
 @mixin themify($themes: $themes) {
   @each $theme, $map in $themes {
-    .#{$theme}.calculator {
+    #{$outer-wrapper}.#{$theme} {
       $theme-map: () !global;
       @each $key, $submap in $map {
         $value: map-get(map-get($themes, $theme), "#{$key}");
@@ -251,29 +251,19 @@ $themes: (
 }
 
 #{$outer-wrapper} {
-  // max-width: 640px;
-  // margin-top: $s-3r;
   background-color: hotpink;
+  position: relative;
 
   // common sizes, lengths etc
   .calculator {
-    .main-kb-wrapper {
-      position: relative;
-    }
-
-    .sidebar {
-      // transform: translateX(100%);
-      transition: all 0.5s ease-out;
-      height: 100%;
-    }
     @include transition(all 0.25s);
-    padding: 10px;
     border-radius: $s-05r;
     border-width: 2px;
     border-style: solid;
-    // max-width: 540px;
-    background-color: #cd5c5cb0$i;
-    background-image: none;
+    padding: 1rem 1.5rem;
+    .main-kb-wrapper {
+      position: relative;
+    }
     > .title {
       font-size: $s-2r;
       font-weight: 100;
@@ -281,69 +271,44 @@ $themes: (
     }
 
     .keyboard {
-      //
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
     }
   }
 
-  // colours
-  @include themify($themes) {
-    background-color: themed(backgroundColor);
-    border-color: themed(borderColor);
-    border-color: themed(menuIconBorderColor);
-    > .title {
-      color: themed(calculatorTitleTextColor);
-    }
-
-    .menu-icon {
-      background-color: themed(menuIconBackgroundColor);
-      border-color: themed(menuIconBorderColor);
-      &:hover {
-        background-color: themed(menuIconBackgroundHoverColor);
-      }
-    }
-    .icon-bar {
-      background-color: themed(iconBarColor);
-    }
-
-    .keyboard {
-      background-color: transparentize(
-        lighten(themed(keyboardBackground), 0%),
-        0.35
-      );
-      border-color: themed(keyboardBorderColor);
-    }
-  }
-
-  // menu-icon
-  // open
-  &#{$open} {
-    .calculator {
-    }
+  .sidebar {
+    @include transition(all 0.25s);
+    background-color: #c0cd5cb0 !important;
+    height: 100%;
+    width: 20%;
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    transform: translateX(100%);
   }
 
   ///////////////  sidebar
   // sizes
   .calculator {
-    .sidebar {
-      border: 1px solid;
-      padding-bottom: 15px;
-      border-radius: $s-025r;
-      @include transition(all 0.25s);
-      z-index: -1;
-      > .title {
-        text-align: center;
-        font-size: 1.1rem;
-        padding: 10px 0;
-      }
+  }
+  .sidebar {
+    border: 1px solid;
+    padding-bottom: 15px;
+    border-radius: $s-025r;
+    > .title {
+      text-align: center;
+      font-size: 1.1rem;
+      padding: 10px 0;
     }
   }
   // open
   &#{$open} {
     .calculator {
-      .sidebar {
-        z-index: 2;
-        transform: scaleX(1);
-      }
+    }
+    .sidebar {
+      z-index: 2;
+      transform: scaleX(1);
     }
   }
 
@@ -367,37 +332,55 @@ $themes: (
   }
 }
 
-#{$picture} {
+#{$outer-wrapper}#{$picture} {
   // sizes
   .calculator {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: bottom;
   }
-  // colors
-  @include themify($themes) {
-    background-image: themed(backgroundUrl);
-    .keyboard {
-    }
-     .sidebar {
+}
+@include themify($themes) {
+  &#{$picture} {
+    .calculator {
+      background-image: themed(backgroundUrl);
       .keyboard {
+      }
+      .sidebar {
+        .keyboard {
+        }
       }
     }
   }
-}
-
-#{$color} {
-  // sizes
-  .calculator {
-  }
-  .sidebar {
-    .keyboard {
-    }
-  }
+  
   // colors
-  @include themify($themes) {
+  &#{$color} {
+    // sizes
+    .calculator {
+      background-color: themed(backgroundColor);
+      border-color: themed(borderColor);
+      border-color: themed(menuIconBorderColor);
+      > .title {
+        color: themed(calculatorTitleTextColor);
+      }
+
+      .keyboard {
+        background-color: transparentize(
+          lighten(themed(keyboardBackground), 0%),
+          0.35
+        );
+        border-color: themed(keyboardBorderColor);
+      }
+    }
     .sidebar {
       .keyboard {
+      }
+    }
+    // colors
+    @include themify($themes) {
+      .sidebar {
+        .keyboard {
+        }
       }
     }
   }
