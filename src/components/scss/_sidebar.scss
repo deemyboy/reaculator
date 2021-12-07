@@ -1,16 +1,47 @@
+.settings {
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+  position: absolute;
+  top: 5%;
+  left: 90%;
+  .fa.fa-cog {
+      font-size: 2rem;
+  }
+  &:before {
+    // content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* border: 1px solid blanchedalmond; */
+    background: #4cbc06;
+    z-index: -40;
+    // transform: rotate(45deg);
+    // transform-origin: bottom left;
+    // z-index: -1;
+  }
+}
 .sidebar {
-    &:after {
-        // content: "";
-        content:"\2039";
-        display: inline-block;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width:0;
-        border: 1px solid blanchedalmond;
-        color: blanchedalmond;
-        font-size: 3rem;
-
-    }
+  &:before {
+    // content: "";
+    display: inline-block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    border: 1px solid blanchedalmond;
+    position: absolute;
+    top: 90%;
+    left: 20px;
+    height: 30%;
+    width: 20px;
+    background: black;
+    transform: skewY(-45deg);
+    transform-origin: bottom left;
+    z-index: -1;
+  }
 }

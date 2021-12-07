@@ -254,7 +254,7 @@ $themes: (
   background-color: hotpink;
   position: relative;
 
-  // common sizes, lengths etc
+  // sizes
   .calculator {
     @include transition(all 0.25s);
     border-radius: $s-05r;
@@ -291,6 +291,17 @@ $themes: (
   ///////////////  sidebar
   // sizes
   .calculator {
+    &::after {
+      // content: "";
+      border: 1px solid;
+      width: 0;
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: 97.7%;
+      height: 100%;
+      border-color: blue;
+    }
   }
   .sidebar {
     border: 1px solid;
@@ -302,6 +313,7 @@ $themes: (
       padding: 10px 0;
     }
   }
+
   // open
   &#{$open} {
     .calculator {
@@ -320,13 +332,19 @@ $themes: (
       > .title {
         color: themed(sidebarTitleTextColor);
       }
+      .settings {
+        .fa.fa-cog {
+          color: themed(sidebarTitleTextColor);
+        }
+      }
     }
-  }
 
-  // open
-  &#{$open} {
-    @include themify($themes) {
-      .sidebar {
+    /////////////// open
+    // open
+    &#{$open} {
+      @include themify($themes) {
+        .sidebar {
+        }
       }
     }
   }
@@ -340,6 +358,7 @@ $themes: (
     background-position: bottom;
   }
 }
+
 @include themify($themes) {
   &#{$picture} {
     .calculator {
@@ -352,7 +371,7 @@ $themes: (
       }
     }
   }
-  
+
   // colors
   &#{$color} {
     // sizes
@@ -372,16 +391,19 @@ $themes: (
         border-color: themed(keyboardBorderColor);
       }
     }
+    .settings {
+    }
     .sidebar {
       .keyboard {
       }
     }
-    // colors
-    @include themify($themes) {
-      .sidebar {
-        .keyboard {
-        }
-      }
+  }
+}
+
+// colors
+@include themify($themes) {
+  .sidebar {
+    .keyboard {
     }
   }
 }

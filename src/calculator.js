@@ -864,7 +864,7 @@ class Calculator extends Component {
                       </div>
                     </div>
                   </div>
-                  {/* ------------ keyboards ---------------- */}
+                  {/* ------------ main keyboards ---------------- */}
                   <div className="row" meta-name="main keyboards">
                     <div className="col">
                       <Keyboard
@@ -895,9 +895,13 @@ class Calculator extends Component {
             <div className="row" meta-name="sidebar">
               {/* ------------ sidebar ---------------- */}
               <div className="col">
+                <div className="settings">
+                  <i className="fa fa-cog" aria-hidden="true"></i>
+                </div>
                 <div className="sidebar">
                   <div className="h-50 keyboard-wrapper">
                     <div className="circle"></div>
+                    {/* ------------ sidebar keyboards ---------------- */}
                     <Keyboard
                       className={`${this.state.themeTypeKeyboardData.className}`}
                       label={this.state.themeTypeKeyboardData.labelForKeyboard}
