@@ -7,15 +7,15 @@
   &.keyboard-number {
   }
   &.keyboard-utility {
-    border: 0;
-    background: none$i;
+    // border: 0;
+    // background: none$i;
     margin: 0;
     padding: 0;
     width: 100%;
   }
 }
 .calculator {
-  .keyboard { 
+  .keyboard {
     .title {
       display: none;
     }
@@ -25,115 +25,97 @@
 .sidebar {
   .keyboard-wrapper {
     position: relative;
-    .circle {
-      z-index: 100;
-      height: 2rem;
-      width: 2rem;
-      background-color: #c4faff6e;
-      position: absolute;
-      // left: 90%;
-      top: 50%;
+  }
+  .circle {
+    z-index: 100;
+    height: 2rem;
+    width: 2rem;
+    background-color: #c4faff6e;
+    position: absolute;
+    top: calc(50% - 1rem);
+    left: calc(50% - 1rem);
+    border-radius: 25px;
+    @include transition(all 0.25s ease-out);
+    transform-origin: center;
+    &:after {
+      content: "";
+      display: inline-block;
+      height: 3rem;
+      width: 3rem;
+      border: none$i;
+      background-color: #c4faff;
+      opacity: 0.4;
       border-radius: 25px;
+      position: absolute;
+      top: -0.5rem;
+      left: -0.5rem;
       @include transition(all 0.25s ease-out);
-      transform-origin: center;
-      &:hover {
-        transform: scale(1.5);
-        + .keyboard {
-          .btn {
-            transform: rotate(0deg);
-            width: 80%;
-            opacity: 1;
-            @for $i from 10 through 1 {
-              &:nth-of-type(#{$i}) {
-                top: calc(#{$i} * 40px);
-              }
-            }
-          }
-        }
-        &:after {
-          transform: scale(.675);
-        }
-      }
-      &:after {
-        content: "";
-        display: inline-block;
-        height: 3rem;
-        width: 3rem;
-        border: none$i;
-        background-color: #c4faff6e;
-        border-radius: 25px;
-        position: absolute;
-        top: -.5rem;
-        left: -.5rem;
-        @include transition(all 0.25s ease-out);
-        transform: scale(1);
-      }
+      transform: scale(1);
     }
-    border: 1px dashed black;
-    .keyboard {
-      border-radius: 50px;
-      height: 50%;
-      transform-origin: right;
-      @include transition(all 0.25s ease-out);
-      .btn {
-        z-index: 0;
-        transform: rotate(180deg);
-        transform-origin: right;
-        width: 100%;
-        opacity: 0.2;
-        position: relative;
-        @for $i from 1 through 10 {
-          &:nth-of-type(#{$i}) {
-            transition: transform #{$i * 0.25}s, opacity #{$i * 0.25}s,
-              width #{$i * 0.25}s;
-            transition: top #{$i * 0.25}s;
-          }
-        }
-        @for $i from 10 through 1 {
-          &:nth-of-type(#{$i}) {
-            top: calc(((#{$i} -1) * 40px) - 40px);
-          }
-        }
-      }
-    }
-    .keyboard:nth-of-type(2) {
-      .btn {
-        width: 100%;
-        opacity: 0.2;
-        position: relative;
-        @for $i from 1 through 10 {
-          &:nth-of-type(#{$i}) {
-            transition: transform #{$i * 0.15}s, opacity #{$i * 0.15}s,
-              width #{$i * 0.15}s, top #{$i * 0.15}s ease 0s;
-          }
-        }
-        @for $i from 10 through 1 {
-          &:nth-of-type(#{$i}) {
-            top: calc(190px - (#{$i} * 40px));
-          }
-        }
-      }
+    &:hover:after {
+      transform: scale(0.675);
+      background-color: #fff;
+      opacity: 1;
     }
   }
-  .keyboard-theme,
-  .keyboard-theme-type {
-    margin-bottom: 10px;
-    .title {
-      display: none;
-      width: 100%;
-      text-align: center;
-      font-size: 1rem;
-      padding: 10px 6px;
-      border-radius: 6px;
-      font-weight: 600;
-      background: none;
-      border: 1px solid;
+  .keyboard {
+    border-radius: 50%;
+    height: 100%;
+    transform: rotate(90deg);
+    transform-origin: center;
+    background-color: transparent$i;
+    border: 0;
+    @include transition(all 0.25s ease-out);
+    .btn {
+      z-index: 0;
+      transform: rotate(180deg);
+      // transform-origin: right;
+      // top: calc(50% - 1.6rem);
+      margin: 0;
+      padding: 0;
+      width: 40%;
+      opacity: 0;
+      position: absolute;
+      top: calc(50% - 1rem);
+      left: calc(50% - 20%);
+      @for $i from 1 through 10 {
+        &:nth-of-type(#{$i}) {
+          transition: transform #{$i * 0.25}s, opacity #{$i * 0.25}s;
+
+          // transition: top #{$i * 0.25}s;
+        }
+      }
+      // @for $i from 1 through 5 {
+      //   &:nth-of-type(#{$i}) {
+      //     @if $i < 4 {
+      //       left: calc((3 - #{$i})* 8%);
+      //     } @else {
+      //       left: calc((1 - #{$i})* 12%);
+      //     }
+      //   }
+      // }
     }
   }
 }
 
+.keyboard-theme,
+.keyboard-theme-type {
+  margin-bottom: 10px;
+  .title {
+    display: none;
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    padding: 10px 6px;
+    border-radius: 6px;
+    font-weight: 600;
+    background: none;
+    border: 1px solid;
+  }
+}
+
 @include themify($themes) {
-   .sidebar {
+  .sidebar {
     .keyboard-theme,
     .keyboard-theme-type {
       background-color: themed(keyboardBackground);
@@ -151,7 +133,7 @@
 }
 // theme section colours
 @include themify($themes) {
-   .sidebar {
+  .sidebar {
     .keyboard {
       background-color: darken(
         transparentize(themed(keyboardBackground), 0.2),
@@ -171,33 +153,129 @@
 
 #{$picture} {
   // sizes
-     .sidebar {
-      .keyboard {
-      }
-    }
-  }
-  // colors
-  @include themify($themes) {
+  .sidebar {
     .keyboard {
-      background-color: #faebd729;
-    }
-     .sidebar {
-      .keyboard {
-      }
     }
   }
+}
+// colors
+@include themify($themes) {
+  .keyboard {
+    background-color: #faebd729;
+  }
+  .sidebar {
+    .keyboard {
+    }
+  }
+}
 
 #{$color} {
   // sizes
-     .sidebar {
-      .keyboard {
+  .sidebar {
+    .keyboard {
+    }
+  }
+}
+// colors
+@include themify($themes) {
+  .sidebar {
+    .keyboard {
+    }
+  }
+}
+
+.sidebar {
+  .keyboard-wrapper {
+    .circle {
+      &:hover {
+        transform: scale(1.5);
+        + .keyboard {
+          transform: rotate(0deg);
+          .btn {
+            transform: rotate(0deg);
+            opacity: 1;
+            &:first-of-type {
+              left: 15%;
+              top: 15%;
+            }
+            &:nth-of-type(2) {
+              left: 15%;
+              top: 65%;
+            }
+            // @for $i from 10 through 1 {
+            //   &:nth-of-type(#{$i}) {
+            //     top: calc(#{$i} * 40px);
+            //   }
+            // }
+          }
+        }
       }
     }
   }
-  // colors
-  @include themify($themes) {
-     .sidebar {
-      .keyboard {
+}
+
+.sidebar {
+  .keyboard-wrapper ~ .keyboard-wrapper {
+    .circle {
+      &:hover {
+        + .keyboard {
+          transform: rotate(0deg);
+          .btn {
+            transform: rotate(0deg);
+            opacity: 1;
+            &:first-of-type {
+              left: 9%;
+              top: 10%;
+            }
+            &:nth-of-type(2) {
+              left: -5%;
+              top: 27%;
+            }
+            &:nth-of-type(3) {
+              left: -13%;
+              top: 44%;
+            }
+            &:nth-of-type(4) {
+              left: -5%;
+              top: 61%;
+            }
+            &:nth-of-type(5) {
+              left: 9%;
+              top: 78%;
+            }
+            // @for $i from 10 through 1 {
+            //   &:nth-of-type(#{$i}) {
+            //     top: calc(#{$i} * 40px);
+            //   }
+            // }
+          }
+        }
+      }
+    }
+    .keyboard {
+      .btn {
+        @for $i from 1 through 10 {
+          &:nth-of-type(#{$i}) {
+            transition: transform #{$i * 0.2}s, opacity #{$i * 0.2}s,
+              top #{$i * 0.2}s, left #{$i * 0.2}s ease 0s;
+          }
+        }
+        // @for $i from 10 through 1 {
+        //   &:nth-of-type(#{$i}) {
+        //     top: calc(190px - (#{$i} * 40px));
+        //   }
+        // }
       }
     }
   }
+}
+
+.keyboard.keyboard-function {
+  border-bottom: none;
+  border-radius: .25rem .25rem 0px 0px$i;
+}
+
+.keyboard.keyboard-utility {
+  border-top: none;
+  border-radius:  0px 0px .25rem .25rem$i;
+}

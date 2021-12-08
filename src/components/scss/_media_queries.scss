@@ -200,6 +200,16 @@ $breakpoints: (
       .keyboard {
         border-radius: 1rem;
         justify-content: space-evenly;
+        &.keyboard-function {
+          border-bottom: none;
+          border-radius: 1rem 1rem 0px 0px$i;
+        }
+        
+        &.keyboard-utility {
+          border-top: none;
+          border-radius:  0px 0px 1rem 1rem$i;
+        }
+        
         .title {
           display: none;
         }

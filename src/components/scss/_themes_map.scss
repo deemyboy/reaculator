@@ -251,7 +251,6 @@ $themes: (
 }
 
 #{$outer-wrapper} {
-  background-color: hotpink;
   position: relative;
 
   // sizes
@@ -260,6 +259,7 @@ $themes: (
     border-radius: $s-05r;
     border-width: 2px;
     border-style: solid;
+    margin: 0 -0.75rem;
     padding: 1rem 1.5rem;
     .main-kb-wrapper {
       position: relative;
@@ -275,17 +275,6 @@ $themes: (
       justify-content: space-evenly;
       flex-wrap: wrap;
     }
-  }
-
-  .sidebar {
-    @include transition(all 0.25s);
-    background-color: #c0cd5cb0 !important;
-    height: 100%;
-    width: 20%;
-    position: absolute;
-    top: 0%;
-    right: 0%;
-    transform: translateX(100%);
   }
 
   ///////////////  sidebar
@@ -305,7 +294,6 @@ $themes: (
   }
   .sidebar {
     border: 1px solid;
-    padding-bottom: 15px;
     border-radius: $s-025r;
     > .title {
       text-align: center;
@@ -320,7 +308,8 @@ $themes: (
     }
     .sidebar {
       z-index: 2;
-      transform: scaleX(1);
+      transform: translateX(0);
+      opacity: 1;
     }
   }
 
@@ -392,6 +381,7 @@ $themes: (
       }
     }
     .settings {
+      color: darken(themed(calculatorTitleTextColor), 15%);
     }
     .sidebar {
       .keyboard {

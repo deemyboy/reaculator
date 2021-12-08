@@ -136,14 +136,20 @@ class Calculator extends Component {
 
     // test if body touched (not menu icon)
     if (
-      e.target.className !== "menu-icon" &&
-      e.target.className !== "icon-bar"
+      e.target.className !== "fa fa-cog" ||
+      e.target.className !== "settings"
     ) {
       // if sidebar open allow touch on calculator body  to close sidebar
       if (isOpen) {
         isOpen = false;
         sidebarData.isOpen = isOpen;
         this.setState({ sidebarData });
+      }
+      else {
+        isOpen = true;
+        sidebarData.isOpen = isOpen;
+        this.setState({ sidebarData });
+
       }
     } else {
       if (!isOpen) {
@@ -895,10 +901,10 @@ class Calculator extends Component {
             <div className="row" meta-name="sidebar">
               {/* ------------ sidebar ---------------- */}
               <div className="col">
-                <div className="settings">
+                <div className="settings" onMouseOver={this.toggleSidebar}>
                   <i className="fa fa-cog" aria-hidden="true"></i>
                 </div>
-                <div className="sidebar">
+                <div className="sidebar"onMouseLeave={this.toggleSidebar}>
                   <div className="h-50 keyboard-wrapper">
                     <div className="circle"></div>
                     {/* ------------ sidebar keyboards ---------------- */}
