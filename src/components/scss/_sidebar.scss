@@ -1,13 +1,15 @@
 .sidebar {
   @include transition(all 0.25s);
   height: 100%;
-  width: 33.3%;
+  width: 40%;
   position: absolute;
   top: 0%;
   right: 0%;
   transform: translateX(100%);
-  opacity: 0;
-  z-index: 20;
+  opacity: 1;
+  z-index: 50;
+  border-width: 0;
+  // max-width: 192px;
 
   &:before {
     // content: "";
@@ -29,3 +31,28 @@
     z-index: -1;
   }
 }
+
+
+  // open
+  #{$open} {
+    .sidebar {
+      // transform: translateX(0);
+      transform: translateX(-12px);
+      opacity: 1;
+      border: 1px solid;
+      // transition-delay: -1s;
+      // transition-property: width;
+      .keyboard-wrapper {
+        opacity: 1;
+      }
+    }
+  }
+
+  .sidebar {
+    border-radius: 0 $s-05r $s-05r 0;
+    > .title {
+      text-align: center;
+      font-size: 1.1rem;
+      padding: 10px 0;
+    }
+  }

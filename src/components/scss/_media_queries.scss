@@ -82,6 +82,52 @@ $breakpoints: (
 }
 
 ///////////// ///////////// /////////////
+/////////// basic structure  ////////////
+///////////// ///////////// /////////////
+/////// open
+
+@include respond-below(xs) {
+  #{$outer-wrapper} {
+    & {
+    }
+    //sizes here
+    // closed
+    .calculator {
+    }
+    .settings {
+    }
+    .sidebar {
+    }
+    &#{$open} {
+      .calculator {
+      }
+      .settings {
+      }
+      .sidebar {
+      }
+    }
+  }
+  // colors here
+  @include themify($themes) {
+    // closed
+    .calculator {
+    }
+    .settings {
+    }
+    .sidebar {
+    }
+    &#{$open} {
+      .calculator {
+      }
+      .settings {
+      }
+      .sidebar {
+      }
+    }
+  }
+}
+
+///////////// ///////////// /////////////
 /////////// portrait section ////////////
 ///////////// ///////////// /////////////
 
@@ -89,60 +135,144 @@ $breakpoints: (
 /////// xs
 
 @include respond-below(xs) {
+  #calculator {
+    margin: 0 -12px;
+    max-width: 320px;
+    > .container {
+      max-width: 320px;
+    }
+  }
   #{$outer-wrapper} {
     & {
-      width: 100%;
-      margin-top: $s-05r$i;
-      padding-left: $s-1r$i;
-      padding-right: $s-1r$i;
     }
     // sizes here
+    // closed
     .calculator {
       width: 100%;
       border: none;
       border-radius: 5px;
-      position: fixed;
+      // position: fixed;
       top: 0px;
       right: 0px;
       bottom: 0px;
       left: 0px;
       .keyboard button {
-        height: 50px;
-        width: 50px;
+        margin: 5px;
+        height: 40px;
+        width: 40px;
+        font-size: 1rem;
       }
-      // colors here
-      @include themify($themes) {
-      }
+    }
+    .settings {
+      height: 2rem;
+      width: 2rem;
+      position: absolute;
+      top: 3%;
+      left: 84%;
     }
     .sidebar {
-      position: absolute;
-      right: 0;
-      transform: scaleX(0);
-      display: flex;
-      height: 100%;
-      flex-direction: column;
-      margin-top: -8px;
-      justify-content: space-around;
-    }
-  }
-}
-
-///////////// portrait
-/////// xs
-/////// open
-
-@include respond-below(xs) {
-  #{$outer-wrapper} {
-    & {
+      width: 50%;
+      .keyboard {
+        position: relative;
+        left: 15%;
+        button {
+          transform: scale(1);
+          max-width: 60px;
+        }
+      }
     }
     &#{$open} {
-      //sizes here
       .calculator {
       }
-       .sidebar {
+      .sidebar {
+        transform: translateX(-12px);
       }
-      // colors here
-      @include themify($themes) {
+    }
+    // colors here
+    @include themify($themes) {
+    }
+  }
+  #{$outer-wrapper} {
+    .sidebar {
+      .keyboard-wrapper {
+        .circle {
+          height: 1.4rem;
+          width: 1.4rem;
+          left: calc(60% - 1rem);
+          &:hover {
+            transform: scale(1.5);
+            + .keyboard {
+              transform: rotate(0deg);
+              .btn {
+                transform: rotate(0deg), scale(2);
+                opacity: 1;
+              }
+            }
+          }
+          &:after {
+            height: 2rem;
+            width: 2rem;
+            top: -0.3rem;
+            left: -0.3rem;
+          }
+        }
+        .circle-1 {
+          &:hover {
+            + .keyboard {
+              .btn {
+                &:first-of-type {
+                  left: 15%;
+                  top: 25%;
+                }
+                &:nth-of-type(2) {
+                  left: 15%;
+                  top: 65%;
+                }
+                // @for $i from 10 through 1 {
+                //   &:nth-of-type(#{$i}) {
+                //     top: calc(#{$i} * 40px);
+                //   }
+                // }
+              }
+            }
+          }
+        }
+
+        .circle-2 {
+          &:hover {
+            // transform: scale(1.5);
+            + .keyboard {
+              // transform: rotate(0deg);
+              .btn {
+                &:first-of-type {
+                  left: 18%;
+                  top: 10%;
+                }
+                // &:nth-of-type(2) {
+                //   left: -5%;
+                //   top: 27%;
+                // }
+                // &:nth-of-type(3) {
+                //   left: -13%;
+                //   top: 44%;
+                // }
+                // &:nth-of-type(4) {
+                //   left: -5%;
+                //   top: 61%;
+                // }
+                &:nth-of-type(5) {
+                  left: 18%;
+                  top: 78%;
+                }
+                // @for $i from 10 through 1 {
+                //   &:nth-of-type(#{$i}) {
+                //     top: calc(#{$i} * 40px);
+                //   }
+                // }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -204,37 +334,36 @@ $breakpoints: (
           border-bottom: none;
           border-radius: 1rem 1rem 0px 0px$i;
         }
-        
+
         &.keyboard-utility {
           border-top: none;
-          border-radius:  0px 0px 1rem 1rem$i;
+          border-radius: 0px 0px 1rem 1rem$i;
         }
-        
+
         .title {
           display: none;
         }
         button {
           height: 45px;
           width: 45px;
-          transform: scale(2);
+          transform: scale(1.7);
           margin: 36px;
         }
       }
-
 
       // colors here
       @include themify($themes) {
       }
     }
     .sidebar {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: auto;
-      transform: scaleX(0);
-      display: flex;
-      height: 100%;
-      justify-content: space-around;
+      // position: absolute;
+      // right: 0;
+      // top: 0;
+      // width: auto;
+      // transform: scaleX(0);
+      // display: flex;
+      // height: 100%;
+      // justify-content: space-around;
       // flex-direction: column;
       > .title {
         font-size: 3rem;
@@ -247,23 +376,98 @@ $breakpoints: (
         button {
           display: block$i;
           height: auto;
-          width: auto;
+          // width: auto;
           padding: 0;
         }
       }
       .keyboard-theme-type {
         .btn-theme-type {
-          transform: scale(3.3);
-          margin: 50px 0px;
+          transform: scale(2);
+          // margin: 50px 0px;
         }
       }
       .keyboard-theme {
         .btn-theme {
-          margin: 30px 0px;
-          transform: scale(2);
+          // margin: 30px 0px;
+          transform: scale(1.2);
           // height: 30px !important;
           // transform: scale(2);
           // margin: 10px 0;
+        }
+      }
+    }
+    .sidebar {
+      .keyboard-wrapper {
+        .circle {
+          &:hover {
+            transform: scale(1.5);
+            + .keyboard {
+              transform: rotate(0deg);
+              .btn {
+                transform: rotate(0deg), scale(2);
+                opacity: 1;
+              }
+            }
+          }
+        }
+        .circle-1 {
+          &:hover {
+            + .keyboard {
+              .btn {
+                &:first-of-type {
+                  left: 15%;
+                  top: 25%;
+                }
+                &:nth-of-type(2) {
+                  left: 15%;
+                  top: 65%;
+                }
+                // @for $i from 10 through 1 {
+                //   &:nth-of-type(#{$i}) {
+                //     top: calc(#{$i} * 40px);
+                //   }
+                // }
+              }
+            }
+          }
+        }
+
+        .circle-2 {
+          &:hover {
+            // transform: scale(1.5);
+            + .keyboard {
+              // transform: rotate(0deg);
+              .btn {
+                transform: scale(1.2);
+                opacity: 1;
+                &:first-of-type {
+                  left: 18%;
+                  top: 10%;
+                }
+                // &:nth-of-type(2) {
+                //   left: -5%;
+                //   top: 27%;
+                // }
+                // &:nth-of-type(3) {
+                //   left: -13%;
+                //   top: 44%;
+                // }
+                // &:nth-of-type(4) {
+                //   left: -5%;
+                //   top: 61%;
+                // }
+                &:nth-of-type(5) {
+                  left: 18%;
+                  top: 78%;
+                }
+                // @for $i from 10 through 1 {
+                //   &:nth-of-type(#{$i}) {
+                //     top: calc(#{$i} * 40px);
+                //   }
+                // }
+              }
+            }
+          }
         }
       }
     }
@@ -279,11 +483,11 @@ $breakpoints: (
     &#{$open} {
       //sizes here
       .calculator {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        // position: fixed;
+        // top: 0;
+        // right: 0;
+        // bottom: 0;
+        // left: 0;
         .menu-icon {
           transform: translate(-400%, 0%);
           // .icon-bar:nth-of-type(2) {
@@ -301,17 +505,17 @@ $breakpoints: (
           // }
         }
       }
-       .sidebar {
-        border: 1px solid;
-        padding-bottom: 15px;
+      .sidebar {
+        // border: 1px solid;
+        // padding-bottom: 15px;
         border-radius: 0.25rem;
-        width: 200px;
-        position: fixed;
+        width: 30%;
+        // position: fixed;
         right: 0;
-        transform: scaleX(0);
+        // transform: scaleX(0);
         transform-origin: right;
         transition: 0.25s all;
-        z-index: -1;
+        // z-index: -1;
         height: 100%;
         top: 0;
       }
@@ -405,9 +609,8 @@ $breakpoints: (
             }
           }
         }
-
       }
-       .sidebar {
+      .sidebar {
         position: absolute;
         border-radius: 0;
         transform: scaleX(0);

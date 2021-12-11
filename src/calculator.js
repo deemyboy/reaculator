@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./calculator.scss";
+import "./main.scss";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Sidebar from "./components/sidebar";
@@ -59,17 +59,23 @@ class Calculator extends Component {
     op2: "",
     themesKeyboardData: {
       className: "keyboard-theme",
+      circleClassName :"circle circle-2" ,
+      circleDefaultClassName :"circle circle-2" ,
       labelForKeyboard: "Theme",
       currentSetting: "Ocean",
       onClick: (e) => this.onSelectTheme(e),
       itemsForKeyboard: sidebarKeys,
+      visible: false,
     },
     themeTypeKeyboardData: {
       className: "keyboard-theme-type",
+      circleClassName :"circle circle-1" ,
+      circleDefaultClassName :"circle circle-1" ,
       labelForKeyboard: "Theme Type",
       currentSetting: "picture",
       onClick: (e) => this.onSelectThemeType(e),
       itemsForKeyboard: themeTypeKeys,
+      visible: false,
     },
     theme: "Ocean",
     themeType: "color",
@@ -104,100 +110,6 @@ class Calculator extends Component {
     document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
   }
 
-  setResultData = (data, callback) => {
-    let resultData = { ...this.state.resultData },
-      _resultData = {};
-
-    if (data.resultClass) {
-      _resultData.resultClass = data.resultClass;
-    } else {
-      _resultData.resultClass = this.state.resultDefaultClass;
-    }
-    if (data.resultValue) {
-      _resultData.resultValue = data.resultValue;
-    } else {
-      _resultData.resultValue = resultData.resultValue;
-    }
-    if (data.resultCount) {
-      _resultData.resultCount = data.resultCount;
-    } else {
-      _resultData.resultCount = resultData.resultCount;
-    }
-    if (callback) {
-      this.setState({ resultData: _resultData }, () => callback());
-    } else {
-      this.setState({ resultData: _resultData });
-    }
-  };
-
-  toggleSidebar = (e) => {
-    let sidebarData = { ...this.state.sidebarData };
-    let isOpen = sidebarData.isOpen;
-
-    // test if body touched (not menu icon)
-    if (
-      e.target.className !== "fa fa-cog" ||
-      e.target.className !== "settings"
-    ) {
-      // if sidebar open allow touch on calculator body  to close sidebar
-      if (isOpen) {
-        isOpen = false;
-        sidebarData.isOpen = isOpen;
-        this.setState({ sidebarData });
-      }
-      else {
-        isOpen = true;
-        sidebarData.isOpen = isOpen;
-        this.setState({ sidebarData });
-
-      }
-    } else {
-      if (!isOpen) {
-        isOpen = true;
-      } else {
-        isOpen = false;
-      }
-
-      sidebarData.isOpen = isOpen;
-    }
-    this.setState({ sidebarData });
-  };
-
-  packageKeyboardData = (keyboardUser) => {
-    return this.state[keyboardUser];
-  };
-
-  onSelectTheme = (e) => {
-    let cookieData = {};
-    let _themesData = { ...this.state.themesKeyboardData };
-    _themesData.currentSetting = e.target.innerHTML;
-    cookieData.cookieLabel = "currentTheme";
-    cookieData.cookieValue = _themesData.currentSetting;
-    cookieData.cookiePath = { path: "/" };
-    this.setState({
-      themesData: _themesData,
-      theme: _themesData.currentSetting,
-    });
-    this.setCookie(cookieData);
-    // this.toggleSidebar(e);
-  };
-
-  onSelectThemeType = (e) => {
-    let cookieData = {};
-    let _themeTypeData = { ...this.state.themeTypeKeyboardData };
-    _themeTypeData.currentSetting = e.target.value;
-    cookieData.cookieLabel = "currentThemeType";
-    cookieData.cookieValue = _themeTypeData.currentSetting;
-    cookieData.cookiePath = { path: "/" };
-    this.setState({
-      themeTypeKeyboardData: _themeTypeData,
-      themeType: _themeTypeData.currentSetting,
-    });
-    this.setCookie(cookieData);
-    // this.selectThemeType(e);
-    // this.toggleSidebar(e);
-  };
-
   setCookie = (cookieData) => {
     let d = new Date();
     let year = d.getFullYear();
@@ -220,11 +132,6 @@ class Calculator extends Component {
       ? cookies.get(cookieLabel)
       : this.state[cookieDefault];
   };
-
-  // selectThemeType = (e) => {
-  //   let themeTypeData = { ...this.state.themeTypeKeyboardData };
-  //   //
-  // };
 
   handleClick = (e) => {
     // console.log("189: handleClick", e);
@@ -465,6 +372,32 @@ class Calculator extends Component {
     }
   };
 
+  setResultData = (data, callback) => {
+    let resultData = { ...this.state.resultData },
+      _resultData = {};
+
+    if (data.resultClass) {
+      _resultData.resultClass = data.resultClass;
+    } else {
+      _resultData.resultClass = this.state.resultDefaultClass;
+    }
+    if (data.resultValue) {
+      _resultData.resultValue = data.resultValue;
+    } else {
+      _resultData.resultValue = resultData.resultValue;
+    }
+    if (data.resultCount) {
+      _resultData.resultCount = data.resultCount;
+    } else {
+      _resultData.resultCount = resultData.resultCount;
+    }
+    if (callback) {
+      this.setState({ resultData: _resultData }, () => callback());
+    } else {
+      this.setState({ resultData: _resultData });
+    }
+  };
+
   makeNumbersAndOperators = (input) => {
     let _opRgxOuter = /[+\-x\/ysr=]/i,
       _opRgxLoop = /[+\-x\/ysr=]/gi,
@@ -610,6 +543,110 @@ class Calculator extends Component {
       dotRgx = /\./g,
       _count = 0;
     return "0.";
+  };
+
+  packageKeyboardData = (keyboardUser) => {
+    return this.state[keyboardUser];
+  };
+
+  toggleSidebar = (e) => {
+    let sidebarData = { ...this.state.sidebarData };
+    let isOpen = sidebarData.isOpen;
+
+    // test if body touched (not menu icon)
+    if (
+      e.target.className !== "fa fa-cog" ||
+      e.target.className !== "settings"
+    ) {
+      // if sidebar open allow touch on calculator body  to close sidebar
+      if (isOpen) {
+        isOpen = false;
+        sidebarData.isOpen = isOpen;
+        this.setState({ sidebarData });
+      } else {
+        isOpen = true;
+        sidebarData.isOpen = isOpen;
+        this.setState({ sidebarData });
+      }
+    } else {
+      if (!isOpen) {
+        isOpen = true;
+      } else {
+        isOpen = false;
+      }
+
+      sidebarData.isOpen = isOpen;
+    }
+    this.setState({ sidebarData });
+  };
+
+  closeSidebar = (e) => {
+    let sidebarData = { ...this.state.sidebarData },themeTypeKeyboardData = { ...this.state.themeTypeKeyboardData },themesKeyboardData = { ...this.state.themesKeyboardData };
+    sidebarData.isOpen = false;
+    themeTypeKeyboardData.circleClassName = this.state.themeTypeKeyboardData.circleDefaultClassName;
+    themesKeyboardData.circleClassName = this.state.themesKeyboardData.circleDefaultClassName;
+    this.setState({ sidebarData,themeTypeKeyboardData,themesKeyboardData });
+  };
+
+  showKeyboard = (e) => {
+    console.log(
+      e,
+      e.target.className.charAt(e.target.className.length - 1) === "1"
+    );
+
+    let _kb,
+      _kbData,
+      _visible;
+
+    // only allow interaction on visible sidebar
+    if (this.state.sidebarData.isOpen) {
+      if (e.target.className.charAt(e.target.className.length - 1) === "1") {
+        _kbData = { ...this.state.themeTypeKeyboardData };
+        _kb = "themeTypeKeyboardData";
+      } else {
+        _kbData = { ...this.state.themesKeyboardData };
+        _kb = "themesKeyboardData";
+      }
+      if (_kbData.circleClassName.includes("visible")) {
+        _visible = true;
+        return;
+      } else {
+        _kbData.circleClassName = "visible " + _kbData.circleClassName;
+        console.log(_kbData);
+        this.setState({ [_kb]: _kbData });
+      }
+    }
+  };
+
+  onSelectTheme = (e) => {
+    let cookieData = {};
+    let _themesData = { ...this.state.themesKeyboardData };
+    _themesData.currentSetting = e.target.innerHTML;
+    cookieData.cookieLabel = "currentTheme";
+    cookieData.cookieValue = _themesData.currentSetting;
+    cookieData.cookiePath = { path: "/" };
+    this.setState({
+      themesData: _themesData,
+      theme: _themesData.currentSetting,
+    });
+    this.setCookie(cookieData);
+    // this.toggleSidebar(e);
+  };
+
+  onSelectThemeType = (e) => {
+    let cookieData = {};
+    let _themeTypeData = { ...this.state.themeTypeKeyboardData };
+    _themeTypeData.currentSetting = e.target.value;
+    cookieData.cookieLabel = "currentThemeType";
+    cookieData.cookieValue = _themeTypeData.currentSetting;
+    cookieData.cookiePath = { path: "/" };
+    this.setState({
+      themeTypeKeyboardData: _themeTypeData,
+      themeType: _themeTypeData.currentSetting,
+    });
+    this.setCookie(cookieData);
+    // this.selectThemeType(e);
+    // this.toggleSidebar(e);
   };
 
   goForMath = () => {
@@ -843,6 +880,7 @@ class Calculator extends Component {
   };
 
   render = () => {
+    // console.log(this.state.themeTypeKeyboardData.visible,"circle circle-1" + this.state.themeTypeKeyboardData.visible ? this.state.themeTypeKeyboardData.circleClassName + " visible":this.state.themeTypeKeyboardData.circleClassName );
     return (
       <div
         className={`container ${
@@ -854,7 +892,7 @@ class Calculator extends Component {
             <div className="row" meta-name="calculator">
               {/* ------------ calculator body ---------------- */}
               <div className="col">
-                <div className={`calculator `}>
+                <div className={`calculator `} onTouchStart={this.closeSidebar}>
                   <p className="title">{this.state.title}</p>
                   <div className="row">
                     <div className="col">
@@ -904,9 +942,12 @@ class Calculator extends Component {
                 <div className="settings" onMouseOver={this.toggleSidebar}>
                   <i className="fa fa-cog" aria-hidden="true"></i>
                 </div>
-                <div className="sidebar"onMouseLeave={this.toggleSidebar}>
+                <div className="sidebar" onMouseLeave={this.closeSidebar}>
                   <div className="h-50 keyboard-wrapper">
-                    <div className="circle"></div>
+                    <div
+                      className={this.state.themeTypeKeyboardData.visible ? this.state.themeTypeKeyboardData.circleClassName + " visible":this.state.themeTypeKeyboardData.circleClassName}
+                      onMouseEnter={this.showKeyboard}
+                    ></div>
                     {/* ------------ sidebar keyboards ---------------- */}
                     <Keyboard
                       className={`${this.state.themeTypeKeyboardData.className}`}
@@ -918,7 +959,10 @@ class Calculator extends Component {
                     ></Keyboard>
                   </div>
                   <div className="h-50 keyboard-wrapper">
-                    <div className="circle"></div>
+                    <div
+                      className={this.state.themesKeyboardData.visible ? this.state.themesKeyboardData.circleClassName + " visible":this.state.themesKeyboardData.circleClassName}
+                      onMouseEnter={this.showKeyboard}
+                    ></div>
                     <Keyboard
                       className={`${this.state.themesKeyboardData.className}`}
                       label={this.state.themesKeyboardData.labelForKeyboard}

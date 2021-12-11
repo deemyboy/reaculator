@@ -8,7 +8,7 @@
     align-items: center;
     justify-content: center;
     transform: scale(1);
-    @include transition(all 0.25s);
+    @include transition(all 0.25s ease);
   }
   .btn-success {
     // width: 160px;
@@ -25,10 +25,6 @@
     font-weight: 400;
     width: 60px;
     height: 30px;
-  }
-  .btn {
-    transition: 0.2s ease;
-    transition-property: background-color;
   }
 
   // common button properties

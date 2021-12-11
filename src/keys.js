@@ -2,7 +2,7 @@ export const sidebarKeys = [
   {
     id: "Fire",
     value: "Fire",
-    specialClass: "btn-fire",
+    specialClass: "btn-fire fire",
     title: "Fire",
     keycode: 55,
     kbCode: "Digit7",
@@ -11,7 +11,7 @@ export const sidebarKeys = [
   {
     id: "Midnight",
     value: "Midnight",
-    specialClass: "btn-midnight",
+    specialClass: "btn-midnight midnight",
     title: "Midnight",
     keycode: 55,
     kbCode: "Digit7",
@@ -20,7 +20,7 @@ export const sidebarKeys = [
   {
     id: "Ocean",
     value: "Ocean",
-    specialClass: "btn-ocean",
+    specialClass: "btn-ocean ocean",
     title: "Ocean",
     keycode: 55,
     kbCode: "Digit7",
@@ -29,7 +29,7 @@ export const sidebarKeys = [
   {
     id: "Storm",
     value: "Storm",
-    specialClass: "btn-storm",
+    specialClass: "btn-storm storm",
     title: "Storm",
     keycode: 55,
     kbCode: "Digit7",
@@ -38,7 +38,7 @@ export const sidebarKeys = [
   {
     id: "Jungle",
     value: "Jungle",
-    specialClass: "btn-jungle",
+    specialClass: "btn-jungle jungle",
     title: "Jungle",
     keycode: 55,
     kbCode: "Digit7",
