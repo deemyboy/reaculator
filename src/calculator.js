@@ -3,6 +3,7 @@ import "./main.scss";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Sidebar from "./components/sidebar";
+import Canvas from "./components/canvas";
 import Cookies from "universal-cookie";
 import { sidebarKeys } from "./keys";
 import { numberKeys } from "./keys";
@@ -13,8 +14,13 @@ import { themeTypeKeys } from "./keys";
 
 class Calculator extends Component {
   displayRef = React.createRef();
+  canvasRef = React.createRef();
+  // console.log("canvasRef",canvasRef);
+  // const canvasRef = useRef();
   constructor(props) {
     super(props);
+
+    this.handleLoad = this.handleLoad.bind(this);
 
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
@@ -32,9 +38,15 @@ class Calculator extends Component {
     this.utilityKeys = utilityKeys;
     this.allowedKeys = allowedKeys;
     this.themeTypeKeys = themeTypeKeys;
+
+    // useEffect(() => {
+    //   const divElement = elementRef.current;
+    //   console.log(divElement); // logs <div>I'm an element</div>
+    // }, []);
   }
 
   state = {
+    canId: "cvs",
     calculationData: {
       calculationClass: "calculation",
       calculationValue: "",
@@ -59,8 +71,8 @@ class Calculator extends Component {
     op2: "",
     themesKeyboardData: {
       className: "keyboard-theme",
-      circleClassName :"circle circle-2" ,
-      circleDefaultClassName :"circle circle-2" ,
+      circleClassName: "circle circle-2",
+      circleDefaultClassName: "circle circle-2",
       labelForKeyboard: "Theme",
       currentSetting: "Ocean",
       onClick: (e) => this.onSelectTheme(e),
@@ -69,8 +81,8 @@ class Calculator extends Component {
     },
     themeTypeKeyboardData: {
       className: "keyboard-theme-type",
-      circleClassName :"circle circle-1" ,
-      circleDefaultClassName :"circle circle-1" ,
+      circleClassName: "circle circle-1",
+      circleDefaultClassName: "circle circle-1",
       labelForKeyboard: "Theme Type",
       currentSetting: "picture",
       onClick: (e) => this.onSelectThemeType(e),
@@ -98,8 +110,32 @@ class Calculator extends Component {
     userInput: "",
   };
 
+  animate = (e) => {
+    console.log("animate", e);
+    // anim();
+  };
+
   componentDidMount() {
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
+    // window.addEventListener('load', this.handleLoad);
+    // // anim();
+    // const script = document.createElement("script");
+
+    // script.src = "/static/anim.js";
+    // script.async = true;
+
+    // document.body.appendChild(script);
+
+    var loadScript = function (src) {
+      var tag = document.createElement("script");
+      tag.async = false;
+      tag.src = src;
+      var body = document.getElementsByTagName("body")[0];
+      body.appendChild(tag);
+    };
+
+    loadScript("./anim.js");
+    this.animate();
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -108,6 +144,7 @@ class Calculator extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
+    window.removeEventListener("load", this.handleLoad);
   }
 
   setCookie = (cookieData) => {
@@ -581,11 +618,15 @@ class Calculator extends Component {
   };
 
   closeSidebar = (e) => {
-    let sidebarData = { ...this.state.sidebarData },themeTypeKeyboardData = { ...this.state.themeTypeKeyboardData },themesKeyboardData = { ...this.state.themesKeyboardData };
+    let sidebarData = { ...this.state.sidebarData },
+      themeTypeKeyboardData = { ...this.state.themeTypeKeyboardData },
+      themesKeyboardData = { ...this.state.themesKeyboardData };
     sidebarData.isOpen = false;
-    themeTypeKeyboardData.circleClassName = this.state.themeTypeKeyboardData.circleDefaultClassName;
-    themesKeyboardData.circleClassName = this.state.themesKeyboardData.circleDefaultClassName;
-    this.setState({ sidebarData,themeTypeKeyboardData,themesKeyboardData });
+    themeTypeKeyboardData.circleClassName =
+      this.state.themeTypeKeyboardData.circleDefaultClassName;
+    themesKeyboardData.circleClassName =
+      this.state.themesKeyboardData.circleDefaultClassName;
+    this.setState({ sidebarData, themeTypeKeyboardData, themesKeyboardData });
   };
 
   showKeyboard = (e) => {
@@ -594,9 +635,7 @@ class Calculator extends Component {
       e.target.className.charAt(e.target.className.length - 1) === "1"
     );
 
-    let _kb,
-      _kbData,
-      _visible;
+    let _kb, _kbData, _visible;
 
     // only allow interaction on visible sidebar
     if (this.state.sidebarData.isOpen) {
@@ -892,7 +931,12 @@ class Calculator extends Component {
             <div className="row" meta-name="calculator">
               {/* ------------ calculator body ---------------- */}
               <div className="col">
-                <div className={`calculator `} onTouchStart={this.closeSidebar}>
+                <div
+                  id="canvas-container"
+                  className={`calculator `}
+                  onTouchStart={this.closeSidebar}
+                >
+                  <Canvas ref={this.animate} canId={this.state.canId} />
                   <p className="title">{this.state.title}</p>
                   <div className="row">
                     <div className="col">
@@ -945,7 +989,12 @@ class Calculator extends Component {
                 <div className="sidebar" onMouseLeave={this.closeSidebar}>
                   <div className="h-50 keyboard-wrapper">
                     <div
-                      className={this.state.themeTypeKeyboardData.visible ? this.state.themeTypeKeyboardData.circleClassName + " visible":this.state.themeTypeKeyboardData.circleClassName}
+                      className={
+                        this.state.themeTypeKeyboardData.visible
+                          ? this.state.themeTypeKeyboardData.circleClassName +
+                            " visible"
+                          : this.state.themeTypeKeyboardData.circleClassName
+                      }
                       onMouseEnter={this.showKeyboard}
                     ></div>
                     {/* ------------ sidebar keyboards ---------------- */}
@@ -960,7 +1009,12 @@ class Calculator extends Component {
                   </div>
                   <div className="h-50 keyboard-wrapper">
                     <div
-                      className={this.state.themesKeyboardData.visible ? this.state.themesKeyboardData.circleClassName + " visible":this.state.themesKeyboardData.circleClassName}
+                      className={
+                        this.state.themesKeyboardData.visible
+                          ? this.state.themesKeyboardData.circleClassName +
+                            " visible"
+                          : this.state.themesKeyboardData.circleClassName
+                      }
                       onMouseEnter={this.showKeyboard}
                     ></div>
                     <Keyboard
