@@ -5,7 +5,7 @@ import Result from "./result";
 const Display = React.forwardRef((props, ref) => {
   return (
     <React.Fragment>
-      <div className={props.dispClass} ref={ref}>
+      <div className={props.displayClass} ref={ref}>
         <Calculation calculationData={props.calculationData}>
           500 x 100
         </Calculation>

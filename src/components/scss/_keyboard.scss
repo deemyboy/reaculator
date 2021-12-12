@@ -4,46 +4,124 @@
   border-radius: $s-025r;
   margin: 0;
   padding: 5px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   &.keyboard-number {
-    margin-right: 10px;
   }
   &.keyboard-utility {
-    border: 0;
-    background: none$i;
+    // border: 0;
+    // background: none$i;
     margin: 0;
     padding: 0;
     width: 100%;
-    justify-content: center;
   }
 }
-.sidebar > .keyboard {
-  transition-duration: 0.05s;
-}
-
-.sidebar {
-  .keyboard-theme,
-  .keyboard-theme-type {
-    margin-bottom: 10px;
+.calculator {
+  .keyboard {
     .title {
       display: none;
-      width: 100%;
-      text-align: center;
-      font-size: 1rem;
-      padding: 10px 6px;
-      border-radius: 6px;
-      font-weight: 600;
-      background: none;
-      border: 1px solid;
     }
   }
 }
 
+.sidebar {
+  .keyboard-wrapper {
+    position: relative;
+    z-index: inherit;
+    opacity: 0;
+  }
+  .circle {
+    z-index: inherit;
+    height: 2rem;
+    width: 2rem;
+    background-color: #c4faff6e;
+    position: absolute;
+    top: calc(50% - 1rem);
+    left: calc(50% - 1rem);
+    border-radius: 25px;
+    @include transition(all 0.25s ease-in);
+    transform-origin: center;
+    &:after {
+      content: "";
+      display: inline-block;
+      height: 3rem;
+      width: 3rem;
+      border: none$i;
+      background-color: #c4faff;
+      opacity: 0.4;
+      border-radius: 25px;
+      position: absolute;
+      top: -0.5rem;
+      left: -0.5rem;
+      @include transition(all 0.25s ease-out);
+      transform: scale(1);
+    }
+    &:hover:after {
+      transform: scale(0.675);
+      background-color: #fff;
+      opacity: 1;
+    }
+  }
+  .keyboard {
+    border-radius: 50%;
+    height: 100%;
+    transform: rotate(90deg);
+    transform-origin: center;
+    background-color: transparent$i;
+    border: 0;
+    @include transition(all 0.25s ease-out);
+    position: relative;
+    left: 15%;
+    .btn {
+      z-index: 0;
+      transform: rotate(180deg);
+      // transform-origin: right;
+      // top: calc(50% - 1.6rem);
+      margin: 0;
+      padding: 0;
+      width: 40%;
+      left: 30%;
+      max-width: 80px;
+      opacity: 0;
+      position: absolute;
+      // top: calc(50% - 1rem);
+      // left: calc(50% - 20%);
+      @for $i from 1 through 10 {
+        &:nth-of-type(#{$i}) {
+          transition: transform #{$i * 0.25}s, opacity #{$i * 0.25}s;
+
+          // transition: top #{$i * 0.25}s;
+        }
+      }
+      // @for $i from 1 through 5 {
+      //   &:nth-of-type(#{$i}) {
+      //     @if $i < 4 {
+      //       left: calc((3 - #{$i})* 8%);
+      //     } @else {
+      //       left: calc((1 - #{$i})* 12%);
+      //     }
+      //   }
+      // }
+    }
+  }
+}
+
+.keyboard-theme,
+.keyboard-theme-type {
+  margin-bottom: 10px;
+  .title {
+    display: none;
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    padding: 10px 6px;
+    border-radius: 6px;
+    font-weight: 600;
+    background: none;
+    border: 1px solid;
+  }
+}
+
 @include themify($themes) {
-  + .sidebar {
+  .sidebar {
     .keyboard-theme,
     .keyboard-theme-type {
       background-color: themed(keyboardBackground);
@@ -57,12 +135,16 @@
 .keyboard-theme-type {
 }
 .keyboard-theme {
+  // display: none$i;
 }
 // theme section colours
 @include themify($themes) {
-  + .sidebar {
+  .sidebar {
     .keyboard {
-      background-color: darken(transparentize(themed(keyboardBackground), 0.2),15%);
+      background-color: darken(
+        transparentize(themed(keyboardBackground), 0.2),
+        15%
+      );
       border-color: transparentize(themed(keyboardBorderColor), 0.2);
     }
   }
@@ -75,54 +157,209 @@
   }
 }
 
-// backgroundColor: $ocean_bg,
-// backgroundUrl: $ocean_url,
-// textColor: $ocean_color,
-// calculatorTitleTextColor: lighten($ocean_color, 30%),
-// borderColor: $ocean_border,
-// menuIconBackgroundColor: darken($ocean_bg, 5%),
-// menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
-// menuIconBorderColor: $ocean_border,
-// iconBarColor: $ocean_color,
-// sidebarTitleTextColor: lighten($ocean_color, 30%),
-// sidebarBackground: transparentize($ocean_bg, 0.2),
-// sidebarBorderColor: $ocean_border,
-// sidebarKeyboardBackground: $ocean_bg,
-// sidebarKeyboardHoverBackground: darken($ocean_bg, 5%),
-// keyboardBackgroundColor: darken($ocean_bg, 5%),
-// keyboardItemBackgroundColor: $ocean_bg,
-// keyboardItemBackgroundHoverColor: lighten($ocean_bg, 10%),
-// keyboardTextColor: $ocean_color,
-// keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5),
-// keyboardBorderColor: $ocean_border,
-// primaryButtonBgColor: $ocean_btn_bg,
-// primaryButtonTextColor: $ocean_btn_color,
-// primaryButtonBorderColor: $ocean_btn_border,
-// primaryButtonHoverColor: darken($ocean_btn_bg, 5%),
-// primaryButtonActiveColor: darken($ocean_btn_bg, 10%),
-// primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%),
-// primaryButtonTextTransform: none,
-// secondaryButtonBgColor: complement($ocean_btn_bg),
-// secondaryButtonTextColor: lighten(complement($ocean_btn_color), 10%),
-// secondaryButtonBorderColor: complement($ocean_btn_border),
-// secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
-// secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%),
-// secondaryButtonBoxShadowColor:
-//   darken(transparentize(complement($ocean_btn_bg), 0.5), 10%),
-// secondaryButtonTextTransform: none,
-
 #{$picture} {
-  @include themify($themes) {
+  // sizes
+  .sidebar {
     .keyboard {
-      background-color: #faebd729;
     }
-    + .sidebar {
-      .keyboard {
-        .btn-theme-type:nth-of-type(1) {
-          transform: scale(1.2);
-          border: 1px solid themed(keyboardBorderColor);
+  }
+}
+// colors
+@include themify($themes) {
+  .keyboard {
+    background-color: #faebd729;
+  }
+  .sidebar {
+    .keyboard {
+    }
+  }
+}
+
+#{$color} {
+  // sizes
+  .sidebar {
+    .keyboard {
+    }
+  }
+}
+// colors
+@include themify($themes) {
+  .sidebar {
+    .keyboard {
+    }
+  }
+}
+
+.sidebar {
+  .keyboard-wrapper {
+    .circle {
+      &:hover {
+        transform: scale(1.5);
+        + .keyboard {
+          transform: rotate(0deg);
+          .btn {
+            transform: rotate(0deg);
+            opacity: 1;
+          }
         }
       }
+    }
+    .circle-1 {
+      &:hover {
+        + .keyboard {
+          .btn {
+            transform: rotate(0deg);
+            opacity: 1;
+            &:first-of-type {
+              left: 15%;
+              top: 15%;
+            }
+            &:nth-of-type(2) {
+              left: 15%;
+              top: 65%;
+            }
+            // @for $i from 10 through 1 {
+            //   &:nth-of-type(#{$i}) {
+            //     top: calc(#{$i} * 40px);
+            //   }
+            // }
+          }
+        }
+      }
+      &.visible {
+        @extend:hover;
+      }
+    }
+
+    .circle-2 {
+      &:hover {
+        // transform: scale(1.5);
+        + .keyboard {
+          // transform: rotate(0deg);
+          .btn {
+            // transform: rotate(0deg);
+            opacity: 1;
+            &:first-of-type {
+              left: 9%;
+              top: 10%;
+            }
+            &:nth-of-type(2) {
+              left: -5%;
+              top: 27%;
+            }
+            &:nth-of-type(3) {
+              left: -13%;
+              top: 44%;
+            }
+            &:nth-of-type(4) {
+              left: -5%;
+              top: 61%;
+            }
+            &:nth-of-type(5) {
+              left: 9%;
+              top: 78%;
+            }
+            // @for $i from 10 through 1 {
+            //   &:nth-of-type(#{$i}) {
+            //     top: calc(#{$i} * 40px);
+            //   }
+            // }
+          }
+        }
+      }
+      &.visible {
+        @extend:hover;
+      }
+    }
+    .keyboard {
+      .btn {
+        @for $i from 1 through 10 {
+          &:nth-of-type(#{$i}) {
+            transition: transform #{$i * 0.2}s, opacity #{$i * 0.2}s,
+              top #{$i * 0.2}s, left #{$i * 0.2}s ease 0s;
+          }
+        }
+        // @for $i from 10 through 1 {
+        //   &:nth-of-type(#{$i}) {
+        //     top: calc(190px - (#{$i} * 40px));
+        //   }
+        // }
+      }
+    }
+  }
+}
+
+.sidebar {
+  .keyboard-wrapper ~ .keyboard-wrapper {
+    // .circle {
+    //   &:hover {
+    //     + .keyboard {
+    //       transform: rotate(0deg);
+    //       .btn {
+    //         transform: rotate(0deg);
+    //         opacity: 1;
+    //         &:first-of-type {
+    //           left: 9%;
+    //           top: 10%;
+    //         }
+    //         &:nth-of-type(2) {
+    //           left: -5%;
+    //           top: 27%;
+    //         }
+    //         &:nth-of-type(3) {
+    //           left: -13%;
+    //           top: 44%;
+    //         }
+    //         &:nth-of-type(4) {
+    //           left: -5%;
+    //           top: 61%;
+    //         }
+    //         &:nth-of-type(5) {
+    //           left: 9%;
+    //           top: 78%;
+    //         }
+    //         // @for $i from 10 through 1 {
+    //         //   &:nth-of-type(#{$i}) {
+    //         //     top: calc(#{$i} * 40px);
+    //         //   }
+    //         // }
+    //       }
+    //     }
+    //   }
+    // }
+    // .keyboard {
+    //   .btn {
+    //     @for $i from 1 through 10 {
+    //       &:nth-of-type(#{$i}) {
+    //         transition: transform #{$i * 0.2}s, opacity #{$i * 0.2}s,
+    //           top #{$i * 0.2}s, left #{$i * 0.2}s ease 0s;
+    //       }
+    //     }
+    //     // @for $i from 10 through 1 {
+    //     //   &:nth-of-type(#{$i}) {
+    //     //     top: calc(190px - (#{$i} * 40px));
+    //     //   }
+    //     // }
+    //   }
+    // }
+  }
+}
+
+.keyboard.keyboard-function {
+  border-bottom: none;
+  border-radius: 0.25rem 0.25rem 0px 0px$i;
+}
+
+.keyboard.keyboard-utility {
+  border-top: none;
+  border-radius: 0px 0px 0.25rem 0.25rem$i;
+}
+
+// colors
+@include themify($themes) {
+  .sidebar {
+    .keyboard {
+      // display: none;
     }
   }
 }
