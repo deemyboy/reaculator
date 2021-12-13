@@ -1,10 +1,40 @@
 $theme-map: null;
 $i: #{"!"}important;
-@import "./components/scss/_variables","./components/scss/_colors", "./components/scss/_transitions",
-  "./components/scss/_spacers";
-  @import "./components/scss/_themes_map", "./components/scss/_media_queries";
-  @import "~bootstrap/scss/bootstrap";
-  @import "./components/scss/_display", "./components/scss/_key",
-  "./components/scss/_calculator",
-  "./components/scss/_keyboard",
-  "./components/scss/_sidebar","./components/scss/_settings";
+@import "./components/scss/_variables", "./components/scss/_colors",
+  "./components/scss/_transitions", "./components/scss/_spacers";
+@import "./components/scss/_themes_map", "./components/scss/_media_queries";
+@import "~bootstrap/scss/bootstrap";
+@import "./components/scss/_display", "./components/scss/_key",
+  "./components/scss/_calculator", "./components/scss/_keyboard",
+  "./components/scss/_sidebar", "./components/scss/_settings";
+
+#{$outer-wrapper} {
+  & {
+  }
+  &.dev {
+    //sizes here
+    // closed
+    .calculator {
+      background-color: hotpink$i;
+    }
+    .settings {
+    }
+    .sidebar {
+      background-color: #99333382 $i;
+      .keyboard-wrapper {
+        background-color: #00ff58a8;
+        .keyboard {
+          background-color: #2a64c796$i;
+        }
+      }
+    }
+    &#{$open} {
+      .calculator {
+      }
+      .settings {
+      }
+      .sidebar {
+      }
+    }
+  }
+}

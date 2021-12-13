@@ -16,9 +16,6 @@
 }
 .calculator {
   .keyboard {
-    .title {
-      display: none;
-    }
   }
 }
 
@@ -27,6 +24,9 @@
     position: relative;
     z-index: inherit;
     opacity: 0;
+    .title {
+      display: none;
+    }
   }
   .circle {
     z-index: inherit;
@@ -34,7 +34,7 @@
     width: 2rem;
     background-color: #c4faff6e;
     position: absolute;
-    top: calc(50% - 1rem);
+    top: calc(50% - 0.8rem);
     left: calc(50% - 1rem);
     border-radius: 25px;
     @include transition(all 0.25s ease-in);
@@ -61,7 +61,6 @@
     }
   }
   .keyboard {
-    border-radius: 50%;
     height: 100%;
     transform: rotate(90deg);
     transform-origin: center;
@@ -69,12 +68,11 @@
     border: 0;
     @include transition(all 0.25s ease-out);
     position: relative;
-    left: 15%;
+    padding: 0;
+    margin: 0;
     .btn {
       z-index: 0;
       transform: rotate(180deg);
-      // transform-origin: right;
-      // top: calc(50% - 1.6rem);
       margin: 0;
       padding: 0;
       width: 40%;
@@ -82,8 +80,6 @@
       max-width: 80px;
       opacity: 0;
       position: absolute;
-      // top: calc(50% - 1rem);
-      // left: calc(50% - 20%);
       @for $i from 1 through 10 {
         &:nth-of-type(#{$i}) {
           transition: transform #{$i * 0.25}s, opacity #{$i * 0.25}s;
@@ -104,30 +100,16 @@
   }
 }
 
-.keyboard-theme,
-.keyboard-theme-type {
-  margin-bottom: 10px;
-  .title {
-    display: none;
-    width: 100%;
-    text-align: center;
-    font-size: 1rem;
-    padding: 10px 6px;
-    border-radius: 6px;
-    font-weight: 600;
-    background: none;
-    border: 1px solid;
-  }
-}
-
 @include themify($themes) {
   .sidebar {
-    .keyboard-theme,
-    .keyboard-theme-type {
-      background-color: themed(keyboardBackground);
+    .keyboard-wrapper {
       .title {
         color: darken(themed(textColor), 10%);
       }
+    }
+    .keyboard-theme,
+    .keyboard-theme-type {
+      background-color: themed(keyboardBackground);
     }
   }
 }
@@ -195,7 +177,7 @@
     .circle {
       &:hover {
         transform: scale(1.5);
-        + .keyboard {
+        ~ .keyboard {
           transform: rotate(0deg);
           .btn {
             transform: rotate(0deg);
@@ -206,10 +188,8 @@
     }
     .circle-1 {
       &:hover {
-        + .keyboard {
+        ~ .keyboard {
           .btn {
-            transform: rotate(0deg);
-            opacity: 1;
             &:first-of-type {
               left: 15%;
               top: 15%;
@@ -233,12 +213,8 @@
 
     .circle-2 {
       &:hover {
-        // transform: scale(1.5);
-        + .keyboard {
-          // transform: rotate(0deg);
+        ~ .keyboard {
           .btn {
-            // transform: rotate(0deg);
-            opacity: 1;
             &:first-of-type {
               left: 9%;
               top: 10%;
@@ -289,62 +265,18 @@
   }
 }
 
-.sidebar {
-  .keyboard-wrapper ~ .keyboard-wrapper {
-    // .circle {
-    //   &:hover {
-    //     + .keyboard {
-    //       transform: rotate(0deg);
-    //       .btn {
-    //         transform: rotate(0deg);
-    //         opacity: 1;
-    //         &:first-of-type {
-    //           left: 9%;
-    //           top: 10%;
-    //         }
-    //         &:nth-of-type(2) {
-    //           left: -5%;
-    //           top: 27%;
-    //         }
-    //         &:nth-of-type(3) {
-    //           left: -13%;
-    //           top: 44%;
-    //         }
-    //         &:nth-of-type(4) {
-    //           left: -5%;
-    //           top: 61%;
-    //         }
-    //         &:nth-of-type(5) {
-    //           left: 9%;
-    //           top: 78%;
-    //         }
-    //         // @for $i from 10 through 1 {
-    //         //   &:nth-of-type(#{$i}) {
-    //         //     top: calc(#{$i} * 40px);
-    //         //   }
-    //         // }
-    //       }
-    //     }
-    //   }
-    // }
-    // .keyboard {
-    //   .btn {
-    //     @for $i from 1 through 10 {
-    //       &:nth-of-type(#{$i}) {
-    //         transition: transform #{$i * 0.2}s, opacity #{$i * 0.2}s,
-    //           top #{$i * 0.2}s, left #{$i * 0.2}s ease 0s;
-    //       }
-    //     }
-    //     // @for $i from 10 through 1 {
-    //     //   &:nth-of-type(#{$i}) {
-    //     //     top: calc(190px - (#{$i} * 40px));
-    //     //   }
-    //     // }
-    //   }
-    // }
+// colors
+@include themify($themes) {
+  .sidebar {
+    .keyboard {
+      // display: none;
+    }
   }
 }
 
+///////////// hacking zone
+
+// fuse borders together on utility and function keyboards
 .keyboard.keyboard-function {
   border-bottom: none;
   border-radius: 0.25rem 0.25rem 0px 0px$i;
@@ -353,13 +285,4 @@
 .keyboard.keyboard-utility {
   border-top: none;
   border-radius: 0px 0px 0.25rem 0.25rem$i;
-}
-
-// colors
-@include themify($themes) {
-  .sidebar {
-    .keyboard {
-      // display: none;
-    }
-  }
 }

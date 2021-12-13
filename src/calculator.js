@@ -20,7 +20,7 @@ class Calculator extends Component {
   constructor(props) {
     super(props);
 
-    this.handleLoad = this.handleLoad.bind(this);
+    // this.handleLoad = this.handleLoad.bind(this);
 
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
@@ -144,7 +144,7 @@ class Calculator extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
-    window.removeEventListener("load", this.handleLoad);
+    // window.removeEventListener("load", this.handleLoad);
   }
 
   setCookie = (cookieData) => {
@@ -919,7 +919,6 @@ class Calculator extends Component {
   };
 
   render = () => {
-    // console.log(this.state.themeTypeKeyboardData.visible,"circle circle-1" + this.state.themeTypeKeyboardData.visible ? this.state.themeTypeKeyboardData.circleClassName + " visible":this.state.themeTypeKeyboardData.circleClassName );
     return (
       <div
         className={`container ${
@@ -927,20 +926,23 @@ class Calculator extends Component {
         } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
       >
         <div className="row justify-content-center">
-          <div className="col-lg-8 col-md" style={{ position: "relative" }}>
-            <div className="row" meta-name="calculator">
-              {/* ------------ calculator body ---------------- */}
-              <div className="col">
+          <div className="col">
+            {/* ------------ app ---------------- */}
+            <div className="row" meta-name="app" style={{ position: "relative" }}>
+              {/* ------------ display and keyboards---------------- */}
+              <div className="col-md-9" meta-name="display and keyboards">
                 <div
-                  id="canvas-container"
-                  className={`calculator `}
-                  onTouchStart={this.closeSidebar}
+                  className="settings float-end"
+                  onMouseOver={this.toggleSidebar}
+                  onTouchStart={this.toggleSidebar}
                 >
-                  <Canvas ref={this.animate} canId={this.state.canId} />
+                  <i className="fa fa-cog" aria-hidden="true"></i>
+                </div>
+                <div className={`calculator`} onTouchStart={this.closeSidebar}>
                   <p className="title">{this.state.title}</p>
-                  <div className="row">
+                  {/* ------------ display ---------------- */}
+                  <div className="row" meta-name="display">
                     <div className="col">
-                      {/* ------------ display ---------------- */}
                       <div className="row" meta-name="display">
                         <div className="col">
                           <Display
@@ -979,13 +981,8 @@ class Calculator extends Component {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row" meta-name="sidebar">
               {/* ------------ sidebar ---------------- */}
-              <div className="col">
-                <div className="settings" onMouseOver={this.toggleSidebar}>
-                  <i className="fa fa-cog" aria-hidden="true"></i>
-                </div>
+              <div className="col-md-3 slider" meta-name="sidebar">
                 <div className="sidebar" onMouseLeave={this.closeSidebar}>
                   <div className="h-50 keyboard-wrapper">
                     <div

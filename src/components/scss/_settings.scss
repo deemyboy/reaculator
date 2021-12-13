@@ -1,15 +1,14 @@
-.settings {
+#{$outer-wrapper} {
+  .settings {
     display: inline-block;
-    height: 2rem;
-    width: 2rem;
-    position: absolute;
-    top: 5%;
-    left: 90%;
-    transform-origin: center;
-    @include transition(all 0.25s);
+    height: 1.5rem;
+    width: 1.5rem;
+    transition: all 0.25s;
     z-index: 9;
+    margin: 10px 10px 0 0;
+
     .fa.fa-cog {
-        font-size: 2rem;
+      font-size: 1.5rem;
     }
     &:before {
       // content: "";
@@ -27,9 +26,16 @@
       // z-index: -1;
     }
     &:hover {
-        transform: rotate(90deg);
-        // +.sidebar {
-        //     transform: translateX(0);
-        // }
+      transform: rotate(90deg);
+      // +.sidebar {
+      //     transform: translateX(0);
+      // }
     }
   }
+
+  // open
+  #{$open} {
+    .settings {
+    }
+  }
+}

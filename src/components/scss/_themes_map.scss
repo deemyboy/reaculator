@@ -328,9 +328,8 @@ $themes: (
       // @extend #{$color}
       .calculator {
         background-image: themed(backgroundUrl);
-        // > .title {
-        //   color: themed(calculatorTitleTextColor);
-        // }
+        > .title {
+        }
     } 
       
       .sidebar {
