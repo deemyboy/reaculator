@@ -68,18 +68,6 @@
     }
   }
 }
-// colours
-@include themify($themes) {
-  .sidebar {
-    .keyboard-theme {
-      .btn-theme {
-        // background-color: themed(primaryButtonBgColor);
-        // color: themed(primaryButtonTextColor);
-        // border-color: themed(primaryButtonBorderColor);
-      }
-    }
-  }
-}
 
 @include themify($themes) {
   .btn-primary {

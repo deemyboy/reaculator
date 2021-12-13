@@ -59,8 +59,8 @@ class Calculator extends Component {
     op2: "",
     themesKeyboardData: {
       className: "keyboard-theme",
-      circleClassName :"circle circle-2" ,
-      circleDefaultClassName :"circle circle-2" ,
+      circleClassName: "circle circle-2",
+      circleDefaultClassName: "circle circle-2",
       labelForKeyboard: "Theme",
       currentSetting: "Ocean",
       onClick: (e) => this.onSelectTheme(e),
@@ -69,8 +69,8 @@ class Calculator extends Component {
     },
     themeTypeKeyboardData: {
       className: "keyboard-theme-type",
-      circleClassName :"circle circle-1" ,
-      circleDefaultClassName :"circle circle-1" ,
+      circleClassName: "circle circle-1",
+      circleDefaultClassName: "circle circle-1",
       labelForKeyboard: "Theme Type",
       currentSetting: "picture",
       onClick: (e) => this.onSelectThemeType(e),
@@ -581,11 +581,15 @@ class Calculator extends Component {
   };
 
   closeSidebar = (e) => {
-    let sidebarData = { ...this.state.sidebarData },themeTypeKeyboardData = { ...this.state.themeTypeKeyboardData },themesKeyboardData = { ...this.state.themesKeyboardData };
+    let sidebarData = { ...this.state.sidebarData },
+      themeTypeKeyboardData = { ...this.state.themeTypeKeyboardData },
+      themesKeyboardData = { ...this.state.themesKeyboardData };
     sidebarData.isOpen = false;
-    themeTypeKeyboardData.circleClassName = this.state.themeTypeKeyboardData.circleDefaultClassName;
-    themesKeyboardData.circleClassName = this.state.themesKeyboardData.circleDefaultClassName;
-    this.setState({ sidebarData,themeTypeKeyboardData,themesKeyboardData });
+    themeTypeKeyboardData.circleClassName =
+      this.state.themeTypeKeyboardData.circleDefaultClassName;
+    themesKeyboardData.circleClassName =
+      this.state.themesKeyboardData.circleDefaultClassName;
+    this.setState({ sidebarData, themeTypeKeyboardData, themesKeyboardData });
   };
 
   showKeyboard = (e) => {
@@ -594,9 +598,7 @@ class Calculator extends Component {
       e.target.className.charAt(e.target.className.length - 1) === "1"
     );
 
-    let _kb,
-      _kbData,
-      _visible;
+    let _kb, _kbData, _visible;
 
     // only allow interaction on visible sidebar
     if (this.state.sidebarData.isOpen) {
@@ -880,7 +882,6 @@ class Calculator extends Component {
   };
 
   render = () => {
-    // console.log(this.state.themeTypeKeyboardData.visible,"circle circle-1" + this.state.themeTypeKeyboardData.visible ? this.state.themeTypeKeyboardData.circleClassName + " visible":this.state.themeTypeKeyboardData.circleClassName );
     return (
       <div
         className={`container ${
@@ -888,15 +889,23 @@ class Calculator extends Component {
         } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
       >
         <div className="row justify-content-center">
-          <div className="col-lg-8 col-md" style={{ position: "relative" }}>
-            <div className="row" meta-name="calculator">
-              {/* ------------ calculator body ---------------- */}
-              <div className="col">
-                <div className={`calculator `} onTouchStart={this.closeSidebar}>
+          <div className="col">
+            {/* ------------ app ---------------- */}
+            <div className="row" meta-name="app" style={{ position: "relative" }}>
+              {/* ------------ display and keyboards---------------- */}
+              <div className="col-md-9" meta-name="display and keyboards">
+                <div
+                  className="settings float-end"
+                  onMouseOver={this.toggleSidebar}
+                  onTouchStart={this.toggleSidebar}
+                >
+                  <i className="fa fa-cog" aria-hidden="true"></i>
+                </div>
+                <div className={`calculator`} onTouchStart={this.closeSidebar}>
                   <p className="title">{this.state.title}</p>
-                  <div className="row">
+                  {/* ------------ display ---------------- */}
+                  <div className="row" meta-name="display">
                     <div className="col">
-                      {/* ------------ display ---------------- */}
                       <div className="row" meta-name="display">
                         <div className="col">
                           <Display
@@ -935,17 +944,17 @@ class Calculator extends Component {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row" meta-name="sidebar">
               {/* ------------ sidebar ---------------- */}
-              <div className="col">
-                <div className="settings" onMouseOver={this.toggleSidebar}>
-                  <i className="fa fa-cog" aria-hidden="true"></i>
-                </div>
+              <div className="col-md-3 slider" meta-name="sidebar">
                 <div className="sidebar" onMouseLeave={this.closeSidebar}>
                   <div className="h-50 keyboard-wrapper">
                     <div
-                      className={this.state.themeTypeKeyboardData.visible ? this.state.themeTypeKeyboardData.circleClassName + " visible":this.state.themeTypeKeyboardData.circleClassName}
+                      className={
+                        this.state.themeTypeKeyboardData.visible
+                          ? this.state.themeTypeKeyboardData.circleClassName +
+                            " visible"
+                          : this.state.themeTypeKeyboardData.circleClassName
+                      }
                       onMouseEnter={this.showKeyboard}
                     ></div>
                     {/* ------------ sidebar keyboards ---------------- */}
@@ -960,7 +969,12 @@ class Calculator extends Component {
                   </div>
                   <div className="h-50 keyboard-wrapper">
                     <div
-                      className={this.state.themesKeyboardData.visible ? this.state.themesKeyboardData.circleClassName + " visible":this.state.themesKeyboardData.circleClassName}
+                      className={
+                        this.state.themesKeyboardData.visible
+                          ? this.state.themesKeyboardData.circleClassName +
+                            " visible"
+                          : this.state.themesKeyboardData.circleClassName
+                      }
                       onMouseEnter={this.showKeyboard}
                     ></div>
                     <Keyboard
