@@ -247,11 +247,11 @@ $breakpoints: (
         }
 
         .circle-2 {
-          &.visible {
+          &.showing {
             left: 50%;
           }
           &:hover,
-          &.visible {
+          &.showing {
             ~ .keyboard {
               .btn {
                 &:first-of-type {

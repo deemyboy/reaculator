@@ -10,7 +10,6 @@ var w = (cvs.width = cvs.parentNode.clientWidth),
   size = [0.5, 3],
   lines = [],
   frame = (Math.random() * 360) | 0;
-console.log(cvs);
 
 function rand(ar) {
   return Math.random() * (ar[1] - ar[0]) + ar[0];
@@ -69,12 +68,12 @@ function anim() {
   ctx.fillStyle = "rgba(0, 0, 0, .04)";
   ctx.fillRect(0, 0, w, h);
   ctx.shadowBlur = 20;
-
+  
   if (Math.random() < spawnProb) lines.push(new Line());
-
+  
   for (var i = 0; i < lines.length; ++i) {
     lines[i].use();
-
+    
     if (lines[i].move >= lines[i].totalMoves) {
       lines.splice(i, 1);
       --i;
@@ -82,3 +81,11 @@ function anim() {
   }
 }
 anim();
+
+window.addEventListener( 'resize', function(){
+  
+  w = cvs.width = cvs.parentNode.clientWidth;
+	h = cvs.height = cvs.parentNode.clientHeight;
+	
+  ctx.fillRect(0, 0, w, h);
+});

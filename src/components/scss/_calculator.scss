@@ -10,6 +10,15 @@
     transform-origin: right;
   }
 
+  &#{$picture} {
+    // sizes
+    .calculator {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: bottom;
+    }
+  }
+
   // sizes
   .calculator {
     @include transition(all 0.25s);

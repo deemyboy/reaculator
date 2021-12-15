@@ -1,0 +1,13 @@
+canvas {
+  position: absolute;
+  top: 0;
+  left: -2px;
+  background-color: black;
+  z-index: -1;
+  border-radius: 0.5rem;
+}
+
+#calculator > .container.anim .calculator {
+  background: none$i;
+  border-width: 0$i;
+}
