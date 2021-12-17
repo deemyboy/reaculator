@@ -15,13 +15,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 const Canvas = React.forwardRef((props, ref) => {
-  // const Display = React.forwardRef((props, ref) => {
-
-  // // const canvasRef = useRef(null)
-  // const canvas = ref.current;
-  // const context = canvas.getContext("2d");
-
-
     return  <canvas ref={ref} id={props.canId} />
 });
 export default Canvas;

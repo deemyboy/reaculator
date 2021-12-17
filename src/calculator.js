@@ -15,12 +15,8 @@ import { animKeys } from "./keys";
 class Calculator extends Component {
   displayRef = React.createRef();
   canvasRef = React.createRef();
-  // console.log("canvasRef",canvasRef);
-  // const canvasRef = useRef();
   constructor(props) {
     super(props);
-
-    // this.handleLoad = this.handleLoad.bind(this);
 
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
@@ -39,11 +35,6 @@ class Calculator extends Component {
     this.allowedKeys = allowedKeys;
     this.themeTypeKeys = themeTypeKeys;
     this.animKeys = animKeys;
-
-    // useEffect(() => {
-    //   const divElement = elementRef.current;
-    //   console.log(divElement); // logs <div>I'm an element</div>
-    // }, []);
   }
 
   state = {
@@ -66,52 +57,97 @@ class Calculator extends Component {
       sidebarValue: "Settings",
       isOpen: false,
     },
-    num1: "",
-    num2: "",
-    op1: "",
-    op2: "",
+
+    sidebarKeyboards: "",
+
+    circleDefaultClassName: "circle",
+    circle1Data: { id: "circle1", className: "circle-1", showing: false },
+    circle2Data: { id: "circle2", className: "circle-2", showing: false },
     visibleClassName: "showing",
-    currentKeyboard:"",
-    keyboards: ["themesKeyboardData","themeTypeKeyboardData","animKeyboardData"],
+    keyboards: [
+      { picture: "themesKeyboardData" },
+      { color: "themesKeyboardData" },
+      { anim: "animKeyboardData" },
+    ],
+    currentSidebarSecondKeyboard: "",
+    defaultSidebarSecondKeyboard: "themesKeyboardData",
+    themeTypeKeyboardData: {
+      className: "keyboard-theme-type",
+      keyboardTitle: "Theme Type",
+      currentSetting: "picture",
+      onClick: (e) => this.onSelectThemeType(e),
+      keys: themeTypeKeys,
+      visible: false,
+    },
     themesKeyboardData: {
       className: "keyboard-theme",
-      circleClassName: "circle circle-2",
-      circleDefaultClassName: "circle circle-2",
-      labelForKeyboard: "Theme",
+      keyboardTitle: "Theme",
       currentSetting: "Ocean",
       onClick: (e) => this.onSelectTheme(e),
       keys: themeKeys,
       visible: false,
     },
-    themeTypeKeyboardData: {
-      className: "keyboard-theme-type",
-      circleClassName: "circle circle-1",
-      circleDefaultClassName: "circle circle-1",
-      labelForKeyboard: "Theme Type",
-      currentSetting: "picture",
-      onClick: (e) => this.keyboardSwitcher(e),
-      keys: themeTypeKeys,
-      visible: false,
-    },
     animKeyboardData: {
-      className: "keyboard-anim-type",
-      circleClassName: "circle circle-2",
-      circleDefaultClassName: "circle circle-2",
-      labelForKeyboard: "Anim Type",
+      className: "keyboard-anim",
+      keyboardTitle: "Animation",
       currentSetting: "slither",
       onClick: (e) => this.onSelectAnim(e),
       keys: animKeys,
       visible: false,
     },
     keyboards: [
-      { name: "themes", kb: "theme", keys: this.themeKeys },
-      { name: "animations", kb: "anim", keys: this.animKeys },
+      {
+        name: "number",
+        keyboardTitle: "Number Keyboard",
+        kb: "num",
+        keys: numberKeys,
+      },
+      {
+        name: "function",
+        keyboardTitle: "Function Keyboard",
+        kb: "func",
+        keys: functionKeys,
+      },
+      {
+        name: "utility",
+        keyboardTitle: "Utility Keyboard",
+        kb: "util",
+        keys: utilityKeys,
+      },
+      {
+        name: "theme-type",
+        keyboardTitle: "Select Theme Type",
+        kb: "theme-type",
+        keys: themeTypeKeys,
+        onClick: (e) => this.onSelectThemeType(e),
+        currentSetting: "picture",
+      },
+      {
+        name: "theme",
+        keyboardTitle: "Select Theme",
+        kb: "theme",
+        keys: themeKeys,
+        onClick: (e) => this.onSelectTheme(e),
+        currentSetting: "Ocean",
+      },
+      {
+        name: "animations",
+        keyboardTitle: "Select Animation",
+        kb: "anim",
+        keys: animKeys,
+        onClick: (e) => this.onSelectAnim(e),
+        currentSetting: "slither",
+      },
     ],
     theme: "Ocean",
     themeType: "color",
     numberKeyboardClass: "keyboard-number",
     functionKeyboardClass: "keyboard-function",
     utilityKeyboardClass: "keyboard-utility",
+    num1: "",
+    num2: "",
+    op1: "",
+    op2: "",
     title: "Reaculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
@@ -136,7 +172,7 @@ class Calculator extends Component {
   componentDidMount() {
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
 
-    if (this.state.themeType === "anim")
+    if (this.state.themeType === "anim") {
       var loadScript = function (src) {
         var tag = document.createElement("script");
         tag.async = false;
@@ -145,7 +181,10 @@ class Calculator extends Component {
         body.appendChild(tag);
       };
 
-    loadScript("./anim-fireworks.js");
+      loadScript("./anim-slither.js");
+    }
+    // loadScript("./anim-fireworks.js");
+    // loadScript("./anim-twist.js");
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -592,10 +631,6 @@ class Calculator extends Component {
     return "0.";
   };
 
-  packageKeyboardData = (keyboardUser) => {
-    return this.state[keyboardUser];
-  };
-
   toggleSidebar = (e) => {
     let sidebarData = { ...this.state.sidebarData };
     let isOpen = sidebarData.isOpen;
@@ -628,41 +663,50 @@ class Calculator extends Component {
   };
 
   closeSidebar = (e) => {
-    let sidebarData = { ...this.state.sidebarData },
-      themeTypeKeyboardData = { ...this.state.themeTypeKeyboardData },
-      themesKeyboardData = { ...this.state.themesKeyboardData };
-    sidebarData.isOpen = false;
-    themeTypeKeyboardData.circleClassName =
-      this.state.themeTypeKeyboardData.circleDefaultClassName;
-    themesKeyboardData.circleClassName =
-      this.state.themesKeyboardData.circleDefaultClassName;
-    this.setState({ sidebarData, themeTypeKeyboardData, themesKeyboardData });
+    let _sidebarData = { ...this.state.sidebarData },
+      _circle1Data = { ...this.state.circle1Data },
+      _circle2Data = { ...this.state.circle2Data };
+
+    _sidebarData.isOpen = false;
+    _circle1Data.showing = false;
+    _circle2Data.showing = false;
+
+    this.setState({
+      sidebarData: _sidebarData,
+      circle1Data: _circle1Data,
+      circle2Data: _circle2Data,
+    });
   };
 
   showKeyboard = (e) => {
-    let _kb,
-      _kbData,
-      _visible,
-      _visibleClassName = this.state.visibleClassName;
-
+    let _circleData;
     // only allow interaction on visible sidebar
     if (this.state.sidebarData.isOpen) {
-      if (e.target.className.charAt(e.target.className.length - 1) === "1") {
-        _kbData = { ...this.state.themeTypeKeyboardData };
-        _kb = "themeTypeKeyboardData";
+      if (e.target.id === "circle1") {
+        _circleData = { ...this.state.circle1Data };
+        _circleData.showing = true;
+        this.setState({ circle1Data: _circleData });
       } else {
-        _kbData = { ...this.state.themesKeyboardData };
-        _kb = "themesKeyboardData";
-      }
-      if (_kbData.circleClassName.includes(_visibleClassName)) {
-        _visible = true;
-        return;
-      } else {
-        _kbData.circleClassName =
-          _visibleClassName + " " + _kbData.circleClassName;
-        this.setState({ [_kb]: _kbData });
+        _circleData = { ...this.state.circle2Data };
+        _circleData.showing = true;
+        this.setState({ circle2Data: _circleData });
       }
     }
+  };
+
+  onSelectThemeType = (e) => {
+    let cookieData = {};
+    let _themeTypeData = {...this.getKeyboardData("theme-type")};
+    // let _themeTypeData = { ...this.state.themeTypeKeyboardData };
+    _themeTypeData.currentSetting = e.target.value;
+    cookieData.cookieLabel = "currentThemeType";
+    cookieData.cookieValue = _themeTypeData.currentSetting;
+    cookieData.cookiePath = { path: "/" };
+    this.setState({
+      themeTypeKeyboardData: _themeTypeData,
+      themeType: _themeTypeData.currentSetting,
+    });
+    this.setCookie(cookieData);
   };
 
   onSelectTheme = (e) => {
@@ -680,19 +724,6 @@ class Calculator extends Component {
     // this.toggleSidebar(e);
   };
 
-  onSelectThemeType = (e) => {
-    let cookieData = {};
-    let _themeTypeData = { ...this.state.themeTypeKeyboardData };
-    _themeTypeData.currentSetting = e.target.value;
-    cookieData.cookieLabel = "currentThemeType";
-    cookieData.cookieValue = _themeTypeData.currentSetting;
-    cookieData.cookiePath = { path: "/" };
-    this.setState({
-      themeTypeKeyboardData: _themeTypeData,
-      themeType: _themeTypeData.currentSetting,
-    });
-    this.setCookie(cookieData);
-  };
 
   onSelectAnim = (e) => {
     let cookieData = {};
@@ -708,47 +739,91 @@ class Calculator extends Component {
     this.setCookie(cookieData);
   };
 
-  keyboardSwitcher = (kbName) => {
+  keyboardLoader = (kbName) => {
     console.log(kbName.target.id);
-    let _kbData, _kbCurrent = this.state.currentKeyboard, _kbsAvalaible = this.state.keyboards,_id= kbName.target.id;
-    switch(_id) {
-        case "picture": {
-          //
-          console.log("hit", _id);
-          break;
-        }
-        case "color": {
-          //
-          console.log("hit", _id);
-          break;
-        }
-        case "anim": {
-          //
-          console.log("hit", _id);
-          break;
-        }
-        case "": {
-          //
-          break;
-        }
-        case "": {
-          //
-          break;
-        }
-        case "": {
-          //
-          break;
-        }
-        case "": {
-          //
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-     
+    let _kbData,
+      _kbCurrent = this.state.currentSidebarSecondKeyboard,
+      _kbsAvalaible = this.state.keyboards,
+      _id = kbName.target.id;
+    this.setState({ currentSidebarSecondKeyboard: kbName.target.id });
+    // switch(_id) {
+    //     case "picture": {
+    //       //
+    //       console.log("hit", _id);
+    //       // _kbData = this
+    //       this.setState({currentSidebarKeyboard : _id})
+    //       break;
+    //     }
+    //     case "color": {
+    //       //
+    //       console.log("hit", _id);
+    //       this.setState({currentSidebarKeyboard : _id})
+    //       break;
+    //     }
+    //     case "anim": {
+    //       //
+    //       console.log("hit", _id);
+    //       this.setState({currentSidebarKeyboard : _id})
+    //       break;
+    //     }
+    //     case "": {
+    //       //
+    //       break;
+    //     }
+    //     case "": {
+    //       //
+    //       break;
+    //     }
+    //     case "": {
+    //       //
+    //       break;
+    //     }
+    //     case "": {
+    //       //
+    //       break;
+    //     }
+    //     default: {
+    //       break;
+    //     }
+    //   }
+  };
 
+  getKeyboardData = (keyboardName) => {
+    let _kb;
+    while (typeof _kb === "undefined") {
+      this.state.keyboards.forEach((element) => {
+        if (element.name === keyboardName) {
+          _kb = element;
+        }
+      });
+    }
+    return _kb;
+  };
+
+  getCircleClasses = (position) => {
+    let _circleData;
+    if (position === 1) {
+      _circleData = this.state.circle1Data;
+    } else if (position === 2) {
+      _circleData = this.state.circle2Data;
+    }
+    return _circleData.showing
+      ? this.state.circleDefaultClassName +
+          " " +
+          _circleData.className +
+          " " +
+          this.state.visibleClassName
+      : this.state.circleDefaultClassName + " " + _circleData.className;
+  };
+
+  getCircleId = (position) => {
+    let _circleData;
+    if (position === 1) {
+      _circleData = this.state.circle1Data;
+    } else if (position === 2) {
+      _circleData = this.state.circle2Data;
+    }
+    return _circleData.id;
   };
 
   goForMath = () => {
@@ -982,6 +1057,7 @@ class Calculator extends Component {
   };
 
   render = () => {
+    // let _secondSidebarKeyboard =
     return (
       <div
         className={`container ${
@@ -1033,24 +1109,15 @@ class Calculator extends Component {
                   <div className="row" meta-name="main keyboards">
                     <div className="col">
                       <Keyboard
-                        className={`keyboard ${this.state.numberKeyboardClass}`}
-                        keys={this.numberKeys}
-                        passClickHandler={(e) => this.handleClick(e)}
-                        keyErr={this.state.keyErr}
+                        kbData={this.getKeyboardData("number")}
                       ></Keyboard>
                     </div>
                     <div className="col">
                       <Keyboard
-                        className={`keyboard ${this.state.functionKeyboardClass}`}
-                        keys={this.functionKeys}
-                        passClickHandler={(e) => this.handleClick(e)}
-                        keyErr={this.state.keyErr}
+                        kbData={this.getKeyboardData("function")}
                       ></Keyboard>
                       <Keyboard
-                        className={`keyboard ${this.state.utilityKeyboardClass}`}
-                        keys={this.utilityKeys}
-                        passClickHandler={(e) => this.handleClick(e)}
-                        keyErr={this.state.keyErr}
+                        kbData={this.getKeyboardData("utility")}
                       ></Keyboard>
                     </div>
                   </div>
@@ -1059,44 +1126,24 @@ class Calculator extends Component {
               {/* ------------ sidebar ---------------- */}
               <div className="col-md-3 slider" meta-name="sidebar">
                 <div className="sidebar" onMouseLeave={this.closeSidebar}>
-                  <div className="h-50 keyboard-wrapper">
+                  <div className="h-50 sidebar-keyboard-wrapper">
                     <div
-                      className={
-                        this.state.themeTypeKeyboardData.visible
-                          ? this.state.themeTypeKeyboardData.circleClassName +
-                            " " +
-                            this.state.visibleClassName
-                          : this.state.themeTypeKeyboardData.circleClassName
-                      }
+                      id={this.getCircleId(1)}
+                      className={this.getCircleClasses(1)}
                       onMouseEnter={this.showKeyboard}
                     ></div>
                     {/* ------------ sidebar keyboards ---------------- */}
                     <Keyboard
-                      className={`${this.state.themeTypeKeyboardData.className}`}
-                      label={this.state.themeTypeKeyboardData.labelForKeyboard}
-                      keys={this.state.themeTypeKeyboardData.keys}
-                      passClickHandler={
-                        this.state.themeTypeKeyboardData.onClick
-                      }
+                      kbData={this.getKeyboardData("theme-type")}
                     ></Keyboard>
                   </div>
-                  <div className="h-50 keyboard-wrapper">
+                  <div className="h-50 sidebar-keyboard-wrapper">
                     <div
-                      className={
-                        this.state.themesKeyboardData.visible
-                          ? this.state.themesKeyboardData.circleClassName +
-                            " " +
-                            this.state.visibleClassName
-                          : this.state.themesKeyboardData.circleClassName
-                      }
+                      id={this.getCircleId(2)}
+                      className={this.getCircleClasses(2)}
                       onMouseEnter={this.showKeyboard}
                     ></div>
-                    <Keyboard
-                      className={`${this.state.themesKeyboardData.className}`}
-                      label={this.state.themesKeyboardData.labelForKeyboard}
-                      keys={this.state.themesKeyboardData.keys}
-                      passClickHandler={this.state.themesKeyboardData.onClick}
-                    ></Keyboard>
+                    <Keyboard kbData={this.getKeyboardData("theme")}></Keyboard>
                   </div>
                 </div>
               </div>

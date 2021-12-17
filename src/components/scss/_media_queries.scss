@@ -202,7 +202,7 @@ $breakpoints: (
   }
   #{$outer-wrapper} {
     .sidebar {
-      .keyboard-wrapper {
+      .sidebar-keyboard-wrapper {
         .circle {
           height: 1.4rem;
           width: 1.4rem;
@@ -379,7 +379,7 @@ $breakpoints: (
       }
     }
     .sidebar {
-      .keyboard-wrapper {
+      .sidebar-keyboard-wrapper {
         .circle {
           &:hover {
             transform: scale(1.5);

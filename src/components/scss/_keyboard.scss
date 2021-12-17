@@ -20,7 +20,7 @@
 }
 
 .sidebar {
-  .keyboard-wrapper {
+  .sidebar-keyboard-wrapper {
     position: relative;
     z-index: inherit;
     opacity: 0;
@@ -103,7 +103,7 @@
 
 @include themify($themes) {
   .sidebar {
-    .keyboard-wrapper {
+    .sidebar-keyboard-wrapper {
       .title {
         color: darken(themed(textColor), 10%);
       }
@@ -152,7 +152,7 @@
 }
 
 .sidebar {
-  .keyboard-wrapper {
+  .sidebar-keyboard-wrapper {
     .circle {
       &.showing {
         transform: scale(1.5);
