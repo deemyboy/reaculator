@@ -90,6 +90,14 @@
       border-color: darken(themed(primaryButtonBorderColor), 90%);
     }
   }
+  &#{$anim} {
+    .btn-primary {
+      background-color: transparentize(
+        darken(themed(primaryButtonBgColor), 15%),
+        0.35
+      );
+    }
+  }
   .btn-secondary {
     background-color: themed(secondaryButtonBgColor);
     color: themed(secondaryButtonTextColor);
@@ -110,6 +118,15 @@
       border-color: darken(themed(secondaryButtonBorderColor), 90%);
     }
   }
+  &#{$anim} {
+    .btn-secondary {
+      background-color: transparentize(
+        darken(themed(secondaryButtonBgColor), 15%),
+        0.35
+      );
+    }
+  }
+
   $btn-danger-bg-color: #dc3545;
   .btn-danger {
     color: #fff;

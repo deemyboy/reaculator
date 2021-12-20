@@ -269,20 +269,16 @@ $themes: (
     }
   }
 
-  /////////////// open
-  // open
-  &#{$open} {
+  &#{$anim} {
     .sidebar {
       background-color: transparentize(
         darken(themed(sidebarBackground), 20%),
         0.4
       );
-      background-color: 
-        themed(backgroundColor);
+      // background-color: themed(backgroundColor);
     }
   }
 }
-
 
 @include themify($themes) {
   // colors
@@ -294,7 +290,8 @@ $themes: (
         color: darken(themed(calculatorTitleTextColor), 5%);
       }
     }
-    .calculator {
+    .calculator,
+    .sidebar {
       background-color: themed(backgroundColor);
       border-color: themed(borderColor);
       // border-color: themed(menuIconBorderColor);
@@ -313,6 +310,22 @@ $themes: (
       }
     }
   }
+  &#{$anim} {
+    .settings {
+      .fa.fa-cog {
+        // color: themed(sidebarTitleTextColor);
+        color: darken(themed(calculatorTitleTextColor), 5%);
+      }
+    }
+    .keyboard {
+      background-color: transparentize(
+        lighten(themed(keyboardBackground), 0%),
+        0.75
+      );
+      border-color: themed(keyboardBorderColor);
+    }
+  }
+
   &#{$picture} {
     .calculator {
       background-image: themed(backgroundUrl);
@@ -324,8 +337,19 @@ $themes: (
 
 // colors
 @include themify($themes) {
-  .sidebar {
-    .keyboard {
+  &#{$anim} {
+    .sidebar {
+      background-color: transparentize(
+        lighten(themed(sidebarBackground), 0%),
+        0.3
+      );
+      background-color: #000;
+      .keyboard {
+        background-color: transparentize(
+          lighten(themed(keyboardBackground), 0%),
+          1
+        );
+      }
     }
   }
 }

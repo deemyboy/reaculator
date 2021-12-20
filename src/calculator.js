@@ -61,8 +61,8 @@ class Calculator extends Component {
     sidebarKeyboards: "",
 
     circleDefaultClassName: "circle",
-    circle1Data: { id: "circle1", className: "circle-1", showing: true },
-    circle2Data: { id: "circle2", className: "circle-2", showing: true },
+    circle1Data: { id: "circle1", className: "circle-1", showing: false },
+    circle2Data: { id: "circle2", className: "circle-2", showing: false },
     visibleClassName: "showing",
     currentSidebarSecondKeyboard: "",
     defaultSidebarSecondKeyboard: "themesKeyboardData",
@@ -115,6 +115,7 @@ class Calculator extends Component {
       },
       {
         name: "animations",
+        className: "keyboard-theme",
         keyboardTitle: "Select Animation",
         kb: "anim",
         keys: [
@@ -154,39 +155,42 @@ class Calculator extends Component {
     console.log("componentDidMount");
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
 
+    var id = "anim-script";
     if (this.state.themeType === "anim") {
-      var loadScript = function (src) {
-        var tag = document.createElement("script");
-        tag.id = "anim-script";
-        tag.async = false;
-        tag.src = src;
-        var body = document.getElementsByTagName("body")[0];
-        body.appendChild(tag);
-      };
+        var loadScript = function (src) {
+          var tag = document.createElement("script");
+          tag.id = "anim-script";
+          tag.async = false;
+          tag.src = src;
+          var body = document.getElementsByTagName("body")[0];
+          body.appendChild(tag);
+        };
 
-      loadScript(`./anim-${this.state.animation}.js`);
+        loadScript(`./anim-${this.state.animation}.js`);
       // loadScript("./anim-slither.js");
       // loadScript("./anim-fireworks.js");
       // loadScript("./anim-twist.js");
     } else {
       var removeScript = function (id) {
         var tag = document.getElementById(id);
-        tag.remove();
+        if (tag) {
+          tag.remove();
+        }
       };
 
       removeScript("anim-script");
-      let scripts = {
-        slither: animSlither,
-        fireworks: animFireworks,
-        twist: animTwist,
-      };
-      scripts[this.state.animation]();
+      // let scripts = {
+      //   slither: animSlither,
+      //   fireworks: animFireworks,
+      //   twist: animTwist,
+      // };
+      // scripts[this.state.animation]();
     }
   }
 
   componentDidUpdate(nextProps, nextState) {
+    var id = "anim-script";
     if (this.state.themeType === "anim") {
-      var id = "anim-script";
       if (this.state.animation !== nextState.animation) {
         var loadScript = function (src) {
           if (document.getElementById(id)) {
