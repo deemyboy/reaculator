@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .keyboard {
   transition-duration: 0.05s;
   border: 1px solid;
@@ -20,89 +22,91 @@
 }
 
 .sidebar {
-  .keyboard-wrapper {
+
+  .sidebar-keyboard-wrapper {
     position: relative;
-    z-index: inherit;
-    opacity: 0;
     .title {
       display: none;
     }
-  }
-  .circle {
-    z-index: inherit;
-    height: 2rem;
-    width: 2rem;
-    background-color: #c4faff6e;
-    position: absolute;
-    top: calc(50% - 0.8rem);
-    left: calc(50% - 1rem);
-    border-radius: 25px;
-    @include transition(all 0.25s ease-in);
-    transform-origin: center;
-    &:after {
-      content: "";
-      display: inline-block;
-      height: 3rem;
-      width: 3rem;
-      border: none$i;
-      background-color: #c4faff;
-      opacity: 0.4;
-      border-radius: 25px;
-      position: absolute;
-      top: -0.5rem;
-      left: -0.5rem;
-      @include transition(all 0.25s ease-out);
-      transform: scale(1);
-    }
-    &:hover:after {
-      transform: scale(0.675);
-      background-color: #fff;
-      opacity: 1;
-    }
-  }
-  .keyboard {
-    height: 100%;
-    transform: rotate(90deg);
-    transform-origin: center;
-    background-color: transparent$i;
-    border: 0;
-    @include transition(all 0.25s ease-out);
-    position: relative;
-    padding: 0;
-    margin: 0;
-    .btn {
-      z-index: 0;
-      transform: rotate(180deg);
-      margin: 0;
-      padding: 0;
-      width: 40%;
-      left: 30%;
-      max-width: 80px;
-      opacity: 0;
-      position: absolute;
-      @for $i from 1 through 10 {
-        &:nth-of-type(#{$i}) {
-          transition: transform #{$i * 0.25}s, opacity #{$i * 0.25}s;
 
-          // transition: top #{$i * 0.25}s;
-        }
+    .circle {
+      z-index: 2;
+      height: 2rem;
+      width: 2rem;
+      background-color: #c4faff6e;
+      position: absolute;
+      top: calc(50% - 0.8rem);
+      left: calc(50% - 1rem);
+      border-radius: 25px;
+      @include transition(all 0.25s ease-in);
+      transform-origin: center;
+      &:after {
+        content: "";
+        display: inline-block;
+        height: 3rem;
+        width: 3rem;
+        border: none$i;
+        background-color: #c4faff;
+        opacity: 0.4;
+        border-radius: 25px;
+        position: absolute;
+        top: -0.5rem;
+        left: -0.5rem;
+        @include transition(all 0.25s ease-out);
+        transform: scale(1);
       }
-      // @for $i from 1 through 5 {
-      //   &:nth-of-type(#{$i}) {
-      //     @if $i < 4 {
-      //       left: calc((3 - #{$i})* 8%);
-      //     } @else {
-      //       left: calc((1 - #{$i})* 12%);
-      //     }
-      //   }
-      // }
+      &:hover:after {
+        transform: scale(0.675);
+        background-color: #fff;
+        opacity: 1;
+      }
+    }
+    .keyboard {
+      height: 100%;
+      transform: rotate(90deg);
+      transform-origin: center;
+      background-color: transparent$i;
+      border: 0;
+      @include transition(all 0.25s ease-out);
+      position: relative;
+      padding: 0;
+      margin: 0;
+      .btn {
+        // z-index: 0;
+        transform: rotate(180deg);
+        margin: 0;
+        padding: 0;
+        width: 40%;
+        top: 0;
+        left: 0;
+        max-width: 80px;
+        opacity: 0;
+        position: absolute;
+        transition: transform 0.25s, opacity 0.25s;
+        @for $i from 1 through 10 {
+          &:nth-of-type(#{$i}) {
+            transition: transform #{$i * 0.25}s, opacity #{$i * 0.25}s;
+
+            // transition: top #{$i * 0.25}s;
+          }
+        }
+        // @for $i from 1 through 5 {
+        //   &:nth-of-type(#{$i}) {
+        //     @if $i < 4 {
+        //       left: calc((3 - #{$i})* 8%);
+        //     } @else {
+        //       left: calc((1 - #{$i})* 12%);
+        //     }
+        //   }
+        // }
+      }
     }
   }
 }
 
 @include themify($themes) {
   .sidebar {
-    .keyboard-wrapper {
+    .sidebar-keyboard-wrapper {
       .title {
         color: darken(themed(textColor), 10%);
       }
@@ -131,13 +135,6 @@
     }
   }
 }
-// open
-#{$open} {
-  @include themify($themes) {
-    .keyboard {
-    }
-  }
-}
 
 #{$picture} {
   // sizes
@@ -157,25 +154,10 @@
   }
 }
 
-#{$color} {
-  // sizes
-  .sidebar {
-    .keyboard {
-    }
-  }
-}
-// colors
-@include themify($themes) {
-  .sidebar {
-    .keyboard {
-    }
-  }
-}
-
 .sidebar {
-  .keyboard-wrapper {
+  .sidebar-keyboard-wrapper {
     .circle {
-      &:hover {
+      &.showing {
         transform: scale(1.5);
         ~ .keyboard {
           transform: rotate(0deg);
@@ -187,17 +169,23 @@
       }
     }
     .circle-1 {
-      &:hover {
+      &.showing {
         ~ .keyboard {
           .btn {
-            &:first-of-type {
+            &:nth-of-type(1) {
               left: 15%;
               top: 15%;
             }
             &:nth-of-type(2) {
+              left: 0%;
+              top: 42%;
+            }
+
+            &:nth-of-type(3) {
               left: 15%;
               top: 65%;
             }
+
             // @for $i from 10 through 1 {
             //   &:nth-of-type(#{$i}) {
             //     top: calc(#{$i} * 40px);
@@ -206,53 +194,27 @@
           }
         }
       }
-      &.visible {
-        @extend:hover;
-      }
+      // &.showing {
+      //   @extend:hover;
+      // }
     }
 
     .circle-2 {
       &:hover {
         ~ .keyboard {
-          .btn {
-            &:first-of-type {
-              left: 9%;
-              top: 10%;
-            }
-            &:nth-of-type(2) {
-              left: -5%;
-              top: 27%;
-            }
-            &:nth-of-type(3) {
-              left: -13%;
-              top: 44%;
-            }
-            &:nth-of-type(4) {
-              left: -5%;
-              top: 61%;
-            }
-            &:nth-of-type(5) {
-              left: 9%;
-              top: 78%;
-            }
-            // @for $i from 10 through 1 {
-            //   &:nth-of-type(#{$i}) {
-            //     top: calc(#{$i} * 40px);
-            //   }
-            // }
-          }
         }
       }
-      &.visible {
-        @extend:hover;
-      }
+      // &.showing {
+      //   @extend:hover;
+      // }
     }
+
     .keyboard {
       .btn {
         @for $i from 1 through 10 {
           &:nth-of-type(#{$i}) {
-            transition: transform #{$i * 0.2}s, opacity #{$i * 0.2}s,
-              top #{$i * 0.2}s, left #{$i * 0.2}s ease 0s;
+            transition: transform #{$i * 0.10}s, opacity #{$i * 0.10}s,
+              top #{$i * 0.10}s, left #{$i * 0.10}s ease 0s;
           }
         }
         // @for $i from 10 through 1 {
@@ -285,4 +247,70 @@
 .keyboard.keyboard-utility {
   border-top: none;
   border-radius: 0px 0px 0.25rem 0.25rem$i;
+}
+
+/// Mixin to place items on a circle
+/// @author Kitty Giraudel
+/// @author Ana Tudor
+/// @param {Integer} $item-count - Number of items on the circle
+/// @param {Length} $circle-size - Large circle size
+/// @param {Length} $item-size - Single item size
+@mixin on-circle($item-count, $circle-width, $circle-height, $item-size) {
+  position: relative;
+  width: $circle-width;
+  height: $circle-height;
+  padding: 0;
+  left: 4px;
+
+  > * {
+    display: block$i;
+    position: absolute;
+    top: calc(50% - 1.7rem);
+    left: calc(50% - 2rem);
+    width: $item-size;
+    height: $item-size;
+    // margin: -(math.div($item-size, 1));
+
+    $angle: math.div(360, $item-count);
+    $rot: 0;
+
+    @for $i from 1 through $item-count {
+      &:nth-of-type(#{$i}) {
+        transform: 
+        rotate($rot * 1deg)
+          translate((math.div($circle-width, 4)*6))
+          rotate($rot * -1deg);
+      }
+
+      $rot: $rot + $angle;
+    }
+  }
+}
+
+
+// .circle-container {
+div#circle2 {
+  &.showing {
+    ~ div.keyboard {
+      @include on-circle($item-count: 8, $circle-width: 100%, $circle-height: 100%, $item-size: 3.5rem);
+      // margin: 5em auto 0;
+      // border: solid 5px tomato;
+
+      // img {
+      button {
+        display: block;
+        // max-width: 100%;
+        // border-radius: 50%;
+        // width: auto$i;
+        // filter: grayscale(70%);
+        // border: solid 5px tomato;
+        // transition: 0.15s;
+
+        &:hover,
+        &:active {
+          filter: grayscale(0);
+        }
+      }
+    }
+  }
 }

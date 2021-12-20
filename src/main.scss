@@ -6,35 +6,4 @@ $i: #{"!"}important;
 @import "~bootstrap/scss/bootstrap";
 @import "./components/scss/_display", "./components/scss/_key",
   "./components/scss/_calculator", "./components/scss/_keyboard",
-  "./components/scss/_sidebar", "./components/scss/_settings";
-
-#{$outer-wrapper} {
-  & {
-  }
-  &.dev {
-    //sizes here
-    // closed
-    .calculator {
-      background-color: hotpink$i;
-    }
-    .settings {
-    }
-    .sidebar {
-      background-color: #99333382 $i;
-      .keyboard-wrapper {
-        background-color: #00ff58a8;
-        .keyboard {
-          background-color: #2a64c796$i;
-        }
-      }
-    }
-    &#{$open} {
-      .calculator {
-      }
-      .settings {
-      }
-      .sidebar {
-      }
-    }
-  }
-}
+  "./components/scss/_sidebar", "./components/scss/_settings", "./components/scss/_canvas","./components/scss/_dev","./components/scss/_anims";

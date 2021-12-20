@@ -1,24 +1,43 @@
 #{$outer-wrapper} {
   max-width: 720px;
-
+  .row {
+    > div {
+      z-index: 1;
+    }
+    > div:nth-of-type(2) {
+      z-index: 0;
+    }
+  }
+  
   .slider {
     @include transition(all 0.25s);
     position: absolute;
     top: 0;
-    right: 0;
+    right: 16.67%;
     height: 100%;
     transform-origin: right;
+    // z-index: -1;
   }
-
+  
+  &#{$picture} {
+    // sizes
+    .calculator {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: bottom;
+    }
+  }
+  
   // sizes
   .calculator {
     @include transition(all 0.25s);
     border-radius: $s-05r;
     border-width: 2px;
+    border-right-width: 0;
     border-style: solid;
     // margin: 0 -0.75rem;
     padding: 0.5rem;
-
+    
     .keyboard {
       display: flex;
       justify-content: space-evenly;
@@ -45,11 +64,12 @@
   // open
   &#{$open} {
     .calculator {
+      border-radius: 5px 0 0 5px;
     }
     .slider {
-      right: 25%;
+      right: -16.5%;
       .sidebar {
-        .keyboard-wrapper {
+        .sidebar-keyboard-wrapper {
         }
       }
     }

@@ -1,11 +1,14 @@
 #{$outer-wrapper} {
   .settings {
+    
     display: inline-block;
     height: 1.5rem;
     width: 1.5rem;
     transition: all 0.25s;
-    z-index: 9;
-    margin: 10px 10px 0 0;
+    z-index: 99;
+    position: relative;
+    top: 5px;
+    left: -3px;
 
     .fa.fa-cog {
       font-size: 1.5rem;

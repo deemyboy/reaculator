@@ -3,6 +3,9 @@ const htmlPlugin = new HtmlWebPackPlugin({
   template: "./src/index.html",
   filename: "./index.html",
 });
+
+var path = require('path');
+
 module.exports = {
   devtool: "source-map",
   mode: "development",

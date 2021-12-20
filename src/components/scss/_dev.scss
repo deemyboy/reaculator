@@ -1,0 +1,30 @@
+#{$outer-wrapper} {
+  & {
+  }
+  &.dev {
+    //sizes here
+    // closed
+    .calculator {
+      background-color: #ff69b487$i;
+    }
+    .settings {
+    }
+    .sidebar {
+      background-color: #99333382 $i;
+      .sidebar-keyboard-wrapper {
+        background-color: #00ff58a8;
+        .keyboard {
+          background-color: #2a64c796$i;
+        }
+      }
+    }
+    &#{$open} {
+      .calculator {
+      }
+      .settings {
+      }
+      .sidebar {
+      }
+    }
+  }
+}

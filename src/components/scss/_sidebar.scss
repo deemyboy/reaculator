@@ -1,7 +1,8 @@
 .sidebar {
   @include transition(all 0.25s);
   border-radius: 0 $s-05r $s-05r 0;
-  border-width: 0;
+  border: 2px solid;
+  border-left-width: 0;
   height: 100%;
   z-index: 50;
 
@@ -36,8 +37,7 @@
   #{$open} {
     .sidebar {
       opacity: 1;
-      border: 1px solid;
-      .keyboard-wrapper {
+      .sidebar-keyboard-wrapper {
         opacity: 1;
       }
     }

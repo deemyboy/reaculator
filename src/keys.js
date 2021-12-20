@@ -1,51 +1,3 @@
-export const sidebarKeys = [
-  {
-    id: "Fire",
-    value: "Fire",
-    specialClass: "btn-fire fire",
-    title: "Fire",
-    keycode: 55,
-    kbCode: "Digit7",
-    type: "thm",
-  },
-  {
-    id: "Midnight",
-    value: "Midnight",
-    specialClass: "btn-midnight midnight",
-    title: "Midnight",
-    keycode: 55,
-    kbCode: "Digit7",
-    type: "thm",
-  },
-  {
-    id: "Ocean",
-    value: "Ocean",
-    specialClass: "btn-ocean ocean",
-    title: "Ocean",
-    keycode: 55,
-    kbCode: "Digit7",
-    type: "thm",
-  },
-  {
-    id: "Storm",
-    value: "Storm",
-    specialClass: "btn-storm storm",
-    title: "Storm",
-    keycode: 55,
-    kbCode: "Digit7",
-    type: "thm",
-  },
-  {
-    id: "Jungle",
-    value: "Jungle",
-    specialClass: "btn-jungle jungle",
-    title: "Jungle",
-    keycode: 55,
-    kbCode: "Digit7",
-    type: "thm",
-  },
-];
-
 export const numberKeys = [
   {
     id: 1,
@@ -222,6 +174,7 @@ export const functionKeys = [
     type: "func",
   },
 ];
+
 export const utilityKeys = [
   {
     id: 17,
@@ -250,6 +203,55 @@ export const allowedKeys = [
   89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110, 111,
   187, 189, 190, 191,
 ];
+
+export const themeKeys = [
+  {
+    id: "Fire",
+    value: "Fire",
+    specialClass: "btn-fire fire",
+    title: "Fire",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Midnight",
+    value: "Midnight",
+    specialClass: "btn-midnight midnight",
+    title: "Midnight",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Ocean",
+    value: "Ocean",
+    specialClass: "btn-ocean ocean",
+    title: "Ocean",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Storm",
+    value: "Storm",
+    specialClass: "btn-storm storm",
+    title: "Storm",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+  {
+    id: "Jungle",
+    value: "Jungle",
+    specialClass: "btn-jungle jungle",
+    title: "Jungle",
+    keycode: 55,
+    kbCode: "Digit7",
+    type: "thm",
+  },
+];
+
 export const themeTypeKeys = [
   {
     id: "picture",
@@ -271,7 +273,19 @@ export const themeTypeKeys = [
     kbCode: "KeyA",
     type: "thype",
   },
+  {
+    id: "anim",
+    value: "anim",
+    specialClass: "btn-theme-type move-it",
+    uniChar: "\u221E",
+    uniChar: "\uD83D\uDE80",
+    title: "choose anim theme",
+    keycode: 65,
+    kbCode: "KeyA",
+    type: "thype",
+  },
 ];
+
 export const imageKeys = [
   {
     id: "trees",
@@ -302,5 +316,38 @@ export const imageKeys = [
     keycode: 65,
     kbCode: "KeyA",
     type: "thype",
+  },
+];
+
+export const animKeys = [
+  {
+    id: "slither",
+    value: "slither",
+    specialClass: "btn-anim-choice",
+    uniChar: "\u2307",
+    title: "choose anim",
+    keycode: null,
+    kbCode: "",
+    type: "anim",
+  },
+  {
+    id: "fireworks",
+    value: "fireworks",
+    specialClass: "btn-anim-choice",
+    uniChar: "\uD83C\uDF86",
+    title: "choose anim",
+    keycode: null,
+    kbCode: "",
+    type: "anim",
+  },
+  {
+    id: "twist",
+    value: "twist",
+    specialClass: "btn-anim-choice",
+    uniChar: "\uD83D\uDD00",
+    title: "choose anim",
+    keycode: null,
+    kbCode: "",
+    type: "anim",
   },
 ];
