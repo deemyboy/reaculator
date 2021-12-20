@@ -1,15 +1,14 @@
 var renderer, scene, camera, light, tiles;
 
-var gravity = .3;
+var gravity = 0.3;
 
 var ww = (cvs.width = cvs.parentNode.clientWidth),
   wh = (cvs.height = cvs.parentNode.clientHeight);
 
-function anim() {
-
+const animTwist = function () {
   renderer = new THREE.WebGLRenderer({
-    canvas: document.getElementById('cvs'),
-    antialias: true
+    canvas: document.getElementById("cvs"),
+    antialias: true,
   });
   renderer.setSize(ww, wh);
 
@@ -28,11 +27,10 @@ function anim() {
   render();
 
   window.addEventListener("click", switchColor);
+};
 
-}
-
-var switchColor = function() {
-  picked++
+var switchColor = function () {
+  picked++;
   if (picked == 5) {
     picked = 0;
   }
@@ -40,25 +38,40 @@ var switchColor = function() {
   for (var i = 0; i < 5; i++) {
     for (var j = 0, k = tiles.children[i].children.length; j < k; j++) {
       var tile = tiles.children[i].children[j];
-      tile.material.color = new THREE.Color(colors[picked][Math.floor(Math.random() * 8)]);
+      tile.material.color = new THREE.Color(
+        colors[picked][Math.floor(Math.random() * 8)]
+      );
     }
   }
-
 };
 
 var colors = [
-  [0x194358, 0xF2C5A8, 0xF2C5A8, 0xF2C5A8, 0XFF3627, 0XFF3627, 0XAD1715, 0XAD1715],
-  [0x113F59, 0x19BEC0, 0x20D6C7, 0x19BEC0, 0xF3EDD3, 0xF3EDD3, 0xF3EDD3, 0XD54F58],
-  [0xB2BB9C, 0xEDCC6B, 0xF1AD5A, 0x6D9692, 0xEDCC6B, 0xF1AD5A, 0xF1AD5A, 0xEDCC6B],
-  [0x59DBD5, 0x43A39F, 0x055154, 0xFFBF3B, 0xFFBF3B, 0XFFBF3B, 0x59DBD5, 0XCF0A2C],
-  [0xEB2144, 0xF16446, 0xA1D59F, 0xFFEFAF, 0xFFEFAF, 0xFFEFAF, 0xFFEFAF, 0xFFEFAF]
+  [
+    0x194358, 0xf2c5a8, 0xf2c5a8, 0xf2c5a8, 0xff3627, 0xff3627, 0xad1715,
+    0xad1715,
+  ],
+  [
+    0x113f59, 0x19bec0, 0x20d6c7, 0x19bec0, 0xf3edd3, 0xf3edd3, 0xf3edd3,
+    0xd54f58,
+  ],
+  [
+    0xb2bb9c, 0xedcc6b, 0xf1ad5a, 0x6d9692, 0xedcc6b, 0xf1ad5a, 0xf1ad5a,
+    0xedcc6b,
+  ],
+  [
+    0x59dbd5, 0x43a39f, 0x055154, 0xffbf3b, 0xffbf3b, 0xffbf3b, 0x59dbd5,
+    0xcf0a2c,
+  ],
+  [
+    0xeb2144, 0xf16446, 0xa1d59f, 0xffefaf, 0xffefaf, 0xffefaf, 0xffefaf,
+    0xffefaf,
+  ],
 ];
 var picked = 1;
 
 var distance = 22;
 
-var createFace = function(side) {
-
+var createFace = function (side) {
   var wall = new THREE.Object3D(side);
 
   var depth = side ? 20 : 16;
@@ -67,24 +80,22 @@ var createFace = function(side) {
     for (var j = 0; j < 16; j++) {
       var geometry = new THREE.BoxGeometry(20, 20, 3);
       var material = new THREE.MeshLambertMaterial({
-        color: colors[picked][Math.floor(Math.random() * 8)]
+        color: colors[picked][Math.floor(Math.random() * 8)],
       });
       var tile = new THREE.Mesh(geometry, material);
-      tile.position.y = (i * distance);
-      tile.position.x = (j * distance);
+      tile.position.y = i * distance;
+      tile.position.x = j * distance;
       tile.speedX = Math.random() / 70;
-      tile.speedY = Math.random() / 190 * (Math.random() < .5 ? 1 : -1);
+      tile.speedY = (Math.random() / 190) * (Math.random() < 0.5 ? 1 : -1);
 
       wall.add(tile);
     }
   }
 
   return wall;
-
 };
 
-var createTiles = function() {
-
+var createTiles = function () {
   tiles = new THREE.Object3D();
   scene.add(tiles);
 
@@ -119,10 +130,9 @@ var createTiles = function() {
   face5.position.y = -(9 * distance);
   face5.position.z = -(19.5 * distance);
   tiles.add(face5);
-
 };
 
-var render = function(a) {
+var render = function (a) {
   requestAnimationFrame(render);
 
   for (var i = 0; i < 5; i++) {
@@ -133,18 +143,18 @@ var render = function(a) {
     }
   }
 
-  camera.rotation.z += .0005;
+  camera.rotation.z += 0.0005;
 
   renderer.render(scene, camera);
 };
 
-anim();
+animTwist();
 
-window.addEventListener( 'resize', function(){
-	
-	ww = cvs.width = cvs.parentNode.clientWidth;
-	wh = cvs.height = cvs.parentNode.clientHeight;
-	
-    renderer.setSize(ww, wh);
+window.addEventListener("resize", function () {
+  ww = cvs.width = cvs.parentNode.clientWidth;
+  wh = cvs.height = cvs.parentNode.clientHeight;
 
+  renderer.setSize(ww, wh);
 });
+
+// export { animTwist };

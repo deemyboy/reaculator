@@ -1,15 +1,34 @@
-var cvs = document.getElementById("cvs");
-var w = (cvs.width = cvs.parentNode.clientWidth),
-  h = (cvs.height = cvs.parentNode.clientHeight),
-  ctx = cvs.getContext("2d"),
-  spawnProb = 1,
-  numberOfMoves = [8, 16], //[min, max]
-  distance = [50, 200],
-  attenuator = 900,
-  timeBetweenMoves = [6, 10],
-  size = [0.5, 3],
-  lines = [],
-  frame = (Math.random() * 360) | 0;
+window.onload = init;
+
+var cvs,
+  ctx,
+  img,
+  w,
+  h,
+  spawnProb,
+  numberOfMoves,
+  distance,
+  attenuator,
+  timeBetweenMoves,
+  size,
+  lines,
+  frame;
+function init() {
+  cvs = document.getElementById("cvs");
+  ctx = cvs.getContext("2d"); /* Error in getContext("2d") */
+
+  (w = cvs.width = cvs.parentNode.clientWidth),
+    (h = cvs.height = cvs.parentNode.clientHeight),
+    (spawnProb = 1),
+    (numberOfMoves = [8, 16]), //[min, max]
+    (distance = [50, 200]),
+    (attenuator = 900),
+    (timeBetweenMoves = [6, 10]),
+    (size = [0.5, 3]),
+    (lines = []),
+    (frame = (Math.random() * 360) | 0);
+  anim();
+}
 
 function rand(ar) {
   return Math.random() * (ar[1] - ar[0]) + ar[0];
@@ -59,7 +78,6 @@ Line.prototype.use = function () {
 };
 
 function anim() {
-
   window.requestAnimationFrame(anim);
 
   ++frame;
@@ -68,24 +86,23 @@ function anim() {
   ctx.fillStyle = "rgba(0, 0, 0, .04)";
   ctx.fillRect(0, 0, w, h);
   ctx.shadowBlur = 20;
-  
+
   if (Math.random() < spawnProb) lines.push(new Line());
-  
+
   for (var i = 0; i < lines.length; ++i) {
     lines[i].use();
-    
+
     if (lines[i].move >= lines[i].totalMoves) {
       lines.splice(i, 1);
       --i;
     }
   }
 }
-anim();
+// anim();
 
-window.addEventListener( 'resize', function(){
-  
+window.addEventListener("resize", function () {
   w = cvs.width = cvs.parentNode.clientWidth;
-	h = cvs.height = cvs.parentNode.clientHeight;
-	
+  h = cvs.height = cvs.parentNode.clientHeight;
+
   ctx.fillRect(0, 0, w, h);
 });

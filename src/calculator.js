@@ -11,6 +11,9 @@ import { utilityKeys } from "./keys";
 import { allowedKeys } from "./keys";
 import { themeTypeKeys } from "./keys";
 import { animKeys } from "./keys";
+// import { animSlither } from "../public/anim-slither";
+// import * as fire from "./anim-fireworks";
+// import { animTwist } from "./anim-twist";
 
 class Calculator extends Component {
   displayRef = React.createRef();
@@ -20,14 +23,8 @@ class Calculator extends Component {
 
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
-    this.state.themesKeyboardData.currentSetting = this.getCookie(
-      "currentTheme",
-      "theme"
-    );
-    this.state.themeTypeKeyboardData.currentSetting = this.getCookie(
-      "currentThemeType",
-      "themeType"
-    );
+    this.state.theme = this.getCookie("currentTheme", "theme");
+    this.state.themeType = this.getCookie("currentThemeType", "themeType");
     this.themeKeys = themeKeys;
     this.numberKeys = numberKeys;
     this.functionKeys = functionKeys;
@@ -38,7 +35,10 @@ class Calculator extends Component {
   }
 
   state = {
-    canId: "cvs",
+    title: "Reaculator",
+    theme: "Ocean",
+    themeType: "color",
+    animation: "fireworks",
     calculationData: {
       calculationClass: "calculation",
       calculationValue: "",
@@ -61,86 +61,68 @@ class Calculator extends Component {
     sidebarKeyboards: "",
 
     circleDefaultClassName: "circle",
-    circle1Data: { id: "circle1", className: "circle-1", showing: false },
-    circle2Data: { id: "circle2", className: "circle-2", showing: false },
+    circle1Data: { id: "circle1", className: "circle-1", showing: true },
+    circle2Data: { id: "circle2", className: "circle-2", showing: true },
     visibleClassName: "showing",
-    keyboards: [
-      { picture: "themesKeyboardData" },
-      { color: "themesKeyboardData" },
-      { anim: "animKeyboardData" },
-    ],
     currentSidebarSecondKeyboard: "",
     defaultSidebarSecondKeyboard: "themesKeyboardData",
-    themeTypeKeyboardData: {
-      className: "keyboard-theme-type",
-      keyboardTitle: "Theme Type",
-      currentSetting: "picture",
-      onClick: (e) => this.onSelectThemeType(e),
-      keys: themeTypeKeys,
-      visible: false,
-    },
-    themesKeyboardData: {
-      className: "keyboard-theme",
-      keyboardTitle: "Theme",
-      currentSetting: "Ocean",
-      onClick: (e) => this.onSelectTheme(e),
-      keys: themeKeys,
-      visible: false,
-    },
-    animKeyboardData: {
-      className: "keyboard-anim",
-      keyboardTitle: "Animation",
+    animationData: {
+      animations: ["slither", "fireworks", "twist"],
       currentSetting: "slither",
       onClick: (e) => this.onSelectAnim(e),
-      keys: animKeys,
-      visible: false,
     },
+    canvasId: "cvs",
     keyboards: [
       {
         name: "number",
         keyboardTitle: "Number Keyboard",
+        className: "keyboard-number",
         kb: "num",
         keys: numberKeys,
+        onClick: (e) => this.handleClick(e),
       },
       {
         name: "function",
         keyboardTitle: "Function Keyboard",
+        className: "keyboard-function",
         kb: "func",
         keys: functionKeys,
+        onClick: (e) => this.handleClick(e),
       },
       {
         name: "utility",
         keyboardTitle: "Utility Keyboard",
+        className: "keyboard-utility",
         kb: "util",
         keys: utilityKeys,
+        onClick: (e) => this.handleClick(e),
       },
       {
         name: "theme-type",
         keyboardTitle: "Select Theme Type",
+        className: "keyboard-theme-type",
         kb: "theme-type",
         keys: themeTypeKeys,
         onClick: (e) => this.onSelectThemeType(e),
-        currentSetting: "picture",
       },
       {
         name: "theme",
         keyboardTitle: "Select Theme",
+        className: "keyboard-theme",
         kb: "theme",
         keys: themeKeys,
         onClick: (e) => this.onSelectTheme(e),
-        currentSetting: "Ocean",
       },
       {
         name: "animations",
         keyboardTitle: "Select Animation",
         kb: "anim",
-        keys: animKeys,
-        onClick: (e) => this.onSelectAnim(e),
-        currentSetting: "slither",
+        keys: [
+          { keys: themeKeys, onClick: (e) => this.onSelectTheme(e) },
+          { keys: animKeys, onClick: (e) => this.onSelectAnim(e) },
+        ],
       },
     ],
-    theme: "Ocean",
-    themeType: "color",
     numberKeyboardClass: "keyboard-number",
     functionKeyboardClass: "keyboard-function",
     utilityKeyboardClass: "keyboard-utility",
@@ -148,7 +130,6 @@ class Calculator extends Component {
     num2: "",
     op1: "",
     op2: "",
-    title: "Reaculator",
     dotRgx: /\./g,
     numRgx: /(\d+)/g,
     mathOpRgx: /([+\-x\/ysr=])/gi,
@@ -170,25 +151,78 @@ class Calculator extends Component {
   // };
 
   componentDidMount() {
+    console.log("componentDidMount");
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
 
     if (this.state.themeType === "anim") {
       var loadScript = function (src) {
         var tag = document.createElement("script");
+        tag.id = "anim-script";
         tag.async = false;
         tag.src = src;
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(tag);
       };
 
-      loadScript("./anim-slither.js");
+      loadScript(`./anim-${this.state.animation}.js`);
+      // loadScript("./anim-slither.js");
+      // loadScript("./anim-fireworks.js");
+      // loadScript("./anim-twist.js");
+    } else {
+      var removeScript = function (id) {
+        var tag = document.getElementById(id);
+        tag.remove();
+      };
+
+      removeScript("anim-script");
+      let scripts = {
+        slither: animSlither,
+        fireworks: animFireworks,
+        twist: animTwist,
+      };
+      scripts[this.state.animation]();
     }
-    // loadScript("./anim-fireworks.js");
-    // loadScript("./anim-twist.js");
   }
 
   componentDidUpdate(nextProps, nextState) {
-    let resultData = { ...this.state.resultData };
+    if (this.state.themeType === "anim") {
+      var id = "anim-script";
+      if (this.state.animation !== nextState.animation) {
+        var loadScript = function (src) {
+          if (document.getElementById(id)) {
+            var tag = document.getElementById(id);
+            tag.remove();
+          }
+
+          var tag = document.createElement("script");
+          tag.id = id;
+          tag.async = false;
+          tag.src = src;
+          var body = document.getElementsByTagName("body")[0];
+          if (!!!document.getElementById(id)) {
+            body.appendChild(tag);
+          }
+        };
+        loadScript(`./anim-${this.state.animation}.js`);
+      }
+      //}animation("./anim-fireworks.js");
+      // loadScript("./anim-twist.js");
+    } else if (document.getElementById("anim-script")) {
+      var removeScript = function (id) {
+        var tag = document.getElementById(id);
+        tag.remove();
+      };
+
+      removeScript("anim-script");
+    }
+
+    //   let scripts = {
+    //     slither: animSlither,
+    //     fireworks: animFireworks,
+    //     twist: animTwist,
+    //   };
+    //   scripts[this.state.animation]();
+    // }
   }
 
   componentWillUnmount() {
@@ -696,7 +730,7 @@ class Calculator extends Component {
 
   onSelectThemeType = (e) => {
     let cookieData = {};
-    let _themeTypeData = {...this.getKeyboardData("theme-type")};
+    let _themeTypeData = { ...this.getKeyboardData("theme-type") };
     // let _themeTypeData = { ...this.state.themeTypeKeyboardData };
     _themeTypeData.currentSetting = e.target.value;
     cookieData.cookieLabel = "currentThemeType";
@@ -724,17 +758,16 @@ class Calculator extends Component {
     // this.toggleSidebar(e);
   };
 
-
   onSelectAnim = (e) => {
     let cookieData = {};
-    let _animData = { ...this.state.animKeyboardData };
+    let _animData = { ...this.state.animationData };
     _animData.currentSetting = e.target.value;
     cookieData.cookieLabel = "currentAnim";
     cookieData.cookieValue = _animData.currentSetting;
     cookieData.cookiePath = { path: "/" };
     this.setState({
-      animKeyboardData: _animData,
-      anim: _animData.currentSetting,
+      animationData: _animData,
+      animation: _animData.currentSetting,
     });
     this.setCookie(cookieData);
   };
@@ -1057,95 +1090,91 @@ class Calculator extends Component {
   };
 
   render = () => {
-    // let _secondSidebarKeyboard =
+    const renderSecondSidebarKeyboard = () => {
+      if (this.state.themeType === "anim") {
+        return (
+          <Keyboard kbData={this.getKeyboardData("animations")}></Keyboard>
+        );
+      } else {
+        return <Keyboard kbData={this.getKeyboardData("theme")}></Keyboard>;
+      }
+    };
+
     return (
       <div
         className={`container ${
           this.state.sidebarData.isOpen === true ? "open" : ""
         } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
       >
-        <div className="row justify-content-center">
-          <div className="col">
-            {/* ------------ app ---------------- */}
+        {/* ------------ app ---------------- */}
+        <div
+          className="row g-0  justify-content-center"
+          meta-name="app"
+          style={{ position: "relative" }}
+        >
+          {/* ------------ display and keyboards---------------- */}
+          <div className="col-md-8" meta-name="display and keyboards">
             <div
-              className="row"
-              meta-name="app"
+              className="settings float-end"
+              onMouseOver={this.toggleSidebar}
+              onTouchStart={this.toggleSidebar}
+            >
+              <i className="fa fa-cog" aria-hidden="true"></i>
+            </div>
+            <div
+              id="canvas-container"
+              className={`calculator `}
+              onTouchStart={this.closeSidebar}
               style={{ position: "relative" }}
             >
-              {/* ------------ display and keyboards---------------- */}
-              <div className="col-md-9" meta-name="display and keyboards">
-                <div
-                  className="settings float-end"
-                  onMouseOver={this.toggleSidebar}
-                  onTouchStart={this.toggleSidebar}
-                >
-                  <i className="fa fa-cog" aria-hidden="true"></i>
-                </div>
-                {/* <div className={`calculator`} onTouchStart={this.closeSidebar}> */}
-
-                <div
-                  id="canvas-container"
-                  className={`calculator `}
-                  onTouchStart={this.closeSidebar}
-                  style={{ position: "relative" }}
-                >
-                  <Canvas ref={this.animate} canId={this.state.canId} />
-                  <p className="title">{this.state.title}</p>
-                  {/* ------------ display ---------------- */}
-                  <div className="row" meta-name="display">
-                    <div className="col">
-                      <div className="row" meta-name="display">
-                        <div className="col">
-                          <Display
-                            calculationData={this.state.calculationData}
-                            resultData={this.state.resultData}
-                            displayClass={this.state.displayClass}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* ------------ main keyboards ---------------- */}
-                  <div className="row" meta-name="main keyboards">
-                    <div className="col">
-                      <Keyboard
-                        kbData={this.getKeyboardData("number")}
-                      ></Keyboard>
-                    </div>
-                    <div className="col">
-                      <Keyboard
-                        kbData={this.getKeyboardData("function")}
-                      ></Keyboard>
-                      <Keyboard
-                        kbData={this.getKeyboardData("utility")}
-                      ></Keyboard>
-                    </div>
-                  </div>
+              <Canvas ref={this.animate} canId={this.state.canvasId} />
+              <p className="title">{this.state.title}</p>
+              {/* ------------ display ---------------- */}
+              <div className="row" meta-name="display">
+                <div className="col">
+                  <Display
+                    calculationData={this.state.calculationData}
+                    resultData={this.state.resultData}
+                    displayClass={this.state.displayClass}
+                  />
                 </div>
               </div>
-              {/* ------------ sidebar ---------------- */}
-              <div className="col-md-3 slider" meta-name="sidebar">
-                <div className="sidebar" onMouseLeave={this.closeSidebar}>
-                  <div className="h-50 sidebar-keyboard-wrapper">
-                    <div
-                      id={this.getCircleId(1)}
-                      className={this.getCircleClasses(1)}
-                      onMouseEnter={this.showKeyboard}
-                    ></div>
-                    {/* ------------ sidebar keyboards ---------------- */}
-                    <Keyboard
-                      kbData={this.getKeyboardData("theme-type")}
-                    ></Keyboard>
-                  </div>
-                  <div className="h-50 sidebar-keyboard-wrapper">
-                    <div
-                      id={this.getCircleId(2)}
-                      className={this.getCircleClasses(2)}
-                      onMouseEnter={this.showKeyboard}
-                    ></div>
-                    <Keyboard kbData={this.getKeyboardData("theme")}></Keyboard>
-                  </div>
+              {/* ------------ main keyboards ---------------- */}
+              <div className="row" meta-name="main keyboards">
+                <div className="col">
+                  <Keyboard kbData={this.getKeyboardData("number")}></Keyboard>
                 </div>
+                <div className="col">
+                  <Keyboard
+                    kbData={this.getKeyboardData("function")}
+                  ></Keyboard>
+                  <Keyboard kbData={this.getKeyboardData("utility")}></Keyboard>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* ------------ sidebar ---------------- */}
+          <div className="col-md-4 slider" meta-name="sidebar">
+            <div className="sidebar" onMouseLeave={this.closeSidebar}>
+              <div className="h-50 sidebar-keyboard-wrapper">
+                <div
+                  id={this.getCircleId(1)}
+                  className={this.getCircleClasses(1)}
+                  onMouseEnter={this.showKeyboard}
+                ></div>
+                {/* ------------ sidebar keyboards ---------------- */}
+                <Keyboard
+                  kbData={this.getKeyboardData("theme-type")}
+                ></Keyboard>
+              </div>
+              <div className="h-50 sidebar-keyboard-wrapper">
+                <div
+                  id={this.getCircleId(2)}
+                  className={this.getCircleClasses(2)}
+                  onMouseEnter={this.showKeyboard}
+                ></div>
+                {/* // */}
+                {renderSecondSidebarKeyboard()}
               </div>
             </div>
           </div>

@@ -277,6 +277,8 @@ $themes: (
         darken(themed(sidebarBackground), 20%),
         0.4
       );
+      background-color: 
+        themed(backgroundColor);
     }
   }
 }
