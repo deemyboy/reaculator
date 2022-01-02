@@ -1,0 +1,36 @@
+@use "sass:math";
+
+
+/// Mixin to place items on a circle
+/// @author Kitty Giraudel
+/// @author Ana Tudor
+/// @param {Integer} $item-count - Number of items on the circle
+/// @param {Length} $circle-size - Large circle size
+/// @param {Length} $item-size - Single item size
+@mixin on-circle($item-count, $circle-width, $circle-height, $circle-radius, $item-size) {
+    position: relative;
+    width: $circle-width;
+    height: $circle-height;
+    padding: 0;
+
+  
+    > * {
+      display: block$i;
+      position: absolute;
+      top: calc(50% - (math.div($item-size,2)));
+      left: calc(50% - (math.div($item-size,2)));
+  
+      $angle: math.div(360, $item-count);
+      $rot: 0;
+  
+      @for $i from 1 through $item-count {
+        &:nth-of-type(#{$i}) {
+          transform: rotate($rot * 1deg)
+          translate($circle-radius) 
+            rotate(($rot * -1deg)+90);
+        }
+  
+        $rot: $rot + $angle;
+      }
+    }
+  }

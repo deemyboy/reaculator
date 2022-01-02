@@ -6,8 +6,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack serve",
-    "build": "webpack"
+    "stats": "webpack --progress -c --profile --json > stats.json",
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "keywords": [],
   "author": "abdullah sarwar",
@@ -34,7 +35,8 @@
     "style-loader": "^3.3.1",
     "webpack": "^5.64.2",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.5.0"
+    "webpack-dev-server": "^4.5.0",
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@popperjs/core": "^2.10.2",
@@ -42,6 +44,7 @@
     "popper": "^1.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "universal-cookie": "^4.0.4"
   },
   "repository": "https://bitbucket.org/deemyboy/calc-3/",

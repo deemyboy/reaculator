@@ -1,29 +1,40 @@
 #{$outer-wrapper} {
-    & {
+  & {
+  }
+  &.color,&.picture {
+    #cvs {
+      display: none;
     }
-    //sizes here
-    // closed
+  }
+  //sizes here
+  // closed
+  .calculator {
+  }
+  .settings {
+  }
+  .sidebar {
+  }
+  &#{$open} {
     .calculator {
     }
     .settings {
     }
     .sidebar {
     }
-    &#{$open} {
-      .calculator {
-      }
-      .settings {
-      }
-      .sidebar {
-      }
-    }
   }
+}
 
-  .move-it {
-    transform: rotateY(0deg)$i; /* needs Y at 0 deg to behave properly*/
-    transition: transform .25s;
-    &:hover {
-      transform: rotateY(360deg); /* needs Y at 0 deg to behave properly*/
-      
-    }
+.move-it {
+  transition: transform .25s;
+  &:hover {
+    transform: rotateY(360deg); /* needs Y at 0 deg to behave properly*/
+    
   }
+}
+
+#slither {
+  color: #fff
+}
+#hexagons {
+  color: #fff;
+}

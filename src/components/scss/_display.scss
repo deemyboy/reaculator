@@ -1,27 +1,27 @@
 .calculator {
   .display {
-    background: #abbaa7;
-    border: 2px solid #6d6d6d;
+    border: 2px solid;
     border-radius: 5px;
     box-shadow: inset -2px -2px 3px 1px #96a292;
     clear: both;
-    color: #2f2f2f;
     font-family: Orbitron, sans-serif;
-    margin: 15px 0;
+    margin: 20px 3px;
+    padding: 0 10px;
     width: 100%;
     text-align: right;
+
     p {
       margin-bottom: 5px;
     }
     .calculation {
-      font-size: 1.7em;
+      font-size: 2rem;
       min-height: 3rem;
     }
     .clearIt {
       margin: 0;
     }
     .result {
-      font-size: 2.7em;
+      font-size: 3rem;
     }
     .result_err {
       @extend .result;

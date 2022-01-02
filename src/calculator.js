@@ -38,12 +38,12 @@ class Calculator extends Component {
     title: "Reaculator",
     theme: "Ocean",
     themeType: "color",
-    animation: "fireworks",
+    animation: "",
     calculationData: {
       calculationClass: "calculation",
       calculationValue: "",
     },
-    displayClass: "display",
+    displayClass: "col display",
     resultData: {
       resultClass: "result",
       resultCount: 0,
@@ -67,7 +67,14 @@ class Calculator extends Component {
     currentSidebarSecondKeyboard: "",
     defaultSidebarSecondKeyboard: "themesKeyboardData",
     animationData: {
-      animations: ["slither", "fireworks", "twist"],
+      animations: [
+        "slither",
+        "fireworks",
+        "hexagons",
+        "triangles",
+        "lines",
+        "speed",
+      ],
       currentSetting: "slither",
       onClick: (e) => this.onSelectAnim(e),
     },
@@ -146,87 +153,71 @@ class Calculator extends Component {
     userInput: "",
   };
 
-  // animate = (e) => {
-  //   console.log("animate", e);
-  //   // anim();
-  // };
-
   componentDidMount() {
-    console.log("componentDidMount");
+    // console.log("componentDidMount");
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
 
-    var id = "anim-script";
-    if (this.state.themeType === "anim") {
-        var loadScript = function (src) {
-          var tag = document.createElement("script");
-          tag.id = "anim-script";
-          tag.async = false;
-          tag.src = src;
-          var body = document.getElementsByTagName("body")[0];
-          body.appendChild(tag);
-        };
+    let _id = "anim-script",
+      _scriptName = this.state.animationData.currentSetting;
 
-        loadScript(`./anim-${this.state.animation}.js`);
-      // loadScript("./anim-slither.js");
-      // loadScript("./anim-fireworks.js");
-      // loadScript("./anim-twist.js");
-    } else {
+    if (this.state.themeType === "anim") {
+      var loadScript = function () {
+        var tag = document.createElement("script");
+        tag.id = _id;
+        tag.async = false;
+        let _src = `./anim-${_scriptName}.js`;
+        tag.src = _src;
+        var body = document.getElementsByTagName("body")[0];
+        body.appendChild(tag);
+      };
+      if (document.getElementById(_id)) {
+        var tag = document.getElementById(_id);
+        tag.remove();
+      }
+      loadScript();
+    } else if (document.getElementById(_id)) {
       var removeScript = function (id) {
         var tag = document.getElementById(id);
         if (tag) {
           tag.remove();
         }
       };
-
-      removeScript("anim-script");
-      // let scripts = {
-      //   slither: animSlither,
-      //   fireworks: animFireworks,
-      //   twist: animTwist,
-      // };
-      // scripts[this.state.animation]();
+      removeScript(_id);
     }
   }
 
   componentDidUpdate(nextProps, nextState) {
-    var id = "anim-script";
-    if (this.state.themeType === "anim") {
-      if (this.state.animation !== nextState.animation) {
-        var loadScript = function (src) {
-          if (document.getElementById(id)) {
-            var tag = document.getElementById(id);
-            tag.remove();
-          }
+    let _id = "anim-script",
+      _scriptName = this.state.animationData.currentSetting;
 
-          var tag = document.createElement("script");
-          tag.id = id;
-          tag.async = false;
-          tag.src = src;
-          var body = document.getElementsByTagName("body")[0];
-          if (!!!document.getElementById(id)) {
-            body.appendChild(tag);
-          }
-        };
-        loadScript(`./anim-${this.state.animation}.js`);
-      }
-      //}animation("./anim-fireworks.js");
-      // loadScript("./anim-twist.js");
-    } else if (document.getElementById("anim-script")) {
-      var removeScript = function (id) {
-        var tag = document.getElementById(id);
-        tag.remove();
+    if (
+      this.state.themeType === "anim" &&
+      this.state.animation !== nextState.animation
+    ) {
+      var loadScript = function () {
+        var tag = document.createElement("script");
+        tag.id = _id;
+        tag.async = false;
+        let _src = `./anim-${_scriptName}.js`;
+        tag.src = _src;
+        var body = document.getElementsByTagName("body")[0];
+        body.appendChild(tag);
       };
 
-      removeScript("anim-script");
+      if (document.getElementById(_id)) {
+        var tag = document.getElementById(_id);
+        tag.remove();
+      }
+      loadScript();
+    } else if (document.getElementById(_id)) {
+      var removeScript = function (id) {
+        var tag = document.getElementById(id);
+        if (tag) {
+          tag.remove();
+        }
+      };
+      removeScript(_id);
     }
-
-    //   let scripts = {
-    //     slither: animSlither,
-    //     fireworks: animFireworks,
-    //     twist: animTwist,
-    //   };
-    //   scripts[this.state.animation]();
-    // }
   }
 
   componentWillUnmount() {
@@ -670,33 +661,34 @@ class Calculator extends Component {
   };
 
   toggleSidebar = (e) => {
+    e.stopPropagation();
     let sidebarData = { ...this.state.sidebarData };
-    let isOpen = sidebarData.isOpen;
+    let _isOpen = sidebarData.isOpen;
 
     // test if body touched (not menu icon)
-    if (
-      e.target.className !== "fa fa-cog" ||
-      e.target.className !== "settings"
-    ) {
-      // if sidebar open allow touch on calculator body  to close sidebar
-      if (isOpen) {
-        isOpen = false;
-        sidebarData.isOpen = isOpen;
-        this.setState({ sidebarData });
+    // if (
+    //   e.target.className !== "fa fa-cog" ||
+    //   e.target.className !== "settings"
+    // ) {
+    //   // if sidebar open allow touch on calculator body  to close sidebar
+    //   if (isOpen) {
+    //     isOpen = false;
+    //     sidebarData.isOpen = isOpen;
+    //     this.setState({ sidebarData });
+    //   } else {
+    //     isOpen = true;
+    //     sidebarData.isOpen = isOpen;
+    //     this.setState({ sidebarData });
+    //   }
+    // } else {
+      if (!_isOpen) {
+        _isOpen = true;
       } else {
-        isOpen = true;
-        sidebarData.isOpen = isOpen;
-        this.setState({ sidebarData });
-      }
-    } else {
-      if (!isOpen) {
-        isOpen = true;
-      } else {
-        isOpen = false;
+        _isOpen = false;
       }
 
-      sidebarData.isOpen = isOpen;
-    }
+      sidebarData.isOpen = _isOpen;
+    // }
     this.setState({ sidebarData });
   };
 
@@ -717,6 +709,7 @@ class Calculator extends Component {
   };
 
   showKeyboard = (e) => {
+    e.stopPropagation()
     let _circleData;
     // only allow interaction on visible sidebar
     if (this.state.sidebarData.isOpen) {
@@ -733,6 +726,7 @@ class Calculator extends Component {
   };
 
   onSelectThemeType = (e) => {
+    e.stopPropagation();
     let cookieData = {};
     let _themeTypeData = { ...this.getKeyboardData("theme-type") };
     // let _themeTypeData = { ...this.state.themeTypeKeyboardData };
@@ -748,9 +742,10 @@ class Calculator extends Component {
   };
 
   onSelectTheme = (e) => {
+    e.stopPropagation();
     let cookieData = {};
     let _themesData = { ...this.state.themesKeyboardData };
-    _themesData.currentSetting = e.target.innerHTML;
+    _themesData.currentSetting = e.target.id;
     cookieData.cookieLabel = "currentTheme";
     cookieData.cookieValue = _themesData.currentSetting;
     cookieData.cookiePath = { path: "/" };
@@ -763,6 +758,7 @@ class Calculator extends Component {
   };
 
   onSelectAnim = (e) => {
+    e.stopPropagation();
     let cookieData = {};
     let _animData = { ...this.state.animationData };
     _animData.currentSetting = e.target.value;
@@ -1105,46 +1101,121 @@ class Calculator extends Component {
     };
 
     return (
-      <div
-        className={`container ${
-          this.state.sidebarData.isOpen === true ? "open" : ""
-        } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
-      >
-        {/* ------------ app ---------------- */}
+      // <React.Fragment>
+      //   <div
+      //     className={`container dev ${
+      //       this.state.sidebarData.isOpen === true ? "open" : ""
+      //     } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
+      //   >
+      //     {/* ------------ app ---------------- */}
+      //     <div
+      //       className="row g-0 justify-content-center flex-nowrap"
+      //       meta-name="app"
+      //       style={{ position: "relative" }}
+      //     >
+      //       {/* ------------ display and keyboards---------------- */}
+      //       <div
+      //         id="canvas-container"
+      //         className={`col-12 calculator `}
+      //         onTouchStart={this.closeSidebar}
+      //         meta-name="display and keyboards"
+      //       >
+      //         <p
+      //           className="settings"
+      //           onClick={this.toggleSidebar}
+      //           onTouchStart={this.toggleSidebar}
+      //         >
+      //           <i className="fa fa-cog" aria-hidden="true"></i>
+      //         </p>
+      //         <Canvas ref={this.animate} canId={this.state.canvasId} />
+      //         <p className="title">{this.state.title}</p>
+      //         {/* ------------ display ---------------- */}
+      //         <div className="row g-0" meta-name="display">
+      //           <Display
+      //             calculationData={this.state.calculationData}
+      //             resultData={this.state.resultData}
+      //             displayClass={this.state.displayClass}
+      //           />
+      //         </div>
+      //         {/* ------------ main keyboards ---------------- */}
+      //         <div className="row g-0" meta-name="main keyboards">
+      //           <div className="col">
+      //             <Keyboard kbData={this.getKeyboardData("number")}></Keyboard>
+      //           </div>
+      //           <div className="col">
+      //             <Keyboard
+      //               kbData={this.getKeyboardData("function")}
+      //             ></Keyboard>
+      //             <Keyboard kbData={this.getKeyboardData("utility")}></Keyboard>
+      //           </div>
+      //         </div>
+      //       </div>
+      //       {/* ------------ sidebar ---------------- */}
+      //       <div
+      //         // className="col-lg-4 col-4 sidebar "
+      //         className=" sidebar d-flex flex-column flex-shrink-0 p-3 bg-light"
+      //         meta-name="sidebar"
+      //         onMouseLeave={this.closeSidebar}
+      //       >
+      //         <div className="h-50 sidebar-keyboard-wrapper">
+      //           <div
+      //             id={this.getCircleId(1)}
+      //             className={this.getCircleClasses(1)}
+      //             onClick={this.showKeyboard}
+      //           ></div>
+      //           {/* ------------ sidebar keyboards ---------------- */}
+      //           <Keyboard
+      //             kbData={this.getKeyboardData("theme-type")}
+      //           ></Keyboard>
+      //         </div>
+      //         <div className="h-50 sidebar-keyboard-wrapper">
+      //           <div
+      //             id={this.getCircleId(2)}
+      //             className={this.getCircleClasses(2)}
+      //             onClick={this.showKeyboard}
+      //           ></div>
+      //           {/* // */}
+      //           {renderSecondSidebarKeyboard()}
+      //         </div>
+      //       </div>
+      //     </div>
+      //   </div>
+      // </React.Fragment>
+      <React.Fragment>
         <div
-          className="row g-0  justify-content-center"
-          meta-name="app"
-          style={{ position: "relative" }}
+          className={`container ${
+            this.state.sidebarData.isOpen === true ? "open" : ""
+          } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
+          onClick={this.closeSidebar}
+          onTouchStart={this.closeSidebar}
         >
-          {/* ------------ display and keyboards---------------- */}
-          <div className="col-md-8" meta-name="display and keyboards">
-            <div
-              className="settings float-end"
-              onMouseOver={this.toggleSidebar}
+          {/* ------------ app ---------------- */}
+          <div className="row flex-nowrap" meta-name="app">
+            {/* ------------ display and keyboards---------------- */}
+            <p
+              className="settings"
+              onClick={this.toggleSidebar}
               onTouchStart={this.toggleSidebar}
             >
               <i className="fa fa-cog" aria-hidden="true"></i>
-            </div>
+            </p>
             <div
               id="canvas-container"
-              className={`calculator `}
-              onTouchStart={this.closeSidebar}
-              style={{ position: "relative" }}
+              className={`col calculator `}
+              meta-name="display and keyboards"
             >
               <Canvas ref={this.animate} canId={this.state.canvasId} />
               <p className="title">{this.state.title}</p>
               {/* ------------ display ---------------- */}
-              <div className="row" meta-name="display">
-                <div className="col">
-                  <Display
-                    calculationData={this.state.calculationData}
-                    resultData={this.state.resultData}
-                    displayClass={this.state.displayClass}
-                  />
-                </div>
+              <div className="row g-0" meta-name="display">
+                <Display
+                  calculationData={this.state.calculationData}
+                  resultData={this.state.resultData}
+                  displayClass={this.state.displayClass}
+                />
               </div>
               {/* ------------ main keyboards ---------------- */}
-              <div className="row" meta-name="main keyboards">
+              <div className="row g-0" meta-name="main keyboards">
                 <div className="col">
                   <Keyboard kbData={this.getKeyboardData("number")}></Keyboard>
                 </div>
@@ -1156,15 +1227,17 @@ class Calculator extends Component {
                 </div>
               </div>
             </div>
-          </div>
-          {/* ------------ sidebar ---------------- */}
-          <div className="col-md-4 slider" meta-name="sidebar">
-            <div className="sidebar" onMouseLeave={this.closeSidebar}>
+            {/* ------------ sidebar ---------------- */}
+            <div
+              className="col sidebar "
+              // className=" col"
+              meta-name="sidebar"
+            >
               <div className="h-50 sidebar-keyboard-wrapper">
                 <div
                   id={this.getCircleId(1)}
                   className={this.getCircleClasses(1)}
-                  onMouseEnter={this.showKeyboard}
+                  onClick={this.showKeyboard}
                 ></div>
                 {/* ------------ sidebar keyboards ---------------- */}
                 <Keyboard
@@ -1175,15 +1248,14 @@ class Calculator extends Component {
                 <div
                   id={this.getCircleId(2)}
                   className={this.getCircleClasses(2)}
-                  onMouseEnter={this.showKeyboard}
+                  onClick={this.showKeyboard}
                 ></div>
-                {/* // */}
                 {renderSecondSidebarKeyboard()}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   };
 }

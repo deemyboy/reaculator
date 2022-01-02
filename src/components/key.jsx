@@ -1,8 +1,9 @@
 import React from "react";
 
 const Key = React.forwardRef((props, ref) => {
+
   const setKeyClasses = (keyObj) => {
-    let classes = "btn btn-lg btn-key";
+    let classes = "btn btn-lg";
     const numClass = "btn-primary";
     const funcClass = "btn-secondary";
     const thmClass = "btn-theme";
@@ -34,6 +35,7 @@ const Key = React.forwardRef((props, ref) => {
 
     return classes;
   };
+
   return (
     <button
       ref={ref.id}
