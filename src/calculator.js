@@ -1101,93 +1101,13 @@ class Calculator extends Component {
     };
 
     return (
-      // <React.Fragment>
-      //   <div
-      //     className={`container dev ${
-      //       this.state.sidebarData.isOpen === true ? "open" : ""
-      //     } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
-      //   >
-      //     {/* ------------ app ---------------- */}
-      //     <div
-      //       className="row g-0 justify-content-center flex-nowrap"
-      //       meta-name="app"
-      //       style={{ position: "relative" }}
-      //     >
-      //       {/* ------------ display and keyboards---------------- */}
-      //       <div
-      //         id="canvas-container"
-      //         className={`col-12 calculator `}
-      //         onTouchStart={this.closeSidebar}
-      //         meta-name="display and keyboards"
-      //       >
-      //         <p
-      //           className="settings"
-      //           onClick={this.toggleSidebar}
-      //           onTouchStart={this.toggleSidebar}
-      //         >
-      //           <i className="fa fa-cog" aria-hidden="true"></i>
-      //         </p>
-      //         <Canvas ref={this.animate} canId={this.state.canvasId} />
-      //         <p className="title">{this.state.title}</p>
-      //         {/* ------------ display ---------------- */}
-      //         <div className="row g-0" meta-name="display">
-      //           <Display
-      //             calculationData={this.state.calculationData}
-      //             resultData={this.state.resultData}
-      //             displayClass={this.state.displayClass}
-      //           />
-      //         </div>
-      //         {/* ------------ main keyboards ---------------- */}
-      //         <div className="row g-0" meta-name="main keyboards">
-      //           <div className="col">
-      //             <Keyboard kbData={this.getKeyboardData("number")}></Keyboard>
-      //           </div>
-      //           <div className="col">
-      //             <Keyboard
-      //               kbData={this.getKeyboardData("function")}
-      //             ></Keyboard>
-      //             <Keyboard kbData={this.getKeyboardData("utility")}></Keyboard>
-      //           </div>
-      //         </div>
-      //       </div>
-      //       {/* ------------ sidebar ---------------- */}
-      //       <div
-      //         // className="col-lg-4 col-4 sidebar "
-      //         className=" sidebar d-flex flex-column flex-shrink-0 p-3 bg-light"
-      //         meta-name="sidebar"
-      //         onMouseLeave={this.closeSidebar}
-      //       >
-      //         <div className="h-50 sidebar-keyboard-wrapper">
-      //           <div
-      //             id={this.getCircleId(1)}
-      //             className={this.getCircleClasses(1)}
-      //             onClick={this.showKeyboard}
-      //           ></div>
-      //           {/* ------------ sidebar keyboards ---------------- */}
-      //           <Keyboard
-      //             kbData={this.getKeyboardData("theme-type")}
-      //           ></Keyboard>
-      //         </div>
-      //         <div className="h-50 sidebar-keyboard-wrapper">
-      //           <div
-      //             id={this.getCircleId(2)}
-      //             className={this.getCircleClasses(2)}
-      //             onClick={this.showKeyboard}
-      //           ></div>
-      //           {/* // */}
-      //           {renderSecondSidebarKeyboard()}
-      //         </div>
-      //       </div>
-      //     </div>
-      //   </div>
-      // </React.Fragment>
       <React.Fragment>
         <div
           className={`container ${
             this.state.sidebarData.isOpen === true ? "open" : ""
           } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
-          onClick={this.closeSidebar}
-          onTouchStart={this.closeSidebar}
+          // onClick={this.closeSidebar}
+          // onTouchStart={this.closeSidebar}
         >
           {/* ------------ app ---------------- */}
           <div className="row flex-nowrap" meta-name="app">

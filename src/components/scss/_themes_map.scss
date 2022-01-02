@@ -252,10 +252,10 @@ $themes: (
 
 @include themify($themes) {
   > div.row:first-of-type {
-    border-color: themed(borderColor);
     background-color: themed(backgroundColor);
   }
   .calculator {
+    border-color: themed(borderColor);
     > .title {
       color: themed(calculatorTitleTextColor);
     }
