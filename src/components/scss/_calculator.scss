@@ -2,9 +2,8 @@
   max-width: 720px;
   > div.row:first-of-type {
     position: relative;
-    border-radius: $s-033r;
-    border: 2px solid;
-
+    border-radius: $s-05r;
+    
     // calculator
     > div:nth-of-type(1) {
     }
@@ -13,6 +12,8 @@
     }
   }
   .calculator {
+    border-radius: $s-05r;
+    border: 2px solid;
     @include transition(all 0.25s);
     transform-origin: 0;
     z-index: 1;
