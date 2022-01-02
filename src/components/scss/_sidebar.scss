@@ -1,44 +1,158 @@
-.sidebar {
-  @include transition(all 0.25s);
-  border-radius: 0 $s-05r $s-05r 0;
-  border: 2px solid;
-  border-left-width: 0;
-  height: 100%;
-  z-index: 50;
+@use "sass:math";
 
-  &:before {
-    // content: "";
-    display: inline-block;
+#{$outer-wrapper} {
+  .sidebar {
+    @include transition(all 0.25s);
+    border-radius: 0 $s-05r $s-05r 0;
+    z-index: 0;
+    position: absolute;
     height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    border: 1px solid blanchedalmond;
-    position: absolute;
-    top: 90%;
-    left: 20px;
-    height: 30%;
-    width: 20px;
-    background: black;
-    transform: skewY(-45deg);
-    transform-origin: bottom left;
-    z-index: -1;
-  }
-  > .title {
-    text-align: center;
-    font-size: 1.1rem;
-    padding: 10px 0;
-  }
-}
+    width: 50%;
+    right: 0;
+    transform: scaleX(0);
+    transform-origin: right;
 
-
-  // open
-  #{$open} {
-    .sidebar {
-      opacity: 1;
-      .sidebar-keyboard-wrapper {
-        opacity: 1;
+    .sidebar-keyboard-wrapper {
+      position: relative;
+      > .title {
+        display: none;
+        text-align: center;
+        font-size: 1.1rem;
+        padding: 10px 0;
+      }
+    }
+    .keyboard {
+      height: 100%;
+      border: 0;
+      @include transition(all 0.25s ease);
+      position: relative;
+      padding: 0;
+      margin: 0;
+      transform: rotate(0deg);
+      .btn {
+        display: block;
+        filter: grayscale(70%);
+        @include transition(all 0.25s);
+        &:hover,
+        &:active {
+          filter: grayscale(0);
+        }
       }
     }
   }
+
+  $circle-diam: 2rem;
+  .sidebar {
+    .circle {
+      z-index: 2;
+      position: absolute;
+      border-radius: 2rem;
+      transform-origin: center;
+      height: $circle-diam;
+      width: $circle-diam;
+      left: calc(50% - math.div($circle-diam,2));
+      top: calc(50% - math.div($circle-diam,2));
+      @include transition(all 0.25s);
+      &:after {
+        content: "";
+        display: inline-block;
+        border: none$i;
+        opacity: 0.4;
+        border-radius: 2rem;
+        transform: scale(1);
+        height: $circle-diam * 1.333;
+        width: $circle-diam * 1.333;
+        position: absolute;
+        left: calc(50% - math.div($circle-diam * 1.333,2));
+        top: calc(50% - math.div($circle-diam * 1.333,2));
+        @include transition(all 0.25s);
+      }
+      &:hover {
+        transform: scale(1.5);
+        // opacity: 1;
+      }
+      &:hover:after {
+        transform: scale(0.675);
+        // opacity: 1;
+      }
+    }
+  }
+
+  &#{$open} {
+    div.sidebar {
+      border-radius: 0 $s-033r $s-033r 0;
+      transform: scaleX(1) $i;
+      .title {
+      }
+    }
+  }
+
+  &#{$picture} {
+    // sizes
+    .sidebar {
+      .keyboard {
+      }
+    }
+  }
+
+  .sidebar {
+    .circle {
+      &#{$showing} {
+        transform: scale(1.25);
+        &:after {
+          transform: scale(0.675);
+        }
+        ~ .keyboard {
+          transform: rotate(-90deg);
+          .btn {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  div#circle1 {
+    ~ .keyboard {
+      @include on-circle(
+        $item-count: 3,
+        $circle-width: 100%,
+        $circle-height: 100%,
+        $circle-radius: 150%,
+        $item-size: 3.5rem
+      );
+
+      .btn {
+      }
+    }
+  }
+
+  #circle2 {
+    ~ .keyboard {
+      @include on-circle(
+        $item-count: 5,
+        $circle-width: 100%,
+        $circle-height: 100%,
+        $circle-radius: 150%,
+        $item-size: 3.5rem
+      );
+
+      .btn {
+      }
+    }
+  }
+
+  &#{$anim} {
+    div#circle2 {
+      ~ .keyboard {
+        @include on-circle(
+          $item-count: 9,
+          $circle-width: 100%,
+          $circle-height: 100%,
+          $circle-radius: 150%,
+          $item-size: 3.5rem
+        );
+      }
+    }
+  }
+}

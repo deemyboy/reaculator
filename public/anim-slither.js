@@ -1,4 +1,4 @@
-window.onload = init;
+
 
 var cvs,
   ctx,
@@ -13,9 +13,19 @@ var cvs,
   size,
   lines,
   frame;
+  
+function reset(canvas) {
+  var newCanvas = canvas.cloneNode(false);
+  canvas.parentNode.replaceChild(newCanvas, canvas);
+  return newCanvas;
+}
+
 function init() {
   cvs = document.getElementById("cvs");
+  window.onclick = null;
+  cvs = reset(cvs);
   ctx = cvs.getContext("2d"); /* Error in getContext("2d") */
+
 
   (w = cvs.width = cvs.parentNode.clientWidth),
     (h = cvs.height = cvs.parentNode.clientHeight),
@@ -98,7 +108,6 @@ function anim() {
     }
   }
 }
-// anim();
 
 window.addEventListener("resize", function () {
   w = cvs.width = cvs.parentNode.clientWidth;
@@ -106,3 +115,5 @@ window.addEventListener("resize", function () {
 
   ctx.fillRect(0, 0, w, h);
 });
+
+init();

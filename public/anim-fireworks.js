@@ -1,29 +1,37 @@
-var cf = document.getElementById("cvs");
-console.log(cf);
-var gl = cf.getContext("webgl", { preserveDrawingBuffer: true }),
-  w = (cf.width = cf.parentNode.clientWidth),
-  h = (cf.height = cf.parentNode.clientHeight),
-  webgl = {},
-  opts = {
-    projectileAlpha: 0.8,
-    projectileLineWidth: 1.3,
-    fireworkAngleSpan: 0.5,
-    baseFireworkVel: 3,
-    addedFireworkVel: 3,
-    gravity: 0.03,
-    lowVelBoundary: -0.2,
-    xFriction: 0.995,
-    baseShardVel: 1,
-    addedShardVel: 0.2,
-    fireworks: 100,
-    baseShardsParFirework: 10,
-    addedShardsParFirework: 10,
-    shardFireworkVelMultiplier: 0.3,
-    initHueMultiplier: 1 / 360,
-    runHueAdder: 0.1 / 360,
-  };
+function reset(canvas) {
+  var newCanvas = canvas.cloneNode(false);
+  canvas.parentNode.replaceChild(newCanvas, canvas);
+  return newCanvas;
+}
 
-webgl.vertexShaderSource = `
+function initWebgl() {
+  var cvs = document.getElementById("cvs");
+  cvs = reset(cvs);
+
+  var gl = cvs.getContext("webgl", { preserveDrawingBuffer: true }),
+    w = (cvs.width = cvs.parentNode.clientWidth),
+    h = (cvs.height = cvs.parentNode.clientHeight),
+    webgl = {},
+    opts = {
+      projectileAlpha: 0.8,
+      projectileLineWidth: 1.3,
+      fireworkAngleSpan: 0.5,
+      baseFireworkVel: 3,
+      addedFireworkVel: 3,
+      gravity: 0.03,
+      lowVelBoundary: -0.2,
+      xFriction: 0.995,
+      baseShardVel: 1,
+      addedShardVel: 0.2,
+      fireworks: 100,
+      baseShardsParFirework: 10,
+      addedShardsParFirework: 10,
+      shardFireworkVelMultiplier: 0.3,
+      initHueMultiplier: 1 / 360,
+      runHueAdder: 0.1 / 360,
+    };
+
+  webgl.vertexShaderSource = `
 uniform int u_mode;
 uniform vec2 u_res;
 attribute vec4 a_data;
@@ -47,7 +55,7 @@ void main(){
     clear();
 }
 `;
-webgl.fragmentShaderSource = `
+  webgl.fragmentShaderSource = `
 precision mediump float;
 varying vec4 v_color;
 
@@ -55,239 +63,244 @@ void main(){
   gl_FragColor = v_color;
 }
 `;
+  webgl.vertexShader = gl.createShader(gl.VERTEX_SHADER);
+  gl.shaderSource(webgl.vertexShader, webgl.vertexShaderSource);
+  gl.compileShader(webgl.vertexShader);
 
-webgl.vertexShader = gl.createShader(gl.VERTEX_SHADER);
-gl.shaderSource(webgl.vertexShader, webgl.vertexShaderSource);
-gl.compileShader(webgl.vertexShader);
+  webgl.fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+  gl.shaderSource(webgl.fragmentShader, webgl.fragmentShaderSource);
+  gl.compileShader(webgl.fragmentShader);
 
-webgl.fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-gl.shaderSource(webgl.fragmentShader, webgl.fragmentShaderSource);
-gl.compileShader(webgl.fragmentShader);
+  webgl.shaderProgram = gl.createProgram();
+  gl.attachShader(webgl.shaderProgram, webgl.vertexShader);
+  gl.attachShader(webgl.shaderProgram, webgl.fragmentShader);
 
-webgl.shaderProgram = gl.createProgram();
-gl.attachShader(webgl.shaderProgram, webgl.vertexShader);
-gl.attachShader(webgl.shaderProgram, webgl.fragmentShader);
+  gl.linkProgram(webgl.shaderProgram);
+  gl.useProgram(webgl.shaderProgram);
 
-gl.linkProgram(webgl.shaderProgram);
-gl.useProgram(webgl.shaderProgram);
+  webgl.dataAttribLoc = gl.getAttribLocation(webgl.shaderProgram, "a_data");
+  webgl.dataBuffer = gl.createBuffer();
 
-webgl.dataAttribLoc = gl.getAttribLocation(webgl.shaderProgram, "a_data");
-webgl.dataBuffer = gl.createBuffer();
+  gl.enableVertexAttribArray(webgl.dataAttribLoc);
+  gl.bindBuffer(gl.ARRAY_BUFFER, webgl.dataBuffer);
+  gl.vertexAttribPointer(webgl.dataAttribLoc, 4, gl.FLOAT, false, 0, 0);
 
-gl.enableVertexAttribArray(webgl.dataAttribLoc);
-gl.bindBuffer(gl.ARRAY_BUFFER, webgl.dataBuffer);
-gl.vertexAttribPointer(webgl.dataAttribLoc, 4, gl.FLOAT, false, 0, 0);
+  webgl.resUniformLoc = gl.getUniformLocation(webgl.shaderProgram, "u_res");
+  webgl.modeUniformLoc = gl.getUniformLocation(webgl.shaderProgram, "u_mode");
 
-webgl.resUniformLoc = gl.getUniformLocation(webgl.shaderProgram, "u_res");
-webgl.modeUniformLoc = gl.getUniformLocation(webgl.shaderProgram, "u_mode");
+  gl.viewport(0, 0, w, h);
+  gl.uniform2f(webgl.resUniformLoc, w, h);
 
-gl.viewport(0, 0, w, h);
-gl.uniform2f(webgl.resUniformLoc, w, h);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.enable(gl.BLEND);
 
-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-gl.enable(gl.BLEND);
+  gl.lineWidth(opts.projectileLineWidth);
 
-gl.lineWidth(opts.projectileLineWidth);
+  webgl.data = [];
 
-webgl.data = [];
+  webgl.clear = function () {
+    gl.uniform1i(webgl.modeUniformLoc, 1);
+    var a = 0.1;
+    webgl.data = [
+      -1,
+      -1,
+      0,
+      a,
+      1,
+      -1,
+      0,
+      a,
+      -1,
+      1,
+      0,
+      a,
+      -1,
+      1,
+      0,
+      a,
+      1,
+      -1,
+      0,
+      a,
+      1,
+      1,
+      0,
+      a,
+    ];
+    webgl.draw(gl.TRIANGLES);
+    gl.uniform1i(webgl.modeUniformLoc, 0);
+    webgl.data.length = 0;
+  };
+  webgl.draw = function (glType) {
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(webgl.data),
+      gl.STATIC_DRAW
+    );
+    gl.drawArrays(glType, 0, webgl.data.length / 4);
+  };
 
-webgl.clear = function () {
-  gl.uniform1i(webgl.modeUniformLoc, 1);
-  var a = 0.1;
-  webgl.data = [
-    -1,
-    -1,
-    0,
-    a,
-    1,
-    -1,
-    0,
-    a,
-    -1,
-    1,
-    0,
-    a,
-    -1,
-    1,
-    0,
-    a,
-    1,
-    -1,
-    0,
-    a,
-    1,
-    1,
-    0,
-    a,
-  ];
-  webgl.draw(gl.TRIANGLES);
-  gl.uniform1i(webgl.modeUniformLoc, 0);
-  webgl.data.length = 0;
-};
-webgl.draw = function (glType) {
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(webgl.data), gl.STATIC_DRAW);
-  gl.drawArrays(glType, 0, webgl.data.length / 4);
-};
+  var fireworks = [],
+    tick = 0,
+    sins = [],
+    coss = [],
+    maxShardsParFirework =
+      opts.baseShardsParFirework + opts.addedShardsParFirework,
+    tau = 6.283185307179586476925286766559;
 
-var fireworks = [],
-  tick = 0,
-  sins = [],
-  coss = [],
-  maxShardsParFirework =
-    opts.baseShardsParFirework + opts.addedShardsParFirework,
-  tau = 6.283185307179586476925286766559;
+  for (var i = 0; i < maxShardsParFirework; ++i) {
+    sins[i] = Math.sin((tau * i) / maxShardsParFirework);
+    coss[i] = Math.cos((tau * i) / maxShardsParFirework);
+  }
 
-for (var i = 0; i < maxShardsParFirework; ++i) {
-  sins[i] = Math.sin((tau * i) / maxShardsParFirework);
-  coss[i] = Math.cos((tau * i) / maxShardsParFirework);
-}
+  function Firework() {
+    this.reset();
+    this.shards = [];
+    for (var i = 0; i < maxShardsParFirework; ++i)
+      this.shards.push(new Shard(this));
+  }
+  Firework.prototype.reset = function () {
+    var angle = -Math.PI / 2 + (Math.random() - 0.5) * opts.fireworkAngleSpan,
+      vel = opts.baseFireworkVel + opts.addedFireworkVel * Math.random();
 
-function Firework() {
-  this.reset();
-  this.shards = [];
-  for (var i = 0; i < maxShardsParFirework; ++i)
-    this.shards.push(new Shard(this));
-}
-Firework.prototype.reset = function () {
-  var angle = -Math.PI / 2 + (Math.random() - 0.5) * opts.fireworkAngleSpan,
-    vel = opts.baseFireworkVel + opts.addedFireworkVel * Math.random();
+    this.mode = 0;
+    this.vx = vel * Math.cos(angle);
+    this.vy = vel * Math.sin(angle);
 
-  this.mode = 0;
-  this.vx = vel * Math.cos(angle);
-  this.vy = vel * Math.sin(angle);
+    this.x = Math.random() * w;
+    this.y = h;
 
-  this.x = Math.random() * w;
-  this.y = h;
+    this.hue = tick * opts.initHueMultiplier;
+  };
+  Firework.prototype.step = function () {
+    if (this.mode === 0) {
+      var ph = this.hue,
+        px = this.x,
+        py = this.y;
 
-  this.hue = tick * opts.initHueMultiplier;
-};
-Firework.prototype.step = function () {
-  if (this.mode === 0) {
-    var ph = this.hue,
-      px = this.x,
+      this.hue += opts.runHueAdder;
+
+      this.x += this.vx *= opts.xFriction;
+      this.y += this.vy += opts.gravity;
+
+      webgl.data.push(
+        px,
+        py,
+        ph,
+        opts.projectileAlpha * 0.2,
+        this.x,
+        this.y,
+        this.hue,
+        opts.projectileAlpha * 0.2
+      );
+
+      if (this.vy >= opts.lowVelBoundary) {
+        this.mode = 1;
+
+        this.shardAmount =
+          (opts.baseShardsParFirework +
+            opts.addedShardsParFirework * Math.random()) |
+          0;
+
+        var baseAngle = Math.random() * tau,
+          x = Math.cos(baseAngle),
+          y = Math.sin(baseAngle),
+          sin = sins[this.shardAmount],
+          cos = coss[this.shardAmount];
+
+        for (var i = 0; i < this.shardAmount; ++i) {
+          var vel = opts.baseShardVel + opts.addedShardVel * Math.random();
+          this.shards[i].reset(x * vel, y * vel);
+          var X = x;
+          x = x * cos - y * sin;
+          y = y * cos + X * sin;
+        }
+      }
+    } else if (this.mode === 1) {
+      this.ph = this.hue;
+      this.hue += opts.runHueAdder;
+
+      var allDead = true;
+      for (var i = 0; i < this.shardAmount; ++i) {
+        var shard = this.shards[i];
+        if (!shard.dead) {
+          shard.step();
+          allDead = false;
+        }
+      }
+
+      if (allDead) this.reset();
+    }
+  };
+  function Shard(parent) {
+    this.parent = parent;
+  }
+  Shard.prototype.reset = function (vx, vy) {
+    this.x = this.parent.x;
+    this.y = this.parent.y;
+    this.vx = this.parent.vx * opts.shardFireworkVelMultiplier + vx;
+    this.vy = this.parent.vy * opts.shardFireworkVelMultiplier + vy;
+    this.starty = this.y;
+    this.dead = false;
+    this.tick = 1;
+  };
+  Shard.prototype.step = function () {
+    this.tick += 0.05;
+
+    var px = this.x,
       py = this.y;
-
-    this.hue += opts.runHueAdder;
 
     this.x += this.vx *= opts.xFriction;
     this.y += this.vy += opts.gravity;
 
+    var proportion = 1 - (this.y - this.starty) / (h - this.starty);
+
     webgl.data.push(
       px,
       py,
-      ph,
-      opts.projectileAlpha * 0.2,
+      this.parent.ph,
+      opts.projectileAlpha / this.tick,
       this.x,
       this.y,
-      this.hue,
-      opts.projectileAlpha * 0.2
+      this.parent.hue,
+      opts.projectileAlpha / this.tick
     );
 
-    if (this.vy >= opts.lowVelBoundary) {
-      this.mode = 1;
+    if (this.y > h) this.dead = true;
+  };
 
-      this.shardAmount =
-        (opts.baseShardsParFirework +
-          opts.addedShardsParFirework * Math.random()) |
-        0;
+  function anim() {
+    window.requestAnimationFrame(anim);
 
-      var baseAngle = Math.random() * tau,
-        x = Math.cos(baseAngle),
-        y = Math.sin(baseAngle),
-        sin = sins[this.shardAmount],
-        cos = coss[this.shardAmount];
+    webgl.clear();
 
-      for (var i = 0; i < this.shardAmount; ++i) {
-        var vel = opts.baseShardVel + opts.addedShardVel * Math.random();
-        this.shards[i].reset(x * vel, y * vel);
-        var X = x;
-        x = x * cos - y * sin;
-        y = y * cos + X * sin;
-      }
-    }
-  } else if (this.mode === 1) {
-    this.ph = this.hue;
-    this.hue += opts.runHueAdder;
+    ++tick;
 
-    var allDead = true;
-    for (var i = 0; i < this.shardAmount; ++i) {
-      var shard = this.shards[i];
-      if (!shard.dead) {
-        shard.step();
-        allDead = false;
-      }
-    }
+    if (fireworks.length < opts.fireworks) fireworks.push(new Firework());
 
-    if (allDead) this.reset();
+    fireworks.map(function (firework) {
+      firework.step();
+    });
+
+    webgl.draw(gl.LINES);
   }
-};
-function Shard(parent) {
-  this.parent = parent;
-}
-Shard.prototype.reset = function (vx, vy) {
-  this.x = this.parent.x;
-  this.y = this.parent.y;
-  this.vx = this.parent.vx * opts.shardFireworkVelMultiplier + vx;
-  this.vy = this.parent.vy * opts.shardFireworkVelMultiplier + vy;
-  this.starty = this.y;
-  this.dead = false;
-  this.tick = 1;
-};
-Shard.prototype.step = function () {
-  this.tick += 0.05;
+  anim();
 
-  var px = this.x,
-    py = this.y;
+  window.addEventListener("resize", function () {
+    w = cvs.width = cvs.parentNode.clientWidth;
+    h = cvs.height = cvs.parentNode.clientHeight;
 
-  this.x += this.vx *= opts.xFriction;
-  this.y += this.vy += opts.gravity;
-
-  var proportion = 1 - (this.y - this.starty) / (h - this.starty);
-
-  webgl.data.push(
-    px,
-    py,
-    this.parent.ph,
-    opts.projectileAlpha / this.tick,
-    this.x,
-    this.y,
-    this.parent.hue,
-    opts.projectileAlpha / this.tick
-  );
-
-  if (this.y > h) this.dead = true;
-};
-
-function anim() {
-  window.requestAnimationFrame(anim);
-
-  webgl.clear();
-
-  ++tick;
-
-  if (fireworks.length < opts.fireworks) fireworks.push(new Firework());
-
-  fireworks.map(function (firework) {
-    firework.step();
+    gl.viewport(0, 0, w, h);
+    gl.uniform2f(webgl.resUniformLoc, w, h);
   });
 
-  webgl.draw(gl.LINES);
+  window.addEventListener("click", function (e) {
+    var firework = new Firework();
+    firework.x = e.clientX;
+    firework.y = e.clientY;
+    firework.vx = 0;
+    firework.vy = 0;
+    fireworks.push(firework);
+  });
 }
-anim();
-
-window.addEventListener("resize", function () {
-  w = cf.width = cf.parentNode.clientWidth;
-  h = cf.height = cf.parentNode.clientHeight;
-
-  gl.viewport(0, 0, w, h);
-  gl.uniform2f(webgl.resUniformLoc, w, h);
-});
-
-window.addEventListener("click", function (e) {
-  var firework = new Firework();
-  firework.x = e.clientX;
-  firework.y = e.clientY;
-  firework.vx = 0;
-  firework.vy = 0;
-  fireworks.push(firework);
-});
+initWebgl();

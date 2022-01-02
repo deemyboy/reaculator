@@ -2,33 +2,44 @@ var renderer, scene, camera, light, tiles;
 
 var gravity = 0.3;
 
-var ww = (cvs.width = cvs.parentNode.clientWidth),
-  wh = (cvs.height = cvs.parentNode.clientHeight);
+function reset(canvas) {
+  var newCanvas = canvas.cloneNode(false);
+  canvas.parentNode.replaceChild(newCanvas, canvas);
+  return newCanvas;
+}
 
-const animTwist = function () {
-  renderer = new THREE.WebGLRenderer({
-    canvas: document.getElementById("cvs"),
-    antialias: true,
-  });
-  renderer.setSize(ww, wh);
+function initWebgl() {
+  var cvs = document.getElementById("cvs");
+  cvs = reset(cvs);
 
-  scene = new THREE.Scene();
+  var ww = (cvs.width = cvs.parentNode.clientWidth),
+    wh = (cvs.height = cvs.parentNode.clientHeight);
 
-  camera = new THREE.PerspectiveCamera(50, ww / wh, 1, 10000);
-  camera.position.set(0, 0, 190);
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
-  scene.add(camera);
+  const anim = function () {
+    renderer = new THREE.WebGLRenderer({
+      canvas: document.getElementById("cvs"),
+      antialias: true,
+    });
+    renderer.setSize(ww, wh);
 
-  light = new THREE.PointLight(0xffffff, 1.6, 1500);
-  light.position.set(0, 0, 150);
-  scene.add(light);
-  createTiles();
+    scene = new THREE.Scene();
 
-  render();
+    camera = new THREE.PerspectiveCamera(50, ww / wh, 1, 10000);
+    camera.position.set(0, 0, 190);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    scene.add(camera);
 
-  window.addEventListener("click", switchColor);
-};
+    light = new THREE.PointLight(0xffffff, 1.6, 1500);
+    light.position.set(0, 0, 150);
+    scene.add(light);
+    createTiles();
 
+    render();
+
+    window.addEventListener("click", switchColor);
+  };
+  anim();
+}
 var switchColor = function () {
   picked++;
   if (picked == 5) {
@@ -148,7 +159,7 @@ var render = function (a) {
   renderer.render(scene, camera);
 };
 
-animTwist();
+initWebgl();
 
 window.addEventListener("resize", function () {
   ww = cvs.width = cvs.parentNode.clientWidth;
@@ -156,5 +167,3 @@ window.addEventListener("resize", function () {
 
   renderer.setSize(ww, wh);
 });
-
-// export { animTwist };

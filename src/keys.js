@@ -1,3 +1,10 @@
+// allowed key codes for keyPress event handler
+export const allowedKeys = [
+  13, 16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83, 88,
+  89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110, 111,
+  187, 189, 190, 191,
+];
+
 export const numberKeys = [
   {
     id: 1,
@@ -196,56 +203,53 @@ export const utilityKeys = [
     type: "func",
   },
 ];
-
-// allowed key codes for keyPress event handler
-export const allowedKeys = [
-  13, 16, 17, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82, 83, 88,
-  89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109, 110, 111,
-  187, 189, 190, 191,
-];
-
 export const themeKeys = [
   {
-    id: "Fire",
-    value: "Fire",
+    id: "fire",
+    value: "fire",
     specialClass: "btn-fire fire",
-    title: "Fire",
+    uniChar: "\uD83D\uDD25",
+    title: "fire",
     keycode: 55,
     kbCode: "Digit7",
     type: "thm",
   },
   {
-    id: "Midnight",
-    value: "Midnight",
+    id: "midnight",
+    value: "midnight",
     specialClass: "btn-midnight midnight",
-    title: "Midnight",
+    uniChar: "\uD83C\uDF03",
+    title: "midnight",
     keycode: 55,
     kbCode: "Digit7",
     type: "thm",
   },
   {
-    id: "Ocean",
-    value: "Ocean",
+    id: "ocean",
+    value: "ocean",
     specialClass: "btn-ocean ocean",
-    title: "Ocean",
+    uniChar: "\uD83C\uDF0A",
+    title: "ocean",
     keycode: 55,
     kbCode: "Digit7",
     type: "thm",
   },
   {
-    id: "Storm",
-    value: "Storm",
+    id: "storm",
+    value: "storm",
     specialClass: "btn-storm storm",
-    title: "Storm",
+    uniChar: "\u2614",
+    title: "storm",
     keycode: 55,
     kbCode: "Digit7",
     type: "thm",
   },
   {
-    id: "Jungle",
-    value: "Jungle",
+    id: "jungle",
+    value: "jungle",
     specialClass: "btn-jungle jungle",
-    title: "Jungle",
+    uniChar: "\uD83C\uDF33",
+    title: "jungle",
     keycode: 55,
     kbCode: "Digit7",
     type: "thm",
@@ -256,7 +260,7 @@ export const themeTypeKeys = [
   {
     id: "picture",
     value: "picture",
-    specialClass: "btn-theme-type",
+    specialClass: "",
     uniChar: "\uD83D\uDCF7",
     title: "choose picture theme",
     keycode: 65,
@@ -266,7 +270,7 @@ export const themeTypeKeys = [
   {
     id: "color",
     value: "color",
-    specialClass: "btn-theme-type",
+    specialClass: "",
     uniChar: "\uD83C\uDFA8",
     title: "choose color theme",
     keycode: 65,
@@ -276,7 +280,7 @@ export const themeTypeKeys = [
   {
     id: "anim",
     value: "anim",
-    specialClass: "btn-theme-type move-it",
+    specialClass: "move-it",
     uniChar: "\u221E",
     uniChar: "\uD83D\uDE80",
     title: "choose anim theme",
@@ -290,32 +294,32 @@ export const imageKeys = [
   {
     id: "trees",
     value: "trees",
-    specialClass: "btn-image-choice",
+    specialClass: "btn-img-choose",
     uniChar: "\uD83D\uDCF7",
     title: "choose picture image",
     keycode: 65,
     kbCode: "KeyA",
-    type: "thype",
+    type: "imgChs",
   },
   {
     id: "rays",
     value: "rays",
-    specialClass: "btn-image-choice",
+    specialClass: "btn-img-choose",
     uniChar: "\uD83C\uDFA8",
     title: "choose color image",
     keycode: 65,
     kbCode: "KeyA",
-    type: "thype",
+    type: "imgChs",
   },
   {
     id: "leaves",
     value: "leaves",
-    specialClass: "btn-image-choice",
+    specialClass: "btn-img-choose",
     uniChar: "\uD83C\uDFA8",
     title: "choose color image",
     keycode: 65,
     kbCode: "KeyA",
-    type: "thype",
+    type: "imgChs",
   },
 ];
 
@@ -323,31 +327,51 @@ export const animKeys = [
   {
     id: "slither",
     value: "slither",
-    specialClass: "btn-anim-choice",
-    uniChar: "\u2307",
+    specialClass: "btn-anim-choose",
+    // uniChar: "\uD83D\uDD00",
+    uniChar: "\u219D",
     title: "choose anim",
     keycode: null,
     kbCode: "",
-    type: "anim",
+    type: "animChs",
   },
   {
     id: "fireworks",
     value: "fireworks",
-    specialClass: "btn-anim-choice",
-    uniChar: "\uD83C\uDF86",
+    specialClass: "btn-anim-choose",
+    // uniChar: "\uD83C\uDF86",// firework
+    // uniChar: "\uD83C\uDF87",// sparkler
+    uniChar: "\uD83D\uDCA5", // explosion
     title: "choose anim",
     keycode: null,
     kbCode: "",
-    type: "anim",
+    type: "animChs",
   },
   {
     id: "twist",
     value: "twist",
-    specialClass: "btn-anim-choice",
-    uniChar: "\uD83D\uDD00",
+    specialClass: "btn-anim-choose",
+    // uniChar: "\uD83D\uDD00",// twisted-right
+    // uniChar: "\uD83D\uDD01",// Clockwise Rightwards and Leftwards Open Circle Arrows
+    // uniChar: "\uD83C\uDF0C" ,// milkyway symbol
+    uniChar: "\uD83D\uDCAB", // dizzy symbol
     title: "choose anim",
     keycode: null,
     kbCode: "",
-    type: "anim",
+    type: "animChs",
+  },
+  {
+    id: "hexagons",
+    value: "hexagons",
+    specialClass: "btn-anim-choose",
+    uniChar: "\u2B21",
+    title: "choose anim",
+    keycode: null,
+    kbCode: "",
+    type: "animChs",
   },
 ];
+
+// 0xD83C 0xDFAE ps4 controller
+// 0xD83D 0xDCA3 bomb
+// 0xD83D 0xDD2B pistol

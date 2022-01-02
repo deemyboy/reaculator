@@ -250,12 +250,31 @@ $themes: (
   @return map-get($theme-map, $key);
 }
 
-//////////////////// sidebar
-// colors
 @include themify($themes) {
+  > div.row:first-of-type {
+    border-color: themed(borderColor);
+    background-color: themed(backgroundColor);
+  }
+  .calculator {
+    > .title {
+      color: themed(calculatorTitleTextColor);
+    }
+    > div:nth-of-type(2) {
+      .col {
+        border-color: themed(borderColor);
+      }
+    }
+    .display {
+      background-color: #abbaa7;
+      color: #2f2f2f;
+      border-color:#6d6d6d;
+    }
+  }
+}
+@include themify($themes) { 
+
   .sidebar {
-    // background: #fff;
-    border-color: themed(sidebarBorderColor);
+    // border-color: themed(sidebarBorderColor);
     > .title {
       color: themed(sidebarTitleTextColor);
     }
@@ -266,22 +285,20 @@ $themes: (
         background-color: #c4faff;
         background-color: transparentize(themed(calculatorTitleTextColor), 0.3);
       }
-    }
-  }
 
-  &#{$anim} {
-    .sidebar {
-      background-color: transparentize(
-        darken(themed(sidebarBackground), 20%),
-        0.4
-      );
-      // background-color: themed(backgroundColor);
     }
   }
 }
 
 @include themify($themes) {
   // colors
+  &#{$picture} {
+    .calculator {
+      background-image: themed(backgroundUrl);
+      > .title {
+      }
+    }
+  }
   &#{$color},
   &#{$picture} {
     .settings {
@@ -292,64 +309,70 @@ $themes: (
     }
     .calculator,
     .sidebar {
-      background-color: themed(backgroundColor);
-      border-color: themed(borderColor);
+      // background-color: themed(backgroundColor);
+      // border-color: themed(borderColor);
       // border-color: themed(menuIconBorderColor);
       // &#{$picture} {
-      //   background-image: themed(backgroundUrl);
-      > .title {
+        //   background-image: themed(backgroundUrl);
+        > .title {
         color: themed(calculatorTitleTextColor);
       }
-
-      .keyboard {
-        background-color: transparentize(
-          lighten(themed(keyboardBackground), 0%),
-          0.35
-        );
-        border-color: themed(keyboardBorderColor);
+      
+      // .keyboard {
+        //   background-color: transparentize(
+          //     lighten(themed(keyboardBackground), 0%),
+          //     0.35
+          //   );
+          //   border-color: themed(keyboardBorderColor);
+          // }
+        }
       }
     }
-  }
-  &#{$anim} {
+    
+    // colors
+    @include themify($themes) {
+      &#{$anim} {
+        > div.row:first-of-type {
+          border-color: themed(borderColor);
+          background-color: #000;
+        }
+        .calculator {
+          > div:nth-of-type(2) {
+        .col {
+          border-color: #6d6d6d;
+        }
+      }
+      .display {
+        background-color: #abbaa74d;
+        color: #999999;
+        border-color:#6d6d6d;
+      }
+    }
     .settings {
       .fa.fa-cog {
         // color: themed(sidebarTitleTextColor);
         color: darken(themed(calculatorTitleTextColor), 5%);
       }
     }
-    .keyboard {
-      background-color: transparentize(
-        lighten(themed(keyboardBackground), 0%),
-        0.75
-      );
-      border-color: themed(keyboardBorderColor);
-    }
-  }
-
-  &#{$picture} {
-    .calculator {
-      background-image: themed(backgroundUrl);
-      > .title {
-      }
+    .sidebar {
+      background-color: #000;
+      // .keyboard {
+      //   background-color: transparentize(
+      //     lighten(themed(keyboardBackground), 0%),
+      //     1
+      //   );
+      // }
     }
   }
 }
 
 // colors
 @include themify($themes) {
-  &#{$anim} {
+  &#{$open} {
+    .calculator {
+    }
     .sidebar {
-      background-color: transparentize(
-        lighten(themed(sidebarBackground), 0%),
-        0.3
-      );
-      background-color: #000;
-      .keyboard {
-        background-color: transparentize(
-          lighten(themed(keyboardBackground), 0%),
-          1
-        );
-      }
+      // border-left-color: transparent;
     }
   }
 }
