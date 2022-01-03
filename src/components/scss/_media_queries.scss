@@ -440,6 +440,12 @@ $breakpoints: (
       }
     }
     .sidebar {
+      div.keyboard {
+        .btn {
+          height: 3rem;
+          width: 3rem;
+        }
+      }
     }
   }
 }
@@ -477,24 +483,7 @@ $breakpoints: (
         }
       }
       div.calculator {
-        transform: matrix3d(
-          4,
-          2,
-          0,
-          0.0092,
-          0,
-          3.03,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          3
-        );
+        max-width: 80%;
         > .title {
         }
         .keyboard {
@@ -514,7 +503,7 @@ $breakpoints: (
         &:hover:after {
         }
       }
-       div.keyboard {
+      div.keyboard {
         .btn {
           height: 2.5rem;
           width: 2.5rem;
