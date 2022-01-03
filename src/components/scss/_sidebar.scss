@@ -3,11 +3,11 @@
 #{$outer-wrapper} {
   .sidebar {
     @include transition(all 0.25s);
-    border-radius: 0 $s-05r $s-05r 0;
+    // border-radius: 0 $s-05r $s-05r 0;
     z-index: 0;
     position: absolute;
     height: 100%;
-    width: 50%;
+    width: 40%;
     right: 0;
     transform: scaleX(0);
     transform-origin: right;
@@ -118,7 +118,7 @@
         $item-count: 3,
         $circle-width: 100%,
         $circle-height: 100%,
-        $circle-radius: 150%,
+        $circle-radius: 140%,
         $item-size: 3.5rem
       );
 
@@ -133,7 +133,7 @@
         $item-count: 5,
         $circle-width: 100%,
         $circle-height: 100%,
-        $circle-radius: 150%,
+        $circle-radius: 140%,
         $item-size: 3.5rem
       );
 
@@ -146,10 +146,10 @@
     div#circle2 {
       ~ .keyboard {
         @include on-circle(
-          $item-count: 9,
+          $item-count: 8,
           $circle-width: 100%,
           $circle-height: 100%,
-          $circle-radius: 150%,
+          $circle-radius: 140%,
           $item-size: 3.5rem
         );
       }

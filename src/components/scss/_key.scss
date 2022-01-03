@@ -38,30 +38,55 @@
       // height: 30px;
       // margin: 10px 0;
     }
+    // darken($fire_bg, 15%);
+    // darken($midnight_bg, 15%);
+    // darken($ocean_bg, 15%);
+    // darken($storm_bg, 15%);
+    // darken($jungle_bg, 15%);
     .btn-fire {
       background-color: $fire_bg;
       color: $fire_color;
       border-color: $fire_border;
+      &:hover,
+      &:focus {
+        background-color: darken($fire_bg, 10%);
+      }
     }
     .btn-midnight {
       background-color: $midnight_bg;
       color: $midnight_color;
       border-color: $midnight_border;
+      &:hover,
+      &:focus {
+        background-color: lighten($midnight_bg, 10%);
+      }
     }
     .btn-ocean {
       background-color: $ocean_bg;
       color: $ocean_color;
       border-color: $ocean_border;
+      &:hover,
+      &:focus {
+        background-color: darken($ocean_bg, 10%);
+      }
     }
     .btn-storm {
       background-color: $storm_bg;
       color: $storm_color;
       border-color: $storm_border;
+      &:hover,
+      &:focus {
+        background-color: darken($storm_bg, 10%);
+      }
     }
     .btn-jungle {
       background-color: $jungle_bg;
       color: $jungle_color;
       border-color: $jungle_border;
+      &:hover,
+      &:focus {
+        background-color: darken($jungle_bg, 10%);
+      }
     }
   }
   .keyboard {
@@ -239,6 +264,11 @@
     .keyboard {
       .btn {
         border: 2px solid themed(keyboardBorderColor);
+      }
+      &.keyboard-theme-type {
+        .btn {
+          background-color: darken(themed(primaryButtonBgColor), 5%);
+        }
       }
     }
   }
