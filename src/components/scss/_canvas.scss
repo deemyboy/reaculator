@@ -5,12 +5,12 @@ canvas {
   background-color: black;
   z-index: -1;
   border-radius: $s-05r;
+  border: 3px solid;
 }
 
 #calculator > .container.anim.open .calculator {
   background: none$i;
   // border-width: 0$i;
   canvas {
-    border-radius: $s-05r 0 0 $s-05r;
   }
 }
