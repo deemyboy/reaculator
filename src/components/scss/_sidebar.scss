@@ -146,7 +146,7 @@
     div#circle2 {
       ~ .keyboard {
         @include on-circle(
-          $item-count: 9,
+          $item-count: 8,
           $circle-width: 100%,
           $circle-height: 100%,
           $circle-radius: 150%,

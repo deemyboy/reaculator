@@ -360,16 +360,6 @@ export const animKeys = [
     kbCode: "",
     type: "animChs",
   },
-  {
-    id: "hexagons",
-    value: "hexagons",
-    specialClass: "btn-anim-choose",
-    uniChar: "\u2B21",
-    title: "choose anim",
-    keycode: null,
-    kbCode: "",
-    type: "animChs",
-  },
 ];
 
 // 0xD83C 0xDFAE ps4 controller
