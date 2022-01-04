@@ -438,8 +438,8 @@ $breakpoints: (
       .keyboard {
         .btn {
           font-size: 2rem;
-          height: 60px;
-          width: 60px;
+          height: 4rem;
+          width: 4rem;
         }
       }
     }
@@ -496,7 +496,7 @@ $breakpoints: (
     } //end open
 
     .sidebar {
-      max-width: 30%;
+      // max-width: 30%;
       $circle-diam-sm: 1.5rem;
       div.circle {
         z-index: 2;
@@ -595,14 +595,27 @@ $breakpoints: (
 
 @include media-breakpoint-down(xs) {
   #{$outer-wrapper} {
-    // max-width: 540px;
-    > div.row:first-of-type {
-      > div {
-      }
-      > div:nth-of-type(1) {
-      }
-      > div:nth-of-type(2) {
-      }
+    > div.row.flex-nowrap:first-of-type {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      > div.calculator {
+        > div:nth-of-type(1) {
+          .col {
+            //// 320px and 480px
+            margin: 40px 3px  100px;
+          }
+        }
+        > div:nth-of-type(2) {
+          .col {
+            padding: 40px 10px;
+            //// 320px
+            padding: inherit;
+          }
+        }
+      } 
     }
     p.settings {
       .fa.fa-cog {
@@ -615,18 +628,27 @@ $breakpoints: (
       .display {
         .result,
         .result_err {
-          font-size: 2rem;
+          // font-size: 2rem;
         }
         .calculation {
-          font-size: 1.3rem;
-          min-height: 2rem;
+          // font-size: 1.3rem;
+          // min-height: 2rem;
         }
       }
       .keyboard {
         .btn {
-          font-size: 1.3rem;
-          height: 2rem;
-          width: 2rem;
+          font-size: 1.4rem;
+          height: 3.5rem;
+          width: 3.5rem;
+          margin: 20px 4px;
+          padding: 0.25rem;
+
+          // 
+          //// 320px
+          font-size: 1.4rem;
+          height: 2.3rem;
+          width: 2.3rem;
+          margin: 10px 5px;
           padding: 0;
         }
       }
@@ -647,11 +669,11 @@ $breakpoints: (
         .keyboard {
           padding: 2px;
           .btn {
-            margin: 2px;
-            font-size: 1rem;
-            height: 1.2rem;
-            width: 1.2rem;
-            padding: 0;
+            // margin: 2px;
+            // font-size: 1rem;
+            // height: 1.2rem;
+            // width: 1.2rem;
+            // padding: 0;
           }
         }
       }
