@@ -1,14 +1,26 @@
 .calculator {
-
   .keyboard {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
   }
-  > div:nth-of-type(2) {
-    .btn {
-      height: 80px;
-      width: 80px;
-    }
+}
+
+.sidebar {
+  .keyboard {
+    z-index: -1;
+    height: 100%;
+    border: 0;
+    @include transition(all 0.25s ease);
+    position: relative;
+    padding: 0;
+    margin: 0;
+    transform: rotate(0deg);
+  }
+}
+
+.sidebar .circle.showing {
+  ~ .keyboard {
+    z-index: 1;
   }
 }
