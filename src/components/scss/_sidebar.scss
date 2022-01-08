@@ -13,30 +13,14 @@
     transform-origin: right;
 
     .sidebar-keyboard-wrapper {
+      margin-right: calc(var(--bs-gutter-x) * -0.5);
+      margin-left: calc(var(--bs-gutter-x) * -0.5);
       position: relative;
       > .title {
         display: none;
         text-align: center;
         font-size: 1.1rem;
         padding: 10px 0;
-      }
-    }
-    .keyboard {
-      height: 100%;
-      border: 0;
-      @include transition(all 0.25s ease);
-      position: relative;
-      padding: 0;
-      margin: 0;
-      transform: rotate(0deg);
-      .btn {
-        display: block;
-        filter: grayscale(70%);
-        @include transition(all 0.25s);
-        &:hover,
-        &:active {
-          filter: grayscale(0);
-        }
       }
     }
   }
@@ -50,8 +34,8 @@
       transform-origin: center;
       height: $circle-diam;
       width: $circle-diam;
-      left: calc(50% - math.div($circle-diam,2));
-      top: calc(50% - math.div($circle-diam,2));
+      left: calc(50% - math.div($circle-diam, 2));
+      top: calc(50% - math.div($circle-diam, 2));
       @include transition(all 0.25s);
       &:after {
         content: "";
@@ -63,8 +47,8 @@
         height: $circle-diam * 1.333;
         width: $circle-diam * 1.333;
         position: absolute;
-        left: calc(50% - math.div($circle-diam * 1.333,2));
-        top: calc(50% - math.div($circle-diam * 1.333,2));
+        left: calc(50% - math.div($circle-diam * 1.333, 2));
+        top: calc(50% - math.div($circle-diam * 1.333, 2));
         @include transition(all 0.25s);
       }
       &:hover {
@@ -118,7 +102,7 @@
         $item-count: 3,
         $circle-width: 100%,
         $circle-height: 100%,
-        $circle-radius: 140%,
+        $circle-radius: 150%,
         $item-size: 3.5rem
       );
 
@@ -133,7 +117,7 @@
         $item-count: 5,
         $circle-width: 100%,
         $circle-height: 100%,
-        $circle-radius: 140%,
+        $circle-radius: 150%,
         $item-size: 3.5rem
       );
 
@@ -149,7 +133,7 @@
           $item-count: 8,
           $circle-width: 100%,
           $circle-height: 100%,
-          $circle-radius: 140%,
+          $circle-radius: 150%,
           $item-size: 3.5rem
         );
       }

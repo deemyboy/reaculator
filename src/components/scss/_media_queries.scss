@@ -1,14 +1,15 @@
+@use "sass:math";
 // A map of breakpoints.
-$breakpoints: (
-  xs: 576px,
-  sm: 767px,
-  md: 992px,
-  lg: 1200px,
-);
+// $breakpoints: (
+//   xs: 576px,
+//   sm: 767px,
+//   md: 992px,
+//   lg: 1200px,
+// );
 
 @mixin respond-above($bp) {
-  @if map-has-key($breakpoints, $bp) {
-    $bp-val: map-get($breakpoints, $bp);
+  @if map-has-key($grid-breakpoints, $bp) {
+    $bp-val: map-get($grid-breakpoints, $bp);
 
     @media (min-width: $bp-val) {
       @content;
@@ -25,8 +26,8 @@ $breakpoints: (
 }
 */
 @mixin respond-below($bp) {
-  @if map-has-key($breakpoints, $bp) {
-    $bp-val: map-get($breakpoints, $bp);
+  @if map-has-key($grid-breakpoints, $bp) {
+    $bp-val: map-get($grid-breakpoints, $bp);
 
     @media (max-width: $bp-val) {
       @content;
@@ -39,10 +40,12 @@ $breakpoints: (
 
 @mixin respond-between($lower, $upper) {
   // If both the lower and upper breakpoints exist in the map.
-  @if map-has-key($breakpoints, $lower) and map-has-key($breakpoints, $upper) {
+  @if map-has-key($grid-breakpoints, $lower) and
+    map-has-key($grid-breakpoints, $upper)
+  {
     // Get the lower and upper breakpoints.
-    $lower-breakpoint: map-get($breakpoints, $lower);
-    $upper-breakpoint: map-get($breakpoints, $upper);
+    $lower-breakpoint: map-get($grid-breakpoints, $lower);
+    $upper-breakpoint: map-get($grid-breakpoints, $upper);
 
     // Write the media query.
     @media (min-width: $lower-breakpoint) and (max-width: ($upper-breakpoint - 1)) {
@@ -52,13 +55,13 @@ $breakpoints: (
     // If one or both of the breakpoints don't exist.
   } @else {
     // If lower breakpoint is invalid.
-    @if (map-has-key($breakpoints, $lower) == false) {
+    @if (map-has-key($grid-breakpoints, $lower) == false) {
       // Log a warning.
       @warn 'Your lower breakpoint was invalid: #{$lower}.';
     }
 
     // If upper breakpoint is invalid.
-    @if (map-has-key($breakpoints, $upper) == false) {
+    @if (map-has-key($grid-breakpoints, $upper) == false) {
       // Log a warning.
       @warn 'Your upper breakpoint was invalid: #{$upper}.';
     }
@@ -413,8 +416,11 @@ $breakpoints: (
 }
 
 @include media-breakpoint-down(md) {
+  canvas {
+    // display: none;
+  }
+
   #{$outer-wrapper} {
-    max-width: 540px;
     > div.row:first-of-type {
       > div {
       }
@@ -425,7 +431,6 @@ $breakpoints: (
     }
     p.settings {
       .fa.fa-cog {
-        font-size: 1.5rem;
       }
     }
     .calculator {
@@ -433,17 +438,12 @@ $breakpoints: (
       }
       .keyboard {
         .btn {
-          font-size: 2rem;
-          height: 60px;
-          width: 60px;
         }
       }
     }
     .sidebar {
       div.keyboard {
         .btn {
-          height: 3rem;
-          width: 3rem;
         }
       }
     }
@@ -465,10 +465,7 @@ $breakpoints: (
       }
       .keyboard {
         .btn {
-          margin: 5px;
-          height: 40px;
-          width: 40px;
-          font-size: 1.3rem;
+          font-size: 2rem;
         }
       }
     }
@@ -483,7 +480,24 @@ $breakpoints: (
         }
       }
       div.calculator {
-        max-width: 80%;
+        transform: matrix3d(
+          1,
+          0,
+          0,
+          0.0015,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        );
         > .title {
         }
         .keyboard {
@@ -494,24 +508,36 @@ $breakpoints: (
     } //end open
 
     .sidebar {
+      $circle-diam-sm: 2rem;
       div.circle {
+        z-index: 2;
+        position: absolute;
+        border-radius: 2rem;
+        transform-origin: center;
+        height: $circle-diam-sm;
+        width: $circle-diam-sm;
+        left: calc(50% - math.div($circle-diam-sm, 2));
+        top: calc(50% - math.div($circle-diam-sm, 2));
+        @include transition(all 0.25s);
+
         &:after {
-          content: "";
-          display: inline-block;
-          position: absolute;
+          height: $circle-diam-sm * 1.333;
+          width: $circle-diam-sm * 1.333;
+          left: calc(50% - math.div($circle-diam-sm * 1.333, 2));
+          top: calc(50% - math.div($circle-diam-sm * 1.333, 2));
+        }
+        &:hover {
+          transform: scale(1.33);
         }
         &:hover:after {
+          transform: scale(0.75);
         }
       }
       div.keyboard {
         .btn {
-          height: 2.5rem;
-          width: 2.5rem;
+          width: 4rem;
         }
       }
-    }
-
-    .sidebar {
     }
 
     div#circle1 {
@@ -520,8 +546,8 @@ $breakpoints: (
           $item-count: 3,
           $circle-width: 100%,
           $circle-height: 100%,
-          $circle-radius: 125%,
-          $item-size: 2.5rem
+          $circle-radius: 150%,
+          $item-size: 4rem
         );
 
         .btn {
@@ -535,8 +561,8 @@ $breakpoints: (
           $item-count: 5,
           $circle-width: 100%,
           $circle-height: 100%,
-          $circle-radius: 125%,
-          $item-size: 2.5rem
+          $circle-radius: 150%,
+          $item-size: 4rem
         );
         .btn {
         }
@@ -547,30 +573,400 @@ $breakpoints: (
       div#circle2 {
         ~ div.keyboard {
           @include on-circle(
-            $item-count: 9,
+            $item-count: 8,
             $circle-width: 100%,
             $circle-height: 100%,
-            $circle-radius: 125%,
-            $item-size: 2.5rem
+            $circle-radius: 150%,
+            $item-size: 4rem
           );
         }
       }
     }
   }
+}
 
-  ////////// landscape sm
-  @include orientation(landscape) {
-    #{$outer-wrapper} {
-      // closed
+////////// landscape sm
+@include orientation(landscape) {
+  #{$outer-wrapper} {
+    // closed
+    .calculator {
+    }
+    .sidebar {
+    }
+    &#{$open} {
+      //sizes here
       .calculator {
       }
       .sidebar {
       }
-      &#{$open} {
-        //sizes here
-        .calculator {
+    }
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  #{$outer-wrapper} {
+    > div.row.flex-nowrap:first-of-type {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      > div.calculator {
+        > div:nth-of-type(1) {
+          .col {
+            //// 320px and 480px
+            margin: 40px 3px 100px;
+          }
         }
-        .sidebar {
+        > div:nth-of-type(2) {
+          .col {
+            padding: 40px 10px;
+            //// 320px
+            padding: inherit;
+          }
+        }
+      }
+    }
+    p.settings {
+      .fa.fa-cog {
+        font-size: 1.5rem;
+      }
+    }
+    .calculator {
+      > .title {
+      }
+      .display {
+        .result,
+        .result_err {
+        }
+        .calculation {
+        }
+      }
+      .keyboard {
+        padding: 2px;
+        .btn {
+          font-size: 1.5rem;
+        }
+      }
+    }
+    div.sidebar {
+      width: 50%;
+      div.keyboard {
+        .btn {
+          // font-size: 1.2rem;
+          // width: 30%;
+        }
+      }
+    }
+
+    &#{$open} {
+      div.calculator {
+        transform: matrix3d(1, 0, 0, 0.002, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        canvas {
+        }
+        .keyboard {
+          .btn {
+          }
+        }
+      }
+      .settings {
+      }
+      .sidebar {
+        div.keyboard {
+          .btn {
+          }
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(xxs) {
+  #{$outer-wrapper} {
+    > div.row.flex-nowrap:first-of-type {
+      > div.calculator {
+        > div:nth-of-type(1) {
+          .col {
+            //// 320px and 480px
+          }
+        }
+        > div:nth-of-type(2) {
+          .col {
+          }
+        }
+      }
+    }
+    p.settings {
+      .fa.fa-cog {
+        font-size: 1.5rem;
+      }
+    }
+    &#{$open} {
+      div.calculator.col {
+        transform: matrix3d(
+          1,
+          0,
+          0,
+          0.0025,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        );
+      }
+    }
+    div.calculator.col {
+      > .title {
+      }
+      .display {
+        .result,
+        .result_err {
+        }
+        .calculation {
+        }
+      }
+      .keyboard {
+        .btn {
+        }
+      }
+    }
+    div.sidebar {
+      div.keyboard {
+        .btn {
+          width: 2.75rem;
+        }
+      }
+    }
+
+    &#{$open} {
+      div.calculator {
+        canvas {
+        }
+        .keyboard {
+          .btn {
+          }
+        }
+      }
+      .settings {
+      }
+      .sidebar {
+        div.keyboard {
+          .btn {
+          }
+        }
+      }
+    }
+
+    div#circle1 {
+      ~ div.keyboard {
+        @include on-circle(
+          $item-count: 3,
+          $circle-width: 100%,
+          $circle-height: 100%,
+          $circle-radius: 150%,
+          $item-size: 2.75rem
+        );
+
+        .btn {
+        }
+      }
+    }
+
+    div#circle2 {
+      ~ div.keyboard {
+        @include on-circle(
+          $item-count: 5,
+          $circle-width: 100%,
+          $circle-height: 100%,
+          $circle-radius: 150%,
+          $item-size: 2.75rem
+        );
+        .btn {
+        }
+      }
+    }
+
+    &#{$anim} {
+      div#circle2 {
+        ~ div.keyboard {
+          @include on-circle(
+            $item-count: 8,
+            $circle-width: 100%,
+            $circle-height: 100%,
+            $circle-radius: 150%,
+            $item-size: 2.75rem
+          );
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(xxxs) {
+  #{$outer-wrapper} {
+    > div.row.flex-nowrap:first-of-type {
+      > div.calculator {
+        > div:nth-of-type(1) {
+          .col {
+            //// 320px and 480px
+          }
+        }
+        > div:nth-of-type(2) {
+          .col {
+          }
+        }
+      }
+    }
+    p.settings {
+      right: 2%;
+      .fa.fa-cog {
+        font-size: 1.5rem;
+      }
+    }
+    // &#{$open} {
+    //   div.calculator.col {
+    //     transform: matrix3d(
+    //       1,
+    //       0,
+    //       0,
+    //       0.0025,
+    //       0,
+    //       1,
+    //       0,
+    //       0,
+    //       0,
+    //       0,
+    //       1,
+    //       0,
+    //       0,
+    //       0,
+    //       0,
+    //       1
+    //     );
+    //   }
+    // }
+    div.calculator.col {
+      > .title {
+      }
+      .display {
+        .result,
+        .result_err {
+          font-size: 2rem;
+        }
+        .calculation {
+          font-size: 1.5rem;
+          min-height: 2.25rem;
+        }
+      }
+      .keyboard {
+        .btn {
+          margin: 8px;
+        }
+      }
+    }
+
+    div.sidebar {
+      // max-width: 30%;
+      $circle-diam-xxs: 1rem;
+      div.circle {
+        z-index: 2;
+        position: absolute;
+        border-radius: 2rem;
+        transform-origin: center;
+        height: $circle-diam-xxs;
+        width: $circle-diam-xxs;
+        left: calc(50% - math.div($circle-diam-xxs, 2));
+        top: calc(50% - math.div($circle-diam-xxs, 2));
+        @include transition(all 0.25s);
+
+        &:after {
+          height: $circle-diam-xxs * 1.333;
+          width: $circle-diam-xxs * 1.333;
+          left: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
+          top: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
+        }
+        &:hover {
+          transform: scale(1.33);
+        }
+        &:hover:after {
+          transform: scale(0.75);
+        }
+      }
+      div.keyboard {
+        button.btn {
+          width: 2.25rem;
+          font-size: 100%;
+        }
+      }
+    }
+
+
+    &#{$open} {
+      div.calculator {
+        canvas {
+        }
+        .keyboard {
+          .btn {
+          }
+        }
+      }
+      .settings {
+      }
+      .sidebar {
+        div.keyboard {
+          .btn {
+          }
+        }
+      }
+    }
+
+    div#circle1 {
+      ~ div.keyboard {
+        @include on-circle(
+          $item-count: 3,
+          $circle-width: 100%,
+          $circle-height: 100%,
+          $circle-radius: 150%,
+          $item-size: 2.25rem
+        );
+
+        .btn {
+        }
+      }
+    }
+
+    div#circle2 {
+      ~ div.keyboard {
+        @include on-circle(
+          $item-count: 5,
+          $circle-width: 100%,
+          $circle-height: 100%,
+          $circle-radius: 150%,
+          $item-size: 2.25rem
+        );
+        .btn {
+        }
+      }
+    }
+
+    &#{$anim} {
+      div#circle2 {
+        ~ div.keyboard {
+          @include on-circle(
+            $item-count: 8,
+            $circle-width: 100%,
+            $circle-height: 100%,
+            $circle-radius: 150%,
+            $item-size: 2.25rem
+          );
         }
       }
     }
