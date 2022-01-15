@@ -1,19 +1,16 @@
 import React, { Component } from "react";
-import "./main.scss";
+import "./styles/main.scss";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
 import Cookies from "universal-cookie";
-import { themeKeys } from "./keys";
-import { numberKeys } from "./keys";
-import { functionKeys } from "./keys";
-import { utilityKeys } from "./keys";
-import { allowedKeys } from "./keys";
-import { themeTypeKeys } from "./keys";
-import { animKeys } from "./keys";
-// import { animSlither } from "../public/anim-slither";
-// import * as fire from "./anim-fireworks";
-// import { animTwist } from "./anim-twist";
+import { themeKeys } from "./js/keys";
+import { numberKeys } from "./js/keys";
+import { functionKeys } from "./js/keys";
+import { utilityKeys } from "./js/keys";
+import { allowedKeys } from "./js/keys";
+import { themeTypeKeys } from "./js/keys";
+import { animKeys } from "./js/keys";
 
 class Calculator extends Component {
   displayRef = React.createRef();
@@ -23,14 +20,13 @@ class Calculator extends Component {
 
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
-    this.state.theme = this.getCookie("currentTheme", "theme");
-    this.state.themeType = this.getCookie("currentThemeType", "themeType");
-    this.themeKeys = themeKeys;
+    this.state.animation = this.getCookie("currentAnim", "anim");
     this.numberKeys = numberKeys;
     this.functionKeys = functionKeys;
     this.utilityKeys = utilityKeys;
     this.allowedKeys = allowedKeys;
     this.themeTypeKeys = themeTypeKeys;
+    this.themeKeys = themeKeys;
     this.animKeys = animKeys;
   }
 
@@ -67,14 +63,7 @@ class Calculator extends Component {
     currentSidebarSecondKeyboard: "",
     defaultSidebarSecondKeyboard: "themesKeyboardData",
     animationData: {
-      animations: [
-        "slither",
-        "fireworks",
-        "hexagons",
-        "triangles",
-        "lines",
-        "speed",
-      ],
+      animations: ["slither", "fireworks", "twist"],
       currentSetting: "slither",
       onClick: (e) => this.onSelectAnim(e),
     },
@@ -235,10 +224,7 @@ class Calculator extends Component {
     const cookies = new Cookies();
 
     const path = cookieData.cookiePath;
-    cookies.set(cookieData.cookieLabel, cookieData.cookieValue, {
-      path,
-      expires,
-    });
+    cookies.set(cookieData.cookieLabel, cookieData.cookieValue, path, expires);
   };
 
   getCookie = (cookieLabel, cookieDefault) => {
@@ -266,13 +252,22 @@ class Calculator extends Component {
 
   handleKeyPress = (e) => {
     // console.log("207: handleKeyPress", e);
-    var local_button = document.getElementById(e.key);
+    var _code = e.keyCode;
+    var _key = this.utilityKeys
+      .concat(this.numberKeys, this.functionKeys)
+      .filter((k) => {
+        return k.keycode === e.keyCode;
+      })[0];
+
+    if (!e.keyCode === 17) {
+      var _button = document.getElementById(_key.id);
+    }
     if (!e.repeat) {
-      if (local_button === null || local_button === undefined) {
+      if (_button === null || _button === undefined) {
         // console.log("local_button equals null"); // do thing
-      } else if (local_button !== null || local_button !== undefined) {
-        local_button.focus(timeout);
-        var timeout = setTimeout(() => local_button.blur(), 200);
+      } else if (_button !== null || _button !== undefined) {
+        _button.focus(timeout);
+        var timeout = setTimeout(() => _button.blur(), 200);
       }
       if (this.allowedKeys.includes(e.keyCode)) {
         let keyData = {
@@ -306,13 +301,30 @@ class Calculator extends Component {
     const keyCode = inputData.keyCode;
     _userInput = userInput;
 
-    // handle shift & ctrl keys to stop Control and Shift being inserted into userInput
+    // exceptions
+    ////
     if (ctrlKey && key !== "") {
       return;
     }
+    // handle shift key pressed by itself
+    // prevent going forward
+    // shift key only allowed with "+" key
+    // shift key alone keyCode === 16
+    if (shiftKey && keyCode === 16) {
+      return;
+    }
+    
+    // handle shift & ctrl keys to stop "Control" and "Shift" being inserted into userInput
+
+    // simple input
+    // no shift or ctrl keys involved
+    // append key value
     if (!shiftKey && !ctrlKey) {
       _userInput += key;
     }
+
+    // compound input
+    // allow "+" => shift & "=" key
     if (shiftKey && keyCode === 187) {
       _userInput += key;
     }
@@ -375,7 +387,7 @@ class Calculator extends Component {
 
     let { userInput } = this.state;
 
-    console.log(`346: ######### parseUserInput ${userInput} #########`);
+    console.log(`373 ######### parseUserInput ${userInput} #########`);
 
     let _num1, _num2, _op1, _op2;
 
@@ -385,23 +397,66 @@ class Calculator extends Component {
     }
 
     // exceptions
-    //
+    ////
     // handle operators entered before numerals
     // reset user input
-    // if a . then handle decimal
+    // allow "." as we see below in [b]
 
-    if (isNaN(userInput.charAt(0)) && userInput.charAt(0) !== ".") {
+    if (
+      isNaN(userInput.charAt(0)) &&
+      userInput.length === 1 &&
+      userInput.charAt(0) !== "."
+    ) {
       console.log("hit NaN");
       this.setState({ userInput: "" });
-      // return;
+      return;
     }
-    // exceptions
-    //
-    // repeated 0
-    if (+userInput === 0 && this.state.dotRgx.test(userInput) === null) {
-      userInput = "0";
+
+    // [a]  repeated 0
+    // handles  00 or 00000 or 00000000000
+    // cast input to a number
+    // strings such as "00000" = 0 when cast
+    // dotRgx.test excludes "0." because when cast === 0 therefore we would lose the .
+    console.log(userInput, +userInput, +userInput === 0);
+    if (+userInput === 0 && this.state.dotRgx.test(userInput) === false) {
+      console.log("hit pure 0");
+      // userInput = "0";
       this.setState({ userInput: "0" });
     }
+    this.state.dotRgx.lastIndex = 0;
+
+    // [b]  handle "0." and "."
+    // if user types a decimal place without a zero
+    //  then we assume they intended to write a 0.x decimal
+    //  therefore we replace "." with "0."
+    if (
+      (+userInput === 0 && this.state.dotRgx.test(userInput) === true) ||
+      userInput === "."
+    ) {
+      console.log("hit 0. or .", userInput);
+      this.setState({ userInput: "0." });
+    }
+
+    //  at this point we should have only
+    // "0" or "0."
+    // or any integer eg "123" or "34"
+    //  or a float eg. "9." or 2.03
+
+    // now we need to handle multipe dots eg. "x.xx."
+    // if multiple dots are found we remove the last char as that is where it has to be found
+    if (
+      userInput.match(this.state.dotRgx) &&
+      userInput.match(this.state.dotRgx).length > 1
+    ) {
+      console.log("multiple dots ", userInput.match(this.state.dotRgx).length);
+      this.setState({ userInput: userInput.slice(0, -1) });
+    }
+
+    // handle operators in input string
+    if(userInput.slice(-1).test) {
+
+    }
+
 
     // if (this.state.op2 === "=") {
     //   this.setState({ userInput: "", num2: "" });
@@ -424,7 +479,8 @@ class Calculator extends Component {
 
   /**
    *
-   * @param input
+
+  * @param input
    *
    * set correct values for
    *
@@ -530,90 +586,29 @@ class Calculator extends Component {
       { op1 } = this.state,
       { op2 } = this.state,
       matches = [],
-      match;
+      match,
+      loops = 0;
 
-    if (!_opRgxOuter.test(input)) {
-      _num1 = input;
-    } else {
-      while ((match = _opRgxLoop.exec(input))) {
-        matches.push(match);
-        if (_count === 0) {
-          if (!_frstOpIdx) {
-            _frstOpIdx = matches[0].index;
-          }
-          if (!_num1) {
-            _num1 = input.substring(0, _frstOpIdx);
-          }
-          if (!_op1 && input.charAt(_frstOpIdx) !== "=") {
-            _op1 = input.charAt(_frstOpIdx);
-          } else if (input.charAt(_frstOpIdx) === "=") {
-            this.setState({ userInput: input.substr(0, _frstOpIdx) });
-            // return;
-          }
-          if (
-            input.length > _frstOpIdx + 1 &&
-            !_num2 &&
-            !/[+\-x\/ysr=]/i.test(input.charAt(input.length - 1))
-          ) {
-            _num2 = input.substring(_frstOpIdx + 1);
-            if (
-              _num2.charAt(_num2.length - 1).match(_opRgxLoopInnerTest) !== null
-            ) {
-              _num2 = _num2.substring(0, _num2.length - 1);
-            }
-          }
-        }
-        if (_count === 1) {
-          if (!_scndOpIdx) {
-            _scndOpIdx = matches[1].index;
-            if (/\d+/.test(input.substring(_frstOpIdx + 1, _scndOpIdx))) {
-              _num2 = input.substring(_frstOpIdx + 1, _scndOpIdx);
-              if (_num2) {
-                _op2 = input.charAt(_scndOpIdx);
-              }
-            }
-          }
-        }
-        _count++;
-      }
-      if (matches.length > 0) {
-      }
-      if (matches.length > 1) {
+    while (_opRgxLoop.exec(input) !== null) {
+      ++loops;
+    }
+
+    if (loops === 0) {
+      this.setState({ num1: input });
+    }
+    for (var i = 0; i < loops; i++) {
+      if (!num1) {
       }
     }
-    if (typeof _num1 !== "undefined") {
-      if (
-        _num1.match(dotRgxNnGr) !== null &&
-        this.state.numRgxNnGr.test(_num1)
-      ) {
-        _num1 = this.formatDecimal(_num1);
-      } else if (
-        _num1.match(dotRgxNnGr) !== null &&
-        !this.state.numRgxNnGr.test(_num1)
-      ) {
-        _num1 = this.formatDots(_num1);
-      }
-    }
-    if (typeof _num2 !== "undefined") {
-      if (
-        _num2.match(dotRgxNnGr) !== null &&
-        this.state.numRgxNnGr.test(_num2)
-      ) {
-        _num2 = this.formatDecimal(_num2);
-      } else if (
-        _num2.match(dotRgxNnGr) !== null &&
-        !this.state.numRgxNnGr.test(_num2)
-      ) {
-        _num2 = this.formatDots(_num2);
-      }
-    }
-    if (_op1 && +_num1 === 0) {
-      _num1 = "0";
-    }
-    this.setState(
-      { num1: _num1, num2: _num2, op1: _op1, op2: _op2 },
-      this.goForMath
-    );
+
+    // if(op1 && op2) {
+    //   this.doMath();
+    // }
+
+    // this.setState(
+    //   { num1: _num1, num2: _num2, op1: _op1, op2: _op2 },
+    //   this.goForMath
+    // );
   };
 
   formatDecimal = (decimal) => {
@@ -681,13 +676,13 @@ class Calculator extends Component {
     //     this.setState({ sidebarData });
     //   }
     // } else {
-      if (!_isOpen) {
-        _isOpen = true;
-      } else {
-        _isOpen = false;
-      }
+    if (!_isOpen) {
+      _isOpen = true;
+    } else {
+      _isOpen = false;
+    }
 
-      sidebarData.isOpen = _isOpen;
+    sidebarData.isOpen = _isOpen;
     // }
     this.setState({ sidebarData });
   };
@@ -709,7 +704,7 @@ class Calculator extends Component {
   };
 
   showKeyboard = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     let _circleData;
     // only allow interaction on visible sidebar
     if (this.state.sidebarData.isOpen) {
@@ -733,7 +728,7 @@ class Calculator extends Component {
     _themeTypeData.currentSetting = e.target.value;
     cookieData.cookieLabel = "currentThemeType";
     cookieData.cookieValue = _themeTypeData.currentSetting;
-    cookieData.cookiePath = { path: "/" };
+    cookieData.cookiePath = "/";
     this.setState({
       themeTypeKeyboardData: _themeTypeData,
       themeType: _themeTypeData.currentSetting,
@@ -748,13 +743,12 @@ class Calculator extends Component {
     _themesData.currentSetting = e.target.id;
     cookieData.cookieLabel = "currentTheme";
     cookieData.cookieValue = _themesData.currentSetting;
-    cookieData.cookiePath = { path: "/" };
+    cookieData.cookiePath = "/";
     this.setState({
       themesData: _themesData,
       theme: _themesData.currentSetting,
     });
     this.setCookie(cookieData);
-    // this.toggleSidebar(e);
   };
 
   onSelectAnim = (e) => {
@@ -764,7 +758,7 @@ class Calculator extends Component {
     _animData.currentSetting = e.target.value;
     cookieData.cookieLabel = "currentAnim";
     cookieData.cookieValue = _animData.currentSetting;
-    cookieData.cookiePath = { path: "/" };
+    cookieData.cookiePath = "/";
     this.setState({
       animationData: _animData,
       animation: _animData.currentSetting,
