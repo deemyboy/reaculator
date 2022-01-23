@@ -209,6 +209,9 @@ class Calculator extends Component {
       };
       removeScript(_id);
     }
+    // if (this.state.calculationData !== nextState.calculationData) {
+    this.setCalculationValue();
+    // }
   }
 
   componentWillUnmount() {
@@ -357,8 +360,8 @@ class Calculator extends Component {
           resultData,
           userInput: "",
           keyErr: false,
-        },
-        this.setCalculationValue
+        }
+        // this.setCalculationValue
       );
     }
     if (key === "c") {
@@ -386,8 +389,6 @@ class Calculator extends Component {
     const dotRgxNnGr = this.state.dotRgxNnGr;
     const dotRgx = this.state.dotRgx;
     const dotRgxD = this.state.dotRgxD;
-    // const resultData = {...this.state.resultData}
-    let _userInput, _frstOpIdx, _matches;
 
     let { userInput } = this.state;
 
@@ -420,7 +421,6 @@ class Calculator extends Component {
     // handles  00 or 00000 or 00000000000
     if (+userInput === 0 && !this.state.dotRgxNnGr.test(userInput)) {
       console.log("hit pure 0");
-      // userInput = "0";
       this.setState({ userInput: "0", num1: "0" });
       return;
     }
@@ -431,9 +431,7 @@ class Calculator extends Component {
       _op2Idx;
 
     let opMatches = [];
-    // while (this.state.mathOpRgx.exec(input) !== null) {
     while ((opMatch = this.state.mathOpRgx.exec(userInput)) != null) {
-      console.log("op match found at " + opMatch.index);
       opMatches.push(opMatch.index);
       if (loop < 1) {
         _op1Idx = opMatch.index;
@@ -443,57 +441,52 @@ class Calculator extends Component {
       ++loop;
     }
 
+    //  count number of maths operators in user input string
+
+    // no operators
+    // store user inout in num1
+    if (opMatches.length < 1) {
+      this.storeNum("1", userInput);
+    } else if (opMatches.length < 2) {
+      if (
+        this.state.snglMthOpRgxNnGr.test(userInput.charAt(_op1Idx)) &&
+        userInput.substring(_op1Idx + 1).length === 0
+      ) {
+        this.setState({ op1: userInput.charAt(_op1Idx) }, this.doMath);
+        console.log("single maths - op =", userInput.charAt(_op1Idx));
+      } else if (userInput.substring(_op1Idx + 1).length === 0) {
+        console.log("storing op", userInput.charAt(_op1Idx));
+        this.setState({ op1: userInput.charAt(_op1Idx) });
+      } else if (userInput.substring(_op1Idx + 1).length > 0) {
+        console.log("storing num2", userInput.substring(_op1Idx + 1));
+        this.storeNum("2", userInput.substring(_op1Idx + 1));
+      }
+    } else if (opMatches.length === 2 && _op2Idx - _op1Idx > 1) {
+      _op2 = userInput.charAt(_op2Idx);
+      this.setState({ op2: _op2 }, this.doMath);
+    } else if (opMatches.length === 2 && _op2Idx - _op1Idx === 1) {
+      _op2 = userInput.charAt(_op2Idx);
+      this.setState({ userInput: userInput.slice(0, -2) + _op2 });
+      //
+    }
     // no more than 2 operators
-    if (opMatches.length > 2) {
+    // remove last char === unwanted operator
+    else if (opMatches.length > 2) {
       this.setState({ userInput: userInput.slice(0, -1) });
       return;
     }
-
-    console.log("opMatches", opMatches);
-
-    if (opMatches.length < 1) {
-      // if (dotMatches < 1) {
-      //   console.log("NO opMatches >", opMatches, "dotMatches >", dotMatches);
-      this.makeNum("1", userInput);
-      // } else if (dotMatches < 2) {
-      //   console.log("NO opMatches >", opMatches, "dotMatches >", dotMatches);
-      // } else {
-      //   console.log("NO opMatches >", opMatches, "dotMatches >", dotMatches);
-      // }
-    } else if (opMatches.length < 2) {
-      if (this.state.snglMthOpRgxNnGr.test(userInput.charAt(_op1Idx))) {
-        console.log( userInput.charAt(_op1Idx));
-        _op1 = userInput.charAt(_op1Idx);
-        this.setState({ op1:_op1 }, this.doMath());
-      }
-      if (userInput.substring(_op1Idx + 1).length > 0) {
-        this.setState({ op1: userInput.charAt(_op1Idx) });
-        this.makeNum("2", userInput.substring(_op1Idx + 1));
-      }
-      // if (dotMatches < 1) {
-      //   console.log(opMatches.length," opMatches >", opMatches, "dotMatches >", dotMatches);
-      // } else if (dotMatches < 2) {
-      //   console.log(opMatches.length," opMatches >", opMatches, "dotMatches >", dotMatches);
-      // } else {
-      //   console.log(opMatches.length," opMatches >", opMatches, "dotMatches >", dotMatches);
-      // }
-    } else {
-    }
-    return;
   };
 
-  makeNum = (numLabel, numPart) => {
-    console.log("makeNum  hit");
+  storeNum = (numLabel, numPart) => {
+    console.log("storeNum  hit");
     const numPrefix = "num";
     let dotMatch, _finalValue;
 
     const _completeNumLabel = numPrefix + numLabel;
 
     if (this.state.dotRgxNnGr.test(numPart)) {
-      console.log("some dotMatches ", _completeNumLabel);
       _finalValue = this.formatDecimal(numPart);
     } else {
-      console.log("NO dotMatches ", _completeNumLabel);
       _finalValue = numPart;
     }
 
@@ -567,45 +560,45 @@ class Calculator extends Component {
   };
 
   setResultData = (data, callback) => {
-    let resultData = { ...this.state.resultData },
-      _resultData = {};
+    let resultData = { ...this.state.resultData };
+    // resultData = {};
 
     if (data.resultClass) {
-      _resultData.resultClass = data.resultClass;
+      resultData.resultClass = data.resultClass;
     } else {
-      _resultData.resultClass = this.state.resultDefaultClass;
+      resultData.resultClass = this.state.resultDefaultClass;
     }
     if (data.resultValue) {
-      _resultData.resultValue = data.resultValue;
+      resultData.resultValue = data.resultValue;
     } else {
-      _resultData.resultValue = resultData.resultValue;
+      resultData.resultValue = resultData.resultValue;
     }
     if (data.resultCount) {
-      _resultData.resultCount = data.resultCount;
+      resultData.resultCount = data.resultCount;
     } else {
-      _resultData.resultCount = resultData.resultCount;
+      resultData.resultCount = resultData.resultCount;
     }
     if (callback) {
-      this.setState({ resultData: _resultData }, () => callback());
+      this.setState({ resultData }, () => callback());
     } else {
-      this.setState({ resultData: _resultData });
+      this.setState({ resultData });
     }
   };
 
-  formatDecimal = (decimalPart) => {
+  formatDecimal = (numToProcess) => {
     console.log("formatDecimal  hit");
     const _dotRgx = this.state.dotRgx;
     let dotMatch,
       dotMatches = [];
 
-    while ((dotMatch = _dotRgx.exec(decimalPart)) != null) {
+    while ((dotMatch = _dotRgx.exec(numToProcess)) != null) {
       console.log("dot match found at " + dotMatch.index);
       dotMatches.push(dotMatch.index);
     }
     // if called in error ie. handle no dots
     if (dotMatches.length < 1) {
       console.log("dotMatches < 1");
-      return decimalPart;
+      return numToProcess;
     } else if (dotMatches.length < 2) {
       console.log("dotMatches < 2");
       if (dotMatches[0] < 1) {
@@ -613,21 +606,16 @@ class Calculator extends Component {
         return "0.";
       } else {
         console.log("num dotMatches = ", dotMatches.length);
-        return decimalPart;
+        return numToProcess;
       }
     } else {
-      console.log("dotMatches > 2");
-      this.setState({ userInput: decimalPart.slice(0, -1) });
-      return decimalPart.slice(0, -1);
-    }
-  };
+      console.log("dotMatches >= 2");
+      let _userInput = this.state.userInput;
+      this.setState({ userInput: this.state.userInput.slice(0, -1) });
 
-  formatDots = (decimal) => {
-    //
-    let _formattedDecimal,
-      dotRgx = /\./g,
-      _count = 0;
-    return "0.";
+      // remove last char which has to be a "."
+      return numToProcess.slice(0, -1);
+    }
   };
 
   toggleSidebar = (e) => {
@@ -741,55 +729,6 @@ class Calculator extends Component {
     this.setCookie(cookieData);
   };
 
-  keyboardLoader = (kbName) => {
-    console.log(kbName.target.id);
-    let _kbData,
-      _kbCurrent = this.state.currentSidebarSecondKeyboard,
-      _kbsAvalaible = this.state.keyboards,
-      _id = kbName.target.id;
-    this.setState({ currentSidebarSecondKeyboard: kbName.target.id });
-    // switch(_id) {
-    //     case "picture": {
-    //       //
-    //       console.log("hit", _id);
-    //       // _kbData = this
-    //       this.setState({currentSidebarKeyboard : _id})
-    //       break;
-    //     }
-    //     case "color": {
-    //       //
-    //       console.log("hit", _id);
-    //       this.setState({currentSidebarKeyboard : _id})
-    //       break;
-    //     }
-    //     case "anim": {
-    //       //
-    //       console.log("hit", _id);
-    //       this.setState({currentSidebarKeyboard : _id})
-    //       break;
-    //     }
-    //     case "": {
-    //       //
-    //       break;
-    //     }
-    //     case "": {
-    //       //
-    //       break;
-    //     }
-    //     case "": {
-    //       //
-    //       break;
-    //     }
-    //     case "": {
-    //       //
-    //       break;
-    //     }
-    //     default: {
-    //       break;
-    //     }
-    //   }
-  };
-
   getKeyboardData = (keyboardName) => {
     let _kb;
     while (typeof _kb === "undefined") {
@@ -828,46 +767,16 @@ class Calculator extends Component {
     return _circleData.id;
   };
 
-  // goForMath = () => {
-  //   this.setCalculationValue();
-  //   let mathObj = {};
-  //   if (
-  //     typeof this.state.num1 !== "undefined" &&
-  //     typeof this.state.op1 !== "undefined" &&
-  //     this.state.op1.match(this.state.snglMthOpRgx)
-  //   ) {
-  //     mathObj.type = "single";
-  //     this.doMath(mathObj);
-  //   } else if (
-  //     typeof this.state.num1 !== "undefined" &&
-  //     typeof this.state.op1 !== "undefined" &&
-  //     typeof this.state.num2 !== "undefined" &&
-  //     typeof this.state.op2 !== "undefined" &&
-  //     this.state.op1.match(this.state.dblMthOpRgx) &&
-  //     this.state.op2.match(this.state.dblMthOpRgx)
-  //   ) {
-  //     mathObj.type = "double";
-  //     this.doMath(mathObj);
-  //   } else if (
-  //     typeof this.state.num1 !== "undefined" &&
-  //     typeof this.state.op1 !== "undefined" &&
-  //     typeof this.state.num2 !== "undefined" &&
-  //     typeof this.state.op2 !== "undefined" &&
-  //     this.state.op1.match(this.state.dblMthOpRgx) &&
-  //     this.state.op2 === "="
-  //   ) {
-  //     mathObj.type = "double";
-  //     this.doMath(mathObj);
-  //   }
-  // };
-
   setCalculationValue = () => {
-    let calcDataObj = {};
+    // let calcDataObj = {};
+    // calculationValue,
+    // calculationClass;
+    console.log("setCalculationValue hit");
 
-    let _op1;
     const { num1 } = this.state,
       { num2 } = this.state,
       { op1 } = this.state;
+    let _op1, _num1, _num2;
 
     let calculationData = { ...this.state.calculationData };
 
@@ -884,36 +793,26 @@ class Calculator extends Component {
         setCalculationDisplayChar(op1).length > 0
           ? setCalculationDisplayChar(op1)[0].calculationDisplayChar
           : op1;
-    }
-
-    if (typeof calcDataObj.calculationValue === "undefined") {
-      calcDataObj.calculationValue = "";
-    }
-    calcDataObj.calculationValue += num1 ? num1 : "";
-    if (!_op1) {
-      calcDataObj.calculationValue += op1 ? op1 : "";
     } else {
-      calcDataObj.calculationValue += _op1;
-    }
-    calcDataObj.calculationValue += num2 ? num2 : "";
-
-    if (calculationData.calculationClass) {
-      calcDataObj.calculationClass = calculationData.calculationClass;
+      _op1 = "";
     }
 
-    // console.log(
-    //   "715: setCalculationValue calcDataObj: ",
-    //   calcDataObj,
-    //   "calculationData: ",
-    //   calculationData
-    // );
-    calculationData = calcDataObj;
-    this.setState({ calculationData });
+    _num1 = num1;
+    _num2 = num2;
+
+    calculationData.calculationValue = _num1 + _op1 + _num2;
+    // calculationData = calculationData;
+    if (
+      calculationData.calculationValue !==
+      this.state.calculationData.calculationValue
+    ) {
+      this.setState({ calculationData });
+    }
   };
 
   //  resultData: { resultClass: "result", resultCount: 0, resultValue: "0" }
   doMath = () => {
-    // console.log(`yaaay we're doing ${mathObj.type} math!`);
+    // console.log(`yaaay we're doing ${.type} math!`);
 
     let resultData = { ...this.state.resultData };
     const _op = this.state.op1;
@@ -980,9 +879,9 @@ class Calculator extends Component {
       }
     }
     _resultData.resultCount = 1;
-    // _resultData.resultValue = this.formatResult(_resultData.resultValue);
-    // this.setResultData(_resultData, () => this.postResultClearUp(mathObj));
-    this.setResultData(_resultData);
+    _resultData.resultValue = this.formatResult(_resultData.resultValue);
+    this.setResultData(_resultData, () => this.postResultClearUp());
+    // this.setResultData(_resultData);
   };
 
   formatResult = (resValue) => {
@@ -993,8 +892,8 @@ class Calculator extends Component {
     }
   };
 
-  postResultClearUp = (mathObj) => {
-    console.log("701 postResultClearUp", mathObj);
+  postResultClearUp = (mathbj) => {
+    console.log("701 postResultClearUp");
     let _userInput,
       _num1,
       _num2,
@@ -1047,16 +946,16 @@ class Calculator extends Component {
         num2: _num2,
         userInput: _userInput,
         // resultData: _resultData,
-      },
-      this.setCalculationValue
+      }
+      // this.setCalculationValue
     );
   };
 
   setResultErrorClass = () => {
     let resultData = { ...this.state.resultData };
     let _resultData = {};
-    _resultData.resultClass = this.state.resultErrorClass;
-    this.setResultData(_resultData, null);
+    resultData.resultClass = this.state.resultErrorClass;
+    this.setState({ resultData });
   };
 
   render = () => {
