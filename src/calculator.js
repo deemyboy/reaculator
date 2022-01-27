@@ -119,6 +119,7 @@ class Calculator extends Component {
         ],
       },
     ],
+    keyErr: false,
     numberKeyboardClass: "keyboard-number",
     functionKeyboardClass: "keyboard-function",
     utilityKeyboardClass: "keyboard-utility",
@@ -302,6 +303,10 @@ class Calculator extends Component {
     // console.log("269: handleUserInput inputData: ", inputData);
     let _userInput;
     const { userInput } = this.state;
+
+    if (this.state.keyErr && inputData.key !== "a") {
+      return;
+    }
 
     if (this.state.op2 === "=") {
       _userInput = this.preProcessUserInput(userInput);
@@ -748,6 +753,7 @@ class Calculator extends Component {
       this.state.keyboards.forEach((element) => {
         if (element.name === keyboardName) {
           _kb = element;
+          _kb.keyErr = this.state.keyErr;
         }
       });
     }
@@ -1025,7 +1031,6 @@ class Calculator extends Component {
       // _userInput = String(resultData.resultValue);
       _userInput = "";
     }
-
 
     // if (resultValue) {
     //   _resultData.resultValue = resultData.resultValue;
