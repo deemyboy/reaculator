@@ -301,15 +301,15 @@ class Calculator extends Component {
   handleUserInput = (inputData) => {
     // console.log("269: handleUserInput inputData: ", inputData);
     let _userInput;
-    let { userInput } = this.state;
+    const { userInput } = this.state;
 
-    // const key = inputData.key;
-    // const shiftKey = inputData.shiftKey;
-    // const ctrlKey = inputData.ctrlKey;
-    // const keyCode = inputData.keyCode;
+    if (this.state.op2 === "=") {
+      _userInput = this.preProcessUserInput(userInput);
+    } else {
+      _userInput = userInput;
+    }
 
     const { key, shiftKey, ctrlKey, keyCode } = { ...inputData };
-    _userInput = userInput;
 
     // exceptions
     ////
@@ -527,6 +527,7 @@ class Calculator extends Component {
    * -  was equals last pressed
    */
   preProcessUserInput = (userInput) => {
+    console.log("preProcessUserInput hit");
     // check if "=" was pressed to get a result followed by a number
     // if it is then the previous function (post Result clearup)
     // has put the previous result into userInput
@@ -971,13 +972,13 @@ class Calculator extends Component {
 
   formatResult = (resValue) => {
     if (resValue.length > 13) {
-      return resValue.toExponetial();
+      return String(resValue.toExponetial());
     } else {
-      return resValue;
+      return String(resValue);
     }
   };
 
-  postResultClearUp = (mathbj) => {
+  postResultClearUp = () => {
     console.log("701 postResultClearUp");
     let _userInput,
       _num1,
@@ -985,62 +986,64 @@ class Calculator extends Component {
       _op1,
       _op2,
       _resultData = {},
-      resultData = { ...this.state.resultData };
-    if (!isFinite(resultData.resultValue)) {
+      { resultValue } = { ...this.state.resultData };
+
+    if (!isFinite(resultValue)) {
       this.setResultErrorClass("result");
-      this.setState({ keyErr: true });
       return;
     }
-    const { num1 } = this.state,
-      { num2 } = this.state,
-      { op1 } = this.state,
-      { op2 } = this.state;
 
-    // console.log("713 resultData", resultData);
+    const { num1, num2, op1, op2, userInput } = { ...this.state };
+
+    console.log(
+      "999 resultValue",
+      resultValue,
+      "num1",
+      num1,
+      "num2",
+      num2,
+      "op1",
+      op1,
+      "op2",
+      op2,
+      "userInput",
+      userInput
+    );
 
     if (op2 !== "=") {
       _op2 = "";
-      _num1 = String(resultData.resultValue);
+      _num1 = resultData.resultValue;
       _num2 = "";
       _op1 = op2;
-      _userInput = String(resultData.resultValue) + op2;
+      // _userInput = String(resultData.resultValue) + op2;
+      _userInput = "";
     } else {
       _op2 = op2;
       _num1 = num1;
       _num2 = num2;
       _op1 = op1;
-      _userInput = String(resultData.resultValue);
+      // _userInput = String(resultData.resultValue);
+      _userInput = "";
     }
 
-    if (resultData.resultClass) {
-      _resultData.resultClass = resultData.resultClass;
-    }
-    if (resultData.resultValue) {
-      _resultData.resultValue = resultData.resultValue;
-    }
 
-    // save the 2nd operator to the 1st operatr
-    // before blanking the 2nd operator
-    // console.log("824 _resultData", _resultData);
+    // if (resultValue) {
+    //   _resultData.resultValue = resultData.resultValue;
+    // }
 
-    this.setState(
-      {
-        op1: _op1,
-        op2: _op2,
-        num1: _num1,
-        num2: _num2,
-        userInput: _userInput,
-        // resultData: _resultData,
-      }
-      // this.setCalculationValue
-    );
+    this.setState({
+      op1: _op1,
+      op2: _op2,
+      num1: _num1,
+      num2: _num2,
+      userInput: _userInput,
+    });
   };
 
   setResultErrorClass = () => {
-    let resultData = { ...this.state.resultData };
-    let _resultData = {};
+    let { resultData } = { ...this.state };
     resultData.resultClass = this.state.resultErrorClass;
-    this.setState({ resultData });
+    this.setState({ resultData, keyErr: true });
   };
 
   render = () => {
