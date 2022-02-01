@@ -895,92 +895,86 @@ class Calculator extends Component {
         : num;
     };
 
-    const { num1 } = this.state,
-      { op1 } = this.state,
-      { num2 } = this.state;
+    let { num1, op1, num2 } = { ...this.state };
 
-    let _num1 = num1,
-      _num2 = num2,
-      _op1 = op1;
-
-    // if (typeof _num1 === "number" && !Number.isNaN(_num1)) {
-    //   _num1 = String(_num1);
+    // if (typeof num1 === "number" && !Number.isNaN(num1)) {
+    //   num1 = String(num1);
     // }
 
-    // if (typeof num2 === "number" && !Number.isNaN(_num2)) {
-    //   _num2 = String(_num2);
+    // if (typeof num2 === "number" && !Number.isNaN(num2)) {
+    //   num2 = String(num2);
     // }
 
     let calculationData = { ...this.state.calculationData };
 
-    if (_op1) {
-      _op1 =
-        setCalculationDisplayChar(_op1).length > 0
-          ? setCalculationDisplayChar(_op1)[0].calculationDisplayChar
-          : _op1;
-      if (_num1 && _num1 !== "") {
-        if (_num1.slice(-1) !== "." && Number.isInteger(+_num1)) {
-          // if (clearLastDotFromInt(_num1)) {
-          _num1 = _num1;
+    if (op1) {
+      op1 =
+        setCalculationDisplayChar(op1).length > 0
+          ? setCalculationDisplayChar(op1)[0].calculationDisplayChar
+          : op1;
+      if (num1 && num1 !== "") {
+        if (num1.slice(-1) !== "." && Number.isInteger(+num1)) {
+          // if (clearLastDotFromInt(num1)) {
+          num1 = num1;
         } else {
-          _num1 = String(+_num1);
+          num1 = String(+num1);
         }
       }
 
-      if (_num2 && _num2 !== "") {
-        // _op1 = _op1;
-        if (_num2.slice(-1) !== "." && !Number.isSafeInteger(+_num2)) {
-          _num2 = String(+_num2);
+      if (num2 && num2 !== "") {
+        // op1 = op1;
+        if (num2.slice(-1) !== "." && !Number.isSafeInteger(+num2)) {
+          num2 = String(+num2);
         } else {
-          _num2 = _num2;
+          num2 = num2;
         }
       } else {
       }
-      // if (_num2 && _num2 !== "") {
+      // if (num2 && num2 !== "") {
       // }
     } else {
-      // _op1 = "";
-      if (_num1 && _num1 !== "") {
-        if (_num1.slice(-1) !== "." && !Number.isInteger(+_num1)) {
-          _num1 = String(+_num1);
+      // op1 = "";
+      if (num1 && num1 !== "") {
+        if (num1.slice(-1) !== "." && !Number.isInteger(+num1)) {
+          num1 = String(+num1);
         } else {
-          _num1 = _num1;
+          num1 = num1;
         }
       }
-      // if (_num2 && _num2 !== "") {
-      //   if (_num2.slice(-1) !== ".") {
-      //     _num2 = _num2;
+      // if (num2 && num2 !== "") {
+      //   if (num2.slice(-1) !== ".") {
+      //     num2 = num2;
       //   } else {
-      //     _num2 = String(+_num2);
+      //     num2 = String(+num2);
       //   }
       // } else {
-      _num2 = "";
+      num2 = "";
       // }
     }
 
     // if (num1 && num1 !== "") {
-    //   if (num1.slice(-1) !== "." && _op1) {
-    //     _num1 = num1;
+    //   if (num1.slice(-1) !== "." && op1) {
+    //     num1 = num1;
     //   } else {
-    //     _num1 = String(+num1);
+    //     num1 = String(+num1);
     //   }
     // } else {
-    //   _num1 = "";
+    //   num1 = "";
     // }
 
     // if (num2 && num2 !== "") {
     //   if (num2.slice(-1) !== ".") {
-    //     _num2 = num2;
+    //     num2 = num2;
     //   } else {
-    //     _num2 = String(+num2);
+    //     num2 = String(+num2);
     //   }
     // } else {
-    //   _num2 = "";
+    //   num2 = "";
     // }
-    // _num1 = num1;
-    // _num2 = num2;
+    // num1 = num1;
+    // num2 = num2;
 
-    calculationData.calculationValue = _num1 + _op1 + _num2;
+    calculationData.calculationValue = num1 + op1 + num2;
     // calculationData = calculationData;
     if (
       calculationData.calculationValue !==
