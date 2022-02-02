@@ -352,6 +352,7 @@ class Calculator extends Component {
       this.handleUtilityOperator(key);
       return;
     }
+
     this.setState({ userInput }, this.parseUserInput);
   };
 
@@ -394,6 +395,9 @@ class Calculator extends Component {
     //     this.updateOperator("=");
     //   }
     // }
+    if (key === "m") {
+      this.toggleSign();
+    }
   };
 
   parseUserInput = () => {
@@ -403,11 +407,16 @@ class Calculator extends Component {
     const dotRgx = this.state.dotRgx;
     const dotRgxD = this.state.dotRgxD;
 
+    const re =
+      /([-]?\d*\.?\d*)([srx\-=+\/m]?)([-]?\d*\.?\d*)([srx\-=+\/m]?)/dgi;
+
+    let matches = re.exec(this.state.userInput);
+
+    console.log(matches);
+
     let { num1, num2, op1, op2, userInput } = { ...this.state };
 
     console.log(`373 ######### parseUserInput ${userInput} #########`);
-
-    let _num1, _num2, _op1, _op2;
 
     if (this.state.resultData.resultValue) {
       // _userInput = userInput;
@@ -450,74 +459,103 @@ class Calculator extends Component {
       return;
     }
 
-    let opMatch,
-      loop = 0,
-      _op1Idx,
-      _op2Idx;
+    let _num1, _num2, _op1, _op2;
 
-    let opMatches = [];
-    while ((opMatch = this.state.mathOpRgx.exec(userInput)) != null) {
-      opMatches.push(opMatch.index);
-      if (loop < 1) {
-        _op1Idx = opMatch.index;
-      } else {
-        _op2Idx = opMatch.index;
-      }
-      ++loop;
+    if (matches.indices[1].length > 0) {
+      _num1 = userInput.substring(matches.indices[1][0], matches.indices[1][1]);
     }
+    if (matches.indices[2].length > 0) {
+      _op1 = userInput.substring(matches.indices[2][0], matches.indices[2][1]);
+    }
+    if (matches.indices[3].length > 0) {
+      _num2 = userInput.substring(matches.indices[3][0], matches.indices[3][1]);
+    }
+    if (matches.indices[4].length > 0) {
+      _op2 = userInput.substring(matches.indices[4][0], matches.indices[4][1]);
+    }
+
+    this.setState(
+      {
+        num1: _num1,
+        op1: _op1,
+        num2: _num2,
+        op2: _op2,
+      },
+      this.doMath
+    );
+
+    // if (_op1 && this.state.snglMthOpRgxNnGr.test(_op1)) {
+    //   // this.setState({ op1: _op1 }, this.doMath);
+    //    this.doMath();
+    // }
+    // let opMatch,
+    //   loop = 0,
+    //   _op1Idx,
+    //   _op2Idx;
+
+    // let opMatches = [];
+    // while ((opMatch = this.state.mathOpRgx.exec(userInput)) != null) {
+    //   opMatches.push(opMatch.index);
+    //   if (loop < 1) {
+    //     _op1Idx = opMatch.index;
+    //   } else {
+    //     _op2Idx = opMatch.index;
+    //   }
+    //   ++loop;
+    // }
 
     //  count number of maths operators in user input string
 
     // no operators
     // store user inout in num1
-    if (opMatches.length < 1) {
-      this.setState({ num1: this.processNumber(userInput) });
-    } else if (opMatches.length < 2) {
-      if (userInput.charAt(_op1Idx) === "=") {
-        this.setState({ userInput: userInput.slice(0, -1) });
-        return;
-      } else if (
-        this.state.snglMthOpRgxNnGr.test(userInput.charAt(_op1Idx)) &&
-        userInput.substring(_op1Idx + 1).length === 0
-      ) {
-        // console.log("single maths - op =", userInput.charAt(_op1Idx));
-        this.setState({ op1: userInput.charAt(_op1Idx) }, this.doMath);
-      } else if (userInput.substring(_op1Idx + 1).length === 0) {
-        // console.log("storing op", userInput.charAt(_op1Idx));
-        this.setState({ op1: userInput.charAt(_op1Idx) });
-      } else if (userInput.substring(_op1Idx + 1).length > 0) {
-        // console.log("storing num2", userInput.substring(_op1Idx + 1));
-        this.setState({
-          num2: this.processNumber(userInput.substring(_op1Idx + 1)),
-        });
-      }
-    } else if (opMatches.length === 2 && _op2Idx - _op1Idx > 1) {
-      _op2 = userInput.charAt(_op2Idx);
-      this.setState({ op2: _op2 }, this.doMath);
-    } else if (opMatches.length === 2 && _op2Idx - _op1Idx === 1) {
-      _op1 = userInput.slice(-1);
-      // _op2 = userInput.slice(-1);
-      if (_op1 === "=") {
-        this.setState({ userInput: userInput.slice(0, -1) });
-        return;
-      } else if (this.state.snglMthOpRgxNnGr.test(_op1)) {
-        // console.log("single maths - op =", _op1);
-        this.setState(
-          { userInput: userInput.slice(0, -2) + _op1, op1: _op1 },
-          this.doMath
-        );
-        //
-      }
+    //   if (opMatches.length < 1) {
+    //     this.setState({ num1: this.processNumber(userInput) });
+    //   } else if (opMatches.length < 2) {
+    //     if (userInput.charAt(_op1Idx) === "=") {
+    //       this.setState({ userInput: userInput.slice(0, -1) });
+    //       return;
+    //     } else if (
+    //       this.state.snglMthOpRgxNnGr.test(userInput.charAt(_op1Idx)) &&
+    //       userInput.substring(_op1Idx + 1).length === 0
+    //     ) {
+    //       // console.log("single maths - op =", userInput.charAt(_op1Idx));
+    //       this.setState({ op1: userInput.charAt(_op1Idx) }, this.doMath);
+    //     } else if (userInput.substring(_op1Idx + 1).length === 0) {
+    //       // console.log("storing op", userInput.charAt(_op1Idx));
+    //       this.setState({ op1: userInput.charAt(_op1Idx) });
+    //     } else if (userInput.substring(_op1Idx + 1).length > 0) {
+    //       // console.log("storing num2", userInput.substring(_op1Idx + 1));
+    //       this.setState({
+    //         num2: this.processNumber(userInput.substring(_op1Idx + 1)),
+    //       });
+    //     }
+    //   } else if (opMatches.length === 2 && _op2Idx - _op1Idx > 1) {
+    //     _op2 = userInput.charAt(_op2Idx);
+    //     this.setState({ op2: _op2 }, this.doMath);
+    //   } else if (opMatches.length === 2 && _op2Idx - _op1Idx === 1) {
+    //     _op1 = userInput.slice(-1);
+    //     // _op2 = userInput.slice(-1);
+    //     if (_op1 === "=") {
+    //       this.setState({ userInput: userInput.slice(0, -1) });
+    //       return;
+    //     } else if (this.state.snglMthOpRgxNnGr.test(_op1)) {
+    //       // console.log("single maths - op =", _op1);
+    //       this.setState(
+    //         { userInput: userInput.slice(0, -2) + _op1, op1: _op1 },
+    //         this.doMath
+    //       );
+    //       //
+    //     }
 
-      this.setState({ userInput: userInput.slice(0, -2) + _op1, op1: _op1 });
-      //
-    }
-    // no more than 2 operators
-    // remove last char === unwanted operator
-    else if (opMatches.length > 2) {
-      this.setState({ userInput: userInput.slice(0, -1) });
-      return;
-    }
+    //     this.setState({ userInput: userInput.slice(0, -2) + _op1, op1: _op1 });
+    //     //
+    //   }
+    //   // no more than 2 operators
+    //   // remove last char === unwanted operator
+    //   else if (opMatches.length > 2) {
+    //     this.setState({ userInput: userInput.slice(0, -1) });
+    //     return;
+    //   }
   };
 
   processNumber = (num) => {
@@ -912,45 +950,46 @@ class Calculator extends Component {
         setCalculationDisplayChar(op1).length > 0
           ? setCalculationDisplayChar(op1)[0].calculationDisplayChar
           : op1;
-      if (num1 && num1 !== "") {
-        if (num1.slice(-1) !== "." && Number.isInteger(+num1)) {
-          // if (clearLastDotFromInt(num1)) {
-          num1 = num1;
-        } else {
-          num1 = String(+num1);
-        }
-      }
-
-      if (num2 && num2 !== "") {
-        // op1 = op1;
-        if (num2.slice(-1) !== "." && !Number.isSafeInteger(+num2)) {
-          num2 = String(+num2);
-        } else {
-          num2 = num2;
-        }
-      } else {
-      }
-      // if (num2 && num2 !== "") {
-      // }
-    } else {
-      // op1 = "";
-      if (num1 && num1 !== "") {
-        if (num1.slice(-1) !== "." && !Number.isInteger(+num1)) {
-          num1 = String(+num1);
-        } else {
-          num1 = num1;
-        }
-      }
-      // if (num2 && num2 !== "") {
-      //   if (num2.slice(-1) !== ".") {
-      //     num2 = num2;
-      //   } else {
-      //     num2 = String(+num2);
-      //   }
-      // } else {
-      num2 = "";
-      // }
     }
+    //   if (num1 && num1 !== "") {
+    //     if (num1.slice(-1) !== "." && Number.isInteger(+num1)) {
+    //       // if (clearLastDotFromInt(num1)) {
+    //       num1 = num1;
+    //     } else {
+    //       num1 = String(+num1);
+    //     }
+    //   }
+
+    //   if (num2 && num2 !== "") {
+    //     // op1 = op1;
+    //     if (num2.slice(-1) !== "." && !Number.isSafeInteger(+num2)) {
+    //       num2 = String(+num2);
+    //     } else {
+    //       num2 = num2;
+    //     }
+    //   } else {
+    //   }
+    //   // if (num2 && num2 !== "") {
+    //   // }
+    // } else {
+    //   // op1 = "";
+    //   if (num1 && num1 !== "") {
+    //     if (num1.slice(-1) !== "." && !Number.isInteger(+num1)) {
+    //       num1 = String(+num1);
+    //     } else {
+    //       num1 = num1;
+    //     }
+    //   }
+    //   // if (num2 && num2 !== "") {
+    //   //   if (num2.slice(-1) !== ".") {
+    //   //     num2 = num2;
+    //   //   } else {
+    //   //     num2 = String(+num2);
+    //   //   }
+    //   // } else {
+    //   num2 = "";
+    //   // }
+    // }
 
     // if (num1 && num1 !== "") {
     //   if (num1.slice(-1) !== "." && op1) {
@@ -989,9 +1028,10 @@ class Calculator extends Component {
     // console.log(`yaaay we're doing ${.type} math!`);
 
     let { resultData } = { ...this.state };
-    const _op = this.state.op1;
     const _num1 = Number(this.state.num1);
+    const _op = this.state.op1;
     const _num2 = Number(this.state.num2);
+    const _op2 = this.state.op2;
 
     if (this.state.num1 + this.state.op1 + this.state.num2 === "404+545") {
       resultData.resultValue = "Hello Baba, \uD83D\uDC95 you!";
@@ -1017,6 +1057,10 @@ class Calculator extends Component {
       (!_num2 || _num2 === "") &&
       _num2 !== 0
     ) {
+      return;
+    }
+
+    if (!this.state.snglMthOpRgxNnGr.test(_op) && (!_op2 || _op2 === "")) {
       return;
     }
 
@@ -1062,6 +1106,7 @@ class Calculator extends Component {
       resultData.resultValue = String(resultData.resultValue);
     }
     this.setState(resultData, () => this.postResultClearUp());
+    // this.setState(resultData);
   };
 
   formatResult = (resValue) => {
@@ -1123,6 +1168,20 @@ class Calculator extends Component {
     let { resultData } = { ...this.state };
     resultData.resultClass = this.state.resultData.resultErrorClass;
     this.setState({ resultData, keyErr: true });
+  };
+
+  toggleSign = () => {
+    let { num1 } = { ...this.state };
+    let { op1 } = { ...this.state };
+    let { num2 } = { ...this.state };
+    let { userInput } = { ...this.state };
+
+    if (!num2) {
+      this.setState({ num1: num1 * -1, userInput: num1 * -1 + op1 });
+    } else {
+      this.setState({ num2: num2 * -1, userInput: num1 + op1 + num2 * -1 });
+    }
+    // return num * -1;
   };
 
   render = () => {
