@@ -52,7 +52,7 @@
         @include transition(all 0.25s);
       }
       &:hover {
-        transform: scale(1.5);
+        transform: scale(1.333);
         // opacity: 1;
       }
       &:hover:after {
@@ -82,7 +82,7 @@
   .sidebar {
     .circle {
       &#{$showing} {
-        transform: scale(1.25);
+        transform: scale(1.333);
         &:after {
           transform: scale(0.675);
         }

@@ -207,11 +207,13 @@
     }
     &.btn-error {
       background-color: darken($btn-danger-bg-color, 15%);
+      color: darken(themed(secondaryButtonTextColor), 50%);
+      border-color: darken(themed(secondaryButtonBorderColor), 90%);
     }
     &.btn-use-me {
-      border-color: #eddfe0;
+      border-color: lighten($btn-danger-bg-color, 35%);
       border-width: 2px;
-      box-shadow: 0px 0px 9px 0px;
+      box-shadow: 0px 0px 9px 0px lighten($btn-danger-bg-color, 15%);
     }
   }
   .btn-success {
@@ -234,6 +236,8 @@
     }
     &.btn-error {
       background-color: darken($btn-success-bg-color, 15%);
+      color: darken(themed(secondaryButtonTextColor), 50%);
+      border-color: darken(themed(secondaryButtonBorderColor), 90%);
     }
   }
 

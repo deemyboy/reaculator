@@ -11,7 +11,7 @@ export const numberKeys = [
     value: "1",
     title: "one",
     keycode: 49,
-    kbCode: "Digit1",
+    code: "Digit1",
     type: "num",
   },
   {
@@ -19,7 +19,7 @@ export const numberKeys = [
     value: "2",
     title: "two",
     keycode: 50,
-    kbCode: "Digit2",
+    code: "Digit2",
     type: "num",
   },
   {
@@ -27,7 +27,7 @@ export const numberKeys = [
     value: "3",
     title: "three",
     keycode: 51,
-    kbCode: "Digit3",
+    code: "Digit3",
     type: "num",
   },
   {
@@ -35,7 +35,7 @@ export const numberKeys = [
     value: "4",
     title: "four",
     keycode: 52,
-    kbCode: "Digit4",
+    code: "Digit4",
     type: "num",
   },
   {
@@ -43,7 +43,7 @@ export const numberKeys = [
     value: "5",
     title: "five",
     keycode: 53,
-    kbCode: "Digit5",
+    code: "Digit5",
     type: "num",
   },
   {
@@ -51,7 +51,7 @@ export const numberKeys = [
     value: "6",
     title: "six",
     keycode: 54,
-    kbCode: "Digit6",
+    code: "Digit6",
     type: "num",
   },
   {
@@ -59,7 +59,7 @@ export const numberKeys = [
     value: "7",
     title: "seven",
     keycode: 55,
-    kbCode: "Digit7",
+    code: "Digit7",
     type: "num",
   },
   {
@@ -67,7 +67,7 @@ export const numberKeys = [
     value: "8",
     title: "eight",
     keycode: 56,
-    kbCode: "Digit8",
+    code: "Digit8",
     type: "num",
   },
   {
@@ -75,7 +75,7 @@ export const numberKeys = [
     value: "9",
     title: "nine",
     keycode: 57,
-    kbCode: "Digit9",
+    code: "Digit9",
     type: "num",
   },
   {
@@ -83,7 +83,7 @@ export const numberKeys = [
     value: "0",
     title: "zero",
     keycode: 48,
-    kbCode: "Digit0",
+    code: "Digit0",
     type: "num",
   },
   {
@@ -91,7 +91,7 @@ export const numberKeys = [
     value: ".",
     title: "dot",
     keycode: 190,
-    kbCode: "Period",
+    code: "Period",
     type: "num",
   },
   {
@@ -99,8 +99,8 @@ export const numberKeys = [
     value: "m",
     uniChar: "\u00B1",
     title: "plus minus (m)",
-    keycode: 189,
-    kbCode: "KeyM",
+    keycode: 77,
+    code: "KeyM",
     type: "num",
   },
 ];
@@ -111,7 +111,7 @@ export const functionKeys = [
     value: "+",
     title: "plus",
     keycode: 187,
-    kbCode: "Equal",
+    code: "Equal",
     type: "func",
   },
   {
@@ -119,7 +119,7 @@ export const functionKeys = [
     value: "-",
     title: "minus",
     keycode: 189,
-    kbCode: "Minus",
+    code: "Minus",
     type: "func",
   },
   {
@@ -128,7 +128,7 @@ export const functionKeys = [
     uniChar: "\u00D7",
     title: "multiply (x)",
     keycode: 88,
-    kbCode: "KeyX",
+    code: "KeyX",
     type: "func",
   },
   {
@@ -138,7 +138,7 @@ export const functionKeys = [
     calculationDisplayChar: "\u00F7",
     title: "divide (/)",
     keycode: 191,
-    kbCode: "Slash",
+    code: "Slash",
     type: "func",
   },
   {
@@ -148,7 +148,7 @@ export const functionKeys = [
     calculationDisplayChar: "\u00B2",
     title: "square (s)",
     keycode: 83,
-    kbCode: "KeyS",
+    code: "KeyS",
     type: "func",
   },
   {
@@ -158,7 +158,7 @@ export const functionKeys = [
     calculationDisplayChar: "\u221A",
     title: "square root (r)",
     keycode: 82,
-    kbCode: "KeyR",
+    code: "KeyR",
     type: "func",
     ctrlKey: false,
   },
@@ -168,7 +168,7 @@ export const functionKeys = [
     uniChar: "\uD835\uDC65\u02B8",
     title: "x to the power y (y)",
     keycode: 89,
-    kbCode: "KeyY",
+    code: "KeyY",
     type: "func",
   },
   {
@@ -177,7 +177,7 @@ export const functionKeys = [
     specialClass: "btn-success",
     title: "equals",
     keycode: 187,
-    kbCode: "Equal",
+    code: "Equal",
     type: "func",
   },
 ];
@@ -189,7 +189,7 @@ export const utilityKeys = [
     specialClass: "btn-danger",
     title: "clear last keypress (c)",
     keycode: 67,
-    kbCode: "KeyC",
+    code: "KeyC",
     type: "func",
   },
   {
@@ -199,7 +199,7 @@ export const utilityKeys = [
     uniChar: "\u0061\u0063",
     title: "all clear (a)",
     keycode: 65,
-    kbCode: "KeyA",
+    code: "KeyA",
     type: "func",
   },
 ];
@@ -211,7 +211,7 @@ export const themeKeys = [
     uniChar: "\uD83D\uDD25",
     title: "fire",
     keycode: 55,
-    kbCode: "Digit7",
+    code: "Digit7",
     type: "thm",
   },
   {
@@ -221,7 +221,7 @@ export const themeKeys = [
     uniChar: "\uD83C\uDF03",
     title: "midnight",
     keycode: 55,
-    kbCode: "Digit7",
+    code: "Digit7",
     type: "thm",
   },
   {
@@ -231,7 +231,7 @@ export const themeKeys = [
     uniChar: "\uD83C\uDF0A",
     title: "ocean",
     keycode: 55,
-    kbCode: "Digit7",
+    code: "Digit7",
     type: "thm",
   },
   {
@@ -241,7 +241,7 @@ export const themeKeys = [
     uniChar: "\u2614",
     title: "storm",
     keycode: 55,
-    kbCode: "Digit7",
+    code: "Digit7",
     type: "thm",
   },
   {
@@ -251,7 +251,7 @@ export const themeKeys = [
     uniChar: "\uD83C\uDF33",
     title: "jungle",
     keycode: 55,
-    kbCode: "Digit7",
+    code: "Digit7",
     type: "thm",
   },
 ];
@@ -264,7 +264,7 @@ export const themeTypeKeys = [
     uniChar: "\uD83D\uDCF7",
     title: "choose picture theme",
     keycode: 65,
-    kbCode: "KeyA",
+    code: "KeyA",
     type: "thype",
   },
   {
@@ -274,7 +274,7 @@ export const themeTypeKeys = [
     uniChar: "\uD83C\uDFA8",
     title: "choose color theme",
     keycode: 65,
-    kbCode: "KeyA",
+    code: "KeyA",
     type: "thype",
   },
   {
@@ -285,7 +285,7 @@ export const themeTypeKeys = [
     uniChar: "\uD83D\uDE80",
     title: "choose anim theme",
     keycode: 65,
-    kbCode: "KeyA",
+    code: "KeyA",
     type: "thype",
   },
 ];
@@ -298,7 +298,7 @@ export const imageKeys = [
     uniChar: "\uD83D\uDCF7",
     title: "choose picture image",
     keycode: 65,
-    kbCode: "KeyA",
+    code: "KeyA",
     type: "imgChs",
   },
   {
@@ -308,7 +308,7 @@ export const imageKeys = [
     uniChar: "\uD83C\uDFA8",
     title: "choose color image",
     keycode: 65,
-    kbCode: "KeyA",
+    code: "KeyA",
     type: "imgChs",
   },
   {
@@ -318,7 +318,7 @@ export const imageKeys = [
     uniChar: "\uD83C\uDFA8",
     title: "choose color image",
     keycode: 65,
-    kbCode: "KeyA",
+    code: "KeyA",
     type: "imgChs",
   },
 ];
@@ -332,7 +332,7 @@ export const animKeys = [
     uniChar: "\u219D",
     title: "choose anim",
     keycode: null,
-    kbCode: "",
+    code: "",
     type: "animChs",
   },
   {
@@ -344,7 +344,7 @@ export const animKeys = [
     uniChar: "\uD83D\uDCA5", // explosion
     title: "choose anim",
     keycode: null,
-    kbCode: "",
+    code: "",
     type: "animChs",
   },
   {
@@ -357,7 +357,7 @@ export const animKeys = [
     uniChar: "\uD83D\uDCAB", // dizzy symbol
     title: "choose anim",
     keycode: null,
-    kbCode: "",
+    code: "",
     type: "animChs",
   },
 ];
