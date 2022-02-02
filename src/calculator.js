@@ -1028,9 +1028,15 @@ class Calculator extends Component {
     // console.log(`yaaay we're doing ${.type} math!`);
 
     let { resultData } = { ...this.state };
-    const _num1 = Number(this.state.num1);
+    let _num1, _num2;
+
+    if (!this.state.num1 === "") {
+      _num1 = Number(this.state.num1);
+    }
     const _op = this.state.op1;
-    const _num2 = Number(this.state.num2);
+    if (!this.state.num2 === "") {
+      _num2 = Number(this.state.num2);
+    }
     const _op2 = this.state.op2;
 
     if (this.state.num1 + this.state.op1 + this.state.num2 === "404+545") {
