@@ -1,31 +1,31 @@
 #{$outer-wrapper} {
-  .settings {
-    z-index: 99;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    width: 4rem;
-    padding: 0;
-    height: 4rem;
-    .fa.fa-cog {
-      transition: all 0.25s;
-      font-size: 2rem;
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      &:hover {
-        // transform: rotate(90deg);
-      }
-    }
-  }
-
-  // open
-  &#{$open} {
     .settings {
-      .fa.fa-cog {
-        transform: rotate(90deg);
-      }
+        z-index: 99;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        width: 4rem;
+        height: 4rem;
+        .fa.fa-cog {
+            transition: all 0.25s;
+            font-size: 2rem;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            &:hover {
+                transform: rotate(90deg);
+            }
+        }
     }
-  }
+
+    // open
+    &#{$open} {
+        .settings {
+            .fa.fa-cog {
+                transform: rotate(90deg);
+            }
+        }
+    }
 }

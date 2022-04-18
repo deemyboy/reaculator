@@ -1,13 +1,13 @@
 import React from "react";
+import Paper from '@mui/material/Paper';
 
 const Result = React.forwardRef((props, ref) => {
-  let resVal = props.resultData.resultValue
-    ? props.resultData.resultValue
-    : "0";
+  let { value, className} = props.resultData;
+  value = value ? value : "0";
 
   return (
     <React.Fragment>
-      <p className={props.resultData.resultClass}>{resVal}</p>
+      <Paper className={className}>{value}</Paper>
     </React.Fragment>
   );
 });

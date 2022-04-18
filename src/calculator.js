@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import "./styles/main.scss";
 import Display from "./components/display";
-import Keyboard from "./components/keyboard";
+import { Keyboard } from "./components/keyboard";
 import Canvas from "./components/canvas";
+import { Sidebar } from "./components/sidebar";
 import Cookies from "universal-cookie";
+import { keyboards } from "./js/keyboards";
 import { themeKeys } from "./js/keys";
 import { numberKeys } from "./js/keys";
 import { functionKeys } from "./js/keys";
@@ -11,6 +13,7 @@ import { utilityKeys } from "./js/keys";
 import { allowedKeys } from "./js/keys";
 import { themeTypeKeys } from "./js/keys";
 import { animKeys } from "./js/keys";
+import { Container, Grid, Typography } from "@mui/material";
 
 class Calculator extends Component {
   displayRef = React.createRef();
@@ -21,13 +24,6 @@ class Calculator extends Component {
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
     this.state.animation = this.getCookie("currentAnim", "anim");
-    this.numberKeys = numberKeys;
-    this.functionKeys = functionKeys;
-    this.utilityKeys = utilityKeys;
-    this.allowedKeys = allowedKeys;
-    this.themeTypeKeys = themeTypeKeys;
-    this.themeKeys = themeKeys;
-    this.animKeys = animKeys;
   }
 
   state = {
@@ -36,88 +32,27 @@ class Calculator extends Component {
     themeType: "color",
     animation: "",
     calculationData: {
-      calculationClass: "calculation",
-      calculationValue: "",
+      className: "calculation",
+      value: "",
     },
-    displayClass: "col display",
+    displayClass: "display",
     resultData: {
-      resultClass: "result",
-      resultValue: "",
-      resultDefaultClass: "result",
-      resultErrorClass: "result_err",
+      className: "result",
+      value: "",
+      defaultClass: "result",
+      errorClass: "result_err",
     },
-    sidebarData: {
-      sidebarClass: "sidebar",
-      sidebarValue: "Settings",
-      isOpen: false,
-    },
-
-    sidebarKeyboards: "",
-
-    circleDefaultClassName: "circle",
-    circle1Data: { id: "circle1", className: "circle-1", showing: false },
-    circle2Data: { id: "circle2", className: "circle-2", showing: false },
-    visibleClassName: "showing",
-    currentSidebarSecondKeyboard: "",
-    defaultSidebarSecondKeyboard: "themesKeyboardData",
     animationData: {
       animations: ["slither", "fireworks", "twist"],
       currentSetting: "slither",
       onClick: (e) => this.onSelectAnim(e),
     },
     canvasId: "cvs",
-    keyboards: [
-      {
-        name: "number",
-        keyboardTitle: "Number Keyboard",
-        className: "keyboard-number",
-        kb: "num",
-        keys: numberKeys,
-        onClick: (e) => this.handleClick(e),
-      },
-      {
-        name: "function",
-        keyboardTitle: "Function Keyboard",
-        className: "keyboard-function",
-        kb: "func",
-        keys: functionKeys,
-        onClick: (e) => this.handleClick(e),
-      },
-      {
-        name: "utility",
-        keyboardTitle: "Utility Keyboard",
-        className: "keyboard-utility",
-        kb: "util",
-        keys: utilityKeys,
-        onClick: (e) => this.handleClick(e),
-      },
-      {
-        name: "theme-type",
-        keyboardTitle: "Select Theme Type",
-        className: "keyboard-theme-type",
-        kb: "theme-type",
-        keys: themeTypeKeys,
-        onClick: (e) => this.onSelectThemeType(e),
-      },
-      {
-        name: "theme",
-        keyboardTitle: "Select Theme",
-        className: "keyboard-theme",
-        kb: "theme",
-        keys: themeKeys,
-        onClick: (e) => this.onSelectTheme(e),
-      },
-      {
-        name: "animations",
-        className: "keyboard-theme",
-        keyboardTitle: "Select Animation",
-        kb: "anim",
-        keys: [
-          { keys: themeKeys, onClick: (e) => this.onSelectTheme(e) },
-          { keys: animKeys, onClick: (e) => this.onSelectAnim(e) },
-        ],
-      },
-    ],
+    sidebarIsOpen: false,
+    circle1IsOpen: false,
+    circle2IsOpen: false,
+    circle3IsOpen: false,
+
     keyErr: false,
     numberKeyboardClass: "keyboard-number",
     functionKeyboardClass: "keyboard-function",
@@ -144,7 +79,6 @@ class Calculator extends Component {
   };
 
   componentDidMount() {
-    // console.log("componentDidMount");
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
 
     let _id = "anim-script",
@@ -230,24 +164,23 @@ class Calculator extends Component {
     let day = d.getDate();
     let expires = new Date(year + 1, month, day);
 
-    const cookies = new Cookies();
+    const cookie = new Cookies();
 
     const path = cookieData.cookiePath;
-    cookies.set(cookieData.cookieLabel, cookieData.cookieValue, path, expires);
+    cookie.set(cookieData.cookieLabel, cookieData.cookieValue, path, expires);
   };
 
   getCookie = (cookieLabel, cookieDefault) => {
-    const cookies = new Cookies();
-    return cookies.get(cookieLabel)
-      ? cookies.get(cookieLabel)
+    const cookie = new Cookies();
+    return cookie.get(cookieLabel)
+      ? cookie.get(cookieLabel)
       : this.state[cookieDefault];
   };
 
   handleClick = (e) => {
-    // console.log("189: handleClick", e);
     e.target.blur();
-    const keyClicked = this.utilityKeys
-      .concat(this.numberKeys, this.functionKeys)
+    const keyClicked = utilityKeys
+      .concat(numberKeys, functionKeys)
       .filter((k) => {
         return k.id.toString() === e.target.id;
       });
@@ -260,13 +193,10 @@ class Calculator extends Component {
   };
 
   handleKeyPress = (e) => {
-    // console.log("207: handleKeyPress", e);
     var _code = e.keyCode;
-    var _key = this.utilityKeys
-      .concat(this.numberKeys, this.functionKeys)
-      .filter((k) => {
-        return k.keycode === e.keyCode;
-      })[0];
+    var _key = utilityKeys.concat(numberKeys, functionKeys).filter((k) => {
+      return k.keycode === e.keyCode;
+    })[0];
 
     // prevent these keys firing
     // ctrl key 17, shift key 16 alt key 18
@@ -277,12 +207,11 @@ class Calculator extends Component {
     }
     if (!e.repeat) {
       if (_button === null || _button === undefined) {
-        // console.log("local_button equals null"); // do thing
       } else if (_button !== null || _button !== undefined) {
         _button.focus(timeout);
         var timeout = setTimeout(() => _button.blur(), 200);
       }
-      if (this.allowedKeys.includes(e.keyCode)) {
+      if (allowedKeys.includes(e.keyCode)) {
         let keyData = {
           key: e.key,
           ctrlKey: e.ctrlKey,
@@ -304,7 +233,6 @@ class Calculator extends Component {
   };
 
   handleUserInput = (inputData) => {
-    // console.log("269: handleUserInput inputData: ", inputData);
     let { userInput } = { ...this.state };
 
     // if maths error then prevent all input except a for ac
@@ -359,10 +287,8 @@ class Calculator extends Component {
 
   handleUtilityOperator = (key) => {
     let resultData = { ...this.state.resultData };
-    console.log("490: handleUtilityOperator key:", key, "key", key);
 
     if (key === "a") {
-      console.log("ac pressed");
       resultData.resultValue = "";
       resultData.resultClass = this.state.resultData.resultDefaultClass;
 
@@ -383,7 +309,6 @@ class Calculator extends Component {
       let { userInput } = this.state;
     }
     // if (key === "=") {
-    //   console.log(
     //     `297: num1: ${this.state.num1} num2: ${this.state.num2} op1: ${this.state.op1} op2: ${this.state.op2}`
     //   );
     //   if (
@@ -392,7 +317,6 @@ class Calculator extends Component {
     //     this.state.num2 &&
     //     this.state.num2 !== ""
     //   ) {
-    //     console.log("304: hit");
     //     this.updateOperator("=");
     //   }
     // }
@@ -420,8 +344,6 @@ class Calculator extends Component {
 
     let { num1, num2, op1, op2, userInput } = { ...this.state };
 
-    console.log(`373 ######### parseUserInput ${userInput} #########`);
-
     if (this.state.resultData.resultValue) {
       // _userInput = userInput;
       // input = this.preProcessUserInput(input);
@@ -438,7 +360,6 @@ class Calculator extends Component {
       userInput.length === 1 &&
       userInput.charAt(0) !== "."
     ) {
-      console.log("hit NaN");
       this.setState({ userInput: "" });
       return;
     }
@@ -446,7 +367,6 @@ class Calculator extends Component {
     // [a]  repeated 0
     // handles  00 or 00000 or 00000000000
     if (+userInput === 0 && !this.state.dotRgxNnGr.test(userInput)) {
-      console.log("hit pure 0");
       this.setState({ userInput: "0", num1: "0" });
       return;
     }
@@ -538,8 +458,6 @@ class Calculator extends Component {
   };
 
   processNumber = (num) => {
-    // console.log("processNumber  hit");
-
     if (this.state.dotRgxNnGr.test(num)) {
       return (num = this.formatDecimal(num));
     } else {
@@ -569,7 +487,6 @@ class Calculator extends Component {
    * -  was equals last pressed
    */
   preProcessUserInput = (inputData) => {
-    console.log("preProcessUserInput hit", inputData);
     // check if "=" was pressed to get a result followed by a number
     // if it is then the previous function (post Result clearup)
     // has put the previous result into userInput
@@ -701,7 +618,6 @@ class Calculator extends Component {
   };
 
   formatDecimal = (numToProcess) => {
-    console.log("formatDecimal  hit");
     const _dotRgx = this.state.dotRgx;
     let dotMatch,
       dotMatch2,
@@ -709,7 +625,6 @@ class Calculator extends Component {
       dotMatches2 = [];
 
     while ((dotMatch = _dotRgx.exec(numToProcess)) != null) {
-      console.log("dot match found at " + dotMatch.index);
       dotMatches.push(dotMatch.index);
     }
 
@@ -721,19 +636,15 @@ class Calculator extends Component {
 
     // if called in error ie. handle no dots
     if (dotMatches.length < 1) {
-      console.log("dotMatches < 1");
       return numToProcess;
     } else if (dotMatches.length < 2) {
-      console.log("dotMatches < 2");
       if (dotMatches[0] < 1) {
         this.setState({ userInput: "0." });
         return "0.";
       } else {
-        console.log("num dotMatches = ", dotMatches.length);
         return numToProcess;
       }
     } else {
-      console.log("dotMatches >= 2");
       let _userInput = this.state.userInput;
       this.setState({ userInput: this.state.userInput.slice(0, -1) });
 
@@ -744,66 +655,47 @@ class Calculator extends Component {
 
   toggleSidebar = (e) => {
     e.stopPropagation();
-    let sidebarData = { ...this.state.sidebarData };
-    let _isOpen = sidebarData.isOpen;
+    let _isOpen = this.state.sidebarIsOpen;
 
-    // test if body touched (not menu icon)
-    // if (
-    //   e.target.className !== "fa fa-cog" ||
-    //   e.target.className !== "settings"
-    // ) {
-    //   // if sidebar open allow touch on calculator body  to close sidebar
-    //   if (isOpen) {
-    //     isOpen = false;
-    //     sidebarData.isOpen = isOpen;
-    //     this.setState({ sidebarData });
-    //   } else {
-    //     isOpen = true;
-    //     sidebarData.isOpen = isOpen;
-    //     this.setState({ sidebarData });
-    //   }
-    // } else {
     if (!_isOpen) {
       _isOpen = true;
     } else {
       _isOpen = false;
     }
 
-    sidebarData.isOpen = _isOpen;
-    // }
-    this.setState({ sidebarData });
+    this.setState({ sidebarIsOpen: _isOpen });
   };
 
   closeSidebar = (e) => {
-    let _sidebarData = { ...this.state.sidebarData },
-      _circle1Data = { ...this.state.circle1Data },
-      _circle2Data = { ...this.state.circle2Data };
-
-    _sidebarData.isOpen = false;
-    _circle1Data.showing = false;
-    _circle2Data.showing = false;
-
+    e.stopPropagation();
     this.setState({
-      sidebarData: _sidebarData,
-      circle1Data: _circle1Data,
-      circle2Data: _circle2Data,
+      sidebarIsOpen: false,
+      circle1IsOpen: false,
+      circle2IsOpen: false,
+      circle3IsOpen: false,
     });
   };
 
   showKeyboard = (e) => {
+    console.log("hit showKeyboard _isOpen: ", this.state.sidebarIsOpen, e);
     e.stopPropagation();
     let _circleData;
+    let _key = "IsOpen";
     // only allow interaction on visible sidebar
-    if (this.state.sidebarData.isOpen) {
-      if (e.target.id === "circle1") {
-        _circleData = { ...this.state.circle1Data };
-        _circleData.showing = true;
-        this.setState({ circle1Data: _circleData });
-      } else {
-        _circleData = { ...this.state.circle2Data };
-        _circleData.showing = true;
-        this.setState({ circle2Data: _circleData });
-      }
+    if (this.state.sidebarIsOpen) {
+      // if (e.target.id === "circle1") {
+      //   this.setState({ circle1IsOpen: true });
+
+      //   // _circleData.showing = true;
+      //   this.setState({ circle1Data: _circleData });
+      // } else {
+      //   _circleData = { ...this.state.circle2Data };
+      //   _circleData.showing = true;
+      //   this.setState({ circle2Data: _circleData });
+      // }
+      _key = _key.replace(/^/, e.target.id);
+      console.log(_key);
+      this.setState({ [_key]: true });
     }
   };
 
@@ -853,50 +745,49 @@ class Calculator extends Component {
     this.setCookie(cookieData);
   };
 
-  getKeyboardData = (keyboardName) => {
-    let _kb;
-    while (typeof _kb === "undefined") {
-      this.state.keyboards.forEach((element) => {
-        if (element.name === keyboardName) {
-          _kb = element;
-          _kb.keyErr = this.state.keyErr;
+  getKeyboardData = (name) => {
+    let _keyboardData = {};
+    while (typeof _keyboardData === "undefined") {
+      keyboards.forEach((keyboard) => {
+        if (keyboard.name === name) {
+          _keyboardData.keyboard = keyboard;
+          _keyboardData.keyErr = this.state.keyErr;
         }
       });
     }
-    return _kb;
+    return _keyboardData;
   };
 
-  getCircleClasses = (position) => {
-    let _circleData;
-    if (position === 1) {
-      _circleData = this.state.circle1Data;
-    } else if (position === 2) {
-      _circleData = this.state.circle2Data;
-    }
-    return _circleData.showing
-      ? this.state.circleDefaultClassName +
-          " " +
-          _circleData.className +
-          " " +
-          this.state.visibleClassName
-      : this.state.circleDefaultClassName + " " + _circleData.className;
+  getKeyboard = (keyboardName) => {
+    return keyboards.find((keyboard) => {
+      return keyboard.name === keyboardName ? keyboard : undefined;
+    });
   };
 
-  getCircleId = (position) => {
-    let _circleData;
-    if (position === 1) {
-      _circleData = this.state.circle1Data;
-    } else if (position === 2) {
-      _circleData = this.state.circle2Data;
+  getSidebarData = (themeType) => {
+    let sidebarData = {
+      isOpen: this.state.sidebarIsOpen,
+    };
+    let components = [
+      { keyboard: "theme-type", isOpen: this.state.circle1IsOpen },
+      { keyboard: "theme", isOpen: this.state.circle2IsOpen },
+    ];
+    sidebarData.circleOnClick = this.showKeyboard;
+
+    if (themeType === "anim") {
+      components.push({
+        keyboard: "animation",
+        isOpen: this.state.circle3IsOpen,
+      });
     }
-    return _circleData.id;
+    sidebarData.components = components;
+    return sidebarData;
   };
 
   setCalculationValue = () => {
-    console.log("setCalculationValue hit");
-
+    console.log("hit setCalculationValue");
     const setCalculationDisplayChar = (op) => {
-      return this.functionKeys
+      return functionKeys
         .filter((k) => k.value === op)
         .filter((k) => {
           if ("calculationDisplayChar" in k) return k;
@@ -956,8 +847,6 @@ class Calculator extends Component {
 
   //  resultData: { resultClass: "result", resultValue: "0" }
   doMath = () => {
-    // console.log(`yaaay we're doing ${.type} math!`);
-
     let resultData = { ...this.state.resultData };
     let _num1, _num2;
 
@@ -1051,7 +940,6 @@ class Calculator extends Component {
   };
 
   postResultClearUp = () => {
-    console.log("701 postResultClearUp");
     let { resultValue } = { ...this.state.resultData };
     let { num1, num2, op1, op2, userInput } = { ...this.state };
 
@@ -1059,21 +947,6 @@ class Calculator extends Component {
       this.setResultErrorClass();
       return;
     }
-
-    console.log(
-      "999 resultValue",
-      resultValue,
-      "num1",
-      num1,
-      "num2",
-      num2,
-      "op1",
-      op1,
-      "op2",
-      op2,
-      "userInput",
-      userInput
-    );
 
     if (op2 !== "=" && op1 !== "s" && op1 !== "r") {
       num1 = resultValue;
@@ -1126,92 +999,54 @@ class Calculator extends Component {
   };
 
   render = () => {
-    const renderSecondSidebarKeyboard = () => {
-      if (this.state.themeType === "anim") {
-        return (
-          <Keyboard kbData={this.getKeyboardData("animations")}></Keyboard>
-        );
-      } else {
-        return <Keyboard kbData={this.getKeyboardData("theme")}></Keyboard>;
-      }
-    };
-
     return (
-      <React.Fragment>
-        <div
-          className={`container ${
-            this.state.sidebarData.isOpen === true ? "open" : ""
-          } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
-          // onClick={this.closeSidebar}
-          // onTouchStart={this.closeSidebar}
+      <Container
+        className={`container ${
+          this.state.sidebarIsOpen === true ? "open" : ""
+        } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
+        sx={{ p: "0!important" }}
+      >
+        {/* ------------ app ---------------- */}
+        {/* ------------ display and keyboards---------------- */}
+        <Grid
+          onClick={this.closeSidebar}
+          onTouchStart={this.closeSidebar}
+          direction={"column"}
+          id="canvas-container"
+          className={"calculator"}
+          meta-name="display and keyboards"
         >
-          {/* ------------ app ---------------- */}
-          <div className="row flex-nowrap" meta-name="app">
-            {/* ------------ display and keyboards---------------- */}
-            <p
-              className="settings"
-              onClick={this.toggleSidebar}
-              onTouchStart={this.toggleSidebar}
-            >
-              <i className="fa fa-cog" aria-hidden="true"></i>
-            </p>
-            <div
-              id="canvas-container"
-              className={`col calculator `}
-              meta-name="display and keyboards"
-            >
-              <Canvas ref={this.animate} canId={this.state.canvasId} />
-              <p className="title">{this.state.title}</p>
-              {/* ------------ display ---------------- */}
-              <div className="row g-0" meta-name="display">
-                <Display
-                  calculationData={this.state.calculationData}
-                  resultData={this.state.resultData}
-                  displayClass={this.state.displayClass}
-                />
-              </div>
-              {/* ------------ main keyboards ---------------- */}
-              <div className="row g-0" meta-name="main keyboards">
-                <div className="col">
-                  <Keyboard kbData={this.getKeyboardData("number")}></Keyboard>
-                </div>
-                <div className="col">
-                  <Keyboard
-                    kbData={this.getKeyboardData("function")}
-                  ></Keyboard>
-                  <Keyboard kbData={this.getKeyboardData("utility")}></Keyboard>
-                </div>
-              </div>
-            </div>
-            {/* ------------ sidebar ---------------- */}
-            <div
-              className="col sidebar "
-              // className=" col"
-              meta-name="sidebar"
-            >
-              <div className="h-50 sidebar-keyboard-wrapper">
-                <div
-                  id={this.getCircleId(1)}
-                  className={this.getCircleClasses(1)}
-                  onClick={this.showKeyboard}
-                ></div>
-                {/* ------------ sidebar keyboards ---------------- */}
-                <Keyboard
-                  kbData={this.getKeyboardData("theme-type")}
-                ></Keyboard>
-              </div>
-              <div className="h-50 sidebar-keyboard-wrapper">
-                <div
-                  id={this.getCircleId(2)}
-                  className={this.getCircleClasses(2)}
-                  onClick={this.showKeyboard}
-                ></div>
-                {renderSecondSidebarKeyboard()}
-              </div>
-            </div>
-          </div>
-        </div>
-      </React.Fragment>
+          <p
+            className="settings"
+            onClick={this.toggleSidebar}
+            onTouchStart={this.toggleSidebar}
+          >
+            <i className="fa fa-cog" aria-hidden="true"></i>
+          </p>
+          <Canvas ref={this.animate} canId={this.state.canvasId} />
+          <Typography className="title">{this.state.title}</Typography>
+          {/* ------------ display ---------------- */}
+          <Display
+            calculationData={this.state.calculationData}
+            resultData={this.state.resultData}
+            displayClass={this.state.displayClass}
+          />
+          {/* ------------ main keyboards ---------------- */}
+          <Grid container className="" meta-name="main keyboards">
+            <Grid item xs={6} md={6} className="">
+              <Keyboard props={this.getKeyboard("number")}></Keyboard>
+            </Grid>
+            <Grid item xs={6} md={6} className="">
+              <Keyboard props={this.getKeyboard("function")}></Keyboard>
+            </Grid>
+            <Grid item xs={12} md={12} className="">
+              <Keyboard props={this.getKeyboard("utility")}></Keyboard>
+            </Grid>
+          </Grid>
+        </Grid>
+        {/* ------------ sidebar ---------------- */}
+        <Sidebar props={this.getSidebarData(this.state.themeType)} />
+      </Container>
     );
   };
 }

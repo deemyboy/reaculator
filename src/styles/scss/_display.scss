@@ -1,45 +1,49 @@
 .calculator {
-  .display {
-    border: 2px solid;
-    border-radius: 5px;
-    box-shadow: inset -2px -2px 3px 1px #96a292;
-    clear: both;
-    font-family: Orbitron, sans-serif;
-    margin: 20px 3px;
-    padding: 0 10px;
-    width: 100%;
-    text-align: right;
+    .display {
+        border: 2px solid;
+        border-radius: 5px;
+        box-shadow: inset -2px -2px 3px 1px #96a292;
+        clear: both;
+        font-family: Orbitron, sans-serif;
+        margin: 10px 5px;
+        padding: 10px 5px;
+        display: flex;
+        text-align: right;
+        flex-direction: column;
 
-    p {
-      margin-bottom: 5px;
+        .calculation,
+        .result {
+            background-color: transparent;
+            box-shadow: none;
+        }
+        .calculation {
+            font-size: 2rem;
+            min-height: 3rem;
+        }
+        .clearIt {
+            margin: 0;
+        }
+        .result {
+            font-size: 3rem;
+        }
+
+        .result_err {
+            @extend .result;
+            color: red;
+        }
+        .result_baba {
+            font-size: 2.3em;
+        }
     }
-    .calculation {
-      font-size: 2rem;
-      min-height: 3rem;
+    sup {
+        top: -0.8em;
     }
-    .clearIt {
-      margin: 0;
+    sub,
+    sup {
+        position: relative;
+        font-size: 0.6em;
+        font-weight: 600;
+        line-height: 0;
+        vertical-align: baseline;
     }
-    .result {
-      font-size: 3rem;
-    }
-    .result_err {
-      @extend .result;
-      color: red;
-    }
-    .result_baba {
-      font-size: 2.3em;
-    }
-  }
-  sup {
-    top: -0.8em;
-  }
-  sub,
-  sup {
-    position: relative;
-    font-size: 0.6em;
-    font-weight: 600;
-    line-height: 0;
-    vertical-align: baseline;
-  }
 }

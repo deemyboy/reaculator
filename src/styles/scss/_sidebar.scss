@@ -1,142 +1,103 @@
 @use "sass:math";
 
-#{$outer-wrapper} {
-  .sidebar {
+.sidebar {
     @include transition(all 0.25s);
     // border-radius: 0 $s-05r $s-05r 0;
     z-index: 0;
     position: absolute;
     height: 100%;
-    width: 40%;
+    top: 0;
     right: 0;
     transform: scaleX(0);
     transform-origin: right;
+}
 
-    .sidebar-keyboard-wrapper {
-      margin-right: calc(var(--bs-gutter-x) * -0.5);
-      margin-left: calc(var(--bs-gutter-x) * -0.5);
-      position: relative;
-      > .title {
-        display: none;
-        text-align: center;
-        font-size: 1.1rem;
-        padding: 10px 0;
-      }
-    }
-  }
-
-  $circle-diam: 2rem;
-  .sidebar {
+$circle-diam: 2rem;
+.sidebar {
     .circle {
-      z-index: 2;
-      position: absolute;
-      border-radius: 2rem;
-      transform-origin: center;
-      height: $circle-diam;
-      width: $circle-diam;
-      left: calc(50% - math.div($circle-diam, 2));
-      top: calc(50% - math.div($circle-diam, 2));
-      @include transition(all 0.25s);
-      &:after {
-        content: "";
-        display: inline-block;
-        border: none$i;
-        opacity: 0.4;
+        z-index: 2;
         border-radius: 2rem;
-        transform: scale(1);
-        height: $circle-diam * 1.333;
-        width: $circle-diam * 1.333;
-        position: absolute;
-        left: calc(50% - math.div($circle-diam * 1.333, 2));
-        top: calc(50% - math.div($circle-diam * 1.333, 2));
+        transform-origin: center;
+        height: $circle-diam;
+        width: $circle-diam;
         @include transition(all 0.25s);
-      }
-      &:hover {
-        transform: scale(1.333);
-        // opacity: 1;
-      }
-      &:hover:after {
-        transform: scale(0.675);
-        // opacity: 1;
-      }
+        &:after {
+            content: "";
+            display: inline-block;
+            border: none;
+            opacity: 0.4;
+            border-radius: 2rem;
+            transform: scale(1);
+            height: $circle-diam * 1.333;
+            width: $circle-diam * 1.333;
+            position: relative;
+            top: -0.33rem;
+            left: -0.33rem;
+            @include transition(all 0.25s);
+        }
+        &:hover {
+            transform: scale(1.333);
+            // opacity: 1;
+        }
+        &:hover:after {
+            transform: scale(0.675);
+            // opacity: 1;
+        }
     }
-  }
+}
 
-  &#{$open} {
+#{$open} {
     div.sidebar {
-      border-radius: 0 $s-033r $s-033r 0;
-      transform: scaleX(1) $i;
-      .title {
-      }
+        border-radius: 0 $s-033r $s-033r 0;
+        transform: scaleX(1) $i;
+        .title {}
     }
-  }
+}
 
-  &#{$picture} {
+#{$picture} {
     // sizes
     .sidebar {
-      .keyboard {
-      }
+        .keyboard {}
     }
-  }
+}
 
-  .sidebar {
+.sidebar {
     .circle {
-      &#{$showing} {
-        transform: scale(1.333);
-        &:after {
-          transform: scale(0.675);
+        &#{$showing} {
+            transform: scale(1.333);
+            &:after {
+                transform: scale(0.675);
+            }
+            ~ .keyboard {
+                transform: rotate(-90deg);
+                .btn {
+                    opacity: 1;
+                }
+            }
         }
-        ~ .keyboard {
-          transform: rotate(-90deg);
-          .btn {
-            opacity: 1;
-          }
-        }
-      }
     }
-  }
+}
 
-  div#circle1 {
+div#circle1 {
     ~ .keyboard {
-      @include on-circle(
-        $item-count: 3,
-        $circle-width: 100%,
-        $circle-height: 100%,
-        $circle-radius: 150%,
-        $item-size: 3.5rem
-      );
+        @include on-circle($item-count: 3, $circle-width: 100%, $circle-height: 100%, $circle-radius: 150%, $item-size: 3.5rem);
 
-      .btn {
-      }
+        .btn {}
     }
-  }
+}
 
-  #circle2 {
+#circle2 {
     ~ .keyboard {
-      @include on-circle(
-        $item-count: 5,
-        $circle-width: 100%,
-        $circle-height: 100%,
-        $circle-radius: 150%,
-        $item-size: 3.5rem
-      );
+        @include on-circle($item-count: 5, $circle-width: 100%, $circle-height: 100%, $circle-radius: 150%, $item-size: 3.5rem);
 
-      .btn {
-      }
+        .btn {}
     }
-  }
+}
 
-  &#{$anim} {
+#{$anim} {
     div#circle2 {
-      ~ .keyboard {
-        @include on-circle(
-          $item-count: 8,
-          $circle-width: 100%,
-          $circle-height: 100%,
-          $circle-radius: 150%,
-          $item-size: 3.5rem
-        );
-      }
+        ~ .keyboard {
+            @include on-circle($item-count: 8, $circle-width: 100%, $circle-height: 100%, $circle-radius: 150%, $item-size: 3.5rem);
+        }
     }
-  }
 }

@@ -1,11 +1,13 @@
 import React from "react";
+import Paper from '@mui/material/Paper';
 
-const Calculation = React.forwardRef((props, ref) => {
+const Calculation = React.forwardRef((props) => {
+  const {value, className} = props.calculationData;
   return (
     <React.Fragment>
-      <p className={props.calculationData.calculationClass}>
-        {props.calculationData.calculationValue}
-      </p>
+      <Paper className={className}>
+        {value}
+      </Paper>
     </React.Fragment>
   );
 });

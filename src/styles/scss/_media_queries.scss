@@ -364,611 +364,611 @@
 @include respond-below(sm) {
 }
 
-@include media-breakpoint-down(xl) {
-  #{$outer-wrapper} {
-    > div.row:first-of-type {
-      > div {
-      }
-      > div:nth-of-type(1) {
-      }
-      > div:nth-of-type(2) {
-      }
-    }
-    .calculator {
-      > .title {
-      }
-      .keyboard {
-        button {
-        }
-      }
-    }
-    div.sidebar {
-    }
-  }
-}
+// @include media-breakpoint-down(xl) {
+//   #{$outer-wrapper} {
+//     > div.row:first-of-type {
+//       > div {
+//       }
+//       > div:nth-of-type(1) {
+//       }
+//       > div:nth-of-type(2) {
+//       }
+//     }
+//     .calculator {
+//       > .title {
+//       }
+//       .keyboard {
+//         button {
+//         }
+//       }
+//     }
+//     div.sidebar {
+//     }
+//   }
+// }
 
-@include media-breakpoint-down(lg) {
-  #{$outer-wrapper} {
-    > div.row:first-of-type {
-      position: relative;
-      > div {
-      }
-      > div:nth-of-type(1) {
-      }
-      > div:nth-of-type(2) {
-      }
-    }
-    .calculator {
-      > p.title {
-        font-size: 2.7rem;
-        line-height: 2rem;
-        font-weight: 100;
-        margin-bottom: 0;
-      }
-      .keyboard {
-        button {
-        }
-      }
-    }
-    .sidebar {
-    }
-  }
-}
+// @include media-breakpoint-down(lg) {
+//   #{$outer-wrapper} {
+//     > div.row:first-of-type {
+//       position: relative;
+//       > div {
+//       }
+//       > div:nth-of-type(1) {
+//       }
+//       > div:nth-of-type(2) {
+//       }
+//     }
+//     .calculator {
+//       > p.title {
+//         font-size: 2.7rem;
+//         line-height: 2rem;
+//         font-weight: 100;
+//         margin-bottom: 0;
+//       }
+//       .keyboard {
+//         button {
+//         }
+//       }
+//     }
+//     .sidebar {
+//     }
+//   }
+// }
 
-@include media-breakpoint-down(md) {
-  canvas {
-    // display: none;
-  }
+// @include media-breakpoint-down(md) {
+//   canvas {
+//     // display: none;
+//   }
 
-  #{$outer-wrapper} {
-    > div.row:first-of-type {
-      > div {
-      }
-      > div:nth-of-type(1) {
-      }
-      > div:nth-of-type(2) {
-      }
-    }
-    p.settings {
-      .fa.fa-cog {
-      }
-    }
-    .calculator {
-      > .title {
-      }
-      .keyboard {
-        .btn {
-        }
-      }
-    }
-    .sidebar {
-      div.keyboard {
-        .btn {
-        }
-      }
-    }
-  }
-}
+//   #{$outer-wrapper} {
+//     > div.row:first-of-type {
+//       > div {
+//       }
+//       > div:nth-of-type(1) {
+//       }
+//       > div:nth-of-type(2) {
+//       }
+//     }
+//     p.settings {
+//       .fa.fa-cog {
+//       }
+//     }
+//     .calculator {
+//       > .title {
+//       }
+//       .keyboard {
+//         .btn {
+//         }
+//       }
+//     }
+//     .sidebar {
+//       div.keyboard {
+//         .btn {
+//         }
+//       }
+//     }
+//   }
+// }
 
-@include media-breakpoint-down(sm) {
-  #{$outer-wrapper} {
-    > div.row:first-of-type {
-      > div {
-      }
-      > div:nth-of-type(1) {
-      }
-      > div:nth-of-type(2) {
-      }
-    }
-    .calculator {
-      > .title {
-      }
-      .keyboard {
-        .btn {
-          font-size: 2rem;
-        }
-      }
-    }
+// @include media-breakpoint-down(sm) {
+//   #{$outer-wrapper} {
+//     > div.row:first-of-type {
+//       > div {
+//       }
+//       > div:nth-of-type(1) {
+//       }
+//       > div:nth-of-type(2) {
+//       }
+//     }
+//     .calculator {
+//       > .title {
+//       }
+//       .keyboard {
+//         .btn {
+//           font-size: 2rem;
+//         }
+//       }
+//     }
 
-    &#{$open} {
-      > div.row:first-of-type {
-        > div {
-        }
-        > div:nth-of-type(1) {
-        }
-        > div:nth-of-type(2) {
-        }
-      }
-      div.calculator {
-        transform: matrix3d(
-          1,
-          0,
-          0,
-          0.0015,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1
-        );
-        > .title {
-        }
-        .keyboard {
-          .btn {
-          }
-        }
-      }
-    } //end open
+//     &#{$open} {
+//       > div.row:first-of-type {
+//         > div {
+//         }
+//         > div:nth-of-type(1) {
+//         }
+//         > div:nth-of-type(2) {
+//         }
+//       }
+//       div.calculator {
+//         transform: matrix3d(
+//           1,
+//           0,
+//           0,
+//           0.0015,
+//           0,
+//           1,
+//           0,
+//           0,
+//           0,
+//           0,
+//           1,
+//           0,
+//           0,
+//           0,
+//           0,
+//           1
+//         );
+//         > .title {
+//         }
+//         .keyboard {
+//           .btn {
+//           }
+//         }
+//       }
+//     } //end open
 
-    .sidebar {
-      $circle-diam-sm: 2rem;
-      div.circle {
-        z-index: 2;
-        position: absolute;
-        border-radius: 2rem;
-        transform-origin: center;
-        height: $circle-diam-sm;
-        width: $circle-diam-sm;
-        left: calc(50% - math.div($circle-diam-sm, 2));
-        top: calc(50% - math.div($circle-diam-sm, 2));
-        @include transition(all 0.25s);
+//     .sidebar {
+//       $circle-diam-sm: 2rem;
+//       div.circle {
+//         z-index: 2;
+//         position: absolute;
+//         border-radius: 2rem;
+//         transform-origin: center;
+//         height: $circle-diam-sm;
+//         width: $circle-diam-sm;
+//         left: calc(50% - math.div($circle-diam-sm, 2));
+//         top: calc(50% - math.div($circle-diam-sm, 2));
+//         @include transition(all 0.25s);
 
-        &:after {
-          height: $circle-diam-sm * 1.333;
-          width: $circle-diam-sm * 1.333;
-          left: calc(50% - math.div($circle-diam-sm * 1.333, 2));
-          top: calc(50% - math.div($circle-diam-sm * 1.333, 2));
-        }
-        &:hover {
-          transform: scale(1.33);
-        }
-        &:hover:after {
-          transform: scale(0.75);
-        }
-      }
-      div.keyboard {
-        .btn {
-          width: 4rem;
-        }
-      }
-    }
+//         &:after {
+//           height: $circle-diam-sm * 1.333;
+//           width: $circle-diam-sm * 1.333;
+//           left: calc(50% - math.div($circle-diam-sm * 1.333, 2));
+//           top: calc(50% - math.div($circle-diam-sm * 1.333, 2));
+//         }
+//         &:hover {
+//           transform: scale(1.33);
+//         }
+//         &:hover:after {
+//           transform: scale(0.75);
+//         }
+//       }
+//       div.keyboard {
+//         .btn {
+//           width: 4rem;
+//         }
+//       }
+//     }
 
-    div#circle1 {
-      ~ div.keyboard {
-        @include on-circle(
-          $item-count: 3,
-          $circle-width: 100%,
-          $circle-height: 100%,
-          $circle-radius: 150%,
-          $item-size: 4rem
-        );
+//     div#circle1 {
+//       ~ div.keyboard {
+//         @include on-circle(
+//           $item-count: 3,
+//           $circle-width: 100%,
+//           $circle-height: 100%,
+//           $circle-radius: 150%,
+//           $item-size: 4rem
+//         );
 
-        .btn {
-        }
-      }
-    }
+//         .btn {
+//         }
+//       }
+//     }
 
-    div#circle2 {
-      ~ div.keyboard {
-        @include on-circle(
-          $item-count: 5,
-          $circle-width: 100%,
-          $circle-height: 100%,
-          $circle-radius: 150%,
-          $item-size: 4rem
-        );
-        .btn {
-        }
-      }
-    }
+//     div#circle2 {
+//       ~ div.keyboard {
+//         @include on-circle(
+//           $item-count: 5,
+//           $circle-width: 100%,
+//           $circle-height: 100%,
+//           $circle-radius: 150%,
+//           $item-size: 4rem
+//         );
+//         .btn {
+//         }
+//       }
+//     }
 
-    &#{$anim} {
-      div#circle2 {
-        ~ div.keyboard {
-          @include on-circle(
-            $item-count: 8,
-            $circle-width: 100%,
-            $circle-height: 100%,
-            $circle-radius: 150%,
-            $item-size: 4rem
-          );
-        }
-      }
-    }
-  }
-}
+//     &#{$anim} {
+//       div#circle2 {
+//         ~ div.keyboard {
+//           @include on-circle(
+//             $item-count: 8,
+//             $circle-width: 100%,
+//             $circle-height: 100%,
+//             $circle-radius: 150%,
+//             $item-size: 4rem
+//           );
+//         }
+//       }
+//     }
+//   }
+// }
 
-////////// landscape sm
-@include orientation(landscape) {
-  #{$outer-wrapper} {
-    // closed
-    .calculator {
-    }
-    .sidebar {
-    }
-    &#{$open} {
-      //sizes here
-      .calculator {
-      }
-      .sidebar {
-      }
-    }
-  }
-}
+// ////////// landscape sm
+// @include orientation(landscape) {
+//   #{$outer-wrapper} {
+//     // closed
+//     .calculator {
+//     }
+//     .sidebar {
+//     }
+//     &#{$open} {
+//       //sizes here
+//       .calculator {
+//       }
+//       .sidebar {
+//       }
+//     }
+//   }
+// }
 
-@include media-breakpoint-down(xs) {
-  #{$outer-wrapper} {
-    > div.row.flex-nowrap:first-of-type {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      > div.calculator {
-        > div:nth-of-type(1) {
-          .col {
-            //// 320px and 480px
-            margin: 40px 3px 100px;
-          }
-        }
-        > div:nth-of-type(2) {
-          .col {
-            padding: 40px 10px;
-            //// 320px
-            padding: inherit;
-          }
-        }
-      }
-    }
-    p.settings {
-      .fa.fa-cog {
-        font-size: 1.5rem;
-      }
-    }
-    .calculator {
-      > .title {
-      }
-      .display {
-        .result,
-        .result_err {
-        }
-        .calculation {
-        }
-      }
-      .keyboard {
-        padding: 2px;
-        .btn {
-          font-size: 1.5rem;
-        }
-      }
-    }
-    div.sidebar {
-      width: 50%;
-      div.keyboard {
-        .btn {
-          // font-size: 1.2rem;
-          // width: 30%;
-        }
-      }
-    }
+// @include media-breakpoint-down(xs) {
+//   #{$outer-wrapper} {
+//     > div.row.flex-nowrap:first-of-type {
+//       position: fixed;
+//       top: 0;
+//       bottom: 0;
+//       left: 0;
+//       right: 0;
+//       > div.calculator {
+//         > div:nth-of-type(1) {
+//           .col {
+//             //// 320px and 480px
+//             margin: 40px 3px 100px;
+//           }
+//         }
+//         > div:nth-of-type(2) {
+//           .col {
+//             padding: 40px 10px;
+//             //// 320px
+//             padding: inherit;
+//           }
+//         }
+//       }
+//     }
+//     p.settings {
+//       .fa.fa-cog {
+//         font-size: 1.5rem;
+//       }
+//     }
+//     .calculator {
+//       > .title {
+//       }
+//       .display {
+//         .result,
+//         .result_err {
+//         }
+//         .calculation {
+//         }
+//       }
+//       .keyboard {
+//         padding: 2px;
+//         .btn {
+//           font-size: 1.5rem;
+//         }
+//       }
+//     }
+//     div.sidebar {
+//       width: 50%;
+//       div.keyboard {
+//         .btn {
+//           // font-size: 1.2rem;
+//           // width: 30%;
+//         }
+//       }
+//     }
 
-    &#{$open} {
-      div.calculator {
-        transform: matrix3d(1, 0, 0, 0.002, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        canvas {
-        }
-        .keyboard {
-          .btn {
-          }
-        }
-      }
-      .settings {
-      }
-      .sidebar {
-        div.keyboard {
-          .btn {
-          }
-        }
-      }
-    }
-  }
-}
+//     &#{$open} {
+//       div.calculator {
+//         transform: matrix3d(1, 0, 0, 0.002, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+//         canvas {
+//         }
+//         .keyboard {
+//           .btn {
+//           }
+//         }
+//       }
+//       .settings {
+//       }
+//       .sidebar {
+//         div.keyboard {
+//           .btn {
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 
-@include media-breakpoint-down(xxs) {
-  #{$outer-wrapper} {
-    > div.row.flex-nowrap:first-of-type {
-      > div.calculator {
-        > div:nth-of-type(1) {
-          .col {
-            //// 320px and 480px
-          }
-        }
-        > div:nth-of-type(2) {
-          .col {
-          }
-        }
-      }
-    }
-    p.settings {
-      .fa.fa-cog {
-        font-size: 1.5rem;
-      }
-    }
-    &#{$open} {
-      div.calculator.col {
-        transform: matrix3d(
-          1,
-          0,
-          0,
-          0.0025,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1
-        );
-      }
-    }
-    div.calculator.col {
-      > .title {
-      }
-      .display {
-        .result,
-        .result_err {
-        }
-        .calculation {
-        }
-      }
-      .keyboard {
-        .btn {
-        }
-      }
-    }
-    div.sidebar {
-      div.keyboard {
-        .btn {
-          width: 2.75rem;
-        }
-      }
-    }
+// @include media-breakpoint-down(xxs) {
+//   #{$outer-wrapper} {
+//     > div.row.flex-nowrap:first-of-type {
+//       > div.calculator {
+//         > div:nth-of-type(1) {
+//           .col {
+//             //// 320px and 480px
+//           }
+//         }
+//         > div:nth-of-type(2) {
+//           .col {
+//           }
+//         }
+//       }
+//     }
+//     p.settings {
+//       .fa.fa-cog {
+//         font-size: 1.5rem;
+//       }
+//     }
+//     &#{$open} {
+//       div.calculator.col {
+//         transform: matrix3d(
+//           1,
+//           0,
+//           0,
+//           0.0025,
+//           0,
+//           1,
+//           0,
+//           0,
+//           0,
+//           0,
+//           1,
+//           0,
+//           0,
+//           0,
+//           0,
+//           1
+//         );
+//       }
+//     }
+//     div.calculator.col {
+//       > .title {
+//       }
+//       .display {
+//         .result,
+//         .result_err {
+//         }
+//         .calculation {
+//         }
+//       }
+//       .keyboard {
+//         .btn {
+//         }
+//       }
+//     }
+//     div.sidebar {
+//       div.keyboard {
+//         .btn {
+//           width: 2.75rem;
+//         }
+//       }
+//     }
 
-    &#{$open} {
-      div.calculator {
-        canvas {
-        }
-        .keyboard {
-          .btn {
-          }
-        }
-      }
-      .settings {
-      }
-      .sidebar {
-        div.keyboard {
-          .btn {
-          }
-        }
-      }
-    }
+//     &#{$open} {
+//       div.calculator {
+//         canvas {
+//         }
+//         .keyboard {
+//           .btn {
+//           }
+//         }
+//       }
+//       .settings {
+//       }
+//       .sidebar {
+//         div.keyboard {
+//           .btn {
+//           }
+//         }
+//       }
+//     }
 
-    div#circle1 {
-      ~ div.keyboard {
-        @include on-circle(
-          $item-count: 3,
-          $circle-width: 100%,
-          $circle-height: 100%,
-          $circle-radius: 150%,
-          $item-size: 2.75rem
-        );
+//     div#circle1 {
+//       ~ div.keyboard {
+//         @include on-circle(
+//           $item-count: 3,
+//           $circle-width: 100%,
+//           $circle-height: 100%,
+//           $circle-radius: 150%,
+//           $item-size: 2.75rem
+//         );
 
-        .btn {
-        }
-      }
-    }
+//         .btn {
+//         }
+//       }
+//     }
 
-    div#circle2 {
-      ~ div.keyboard {
-        @include on-circle(
-          $item-count: 5,
-          $circle-width: 100%,
-          $circle-height: 100%,
-          $circle-radius: 150%,
-          $item-size: 2.75rem
-        );
-        .btn {
-        }
-      }
-    }
+//     div#circle2 {
+//       ~ div.keyboard {
+//         @include on-circle(
+//           $item-count: 5,
+//           $circle-width: 100%,
+//           $circle-height: 100%,
+//           $circle-radius: 150%,
+//           $item-size: 2.75rem
+//         );
+//         .btn {
+//         }
+//       }
+//     }
 
-    &#{$anim} {
-      div#circle2 {
-        ~ div.keyboard {
-          @include on-circle(
-            $item-count: 8,
-            $circle-width: 100%,
-            $circle-height: 100%,
-            $circle-radius: 150%,
-            $item-size: 2.75rem
-          );
-        }
-      }
-    }
-  }
-}
+//     &#{$anim} {
+//       div#circle2 {
+//         ~ div.keyboard {
+//           @include on-circle(
+//             $item-count: 8,
+//             $circle-width: 100%,
+//             $circle-height: 100%,
+//             $circle-radius: 150%,
+//             $item-size: 2.75rem
+//           );
+//         }
+//       }
+//     }
+//   }
+// }
 
-@include media-breakpoint-down(xxxs) {
-  #{$outer-wrapper} {
-    > div.row.flex-nowrap:first-of-type {
-      > div.calculator {
-        > div:nth-of-type(1) {
-          .col {
-            //// 320px and 480px
-          }
-        }
-        > div:nth-of-type(2) {
-          .col {
-          }
-        }
-      }
-    }
-    p.settings {
-      right: 2%;
-      .fa.fa-cog {
-        font-size: 1.5rem;
-      }
-    }
-    // &#{$open} {
-    //   div.calculator.col {
-    //     transform: matrix3d(
-    //       1,
-    //       0,
-    //       0,
-    //       0.0025,
-    //       0,
-    //       1,
-    //       0,
-    //       0,
-    //       0,
-    //       0,
-    //       1,
-    //       0,
-    //       0,
-    //       0,
-    //       0,
-    //       1
-    //     );
-    //   }
-    // }
-    div.calculator.col {
-      > .title {
-      }
-      .display {
-        .result,
-        .result_err {
-          font-size: 2rem;
-        }
-        .calculation {
-          font-size: 1.5rem;
-          min-height: 2.25rem;
-        }
-      }
-      .keyboard {
-        .btn {
-          margin: 8px;
-        }
-      }
-    }
+// @include media-breakpoint-down(xxxs) {
+//   #{$outer-wrapper} {
+//     > div.row.flex-nowrap:first-of-type {
+//       > div.calculator {
+//         > div:nth-of-type(1) {
+//           .col {
+//             //// 320px and 480px
+//           }
+//         }
+//         > div:nth-of-type(2) {
+//           .col {
+//           }
+//         }
+//       }
+//     }
+//     p.settings {
+//       right: 2%;
+//       .fa.fa-cog {
+//         font-size: 1.5rem;
+//       }
+//     }
+//     // &#{$open} {
+//     //   div.calculator.col {
+//     //     transform: matrix3d(
+//     //       1,
+//     //       0,
+//     //       0,
+//     //       0.0025,
+//     //       0,
+//     //       1,
+//     //       0,
+//     //       0,
+//     //       0,
+//     //       0,
+//     //       1,
+//     //       0,
+//     //       0,
+//     //       0,
+//     //       0,
+//     //       1
+//     //     );
+//     //   }
+//     // }
+//     div.calculator.col {
+//       > .title {
+//       }
+//       .display {
+//         .result,
+//         .result_err {
+//           font-size: 2rem;
+//         }
+//         .calculation {
+//           font-size: 1.5rem;
+//           min-height: 2.25rem;
+//         }
+//       }
+//       .keyboard {
+//         .btn {
+//           margin: 8px;
+//         }
+//       }
+//     }
 
-    div.sidebar {
-      // max-width: 30%;
-      $circle-diam-xxs: 1rem;
-      div.circle {
-        z-index: 2;
-        position: absolute;
-        border-radius: 2rem;
-        transform-origin: center;
-        height: $circle-diam-xxs;
-        width: $circle-diam-xxs;
-        left: calc(50% - math.div($circle-diam-xxs, 2));
-        top: calc(50% - math.div($circle-diam-xxs, 2));
-        @include transition(all 0.25s);
+//     div.sidebar {
+//       // max-width: 30%;
+//       $circle-diam-xxs: 1rem;
+//       div.circle {
+//         z-index: 2;
+//         position: absolute;
+//         border-radius: 2rem;
+//         transform-origin: center;
+//         height: $circle-diam-xxs;
+//         width: $circle-diam-xxs;
+//         left: calc(50% - math.div($circle-diam-xxs, 2));
+//         top: calc(50% - math.div($circle-diam-xxs, 2));
+//         @include transition(all 0.25s);
 
-        &:after {
-          height: $circle-diam-xxs * 1.333;
-          width: $circle-diam-xxs * 1.333;
-          left: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
-          top: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
-        }
-        &:hover {
-          transform: scale(1.33);
-        }
-        &:hover:after {
-          transform: scale(0.75);
-        }
-      }
-      div.keyboard {
-        button.btn {
-          width: 2.25rem;
-          font-size: 100%;
-        }
-      }
-    }
+//         &:after {
+//           height: $circle-diam-xxs * 1.333;
+//           width: $circle-diam-xxs * 1.333;
+//           left: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
+//           top: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
+//         }
+//         &:hover {
+//           transform: scale(1.33);
+//         }
+//         &:hover:after {
+//           transform: scale(0.75);
+//         }
+//       }
+//       div.keyboard {
+//         button.btn {
+//           width: 2.25rem;
+//           font-size: 100%;
+//         }
+//       }
+//     }
 
 
-    &#{$open} {
-      div.calculator {
-        canvas {
-        }
-        .keyboard {
-          .btn {
-          }
-        }
-      }
-      .settings {
-      }
-      .sidebar {
-        div.keyboard {
-          .btn {
-          }
-        }
-      }
-    }
+//     &#{$open} {
+//       div.calculator {
+//         canvas {
+//         }
+//         .keyboard {
+//           .btn {
+//           }
+//         }
+//       }
+//       .settings {
+//       }
+//       .sidebar {
+//         div.keyboard {
+//           .btn {
+//           }
+//         }
+//       }
+//     }
 
-    div#circle1 {
-      ~ div.keyboard {
-        @include on-circle(
-          $item-count: 3,
-          $circle-width: 100%,
-          $circle-height: 100%,
-          $circle-radius: 150%,
-          $item-size: 2.25rem
-        );
+//     div#circle1 {
+//       ~ div.keyboard {
+//         @include on-circle(
+//           $item-count: 3,
+//           $circle-width: 100%,
+//           $circle-height: 100%,
+//           $circle-radius: 150%,
+//           $item-size: 2.25rem
+//         );
 
-        .btn {
-        }
-      }
-    }
+//         .btn {
+//         }
+//       }
+//     }
 
-    div#circle2 {
-      ~ div.keyboard {
-        @include on-circle(
-          $item-count: 5,
-          $circle-width: 100%,
-          $circle-height: 100%,
-          $circle-radius: 150%,
-          $item-size: 2.25rem
-        );
-        .btn {
-        }
-      }
-    }
+//     div#circle2 {
+//       ~ div.keyboard {
+//         @include on-circle(
+//           $item-count: 5,
+//           $circle-width: 100%,
+//           $circle-height: 100%,
+//           $circle-radius: 150%,
+//           $item-size: 2.25rem
+//         );
+//         .btn {
+//         }
+//       }
+//     }
 
-    &#{$anim} {
-      div#circle2 {
-        ~ div.keyboard {
-          @include on-circle(
-            $item-count: 8,
-            $circle-width: 100%,
-            $circle-height: 100%,
-            $circle-radius: 150%,
-            $item-size: 2.25rem
-          );
-        }
-      }
-    }
-  }
-}
+//     &#{$anim} {
+//       div#circle2 {
+//         ~ div.keyboard {
+//           @include on-circle(
+//             $item-count: 8,
+//             $circle-width: 100%,
+//             $circle-height: 100%,
+//             $circle-radius: 150%,
+//             $item-size: 2.25rem
+//           );
+//         }
+//       }
+//     }
+//   }
+// }

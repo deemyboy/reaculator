@@ -1,7 +1,7 @@
 import React from "react";
+import Button from "@mui/material/Button";
 
 const Key = React.forwardRef((props, ref) => {
-
   const setKeyClasses = (keyObj) => {
     let classes = "btn btn-lg";
     const numClass = "btn-primary";
@@ -37,16 +37,18 @@ const Key = React.forwardRef((props, ref) => {
   };
 
   return (
-    <button
-      ref={ref.id}
-      id={props.kObj.id}
-      className={setKeyClasses(props.kObj)}
-      type="button"
-      value={props.kObj.value}
-      onClick={(e) => props.handleClick(e)}
-    >
-      {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
-    </button>
+    <React.Fragment>
+      <Button
+        ref={ref.id}
+        id={props.kObj.id}
+        className={setKeyClasses(props.kObj)}
+        onClick={(e) => props.handleClick(e)}
+        size="large"
+        sx={{ fontSize: "2rem" }}
+      >
+        {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
+      </Button>
+    </React.Fragment>
   );
 });
 export default Key;
