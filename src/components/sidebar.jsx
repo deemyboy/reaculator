@@ -23,8 +23,9 @@ export function Sidebar(propsIn) {
       direction="column"
       className={className}
       meta-name="sidebar"
-      sm={4}
-      md={4}
+      xs={6}
+      sm={6}
+      md={6}
       justifyContent="space-around"
       alignItems={"center"}
     >
