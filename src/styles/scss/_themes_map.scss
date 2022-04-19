@@ -329,9 +329,15 @@ $themes: (
 
   &#{$color},
   &#{$picture} {
+    .calculator {
+      .title {
+        color: darken(themed(calculatorTitleTextColor), 12%);
+        font-weight: 400;
+      }
+    }
     .settings {
       .fa.fa-cog {
-        color: darken(themed(calculatorTitleTextColor), 5%);
+        color: darken(themed(calculatorTitleTextColor), 12%);
       }
     }
     .calculator,
