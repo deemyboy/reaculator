@@ -24,6 +24,10 @@ class Calculator extends Component {
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
     this.state.animation = this.getCookie("currentAnim", "anim");
+    this.state.pictureType = this.getCookie(
+      "currentPictureType",
+      "pictureType"
+    );
   }
 
   state = {
@@ -31,6 +35,7 @@ class Calculator extends Component {
     theme: "Ocean",
     themeType: "color",
     animation: "",
+    pictureType: "still",
     calculationData: {
       className: "calculation",
       value: "",
@@ -42,17 +47,11 @@ class Calculator extends Component {
       defaultClass: "result",
       errorClass: "result_err",
     },
-    animationData: {
-      animations: ["slither", "fireworks", "twist"],
-      currentSetting: "slither",
-      onClick: (e) => this.onSelectAnim(e),
-    },
     canvasId: "cvs",
     sidebarIsOpen: false,
     circle1IsOpen: false,
     circle2IsOpen: false,
     circle3IsOpen: false,
-
     keyErr: false,
     numberKeyboardClass: "keyboard-number",
     functionKeyboardClass: "keyboard-function",
@@ -82,7 +81,7 @@ class Calculator extends Component {
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
 
     let _id = "anim-script",
-      _scriptName = this.state.animationData.currentSetting;
+      _scriptName = this.state.animation;
 
     if (this.state.themeType === "anim") {
       var loadScript = function () {
@@ -112,7 +111,7 @@ class Calculator extends Component {
 
   componentDidUpdate(nextProps, nextState) {
     let _id = "anim-script",
-      _scriptName = this.state.animationData.currentSetting;
+      _scriptName = this.state.animation;
 
     if (
       this.state.themeType === "anim" &&
@@ -146,9 +145,9 @@ class Calculator extends Component {
       this.state.num1 !== nextState.num1 ||
       this.state.op1 !== nextState.op1 ||
       this.state.num2 !== nextState.num2 ||
-      this.state.resultData.resultValue !== nextState.resultData.resultValue
+      this.state.resultData.value !== nextState.resultData.value
     ) {
-      this.setCalculationValue();
+      this.value();
     }
   }
 
@@ -289,7 +288,7 @@ class Calculator extends Component {
     let resultData = { ...this.state.resultData };
 
     if (key === "a") {
-      resultData.resultValue = "";
+      resultData.value = "";
       resultData.resultClass = this.state.resultData.resultDefaultClass;
 
       this.setState(
@@ -302,7 +301,7 @@ class Calculator extends Component {
           userInput: "",
           keyErr: false,
         }
-        // this.setCalculationValue
+        // this.value
       );
     }
     if (key === "c") {
@@ -343,11 +342,6 @@ class Calculator extends Component {
       matchesOp2 = matches[4];
 
     let { num1, num2, op1, op2, userInput } = { ...this.state };
-
-    if (this.state.resultData.resultValue) {
-      // _userInput = userInput;
-      // input = this.preProcessUserInput(input);
-    }
 
     // exceptions
     ////////////
@@ -479,7 +473,7 @@ class Calculator extends Component {
    * op1
    * op2
    * resultData
-   * -  resultValue
+   * -  value
    * -  condtinuousMaths
    * userinput
    *
@@ -505,8 +499,8 @@ class Calculator extends Component {
     // || user used single number maths operator s = squre or r = sqrt
     // delete last char
     //set userInput as result
-    let { userInput } = { ...this.state };
-    let _resVal = this.state.resultData.resultValue;
+    let { userInput } = this.state;
+    let _resVal = this.state.resultData.value;
 
     // single maths
     // maths op
@@ -516,7 +510,6 @@ class Calculator extends Component {
       this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
       this.state.mathOpRgxNnGr.test(inputData.key)
     ) {
-      //
       this.setState({ num1: _resVal });
       return _resVal;
     } else if (
@@ -525,10 +518,9 @@ class Calculator extends Component {
       this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
       /^-?\d+$/.test(inputData.key)
     ) {
-      //
       this.setState({
         op1: "",
-        resultData: { ...this.state.resultData, resultValue: "" },
+        resultData: { ...this.state.resultData, value: "" },
       });
       return "";
     }
@@ -541,22 +533,14 @@ class Calculator extends Component {
         this.state.snglMthOpRgxNnGr.test(this.state.op1)) &&
       this.state.mathOpRgxNnGr.test(inputData.key)
     ) {
-      let _resVal = this.state.resultData.resultValue;
-      // resultValue = "";
-
-      // this.setState({
-      //   access: {
-      //     ...this.state.access,
-      //     hospital_id: 1,
-      //   },
-      // });
+      let _resVal = this.state.resultData.value;
 
       this.setState({
         num1: _resVal,
         op1: inputData.key,
         num2: "",
         op2: "",
-        resultData: { ...this.state.resultData, resultValue: "" },
+        resultData: { ...this.state.resultData, value: "" },
       });
       return _resVal;
     }
@@ -567,13 +551,11 @@ class Calculator extends Component {
       this.state.op2 === "=" &&
       /^-?\d+$/.test(inputData.key)
     ) {
-      // resultValue = "";
       this.setState({
         num1: "",
         op1: "",
         num2: "",
         op2: "",
-        // resultData,
       });
       return "";
     }
@@ -584,13 +566,11 @@ class Calculator extends Component {
       this.state.op2 === "=" &&
       /^-?\d+$/.test(inputData.key)
     ) {
-      // resultValue = "";
       this.setState({
         num1: "",
         op1: "",
         num2: "",
         op2: "",
-        // resultData,
       });
       return "";
     }
@@ -598,17 +578,16 @@ class Calculator extends Component {
 
   setResultData = (data, callback) => {
     let resultData = { ...this.state.resultData };
-    // resultData = {};
 
     if (data.resultClass) {
       resultData.resultClass = data.resultClass;
     } else {
       resultData.resultClass = this.state.resultData.resultDefaultClass;
     }
-    if (data.resultValue) {
-      resultData.resultValue = data.resultValue;
+    if (data.value) {
+      resultData.value = data.value;
     } else {
-      resultData.resultValue = resultData.resultValue;
+      resultData.value = resultData.value;
     }
     if (callback) {
       this.setState({ resultData }, () => callback());
@@ -677,24 +656,11 @@ class Calculator extends Component {
   };
 
   showKeyboard = (e) => {
-    console.log("hit showKeyboard _isOpen: ", this.state.sidebarIsOpen, e);
     e.stopPropagation();
-    let _circleData;
     let _key = "IsOpen";
     // only allow interaction on visible sidebar
     if (this.state.sidebarIsOpen) {
-      // if (e.target.id === "circle1") {
-      //   this.setState({ circle1IsOpen: true });
-
-      //   // _circleData.showing = true;
-      //   this.setState({ circle1Data: _circleData });
-      // } else {
-      //   _circleData = { ...this.state.circle2Data };
-      //   _circleData.showing = true;
-      //   this.setState({ circle2Data: _circleData });
-      // }
       _key = _key.replace(/^/, e.target.id);
-      console.log(_key);
       this.setState({ [_key]: true });
     }
   };
@@ -702,14 +668,12 @@ class Calculator extends Component {
   onSelectThemeType = (e) => {
     e.stopPropagation();
     let cookieData = {};
-    let _themeTypeData = { ...this.getKeyboardData("theme-type") };
-    // let _themeTypeData = { ...this.state.themeTypeKeyboardData };
-    _themeTypeData.currentSetting = e.target.value;
+    let _themeTypeData = {};
+    _themeTypeData.currentSetting = e.target.id;
     cookieData.cookieLabel = "currentThemeType";
     cookieData.cookieValue = _themeTypeData.currentSetting;
     cookieData.cookiePath = "/";
     this.setState({
-      themeTypeKeyboardData: _themeTypeData,
       themeType: _themeTypeData.currentSetting,
     });
     this.setCookie(cookieData);
@@ -718,13 +682,12 @@ class Calculator extends Component {
   onSelectTheme = (e) => {
     e.stopPropagation();
     let cookieData = {};
-    let _themesData = { ...this.state.themesKeyboardData };
+    let _themesData = {};
     _themesData.currentSetting = e.target.id;
     cookieData.cookieLabel = "currentTheme";
     cookieData.cookieValue = _themesData.currentSetting;
     cookieData.cookiePath = "/";
     this.setState({
-      themesData: _themesData,
       theme: _themesData.currentSetting,
     });
     this.setCookie(cookieData);
@@ -733,35 +696,36 @@ class Calculator extends Component {
   onSelectAnim = (e) => {
     e.stopPropagation();
     let cookieData = {};
-    let _animData = { ...this.state.animationData };
-    _animData.currentSetting = e.target.value;
+    let _animation = e.target.id;
     cookieData.cookieLabel = "currentAnim";
-    cookieData.cookieValue = _animData.currentSetting;
+    cookieData.cookieValue = _animation;
     cookieData.cookiePath = "/";
     this.setState({
-      animationData: _animData,
-      animation: _animData.currentSetting,
+      animation: _animation,
     });
     this.setCookie(cookieData);
   };
 
-  getKeyboardData = (name) => {
-    let _keyboardData = {};
-    while (typeof _keyboardData === "undefined") {
-      keyboards.forEach((keyboard) => {
-        if (keyboard.name === name) {
-          _keyboardData.keyboard = keyboard;
-          _keyboardData.keyErr = this.state.keyErr;
-        }
-      });
-    }
-    return _keyboardData;
+  onSelectPictureType = (e) => {
+    e.stopPropagation();
+    let cookieData = {};
+    let _pictureType = {};
+    _pictureType = e.target.id;
+    cookieData.cookieLabel = "currentPictureType";
+    cookieData.cookieValue = _pictureType;
+    cookieData.cookiePath = "/";
+    this.setState({
+      pictureType: _pictureType,
+    });
+    this.setCookie(cookieData);
   };
 
   getKeyboard = (keyboardName) => {
-    return keyboards.find((keyboard) => {
+    let _keyboard = keyboards.find((keyboard) => {
       return keyboard.name === keyboardName ? keyboard : undefined;
     });
+    _keyboard.onClick = this[_keyboard.onClickFunction];
+    return _keyboard;
   };
 
   getSidebarData = (themeType) => {
@@ -769,23 +733,37 @@ class Calculator extends Component {
       isOpen: this.state.sidebarIsOpen,
     };
     let components = [
-      { keyboard: "theme-type", isOpen: this.state.circle1IsOpen },
-      { keyboard: "theme", isOpen: this.state.circle2IsOpen },
+      {
+        keyboard: this.getKeyboard("theme-type"),
+        isOpen: this.state.circle1IsOpen,
+        selected: this.state.themeType,
+      },
+      {
+        keyboard: this.getKeyboard("theme"),
+        isOpen: this.state.circle2IsOpen,
+        selected: this.state.theme,
+      },
     ];
     sidebarData.circleOnClick = this.showKeyboard;
 
     if (themeType === "anim") {
       components.push({
-        keyboard: "animation",
+        keyboard: this.getKeyboard("animation"),
         isOpen: this.state.circle3IsOpen,
+        selected: this.state.animation,
+      });
+    } else if (themeType === "picture") {
+      components.push({
+        keyboard: this.getKeyboard("picture-type"),
+        isOpen: this.state.circle3IsOpen,
+        selected: this.state.pictureType,
       });
     }
     sidebarData.components = components;
     return sidebarData;
   };
 
-  setCalculationValue = () => {
-    console.log("hit setCalculationValue");
+  value = () => {
     const setCalculationDisplayChar = (op) => {
       return functionKeys
         .filter((k) => k.value === op)
@@ -835,17 +813,13 @@ class Calculator extends Component {
     //   _num2 = processDecimal(_num2);
     // }
 
-    calculationData.calculationValue = _num1 + _op1 + _num2;
+    calculationData.value = _num1 + _op1 + _num2;
     // calculationData = calculationData;
-    if (
-      calculationData.calculationValue !==
-      this.state.calculationData.calculationValue
-    ) {
+    if (calculationData.value !== this.state.calculationData.value) {
       this.setState({ calculationData });
     }
   };
 
-  //  resultData: { resultClass: "result", resultValue: "0" }
   doMath = () => {
     let resultData = { ...this.state.resultData };
     let _num1, _num2;
@@ -860,7 +834,7 @@ class Calculator extends Component {
     const _op2 = this.state.op2;
 
     if (this.state.num1 + this.state.op1 + this.state.num2 === "404+545") {
-      resultData.resultValue = "Hello Baba, \uD83D\uDC95 you!";
+      resultData.value = "Hello Baba, \uD83D\uDC95 you!";
       resultData.resultClass = "baba";
       this.setResultData(resultData, null);
       return;
@@ -868,7 +842,7 @@ class Calculator extends Component {
       this.state.num1 + this.state.op1 + this.state.num2 ===
       "404-545"
     ) {
-      resultData.resultValue = "Bye Baba, miss you \uD83D\uDC96";
+      resultData.value = "Bye Baba, miss you \uD83D\uDC96";
       resultData.resultClass = "baba";
       this.setResultData(resultData, null);
       return;
@@ -893,32 +867,32 @@ class Calculator extends Component {
     // switch statement rather than if else
     switch (_op) {
       case "r": {
-        resultData.resultValue = Math.sqrt(_num1);
+        resultData.value = Math.sqrt(_num1);
         break;
       }
       case "s": {
-        if (_num1 === 0) resultData.resultValue = 1;
-        else resultData.resultValue = Math.pow(_num1, 2);
+        if (_num1 === 0) resultData.value = 1;
+        else resultData.value = Math.pow(_num1, 2);
         break;
       }
       case "+": {
-        resultData.resultValue = _num1 + _num2;
+        resultData.value = _num1 + _num2;
         break;
       }
       case "-": {
-        resultData.resultValue = _num1 - _num2;
+        resultData.value = _num1 - _num2;
         break;
       }
       case "x": {
-        resultData.resultValue = _num1 * _num2;
+        resultData.value = _num1 * _num2;
         break;
       }
       case "y": {
-        resultData.resultValue = Math.pow(_num1, _num2);
+        resultData.value = Math.pow(_num1, _num2);
         break;
       }
       case "/": {
-        resultData.resultValue = _num1 / _num2;
+        resultData.value = _num1 / _num2;
         break;
       }
       default: {
@@ -926,10 +900,10 @@ class Calculator extends Component {
       }
     }
 
-    if (resultData.resultValue.length > 13) {
-      resultData.resultValue = this.formatResult(resultData.resultValue);
+    if (resultData.value.length > 13) {
+      resultData.value = this.formatResult(resultData.value);
     } else {
-      resultData.resultValue = String(resultData.resultValue);
+      resultData.value = String(resultData.value);
     }
     this.setState({ resultData }, () => this.postResultClearUp());
     // this.setState(resultData);
@@ -940,21 +914,21 @@ class Calculator extends Component {
   };
 
   postResultClearUp = () => {
-    let { resultValue } = { ...this.state.resultData };
+    let { value } = { ...this.state.resultData };
     let { num1, num2, op1, op2, userInput } = { ...this.state };
 
-    if (!isFinite(resultValue)) {
+    if (!isFinite(value)) {
       this.setResultErrorClass();
       return;
     }
 
     if (op2 !== "=" && op1 !== "s" && op1 !== "r") {
-      num1 = resultValue;
+      num1 = value;
       num2 = "";
       op1 = op2;
       op2 = "";
       // userInput = "";
-      userInput = resultValue + op1;
+      userInput = value + op1;
     }
     // } else {
     //   op2 = op2;
@@ -962,7 +936,7 @@ class Calculator extends Component {
     //   num2 = num2;
     //   op1 = op1;
     //   // _userInput = "";
-    //   // _userInput = resultValue;
+    //   // _userInput = value;
     // }
 
     this.setState({
@@ -1003,7 +977,9 @@ class Calculator extends Component {
       <Container
         className={`container ${
           this.state.sidebarIsOpen === true ? "open" : ""
-        } ${this.state.themeType} ${this.state.theme.toLowerCase()}`}
+        } ${this.state.themeType} ${this.state.theme.toLowerCase()} ${
+          this.state.pictureType
+        }`}
         sx={{ p: "0!important" }}
       >
         {/* ------------ app ---------------- */}
@@ -1023,7 +999,7 @@ class Calculator extends Component {
           >
             <i className="fa fa-cog" aria-hidden="true"></i>
           </p>
-          <Canvas ref={this.animate} canId={this.state.canvasId} />
+          <Canvas ref={this.animate} canvasId={this.state.canvasId} />
           <Typography className="title">{this.state.title}</Typography>
           {/* ------------ display ---------------- */}
           <Display

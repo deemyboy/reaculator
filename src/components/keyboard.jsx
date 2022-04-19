@@ -5,12 +5,16 @@ import Key from "./key";
 export function Keyboard(propsIn) {
   const { ...props } = propsIn.props;
   const ref = React.createRef();
-
   let _className = props.className,
     _keyErr = props.keyErr,
     _keys = [];
 
   props.keys.forEach((key) => {
+    if (propsIn.selected && propsIn.selected === key.id) {
+      key.selected = true;
+    } else {
+      key.selected = false;
+    }
     key.passClickHandler = props.onClick;
     _keys.push(key);
   });

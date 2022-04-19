@@ -366,3 +366,26 @@ export const animKeys = [
 // 0xD83C 0xDFAE ps4 controller
 // 0xD83D 0xDCA3 bomb
 // 0xD83D 0xDD2B pistol
+
+export const pictureKeys = [
+  {
+    id: "still",
+    value: "still",
+    specialClass: "btn-still still",
+    uniChar: "\u23F8",
+    title: "still",
+    keycode: 55,
+    code: "Digit7",
+    type: "picTypeChs",
+  },
+  {
+    id: "moving",
+    value: "moving",
+    specialClass: "btn-moving moving",
+    uniChar: "\u23E9",
+    title: "moving",
+    keycode: 55,
+    code: "Digit7",
+    type: "picTypeChs",
+  },
+];

@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
-document.addEventListener("DOMContentLoaded", function(event) { 
-  
+document.addEventListener("DOMContentLoaded", function (event) {
   // ReactDOM.render(
   //   <React.StrictMode>
   //     <Provider store={store}>
@@ -11,10 +10,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //   </React.StrictMode>,
   //   document.getElementById("root")
   // );
-
 });
 
 const Canvas = React.forwardRef((props, ref) => {
-    return  <canvas ref={ref} id={props.canId} />
+  return <canvas ref={ref} id={props.canvasId} />;
 });
 export default Canvas;

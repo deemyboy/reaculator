@@ -1,6 +1,7 @@
 #{$outer-wrapper} {
     max-width: 720px;
     .calculator {
+        position: relative;
         border-radius: $s-1r;
         border: 3px solid;
         @include transition(all 0.25s);

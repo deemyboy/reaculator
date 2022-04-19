@@ -2,18 +2,13 @@
     .settings {
         z-index: 99;
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 0.25rem;
+        right: 0.25rem;
         margin: 0;
         padding: 0;
-        width: 4rem;
-        height: 4rem;
         .fa.fa-cog {
             transition: all 0.25s;
             font-size: 2rem;
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
             &:hover {
                 transform: rotate(90deg);
             }

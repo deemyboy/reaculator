@@ -14,7 +14,6 @@
 // cartoon fire
 // url("https://i.gifer.com/TIkr.gif");
 
-
 // .midnight
 // url("https://c.pxhere.com/photos/13/41/milky_way_stars_night_sky_landscape_scenic_galaxy_space-674805.jpg!d");
 // url("https://c.pxhere.com/photos/f9/a8/planet_moon_space_space_travel_universe_all_astronomy_sky-1068224.jpg!d");
@@ -40,7 +39,6 @@
 
 // .jungle
 // url("https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d");
-// url("https://c.pxhere.com/photos/ca/61/bamboo_damyang_sunshine-1100731.jpg!d");
 // url("https://get.pxhere.com/photo/tree-forest-branch-plant-leaf-flower-foliage-green-jungle-botany-fir-flora-fern-spruce-vegetation-rainforest-plant-stem-woody-plant-land-plant-ferns-and-horsetails-arecales-vascular-plant-ostrich-fern-24230.jpg");
 // url("https://c.pxhere.com/photos/c8/e9/fern_plant_green_outdoors_nature-1054165.jpg!d");
 // url("https://c.pxhere.com/photos/4a/e6/spring_tree_flowers_meadow_wood_forest_sun_summer-985038.jpg!d");
@@ -48,155 +46,319 @@
 // animated gifs
 // url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
 
-$fire_url: url("https://i.gifer.com/TIkr.gif");
-$midnight_url: url("https://c.tenor.com/pwks_QPpbvoAAAAd/sky-night.gif");
-$ocean_url: url("https://acegif.com/wp-content/gifs/water-26.gif");
-$storm_url: url("https://i0.wp.com/windowscustomization.com/wp-content/uploads/2018/12/Thunders.gif?fit=700%2C335&quality=80&strip=all&ssl=1");
-$jungle_url: url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
+$fire_moving_url: url("https://i.gifer.com/TIkr.gif");
+$midnight_moving_url: url("https://c.tenor.com/pwks_QPpbvoAAAAd/sky-night.gif");
+$ocean_moving_url: url("https://acegif.com/wp-content/gifs/water-26.gif");
+$storm_moving_url: url("https://i0.wp.com/windowscustomization.com/wp-content/uploads/2018/12/Thunders.gif?fit=700%2C335&quality=80&strip=all&ssl=1");
+$jungle_moving_url: url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
+
+$fire_still_url: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
+$midnight_still_url: url("https://c.pxhere.com/photos/ea/da/milky_way_stars_science_space_sky_galaxy_night_universe-845922.jpg!d");
+$ocean_still_url: url("https://c.pxhere.com/photos/6a/14/beach_dawn_dusk_ocean_sea_seascape_sun_sunrise-1364695.jpg!d");
+$storm_still_url: url("https://c.pxhere.com/photos/7a/92/lightning_storm_arizona_monsoon_lightning_storm_electricity_weather_sky-1323288.jpg!d");
+$jungle_still_url: url("https://c.pxhere.com/photos/4a/e6/spring_tree_flowers_meadow_wood_forest_sun_summer-985038.jpg!d");
 
 $themes: (
-    fire: (backgroundColor: $fire_bg, backgroundUrl: $fire_url, textColor: $fire_color, calculatorTitleTextColor: $fire_color, borderColor: $fire_border, menuIconBackgroundColor: darken($fire_bg, 5%), menuIconBackgroundHoverColor: darken($fire_bg, 10%), menuIconBorderColor: $fire_border, iconBarColor: $fire_color, sidebarTitleTextColor: darken($fire_color, 30%), sidebarBackground: transparentize($fire_bg, 0.2), sidebarBorderColor: $fire_border, sidebarKeyboardBackground: $fire_bg, sidebarKeyboardHoverBackground: darken($fire_bg, 5%), keyboardBackgroundColor: darken($fire_bg, 5%), keyboardItemBackgroundColor: $fire_bg, keyboardItemBackgroundHoverColor: lighten($fire_bg, 10%), keyboardTextColor: $fire_color, keyboardBackground: transparentize(darken($fire_bg, 10%), 0.5), keyboardBorderColor: $fire_border, primaryButtonBgColor: $fire_btn_bg, primaryButtonTextColor: $fire_btn_color, primaryButtonBorderColor: $fire_btn_border, primaryButtonHoverColor: darken($fire_btn_bg, 5%), primaryButtonActiveColor: darken($fire_btn_bg, 10%), primaryButtonBoxShadowColor: darken(transparentize($fire_btn_bg, 0.5), 10%), primaryButtonTextTransform: none, secondaryButtonBgColor: complement($fire_btn_bg), secondaryButtonTextColor: complement($fire_btn_color), secondaryButtonBorderColor: complement($fire_btn_border), secondaryButtonHoverColor: darken(complement($fire_btn_bg), 5%), secondaryButtonActiveColor: darken(complement($fire_btn_bg), 10%), secondaryButtonBoxShadowColor: darken(transparentize(complement($fire_btn_bg), 0.5), 10%), secondaryButtonTextTransform: none,),
-    midnight: (backgroundColor: $midnight_bg, backgroundUrl: $midnight_url, textColor: $midnight_color, calculatorTitleTextColor: lighten($midnight_color, 30%), borderColor: $midnight_border, menuIconBackgroundColor: darken($midnight_bg, 5%), menuIconBackgroundHoverColor: darken($midnight_bg, 10%), menuIconBorderColor: $midnight_border, iconBarColor: $midnight_color, sidebarTitleTextColor: lighten($midnight_color, 30%), sidebarBackground: transparentize($midnight_bg, 0.2), sidebarBorderColor: $midnight_border, sidebarKeyboardBackground: $midnight_bg, sidebarKeyboardHoverBackground: darken($midnight_bg, 5%), keyboardBackgroundColor: darken($midnight_bg, 5%), keyboardItemBackgroundColor: $midnight_bg, keyboardItemBackgroundHoverColor: lighten($midnight_bg, 10%), keyboardTextColor: $midnight_color, keyboardBackground: transparentize(lighten($midnight_bg, 5%), 0.5), keyboardBorderColor: $midnight_border, primaryButtonBgColor: $midnight_btn_bg, primaryButtonTextColor: $midnight_btn_color, primaryButtonBorderColor: $midnight_btn_border, primaryButtonHoverColor: darken($midnight_btn_bg, 5%), primaryButtonActiveColor: darken($midnight_btn_bg, 10%), primaryButtonBoxShadowColor: darken(transparentize($midnight_btn_bg, 0.5), 10%), primaryButtonTextTransform: none, secondaryButtonBgColor: complement($midnight_btn_bg), secondaryButtonTextColor: complement($midnight_btn_color), secondaryButtonBorderColor: complement($midnight_btn_border), secondaryButtonHoverColor: darken(complement($midnight_btn_bg), 5%), secondaryButtonActiveColor: darken(complement($midnight_btn_bg), 10%), secondaryButtonBoxShadowColor: darken(transparentize(complement($midnight_btn_bg), 0.5), 10%), secondaryButtonTextTransform: none,),
-    ocean: (backgroundColor: $ocean_bg, backgroundUrl: $ocean_url, textColor: $ocean_color, calculatorTitleTextColor: darken($ocean_color, 20%), borderColor: $ocean_border, menuIconBackgroundColor: darken($ocean_bg, 5%), menuIconBackgroundHoverColor: darken($ocean_bg, 10%), menuIconBorderColor: $ocean_border, iconBarColor: $ocean_color, sidebarTitleTextColor: lighten($ocean_color, 30%), sidebarBackground: transparentize($ocean_bg, 0.2), sidebarBorderColor: $ocean_border, sidebarKeyboardBackground: $ocean_bg, sidebarKeyboardHoverBackground: darken($ocean_bg, 5%), keyboardBackgroundColor: darken($ocean_bg, 5%), keyboardItemBackgroundColor: $ocean_bg, keyboardItemBackgroundHoverColor: lighten($ocean_bg, 10%), keyboardTextColor: $ocean_color, keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5), keyboardBorderColor: $ocean_border, primaryButtonBgColor: $ocean_btn_bg, primaryButtonTextColor: $ocean_btn_color, primaryButtonBorderColor: $ocean_btn_border, primaryButtonHoverColor: darken($ocean_btn_bg, 5%), primaryButtonActiveColor: darken($ocean_btn_bg, 10%), primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%), primaryButtonTextTransform: none, secondaryButtonBgColor: complement($ocean_btn_bg), secondaryButtonTextColor: lighten(complement($ocean_btn_color), 10%), secondaryButtonBorderColor: complement($ocean_btn_border), secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%), secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%), secondaryButtonBoxShadowColor: darken(transparentize(complement($ocean_btn_bg), 0.5), 10%), secondaryButtonTextTransform: none,),
-    storm: (backgroundColor: $storm_bg, backgroundUrl: $storm_url, textColor: $storm_color, calculatorTitleTextColor: lighten($storm_color, 30%), borderColor: $storm_border, menuIconBackgroundColor: darken($storm_bg, 5%), menuIconBackgroundHoverColor: darken($storm_bg, 10%), menuIconBorderColor: $storm_border, iconBarColor: $storm_color, sidebarTitleTextColor: lighten($storm_color, 30%), sidebarBackground: transparentize($storm_bg, 0.2), sidebarBorderColor: $storm_border, sidebarKeyboardBackground: $storm_bg, sidebarKeyboardHoverBackground: darken($storm_bg, 5%), keyboardBackgroundColor: darken($storm_bg, 5%), keyboardItemBackgroundColor: $storm_bg, keyboardItemBackgroundHoverColor: lighten($storm_bg, 10%), keyboardTextColor: $storm_color, keyboardBackground: transparentize(lighten($storm_bg, 10%), 0.5), keyboardBorderColor: $storm_border, primaryButtonBgColor: $storm_btn_bg, primaryButtonTextColor: $storm_btn_color, primaryButtonBorderColor: $storm_btn_border, primaryButtonHoverColor: darken($storm_btn_bg, 5%), primaryButtonActiveColor: darken($storm_btn_bg, 10%), primaryButtonBoxShadowColor: darken(transparentize($storm_btn_bg, 0.6), 10%), primaryButtonTextTransform: none, secondaryButtonBgColor: complement($storm_btn_bg), secondaryButtonTextColor: complement($storm_btn_color), secondaryButtonBorderColor: complement($storm_btn_border), secondaryButtonHoverColor: darken(complement($storm_btn_bg), 5%), secondaryButtonActiveColor: darken(complement($storm_btn_bg), 10%), secondaryButtonBoxShadowColor: darken(transparentize(complement($storm_btn_bg), 0.6), 10%), secondaryButtonTextTransform: none,),
-    jungle: (backgroundColor: $jungle_bg, backgroundUrl: $jungle_url, textColor: $jungle_color, calculatorTitleTextColor: lighten($jungle_color, 60%), borderColor: $jungle_border, menuIconBackgroundColor: darken($jungle_bg, 5%), menuIconBackgroundHoverColor: darken($jungle_bg, 10%), menuIconBorderColor: $jungle_border, iconBarColor: $jungle_color, sidebarTitleTextColor: lighten($jungle_color, 60%), sidebarBackground: transparentize($jungle_bg, 0.2), sidebarBorderColor: $jungle_border, sidebarKeyboardBackground: $jungle_bg, sidebarKeyboardHoverBackground: darken($jungle_bg, 5%), keyboardBackgroundColor: darken($jungle_bg, 5%), keyboardItemBackgroundColor: $jungle_bg, keyboardItemBackgroundHoverColor: lighten($jungle_bg, 10%), keyboardTextColor: $jungle_color, keyboardBackground: transparentize(lighten($jungle_bg, 10%), 0.5), keyboardBorderColor: $jungle_border, primaryButtonBgColor: $jungle_btn_bg, primaryButtonTextColor: $jungle_btn_color, primaryButtonBorderColor: $jungle_btn_border, primaryButtonHoverColor: darken($jungle_btn_bg, 10%), primaryButtonActiveColor: darken($jungle_btn_bg, 10%), primaryButtonTextTransform: none, primaryButtonBoxShadowColor: darken(transparentize($jungle_btn_bg, 0.5), 10%), secondaryButtonBgColor: $jungle_btn_sec_bg, secondaryButtonTextColor: $jungle_btn_sec_color, secondaryButtonBorderColor: $jungle_btn_sec_border, secondaryButtonHoverColor: $jungle_btn_sec_bg_hover, secondaryButtonActiveColor: darken($jungle_btn_bg, 10%), secondaryButtonBoxShadowColor: darken(transparentize(complement($jungle_btn_bg), 0.5), 10%), secondaryButtonTextTransform: none,), );
+  fire: (
+    backgroundColor: $fire_bg,
+    backgroundMovingUrl: $fire_moving_url,
+    backgroundStillUrl: $fire_still_url,
+    textColor: $fire_color,
+    calculatorTitleTextColor: $fire_color,
+    borderColor: $fire_border,
+    menuIconBackgroundColor: darken($fire_bg, 5%),
+    menuIconBackgroundHoverColor: darken($fire_bg, 10%),
+    menuIconBorderColor: $fire_border,
+    iconBarColor: $fire_color,
+    sidebarTitleTextColor: darken($fire_color, 30%),
+    sidebarBackground: transparentize($fire_bg, 0.2),
+    sidebarBorderColor: $fire_border,
+    sidebarKeyboardBackground: $fire_bg,
+    sidebarKeyboardHoverBackground: darken($fire_bg, 5%),
+    keyboardBackgroundColor: darken($fire_bg, 5%),
+    keyboardItemBackgroundColor: $fire_bg,
+    keyboardItemBackgroundHoverColor: lighten($fire_bg, 10%),
+    keyboardTextColor: $fire_color,
+    keyboardBackground: transparentize(darken($fire_bg, 10%), 0.5),
+    keyboardBorderColor: $fire_border,
+    primaryButtonBgColor: $fire_btn_bg,
+    primaryButtonTextColor: $fire_btn_color,
+    primaryButtonBorderColor: $fire_btn_border,
+    primaryButtonHoverColor: darken($fire_btn_bg, 5%),
+    primaryButtonActiveColor: darken($fire_btn_bg, 10%),
+    primaryButtonBoxShadowColor: darken(transparentize($fire_btn_bg, 0.5), 10%),
+    primaryButtonTextTransform: none,
+    secondaryButtonBgColor: complement($fire_btn_bg),
+    secondaryButtonTextColor: complement($fire_btn_color),
+    secondaryButtonBorderColor: complement($fire_btn_border),
+    secondaryButtonHoverColor: darken(complement($fire_btn_bg), 5%),
+    secondaryButtonActiveColor: darken(complement($fire_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($fire_btn_bg), 0.5), 10%),
+    secondaryButtonTextTransform: none,
+  ),
+  midnight: (
+    backgroundColor: $midnight_bg,
+    backgroundMovingUrl: $midnight_moving_url,
+    backgroundStillUrl: $midnight_still_url,
+    textColor: $midnight_color,
+    calculatorTitleTextColor: lighten($midnight_color, 30%),
+    borderColor: $midnight_border,
+    menuIconBackgroundColor: darken($midnight_bg, 5%),
+    menuIconBackgroundHoverColor: darken($midnight_bg, 10%),
+    menuIconBorderColor: $midnight_border,
+    iconBarColor: $midnight_color,
+    sidebarTitleTextColor: lighten($midnight_color, 30%),
+    sidebarBackground: transparentize($midnight_bg, 0.2),
+    sidebarBorderColor: $midnight_border,
+    sidebarKeyboardBackground: $midnight_bg,
+    sidebarKeyboardHoverBackground: darken($midnight_bg, 5%),
+    keyboardBackgroundColor: darken($midnight_bg, 5%),
+    keyboardItemBackgroundColor: $midnight_bg,
+    keyboardItemBackgroundHoverColor: lighten($midnight_bg, 10%),
+    keyboardTextColor: $midnight_color,
+    keyboardBackground: transparentize(lighten($midnight_bg, 5%), 0.5),
+    keyboardBorderColor: $midnight_border,
+    primaryButtonBgColor: $midnight_btn_bg,
+    primaryButtonTextColor: $midnight_btn_color,
+    primaryButtonBorderColor: $midnight_btn_border,
+    primaryButtonHoverColor: darken($midnight_btn_bg, 5%),
+    primaryButtonActiveColor: darken($midnight_btn_bg, 10%),
+    primaryButtonBoxShadowColor:
+      darken(transparentize($midnight_btn_bg, 0.5), 10%),
+    primaryButtonTextTransform: none,
+    secondaryButtonBgColor: complement($midnight_btn_bg),
+    secondaryButtonTextColor: complement($midnight_btn_color),
+    secondaryButtonBorderColor: complement($midnight_btn_border),
+    secondaryButtonHoverColor: darken(complement($midnight_btn_bg), 5%),
+    secondaryButtonActiveColor: darken(complement($midnight_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($midnight_btn_bg), 0.5), 10%),
+    secondaryButtonTextTransform: none,
+  ),
+  ocean: (
+    backgroundColor: $ocean_bg,
+    backgroundMovingUrl: $ocean_moving_url,
+    backgroundStillUrl: $ocean_still_url,
+    textColor: $ocean_color,
+    calculatorTitleTextColor: darken($ocean_color, 20%),
+    borderColor: $ocean_border,
+    menuIconBackgroundColor: darken($ocean_bg, 5%),
+    menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
+    menuIconBorderColor: $ocean_border,
+    iconBarColor: $ocean_color,
+    sidebarTitleTextColor: lighten($ocean_color, 30%),
+    sidebarBackground: transparentize($ocean_bg, 0.2),
+    sidebarBorderColor: $ocean_border,
+    sidebarKeyboardBackground: $ocean_bg,
+    sidebarKeyboardHoverBackground: darken($ocean_bg, 5%),
+    keyboardBackgroundColor: darken($ocean_bg, 5%),
+    keyboardItemBackgroundColor: $ocean_bg,
+    keyboardItemBackgroundHoverColor: lighten($ocean_bg, 10%),
+    keyboardTextColor: $ocean_color,
+    keyboardBackground: transparentize(darken($ocean_bg, 5%), 0.5),
+    keyboardBorderColor: $ocean_border,
+    primaryButtonBgColor: $ocean_btn_bg,
+    primaryButtonTextColor: $ocean_btn_color,
+    primaryButtonBorderColor: $ocean_btn_border,
+    primaryButtonHoverColor: darken($ocean_btn_bg, 5%),
+    primaryButtonActiveColor: darken($ocean_btn_bg, 10%),
+    primaryButtonBoxShadowColor: darken(transparentize($ocean_btn_bg, 0.5), 10%),
+    primaryButtonTextTransform: none,
+    secondaryButtonBgColor: complement($ocean_btn_bg),
+    secondaryButtonTextColor: lighten(complement($ocean_btn_color), 10%),
+    secondaryButtonBorderColor: complement($ocean_btn_border),
+    secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
+    secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($ocean_btn_bg), 0.5), 10%),
+    secondaryButtonTextTransform: none,
+  ),
+  storm: (
+    backgroundColor: $storm_bg,
+    backgroundMovingUrl: $storm_moving_url,
+    backgroundStillUrl: $storm_still_url,
+    textColor: $storm_color,
+    calculatorTitleTextColor: lighten($storm_color, 30%),
+    borderColor: $storm_border,
+    menuIconBackgroundColor: darken($storm_bg, 5%),
+    menuIconBackgroundHoverColor: darken($storm_bg, 10%),
+    menuIconBorderColor: $storm_border,
+    iconBarColor: $storm_color,
+    sidebarTitleTextColor: lighten($storm_color, 30%),
+    sidebarBackground: transparentize($storm_bg, 0.2),
+    sidebarBorderColor: $storm_border,
+    sidebarKeyboardBackground: $storm_bg,
+    sidebarKeyboardHoverBackground: darken($storm_bg, 5%),
+    keyboardBackgroundColor: darken($storm_bg, 5%),
+    keyboardItemBackgroundColor: $storm_bg,
+    keyboardItemBackgroundHoverColor: lighten($storm_bg, 10%),
+    keyboardTextColor: $storm_color,
+    keyboardBackground: transparentize(lighten($storm_bg, 10%), 0.5),
+    keyboardBorderColor: $storm_border,
+    primaryButtonBgColor: $storm_btn_bg,
+    primaryButtonTextColor: $storm_btn_color,
+    primaryButtonBorderColor: $storm_btn_border,
+    primaryButtonHoverColor: darken($storm_btn_bg, 5%),
+    primaryButtonActiveColor: darken($storm_btn_bg, 10%),
+    primaryButtonBoxShadowColor: darken(transparentize($storm_btn_bg, 0.6), 10%),
+    primaryButtonTextTransform: none,
+    secondaryButtonBgColor: complement($storm_btn_bg),
+    secondaryButtonTextColor: complement($storm_btn_color),
+    secondaryButtonBorderColor: complement($storm_btn_border),
+    secondaryButtonHoverColor: darken(complement($storm_btn_bg), 5%),
+    secondaryButtonActiveColor: darken(complement($storm_btn_bg), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($storm_btn_bg), 0.6), 10%),
+    secondaryButtonTextTransform: none,
+  ),
+  jungle: (
+    backgroundColor: $jungle_bg,
+    backgroundMovingUrl: $jungle_moving_url,
+    backgroundStillUrl: $jungle_still_url,
+    textColor: $jungle_color,
+    calculatorTitleTextColor: lighten($jungle_color, 60%),
+    borderColor: $jungle_border,
+    menuIconBackgroundColor: darken($jungle_bg, 5%),
+    menuIconBackgroundHoverColor: darken($jungle_bg, 10%),
+    menuIconBorderColor: $jungle_border,
+    iconBarColor: $jungle_color,
+    sidebarTitleTextColor: lighten($jungle_color, 60%),
+    sidebarBackground: transparentize($jungle_bg, 0.2),
+    sidebarBorderColor: $jungle_border,
+    sidebarKeyboardBackground: $jungle_bg,
+    sidebarKeyboardHoverBackground: darken($jungle_bg, 5%),
+    keyboardBackgroundColor: darken($jungle_bg, 5%),
+    keyboardItemBackgroundColor: $jungle_bg,
+    keyboardItemBackgroundHoverColor: lighten($jungle_bg, 10%),
+    keyboardTextColor: $jungle_color,
+    keyboardBackground: transparentize(lighten($jungle_bg, 10%), 0.5),
+    keyboardBorderColor: $jungle_border,
+    primaryButtonBgColor: $jungle_btn_bg,
+    primaryButtonTextColor: $jungle_btn_color,
+    primaryButtonBorderColor: $jungle_btn_border,
+    primaryButtonHoverColor: darken($jungle_btn_bg, 10%),
+    primaryButtonActiveColor: darken($jungle_btn_bg, 10%),
+    primaryButtonTextTransform: none,
+    primaryButtonBoxShadowColor:
+      darken(transparentize($jungle_btn_bg, 0.5), 10%),
+    secondaryButtonBgColor: $jungle_btn_sec_bg,
+    secondaryButtonTextColor: $jungle_btn_sec_color,
+    secondaryButtonBorderColor: $jungle_btn_sec_border,
+    secondaryButtonHoverColor: $jungle_btn_sec_bg_hover,
+    secondaryButtonActiveColor: darken($jungle_btn_bg, 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($jungle_btn_bg), 0.5), 10%),
+    secondaryButtonTextTransform: none,
+  ),
+);
 
 // @import "themes.scss";
 
 @mixin themify($themes: $themes) {
-    @each $theme,
-    $map in $themes {
-        #{$outer-wrapper}.#{$theme} {
-            $theme-map: () !global;
-            @each $key,
-            $submap in $map {
-                $value: map-get(map-get($themes, $theme), "#{$key}");
-                $theme-map: map-merge($theme-map, ($key: $value,)) !global;
-            }
+  @each $theme, $map in $themes {
+    #{$outer-wrapper}.#{$theme} {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), "#{$key}");
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value,
+          )
+        ) !global;
+      }
 
-            @content;
-            $theme-map: null !global;
-        }
+      @content;
+      $theme-map: null !global;
     }
-    @debug "outer-wrapper: #{outer-wrapper}";
+  }
+  @debug "outer-wrapper: #{outer-wrapper}";
 }
 
 @function themed($key) {
-    @return map-get($theme-map, $key);
+  @return map-get($theme-map, $key);
 }
 
 @include themify($themes) {
-    > div.row:first-of-type {
-        background-color: themed(backgroundColor);
+  #calculator {
+    background-color: themed(backgroundColor);
+  }
+  .calculator {
+    background-color: themed(backgroundColor);
+    border-color: themed(borderColor);
+    .title {
+      color: themed(calculatorTitleTextColor);
     }
+    .display {
+      background-color: #abbaa7;
+      color: #2f2f2f;
+      border-color: #6d6d6d;
+    }
+  }
+  .sidebar {
+    .circle {
+      background-color: themed(sidebarBorderColor);
+      &:after {
+        background-color: #c4faff;
+        background-color: transparentize(themed(calculatorTitleTextColor), 0.3);
+      }
+    }
+  }
+}
+
+@include themify($themes) {
+  // colors
+  &#{$picture} {
     .calculator {
-        border-color: themed(borderColor);
-        .title {
-            color: complement(themed(calculatorTitleTextColor));
-        }
-        .display {
-            background-color: #abbaa7;
-            color: #2f2f2f;
-            border-color: #6d6d6d;
-        }
+      .title {
+        color: themed(calculatorTitleTextColor);
+      }
     }
-}
-@include themify($themes) {
+    &#{$moving} {
+      .calculator {
+        background-image: themed(backgroundMovingUrl);
+      }
+    }
+    &#{$still} {
+      .calculator {
+        background-image: themed(backgroundStillUrl);
+      }
+    }
+  }
 
+  &#{$color},
+  &#{$picture} {
+    .settings {
+      .fa.fa-cog {
+        color: darken(themed(calculatorTitleTextColor), 5%);
+      }
+    }
+    .calculator,
     .sidebar {
-        // border-color: themed(sidebarBorderColor);
-        > .title {
-            color: themed(sidebarTitleTextColor);
-        }
-
-        .circle {
-            background-color: themed(calculatorTitleTextColor);
-            &:after {
-                background-color: #c4faff;
-                background-color: transparentize(themed(calculatorTitleTextColor), 0.3);
-            }
-
-        }
     }
-}
-
-@include themify($themes) {
-    // colors
-    &#{$picture} {
-        .calculator {
-            background-image: themed(backgroundUrl);
-            .title {
-
-                color: complement(themed(calculatorTitleTextColor));
-            }
-        }
+  }
+  &#{$anim} {
+    .calculator {
+      border-color: themed(borderColor);
+      .display {
+        background-color: #abbaa7b0;
+      }
     }
-    &#{$color},
-    &#{$picture} {
-        .settings {
-            .fa.fa-cog {
-                // color: themed(sidebarTitleTextColor);
-                color: darken(themed(calculatorTitleTextColor), 5%);
-            }
-        }
-        .calculator,
-        .sidebar {
-            ;
-
-
-            // .keyboard {
-            // background-color: transparentize(
-            //     lighten(themed(keyboardBackground), 0%),
-            //     0.35
-            // );
-            // border-color: themed(keyboardBorderColor);
-            // }
-        }
+    .settings {
+      .fa.fa-cog {
+        // color: themed(sidebarTitleTextColor);
+        color: darken(themed(calculatorTitleTextColor), 5%);
+      }
     }
-}
-
-// colors
-@include themify($themes) {
-    &#{$anim} {
-        > div.row:first-of-type {
-            border-color: themed(borderColor);
-            background-color: #000;
-        }
-        .calculator {
-            > div:nth-of-type(2) {
-                .col {
-                    border-color: #6d6d6d;
-                }
-            }
-            .display {
-                background-color: #abbaa7b0;
-            }
-        }
-        .settings {
-            .fa.fa-cog {
-                // color: themed(sidebarTitleTextColor);
-                color: darken(themed(calculatorTitleTextColor), 5%);
-            }
-        }
-        .sidebar {
-            background-color: #000;
-            // .keyboard {
-            // background-color: transparentize(
-            //     lighten(themed(keyboardBackground), 0%),
-            //     1
-            // );
-            // }
-        }
+    .sidebar {
+      //   background-color: #000;
+      // .keyboard {
+      // background-color: transparentize(
+      //     lighten(themed(keyboardBackground), 0%),
+      //     1
+      // );
+      // }
     }
-}
-
-// colors
-@include themify($themes) {
-    &#{$open} {
-        .calculator {}
-        .sidebar {
-
-            border-left-color: transparent;
-        }
-    }
+  }
 }
