@@ -140,15 +140,24 @@
 @include respond-below(xs) {
   #{$outer-wrapper} {
     .calculator {
+      .settings {
+        i.fa-cog {
+          font-size: 1.6rem;
+        }
+      }
       > p.title {
         font-size: 2rem;
         line-height: 1rem;
-        margin: 10px 0 0 3px;
+        margin: 15px 5px;
       }
-    }
-    .settings {
-      height: 2rem;
-      width: 2rem;
+      .keyboard {
+        .btn {
+          min-width: 40px;
+          &.btn-lg {
+            font-size: 1.5rem;
+          }
+        }
+      }
     }
     .sidebar {
       .keyboard {
