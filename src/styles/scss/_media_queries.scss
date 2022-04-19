@@ -138,16 +138,8 @@
 /////// xs
 
 @include respond-below(xs) {
-  #calculator {
-    > .container {
-    }
-  }
   #{$outer-wrapper} {
-    & {
-    }
-    .sidebar {
-    }
-    div.calculator {
+    .calculator {
       > p.title {
         font-size: 2rem;
         line-height: 1rem;
@@ -167,7 +159,25 @@
     &#{$open} {
       .sidebar {
       }
-      .calculator {
+      div.calculator {
+        transform: matrix3d(
+          1,
+          0,
+          0,
+          0.0025,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        );
       }
       .sidebar {
       }
@@ -310,6 +320,24 @@
       &#{$open} {
         //sizes here
         .calculator {
+          transform: matrix3d(
+            1,
+            0,
+            0,
+            0.0025,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          );
         }
         // colors here
         @include themify($themes) {
@@ -907,7 +935,6 @@
 //         }
 //       }
 //     }
-
 
 //     &#{$open} {
 //       div.calculator {
