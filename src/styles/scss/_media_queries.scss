@@ -598,3 +598,171 @@
     }
   }
 }
+
+// layout 2
+@include respond-below(md) {
+  @include orientation(landscape) {
+    body {
+      margin: 0;
+    }
+    #{$outer-wrapper} {
+      & {
+        height: 100vh;
+        width: 100%;
+        max-width: unset !important;
+        margin: 0;
+        padding: 0;
+      }
+      &#{$layout-2} {
+        div.calculator {
+          flex-direction: row;
+          max-width: none;
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          border-radius: 0;
+          border: 0;
+          p.title {
+            font-size: 2rem;
+            line-height: 1rem;
+            margin: 13px 13px 5px;
+            font-weight: 100;
+            width: 0;
+          }
+          .settings {
+            .fa.fa-cog {
+              font-size: 1.5rem;
+            }
+          }
+          .display {
+            margin: 17px 6px;
+            margin: 50px 0px 10px;
+            // padding: 0px 5px;
+            width: 100%;
+            height: fit-content;
+            max-width: 50%;
+            .calculation,
+            .result,
+            .result_err {
+              overflow-wrap: anywhere;
+            }
+            .calculation {
+              // font-size: 1.3rem;
+              // min-height: 2rem;
+            }
+            .result,
+            .result_err {
+              // font-size: 1.8rem;
+            }
+          }
+          .main-keyboards {
+            margin: 50px 0;
+          }
+          .keyboard {
+            .btn {
+              margin: 7px;
+              margin: 0 7px 10px;
+              height: 3rem;
+              width: 3rem;
+              min-width: 40px;
+              // font-size: 1.5rem;
+            }
+            &.keyboard-utility {
+              flex-grow: 1;
+              max-width: 200%;
+              .btn {
+                font-size: 1.7rem;
+              }
+            }
+          }
+        }
+      }
+    }
+    #{$outer-wrapper} {
+      &#{$open} &#{$layout-2} {
+        div.calculator {
+          /* prettier-ignore */
+          // transform: matrix3d(3, 0, 0, 0.002, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3);
+        }
+
+        $circle-diam: 1rem;
+        .sidebar {
+          height: 100vh;
+          .circle {
+            height: $circle-diam;
+            width: $circle-diam;
+            &:after {
+              height: $circle-diam * 1.333;
+              width: $circle-diam * 1.333;
+              top: -0.16rem;
+              left: -0.16rem;
+            }
+          }
+          div#circle1 {
+            ~ .keyboard {
+              @include on-circle(
+                $item-count: 3,
+                $circle-width: 100%,
+                $circle-height: 100%,
+                $circle-radius: 125%,
+                $item-size: 2.25rem
+              );
+            }
+          }
+          #circle2 {
+            ~ .keyboard {
+              @include on-circle(
+                $item-count: 5,
+                $circle-width: 100%,
+                $circle-height: 100%,
+                $circle-radius: 125%,
+                $item-size: 2.25rem
+              );
+            }
+          }
+        }
+        &#{$anim} {
+          .sidebar {
+            div#circle3 {
+              ~ .keyboard {
+                @include on-circle(
+                  $item-count: 3,
+                  $circle-width: 100%,
+                  $circle-height: 100%,
+                  $circle-radius: 125%,
+                  $item-size: 2.25rem
+                );
+              }
+            }
+          }
+        }
+
+        &#{$picture} {
+          .sidebar {
+            div#circle3 {
+              ~ .keyboard {
+                @include on-circle(
+                  $item-count: 2,
+                  $circle-width: 100%,
+                  $circle-height: 100%,
+                  $circle-radius: 125%,
+                  $item-size: 2.25rem
+                );
+              }
+            }
+          }
+        }
+
+        .keyboard {
+          .btn {
+            min-width: 2rem;
+            font-size: 0.8rem;
+          }
+        }
+        // }//
+      }
+    }
+  }
+}
