@@ -655,13 +655,17 @@ class Calculator extends Component {
     });
   };
 
-  showKeyboard = (e) => {
+  toggleKeyboard = (e) => {
     e.stopPropagation();
     let _key = "IsOpen";
     // only allow interaction on visible sidebar
     if (this.state.sidebarIsOpen) {
       _key = _key.replace(/^/, e.target.id);
-      this.setState({ [_key]: true });
+      if (!this.state[_key]) {
+        this.setState({ [_key]: true });
+      } else {
+        this.setState({ [_key]: false });
+      }
     }
   };
 
@@ -744,7 +748,7 @@ class Calculator extends Component {
         selected: this.state.theme,
       },
     ];
-    sidebarData.circleOnClick = this.showKeyboard;
+    sidebarData.circleOnClick = this.toggleKeyboard;
 
     if (themeType === "anim") {
       components.push({
