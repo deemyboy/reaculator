@@ -310,16 +310,38 @@
         padding-left: $s-1r$i;
         padding-right: $s-1r$i;
       }
-      //sizes here
       .calculator {
+        transform: matrix3d(
+          1,
+          0,
+          0,
+          0.0025,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        );
         .title {
           font-size: 2rem;
           line-height: 1rem;
           margin: 13px 13px 0;
         }
       }
-      // colors here
-      @include themify($themes) {
+      .sidebar {
+        .keyboard {
+          .btn-theme-type {
+          }
+          .btn-theme {
+          }
+        }
       }
     }
   }
@@ -332,29 +354,7 @@
   @include orientation(landscape) {
     #{$outer-wrapper} {
       &#{$open} {
-        //sizes here
         .calculator {
-          transform: matrix3d(
-            1,
-            0,
-            0,
-            0.0025,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            0,
-            1
-          );
-        }
-        // colors here
-        @include themify($themes) {
         }
       }
     }
@@ -373,6 +373,25 @@
         padding-right: $s-1r$i;
       }
       div.calculator {
+        transform: matrix3d(
+          1,
+          0,
+          0,
+          0.0025,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        );
+
         max-width: none;
         p.title {
           font-size: 2rem;
@@ -408,8 +427,6 @@
       }
       .sidebar {
         .keyboard {
-          .title {
-          }
           .btn-theme-type {
           }
           .btn-theme {
@@ -420,616 +437,164 @@
   }
 }
 
-///////////// landscape
-/////// sm
-/////// open
-@include respond-below(sm) {
+@include respond-below(md) {
+  @include orientation(portrait) {
+    #{$outer-wrapper} {
+    }
+    #{$outer-wrapper} {
+      &#{$open} {
+        div.sidebar {
+          height: 100%;
+        }
+      }
+    }
+  }
 }
 
-// @include media-breakpoint-down(xl) {
-//   #{$outer-wrapper} {
-//     > div.row:first-of-type {
-//       > div {
-//       }
-//       > div:nth-of-type(1) {
-//       }
-//       > div:nth-of-type(2) {
-//       }
-//     }
-//     .calculator {
-//       > .title {
-//       }
-//       .keyboard {
-//         button {
-//         }
-//       }
-//     }
-//     div.sidebar {
-//     }
-//   }
-// }
+@include respond-below(md) {
+  @include orientation(landscape) {
+    body {
+      margin: 0;
+    }
+    #{$outer-wrapper} {
+      & {
+        height: 100vh;
+        width: 100%;
+        max-width: unset !important;
+        margin: 0;
+        padding: 0;
+      }
+      div.calculator {
+        max-width: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+        border: 0;
+        p.title {
+          font-size: 2rem;
+          line-height: 1rem;
+          margin: 13px 13px 5px;
+          font-weight: 100;
+        }
+        .settings {
+          .fa.fa-cog {
+            font-size: 1.5rem;
+          }
+        }
+        .display {
+          margin: 17px 6px;
+          // padding: 0px 5px;
+          .calculation {
+            // font-size: 1.3rem;
+            // min-height: 2rem;
+          }
+          .result,
+          .result_err {
+            // font-size: 1.8rem;
+          }
+        }
+        .keyboard {
+          .btn {
+            margin: 7px;
+            height: 3rem;
+            width: 3rem;
+            min-width: 40px;
+            // font-size: 1.5rem;
+          }
+          &.keyboard-utility {
+            .btn {
+              font-size: 1.7rem;
+            }
+          }
+        }
+      }
+    }
+  }
+  #{$outer-wrapper} {
+    &#{$open} {
+      div.calculator {
+        /* prettier-ignore */
+        // transform: matrix3d(3, 0, 0, 0.002, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3);
+      }
 
-// @include media-breakpoint-down(lg) {
-//   #{$outer-wrapper} {
-//     > div.row:first-of-type {
-//       position: relative;
-//       > div {
-//       }
-//       > div:nth-of-type(1) {
-//       }
-//       > div:nth-of-type(2) {
-//       }
-//     }
-//     .calculator {
-//       > p.title {
-//         font-size: 2.7rem;
-//         line-height: 2rem;
-//         font-weight: 100;
-//         margin-bottom: 0;
-//       }
-//       .keyboard {
-//         button {
-//         }
-//       }
-//     }
-//     .sidebar {
-//     }
-//   }
-// }
+      $circle-diam: 1rem;
+      .sidebar {
+        height: 100vh;
+        .circle {
+          height: $circle-diam;
+          width: $circle-diam;
+          &:after {
+            height: $circle-diam * 1.333;
+            width: $circle-diam * 1.333;
+            top: -0.16rem;
+            left: -0.16rem;
+          }
+        }
+        div#circle1 {
+          ~ .keyboard {
+            @include on-circle(
+              $item-count: 3,
+              $circle-width: 100%,
+              $circle-height: 100%,
+              $circle-radius: 125%,
+              $item-size: 2.25rem
+            );
+          }
+        }
+        #circle2 {
+          ~ .keyboard {
+            @include on-circle(
+              $item-count: 5,
+              $circle-width: 100%,
+              $circle-height: 100%,
+              $circle-radius: 125%,
+              $item-size: 2.25rem
+            );
+          }
+        }
+      }
+      &#{$anim} {
+        .sidebar {
+          div#circle3 {
+            ~ .keyboard {
+              @include on-circle(
+                $item-count: 3,
+                $circle-width: 100%,
+                $circle-height: 100%,
+                $circle-radius: 125%,
+                $item-size: 2.25rem
+              );
+            }
+          }
+        }
+      }
 
-// @include media-breakpoint-down(md) {
-//   canvas {
-//     // display: none;
-//   }
+      &#{$picture} {
+        .sidebar {
+          div#circle3 {
+            ~ .keyboard {
+              @include on-circle(
+                $item-count: 2,
+                $circle-width: 100%,
+                $circle-height: 100%,
+                $circle-radius: 125%,
+                $item-size: 2.25rem
+              );
+            }
+          }
+        }
+      }
 
-//   #{$outer-wrapper} {
-//     > div.row:first-of-type {
-//       > div {
-//       }
-//       > div:nth-of-type(1) {
-//       }
-//       > div:nth-of-type(2) {
-//       }
-//     }
-//     p.settings {
-//       .fa.fa-cog {
-//       }
-//     }
-//     .calculator {
-//       > .title {
-//       }
-//       .keyboard {
-//         .btn {
-//         }
-//       }
-//     }
-//     .sidebar {
-//       div.keyboard {
-//         .btn {
-//         }
-//       }
-//     }
-//   }
-// }
-
-// @include media-breakpoint-down(sm) {
-//   #{$outer-wrapper} {
-//     > div.row:first-of-type {
-//       > div {
-//       }
-//       > div:nth-of-type(1) {
-//       }
-//       > div:nth-of-type(2) {
-//       }
-//     }
-//     .calculator {
-//       > .title {
-//       }
-//       .keyboard {
-//         .btn {
-//           font-size: 2rem;
-//         }
-//       }
-//     }
-
-//     &#{$open} {
-//       > div.row:first-of-type {
-//         > div {
-//         }
-//         > div:nth-of-type(1) {
-//         }
-//         > div:nth-of-type(2) {
-//         }
-//       }
-//       div.calculator {
-//         transform: matrix3d(
-//           1,
-//           0,
-//           0,
-//           0.0015,
-//           0,
-//           1,
-//           0,
-//           0,
-//           0,
-//           0,
-//           1,
-//           0,
-//           0,
-//           0,
-//           0,
-//           1
-//         );
-//         > .title {
-//         }
-//         .keyboard {
-//           .btn {
-//           }
-//         }
-//       }
-//     } //end open
-
-//     .sidebar {
-//       $circle-diam-sm: 2rem;
-//       div.circle {
-//         z-index: 2;
-//         position: absolute;
-//         border-radius: 2rem;
-//         transform-origin: center;
-//         height: $circle-diam-sm;
-//         width: $circle-diam-sm;
-//         left: calc(50% - math.div($circle-diam-sm, 2));
-//         top: calc(50% - math.div($circle-diam-sm, 2));
-//         @include transition(all 0.25s);
-
-//         &:after {
-//           height: $circle-diam-sm * 1.333;
-//           width: $circle-diam-sm * 1.333;
-//           left: calc(50% - math.div($circle-diam-sm * 1.333, 2));
-//           top: calc(50% - math.div($circle-diam-sm * 1.333, 2));
-//         }
-//         &:hover {
-//           transform: scale(1.33);
-//         }
-//         &:hover:after {
-//           transform: scale(0.75);
-//         }
-//       }
-//       div.keyboard {
-//         .btn {
-//           width: 4rem;
-//         }
-//       }
-//     }
-
-//     div#circle1 {
-//       ~ div.keyboard {
-//         @include on-circle(
-//           $item-count: 3,
-//           $circle-width: 100%,
-//           $circle-height: 100%,
-//           $circle-radius: 150%,
-//           $item-size: 4rem
-//         );
-
-//         .btn {
-//         }
-//       }
-//     }
-
-//     div#circle2 {
-//       ~ div.keyboard {
-//         @include on-circle(
-//           $item-count: 5,
-//           $circle-width: 100%,
-//           $circle-height: 100%,
-//           $circle-radius: 150%,
-//           $item-size: 4rem
-//         );
-//         .btn {
-//         }
-//       }
-//     }
-
-//     &#{$anim} {
-//       div#circle2 {
-//         ~ div.keyboard {
-//           @include on-circle(
-//             $item-count: 8,
-//             $circle-width: 100%,
-//             $circle-height: 100%,
-//             $circle-radius: 150%,
-//             $item-size: 4rem
-//           );
-//         }
-//       }
-//     }
-//   }
-// }
-
-// ////////// landscape sm
-// @include orientation(landscape) {
-//   #{$outer-wrapper} {
-//     // closed
-//     .calculator {
-//     }
-//     .sidebar {
-//     }
-//     &#{$open} {
-//       //sizes here
-//       .calculator {
-//       }
-//       .sidebar {
-//       }
-//     }
-//   }
-// }
-
-// @include media-breakpoint-down(xs) {
-//   #{$outer-wrapper} {
-//     > div.row.flex-nowrap:first-of-type {
-//       position: fixed;
-//       top: 0;
-//       bottom: 0;
-//       left: 0;
-//       right: 0;
-//       > div.calculator {
-//         > div:nth-of-type(1) {
-//           .col {
-//             //// 320px and 480px
-//             margin: 40px 3px 100px;
-//           }
-//         }
-//         > div:nth-of-type(2) {
-//           .col {
-//             padding: 40px 10px;
-//             //// 320px
-//             padding: inherit;
-//           }
-//         }
-//       }
-//     }
-//     p.settings {
-//       .fa.fa-cog {
-//         font-size: 1.5rem;
-//       }
-//     }
-//     .calculator {
-//       > .title {
-//       }
-//       .display {
-//         .result,
-//         .result_err {
-//         }
-//         .calculation {
-//         }
-//       }
-//       .keyboard {
-//         padding: 2px;
-//         .btn {
-//           font-size: 1.5rem;
-//         }
-//       }
-//     }
-//     div.sidebar {
-//       width: 50%;
-//       div.keyboard {
-//         .btn {
-//           // font-size: 1.2rem;
-//           // width: 30%;
-//         }
-//       }
-//     }
-
-//     &#{$open} {
-//       div.calculator {
-//         transform: matrix3d(1, 0, 0, 0.002, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-//         canvas {
-//         }
-//         .keyboard {
-//           .btn {
-//           }
-//         }
-//       }
-//       .settings {
-//       }
-//       .sidebar {
-//         div.keyboard {
-//           .btn {
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
-// @include media-breakpoint-down(xxs) {
-//   #{$outer-wrapper} {
-//     > div.row.flex-nowrap:first-of-type {
-//       > div.calculator {
-//         > div:nth-of-type(1) {
-//           .col {
-//             //// 320px and 480px
-//           }
-//         }
-//         > div:nth-of-type(2) {
-//           .col {
-//           }
-//         }
-//       }
-//     }
-//     p.settings {
-//       .fa.fa-cog {
-//         font-size: 1.5rem;
-//       }
-//     }
-//     &#{$open} {
-//       div.calculator.col {
-//         transform: matrix3d(
-//           1,
-//           0,
-//           0,
-//           0.0025,
-//           0,
-//           1,
-//           0,
-//           0,
-//           0,
-//           0,
-//           1,
-//           0,
-//           0,
-//           0,
-//           0,
-//           1
-//         );
-//       }
-//     }
-//     div.calculator.col {
-//       > .title {
-//       }
-//       .display {
-//         .result,
-//         .result_err {
-//         }
-//         .calculation {
-//         }
-//       }
-//       .keyboard {
-//         .btn {
-//         }
-//       }
-//     }
-//     div.sidebar {
-//       div.keyboard {
-//         .btn {
-//           width: 2.75rem;
-//         }
-//       }
-//     }
-
-//     &#{$open} {
-//       div.calculator {
-//         canvas {
-//         }
-//         .keyboard {
-//           .btn {
-//           }
-//         }
-//       }
-//       .settings {
-//       }
-//       .sidebar {
-//         div.keyboard {
-//           .btn {
-//           }
-//         }
-//       }
-//     }
-
-//     div#circle1 {
-//       ~ div.keyboard {
-//         @include on-circle(
-//           $item-count: 3,
-//           $circle-width: 100%,
-//           $circle-height: 100%,
-//           $circle-radius: 150%,
-//           $item-size: 2.75rem
-//         );
-
-//         .btn {
-//         }
-//       }
-//     }
-
-//     div#circle2 {
-//       ~ div.keyboard {
-//         @include on-circle(
-//           $item-count: 5,
-//           $circle-width: 100%,
-//           $circle-height: 100%,
-//           $circle-radius: 150%,
-//           $item-size: 2.75rem
-//         );
-//         .btn {
-//         }
-//       }
-//     }
-
-//     &#{$anim} {
-//       div#circle2 {
-//         ~ div.keyboard {
-//           @include on-circle(
-//             $item-count: 8,
-//             $circle-width: 100%,
-//             $circle-height: 100%,
-//             $circle-radius: 150%,
-//             $item-size: 2.75rem
-//           );
-//         }
-//       }
-//     }
-//   }
-// }
-
-// @include media-breakpoint-down(xxxs) {
-//   #{$outer-wrapper} {
-//     > div.row.flex-nowrap:first-of-type {
-//       > div.calculator {
-//         > div:nth-of-type(1) {
-//           .col {
-//             //// 320px and 480px
-//           }
-//         }
-//         > div:nth-of-type(2) {
-//           .col {
-//           }
-//         }
-//       }
-//     }
-//     p.settings {
-//       right: 2%;
-//       .fa.fa-cog {
-//         font-size: 1.5rem;
-//       }
-//     }
-//     // &#{$open} {
-//     //   div.calculator.col {
-//     //     transform: matrix3d(
-//     //       1,
-//     //       0,
-//     //       0,
-//     //       0.0025,
-//     //       0,
-//     //       1,
-//     //       0,
-//     //       0,
-//     //       0,
-//     //       0,
-//     //       1,
-//     //       0,
-//     //       0,
-//     //       0,
-//     //       0,
-//     //       1
-//     //     );
-//     //   }
-//     // }
-//     div.calculator.col {
-//       > .title {
-//       }
-//       .display {
-//         .result,
-//         .result_err {
-//           font-size: 2rem;
-//         }
-//         .calculation {
-//           font-size: 1.5rem;
-//           min-height: 2.25rem;
-//         }
-//       }
-//       .keyboard {
-//         .btn {
-//           margin: 8px;
-//         }
-//       }
-//     }
-
-//     div.sidebar {
-//       // max-width: 30%;
-//       $circle-diam-xxs: 1rem;
-//       div.circle {
-//         z-index: 2;
-//         position: absolute;
-//         border-radius: 2rem;
-//         transform-origin: center;
-//         height: $circle-diam-xxs;
-//         width: $circle-diam-xxs;
-//         left: calc(50% - math.div($circle-diam-xxs, 2));
-//         top: calc(50% - math.div($circle-diam-xxs, 2));
-//         @include transition(all 0.25s);
-
-//         &:after {
-//           height: $circle-diam-xxs * 1.333;
-//           width: $circle-diam-xxs * 1.333;
-//           left: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
-//           top: calc(50% - math.div($circle-diam-xxs * 1.333, 2));
-//         }
-//         &:hover {
-//           transform: scale(1.33);
-//         }
-//         &:hover:after {
-//           transform: scale(0.75);
-//         }
-//       }
-//       div.keyboard {
-//         button.btn {
-//           width: 2.25rem;
-//           font-size: 100%;
-//         }
-//       }
-//     }
-
-//     &#{$open} {
-//       div.calculator {
-//         canvas {
-//         }
-//         .keyboard {
-//           .btn {
-//           }
-//         }
-//       }
-//       .settings {
-//       }
-//       .sidebar {
-//         div.keyboard {
-//           .btn {
-//           }
-//         }
-//       }
-//     }
-
-//     div#circle1 {
-//       ~ div.keyboard {
-//         @include on-circle(
-//           $item-count: 3,
-//           $circle-width: 100%,
-//           $circle-height: 100%,
-//           $circle-radius: 150%,
-//           $item-size: 2.25rem
-//         );
-
-//         .btn {
-//         }
-//       }
-//     }
-
-//     div#circle2 {
-//       ~ div.keyboard {
-//         @include on-circle(
-//           $item-count: 5,
-//           $circle-width: 100%,
-//           $circle-height: 100%,
-//           $circle-radius: 150%,
-//           $item-size: 2.25rem
-//         );
-//         .btn {
-//         }
-//       }
-//     }
-
-//     &#{$anim} {
-//       div#circle2 {
-//         ~ div.keyboard {
-//           @include on-circle(
-//             $item-count: 8,
-//             $circle-width: 100%,
-//             $circle-height: 100%,
-//             $circle-radius: 150%,
-//             $item-size: 2.25rem
-//           );
-//         }
-//       }
-//     }
-//   }
-// }
+      .keyboard {
+        .btn {
+          min-width: 2rem;
+          font-size: 0.8rem;
+        }
+      }
+      // }//
+    }
+  }
+}
