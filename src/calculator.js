@@ -986,7 +986,7 @@ class Calculator extends Component {
   render = () => {
     return (
       <Container
-        className={`container ${
+        className={`container layout-2 ${
           this.state.sidebarIsOpen === true ? "open" : ""
         } ${this.state.themeType} ${this.state.theme.toLowerCase()} ${
           this.state.pictureType
@@ -1022,7 +1022,7 @@ class Calculator extends Component {
             displayClass={this.state.displayClass}
           />
           {/* ------------ main keyboards ---------------- */}
-          <Grid container meta-name="main keyboards">
+          <Grid container className="main-keyboards" meta-name="main keyboards">
             <Keyboard
               xs={6}
               md={6}
