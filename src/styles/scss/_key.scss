@@ -11,7 +11,7 @@
       align-items: center;
       justify-content: center;
       @include transition(all 0.25s);
-      width: 10%;
+      // width: 10%;
       padding: 0;
       &:before {
         content: "";

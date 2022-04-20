@@ -1,8 +1,10 @@
 import { Grid } from "@mui/material";
+import { pink } from "@mui/material/colors";
 import React from "react";
 import Key from "./key";
 
 export function Keyboard(propsIn) {
+  console.log(propsIn);
   const { ...props } = propsIn.props;
   const ref = React.createRef();
   let _className = props.className,
@@ -20,7 +22,13 @@ export function Keyboard(propsIn) {
   });
   return (
     <React.Fragment>
-      <Grid item className={`keyboard ${_className}`}>
+      <Grid
+        item
+        xs={propsIn.xs}
+        md={propsIn.md}
+        lg={propsIn.lg}
+        className={`keyboard ${_className}`}
+      >
         {_keys.map((ky) => {
           return (
             <Key

@@ -1022,16 +1022,23 @@ class Calculator extends Component {
             displayClass={this.state.displayClass}
           />
           {/* ------------ main keyboards ---------------- */}
-          <Grid container className="" meta-name="main keyboards">
-            <Grid item xs={6} md={6} className="">
-              <Keyboard props={this.getKeyboard("number")}></Keyboard>
-            </Grid>
-            <Grid item xs={6} md={6} className="">
-              <Keyboard props={this.getKeyboard("function")}></Keyboard>
-            </Grid>
-            <Grid item xs={12} md={12} className="">
-              <Keyboard props={this.getKeyboard("utility")}></Keyboard>
-            </Grid>
+          <Grid container meta-name="main keyboards">
+            <Keyboard
+              xs={6}
+              md={6}
+              props={this.getKeyboard("number")}
+            ></Keyboard>
+            <Keyboard
+              xs={6}
+              md={6}
+              props={this.getKeyboard("function")}
+            ></Keyboard>
+            <Keyboard
+              xs={6}
+              md={6}
+              lg={12}
+              props={this.getKeyboard("utility")}
+            ></Keyboard>
           </Grid>
         </Grid>
         {/* ------------ sidebar ---------------- */}
