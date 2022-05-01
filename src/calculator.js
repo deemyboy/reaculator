@@ -14,7 +14,14 @@ import { allowedKeys } from "./js/keys";
 import { themeTypeKeys } from "./js/keys";
 import { animKeys } from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
-
+import {
+  DOT_RGX,
+  UTIL_OP_RGX,
+  DOT_RGX_NN_GR,
+  MATH_OP_RGX_NN_GR,
+  DBL_MTH_OP_RGX_NN_GR,
+  SNGL_MTH_OP_RGX_NN_GR,
+} from "./utils/constants";
 class Calculator extends Component {
   displayRef = React.createRef();
   canvasRef = React.createRef();
@@ -60,20 +67,6 @@ class Calculator extends Component {
     num2: "",
     op1: "",
     op2: "",
-    dotRgx: /\./g,
-    dotRgxD: /(\.)/d,
-    numRgx: /(\d+)/g,
-    mathOpRgx: /([+\-x\/ysr=])/gi,
-    utilOpRgx: /[acm]/gi,
-    dblMthOpRgx: /[+\-x\/y]/gi,
-    snglMthOpRgx: /[sr]/gi,
-    dotRgxNnGr: /\./,
-    dotRgxDNnGr: /\./d,
-    numRgxNnGr: /(\d+)/,
-    mathOpRgxNnGr: /[+\-x\/ysr=]/i,
-    utilOpRgxNnGr: /[acm]/i,
-    dblMthOpRgxNnGr: /[+\-x\/y]/i,
-    snglMthOpRgxNnGr: /[sr]/i,
     userInput: "",
   };
 
@@ -239,10 +232,7 @@ class Calculator extends Component {
       return;
     }
 
-    if (
-      this.state.op2 === "=" ||
-      this.state.snglMthOpRgxNnGr.test(this.state.op1)
-    ) {
+    if (this.state.op2 === "=" || SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1)) {
       userInput = this.preProcessUserInput(inputData);
     }
 
@@ -276,7 +266,7 @@ class Calculator extends Component {
       userInput += key;
     }
 
-    if (this.state.utilOpRgxNnGr.test(key)) {
+    if (UTIL_OP_RGX.test(key)) {
       this.handleUtilityOperator(key);
       return;
     }
@@ -325,12 +315,6 @@ class Calculator extends Component {
   };
 
   parseUserInput = () => {
-    const mathOpRgx = this.state.mathOpRgx;
-    const numRgxNnGr = this.state.numRgxNnGr;
-    const dotRgxNnGr = this.state.dotRgxNnGr;
-    const dotRgx = this.state.dotRgx;
-    const dotRgxD = this.state.dotRgxD;
-
     const re =
       /([-]?\d*\.?\d*)([srx\-+\/my]?)([-]?\d*\.?\d*)([srx\-=+\/my]?)/dgi;
 
@@ -360,7 +344,7 @@ class Calculator extends Component {
 
     // [a]  repeated 0
     // handles  00 or 00000 or 00000000000
-    if (+userInput === 0 && !this.state.dotRgxNnGr.test(userInput)) {
+    if (+userInput === 0 && !DOT_RGX_NN_GR.test(userInput)) {
       this.setState({ userInput: "0", num1: "0" });
       return;
     }
@@ -369,8 +353,8 @@ class Calculator extends Component {
     if (
       op1 &&
       op1 !== "" &&
-      this.state.dblMthOpRgxNnGr.test(op1) &&
-      this.state.snglMthOpRgxNnGr.test(userInput.slice(-1)) &&
+      DBL_MTH_OP_RGX_NN_GR.test(op1) &&
+      SNGL_MTH_OP_RGX_NN_GR.test(userInput.slice(-1)) &&
       userInput.slice(userInput.indexOf(op1), -1) !== op1
     ) {
       this.setState({ userInput: userInput.slice(0, -1) });
@@ -452,7 +436,7 @@ class Calculator extends Component {
   };
 
   processNumber = (num) => {
-    if (this.state.dotRgxNnGr.test(num)) {
+    if (DOT_RGX_NN_GR.test(num)) {
       return (num = this.formatDecimal(num));
     } else {
       return num;
@@ -507,15 +491,15 @@ class Calculator extends Component {
     if (
       userInput &&
       userInput.length > 0 &&
-      this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
-      this.state.mathOpRgxNnGr.test(inputData.key)
+      SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1) &&
+      MATH_OP_RGX_NN_GR.test(inputData.key)
     ) {
       this.setState({ num1: _resVal });
       return _resVal;
     } else if (
       userInput &&
       userInput.length > 0 &&
-      this.state.snglMthOpRgxNnGr.test(this.state.op1) &&
+      SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1) &&
       /^-?\d+$/.test(inputData.key)
     ) {
       this.setState({
@@ -529,9 +513,8 @@ class Calculator extends Component {
     if (
       userInput &&
       userInput.length > 0 &&
-      (this.state.op2 === "=" ||
-        this.state.snglMthOpRgxNnGr.test(this.state.op1)) &&
-      this.state.mathOpRgxNnGr.test(inputData.key)
+      (this.state.op2 === "=" || SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1)) &&
+      MATH_OP_RGX_NN_GR.test(inputData.key)
     ) {
       let _resVal = this.state.resultData.value;
 
@@ -597,19 +580,18 @@ class Calculator extends Component {
   };
 
   formatDecimal = (numToProcess) => {
-    const _dotRgx = this.state.dotRgx;
     let dotMatch,
       dotMatch2,
       dotMatches = [],
       dotMatches2 = [];
 
-    while ((dotMatch = _dotRgx.exec(numToProcess)) != null) {
+    while ((dotMatch = DOT_RGX.exec(numToProcess)) != null) {
       dotMatches.push(dotMatch.index);
     }
 
     do {
       dotMatches2.push(dotMatch2);
-    } while ((dotMatch2 = _dotRgx.exec(numToProcess)) != null);
+    } while ((dotMatch2 = DOT_RGX.exec(numToProcess)) != null);
 
     // return;
 
@@ -807,9 +789,9 @@ class Calculator extends Component {
       _op1 = "";
     }
 
-    if (_num1 === "." || this.state.dotRgxNnGr.test(_num1)) {
+    if (_num1 === "." || DOT_RGX_NN_GR.test(_num1)) {
       _num1 = processDecimal(_num1);
-    } else if (_num2 === "." || (this.state.dotRgxNnGr.test(_num2) && op2)) {
+    } else if (_num2 === "." || (DOT_RGX_NN_GR.test(_num2) && op2)) {
       _num2 = processDecimal(_num2);
     }
 
@@ -857,14 +839,14 @@ class Calculator extends Component {
 
     // dble number maths but no num2
     if (
-      this.state.dblMthOpRgxNnGr.test(_op) &&
+      DBL_MTH_OP_RGX_NN_GR.test(_op) &&
       (!_num2 || _num2 === "") &&
       _num2 !== 0
     ) {
       return;
     }
 
-    if (!this.state.snglMthOpRgxNnGr.test(_op) && (!_op2 || _op2 === "")) {
+    if (!SNGL_MTH_OP_RGX_NN_GR.test(_op) && (!_op2 || _op2 === "")) {
       return;
     }
 
