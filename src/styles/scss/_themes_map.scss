@@ -297,18 +297,11 @@ $themes: (
     }
   }
   .sidebar {
-    .circle {
-      background-color: themed(sidebarBorderColor);
-      &:after {
-        background-color: #c4faff;
-        background-color: transparentize(themed(calculatorTitleTextColor), 0.3);
-      }
-    }
+    background-color: themed(backgroundColor);
   }
 }
 
 @include themify($themes) {
-  // colors
   &#{$picture} {
     .calculator {
       .title {
@@ -359,12 +352,19 @@ $themes: (
     }
     .sidebar {
       //   background-color: #000;
-      // .keyboard {
-      // background-color: transparentize(
-      //     lighten(themed(keyboardBackground), 0%),
-      //     1
-      // );
-      // }
+      .keyboard {
+        background-color: transparentize(
+              lighten(themed(keyboardBackground), 0%),
+              1
+          );
+          }
+        }
+      }
+      
+    &#{$open} {
+
+    .sidebar {
+      background-color: transparentize(themed(backgroundColor), .4);
     }
-  }
+}
 }

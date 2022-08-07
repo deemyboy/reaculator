@@ -56,9 +56,6 @@ class Calculator extends Component {
     },
     canvasId: "cvs",
     sidebarIsOpen: false,
-    circle1IsOpen: false,
-    circle2IsOpen: false,
-    circle3IsOpen: false,
     keyErr: false,
     numberKeyboardClass: "keyboard-number",
     functionKeyboardClass: "keyboard-function",
@@ -631,9 +628,6 @@ class Calculator extends Component {
     e.stopPropagation();
     this.setState({
       sidebarIsOpen: false,
-      circle1IsOpen: false,
-      circle2IsOpen: false,
-      circle3IsOpen: false,
     });
   };
 
@@ -721,27 +715,22 @@ class Calculator extends Component {
     let components = [
       {
         keyboard: this.getKeyboard("theme-type"),
-        isOpen: this.state.circle1IsOpen,
         selected: this.state.themeType,
       },
       {
         keyboard: this.getKeyboard("theme"),
-        isOpen: this.state.circle2IsOpen,
         selected: this.state.theme,
       },
     ];
-    sidebarData.circleOnClick = this.toggleKeyboard;
 
     if (themeType === "anim") {
       components.push({
         keyboard: this.getKeyboard("animation"),
-        isOpen: this.state.circle3IsOpen,
         selected: this.state.animation,
       });
     } else if (themeType === "picture") {
       components.push({
         keyboard: this.getKeyboard("picture-type"),
-        isOpen: this.state.circle3IsOpen,
         selected: this.state.pictureType,
       });
     }
@@ -981,6 +970,14 @@ class Calculator extends Component {
       >
         {/* ------------ app ---------------- */}
         {/* ------------ display and keyboards---------------- */}
+        <p
+          className="settings"
+          onClick={this.toggleSidebar}
+          onTouchStart={this.toggleSidebar}
+        >
+          {" "}
+          <i className="fa fa-cog" aria-hidden="true"></i>
+        </p>
         <Grid
           onClick={this.closeSidebar}
           onTouchStart={this.closeSidebar}
@@ -992,13 +989,6 @@ class Calculator extends Component {
           sm={8}
           md={8}
         >
-          <p
-            className="settings"
-            onClick={this.toggleSidebar}
-            onTouchStart={this.toggleSidebar}
-          >
-            <i className="fa fa-cog" aria-hidden="true"></i>
-          </p>
           <Canvas ref={this.animate} canvasId={this.state.canvasId} />
           <Typography className="title">{this.state.title}</Typography>
           {/* ------------ display ---------------- */}

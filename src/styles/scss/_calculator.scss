@@ -18,12 +18,12 @@
       margin: 10px 20px;
     }
   }
-  &#{$open} {
-    .calculator {
-      // border-radius: $s-04r 0 0 $s-04r;
-      transform: matrix3d(1, 0, 0, 0.001, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-    }
-  }
+  // &#{$open} {
+  //   .calculator {
+  //     // border-radius: $s-04r 0 0 $s-04r;
+  //     transform: matrix3d(1, 0, 0, 0.001, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  //   }
+  // }
   &#{$picture} {
     .calculator {
       background-size: cover;

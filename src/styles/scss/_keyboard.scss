@@ -8,19 +8,14 @@
 
 .sidebar {
   .keyboard {
-    z-index: -1;
-    height: 100%;
+    z-index: 4;
+    height: 20%;
     border: 0;
     @include transition(all 0.25s ease);
     position: relative;
     padding: 0;
     margin: 0;
-    transform: rotate(0deg);
+    // transform: rotate(0deg);
   }
 }
 
-.sidebar .circle.showing {
-  ~ .keyboard {
-    z-index: 1;
-  }
-}

@@ -1,12 +1,12 @@
 @use "sass:math";
-// A map of breakpoints.
-// $breakpoints: (
-//   xs: 576px,
-//   sm: 767px,
-//   md: 992px,
-//   lg: 1200px,
-// );
-
+/* A map of breakpoints.
+  $breakpoints: (
+    xs: 576px,
+    sm: 767px,
+    md: 992px,
+    lg: 1200px,
+  );
+*/
 @mixin respond-above($bp) {
   @if map-has-key($grid-breakpoints, $bp) {
     $bp-val: map-get($grid-breakpoints, $bp);
@@ -110,14 +110,28 @@
       }
     }
   }
-  // colors here
-  @include themify($themes) {
+}
+
+
+///////////// ///////////// /////////////
+/////////// generic section /////////////
+///////////// ///////////// /////////////
+
+///////////// both portrait and landscape
+/////// xs
+@include respond-below(md) {
+  #{$outer-wrapper} {
+    & {
+    }
+    //sizes here
     // closed
-    .calculator {
+    div.calculator {
+      border-radius: 0;
     }
     .settings {
     }
     .sidebar {
+      border-radius: 0;
     }
     &#{$open} {
       .calculator {
@@ -129,6 +143,7 @@
     }
   }
 }
+
 
 ///////////// ///////////// /////////////
 /////////// portrait section ////////////
@@ -166,33 +181,6 @@
       }
     }
     &#{$open} {
-      .sidebar {
-      }
-      div.calculator {
-        transform: matrix3d(
-          1,
-          0,
-          0,
-          0.0025,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1
-        );
-      }
-      .sidebar {
-      }
-    }
-    // colors here
-    @include themify($themes) {
     }
   }
   #{$outer-wrapper} {
@@ -228,9 +216,6 @@
         }
       }
 
-      // colors here
-      @include themify($themes) {
-      }
     }
     .sidebar {
       > .title {
@@ -254,23 +239,6 @@
         }
       }
       .sidebar-keyboard-wrapper {
-        .circle {
-          &:hover {
-            .keyboard {
-              .btn {
-              }
-            }
-          }
-        }
-        .circle-1 {
-          &:hover {
-          }
-        }
-
-        .circle-2 {
-          &:hover {
-          }
-        }
       }
     }
   }
@@ -288,9 +256,6 @@
       }
       .sidebar {
       }
-      // colors here
-      @include themify($themes) {
-      }
     }
   }
 }
@@ -299,69 +264,90 @@
 /////////// landscape section ///////////
 ///////////// ///////////// /////////////
 
-///////////// landscape
-/////// xs
-@include respond-below(xs) {
+///////////// portrait
+/////// md
+
+@include respond-below(md) {
   @include orientation(landscape) {
+    body {
+      margin: 0;
+    }
     #{$outer-wrapper} {
       & {
+        height: 100vh;
         width: 100%;
-        margin-top: $s-05r$i;
-        padding-left: $s-1r$i;
-        padding-right: $s-1r$i;
+        max-width: unset !important;
+        margin: 0;
+        padding: 0;
       }
-      .calculator {
-        transform: matrix3d(
-          1,
-          0,
-          0,
-          0.0025,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1
-        );
-        .title {
+      div.calculator {
+        max-width: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: 0;
+        p.title {
           font-size: 2rem;
           line-height: 1rem;
-          margin: 13px 13px 0;
+          margin: 13px 13px 5px;
+          font-weight: 100;
         }
-      }
-      .sidebar {
+        .settings {
+          .fa.fa-cog {
+            font-size: 1.5rem;
+          }
+        }
+        .display {
+          margin: 17px 6px;
+          .calculation {
+          }
+          .result,
+          .result_err {
+          }
+        }
         .keyboard {
-          .btn-theme-type {
+          .btn {
+            margin: 7px;
+            height: 5rem;
+            width: 5rem;
+            font-size: 3rem;
           }
-          .btn-theme {
+          &.keyboard-utility {
+            .btn {
+            }
           }
         }
       }
-    }
-  }
-}
-
-///////////// landscape
-/////// xs
-/////// open
-@include respond-below(xs) {
-  @include orientation(landscape) {
-    #{$outer-wrapper} {
-      &#{$open} {
-        .calculator {
-        }
+      div.sidebar {
+        height: 100%;
       }
     }
   }
-}
+  #{$outer-wrapper} {
+    &#{$open} {
+      div.calculator {
+        .keyboard {
+        }
+      }
 
-///////////// landscape
+      &#{$anim} {
+        .sidebar {
+        }
+      }
+
+      &#{$picture} {
+        .sidebar {
+        }
+      }
+
+
+    }
+  }
+}
+  
+  ///////////// landscape
 /////// sm
 @include respond-below(sm) {
   @include orientation(landscape) {
@@ -373,25 +359,6 @@
         padding-right: $s-1r$i;
       }
       div.calculator {
-        transform: matrix3d(
-          1,
-          0,
-          0,
-          0.0025,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          1
-        );
-
         max-width: none;
         p.title {
           font-size: 2rem;
@@ -419,9 +386,9 @@
         .keyboard {
           .btn {
             margin: 5px;
-            width: auto;
-            min-width: 40px;
-            font-size: 1.5rem;
+            height: 4rem;
+            width: 4rem;
+            font-size: 2rem;
           }
         }
       }
@@ -437,331 +404,45 @@
   }
 }
 
-@include respond-below(md) {
-  @include orientation(portrait) {
-    #{$outer-wrapper} {
-    }
-    #{$outer-wrapper} {
-      &#{$open} {
-        div.sidebar {
-          height: 100%;
-        }
-      }
-    }
-  }
-}
-
-@include respond-below(md) {
+///////////// landscape
+/////// xs
+@include respond-below(xs) {
   @include orientation(landscape) {
-    body {
-      margin: 0;
-    }
     #{$outer-wrapper} {
       & {
-        height: 100vh;
         width: 100%;
-        max-width: unset !important;
-        margin: 0;
-        padding: 0;
+        margin-top: $s-05r$i;
+        padding-left: $s-1r$i;
+        padding-right: $s-1r$i;
       }
-      div.calculator {
-        max-width: none;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        border-radius: 0;
-        border: 0;
-        p.title {
+      .calculator {
+        .title {
           font-size: 2rem;
           line-height: 1rem;
-          margin: 13px 13px 5px;
-          font-weight: 100;
-        }
-        .settings {
-          .fa.fa-cog {
-            font-size: 1.5rem;
-          }
-        }
-        .display {
-          margin: 17px 6px;
-          // padding: 0px 5px;
-          .calculation {
-            // font-size: 1.3rem;
-            // min-height: 2rem;
-          }
-          .result,
-          .result_err {
-            // font-size: 1.8rem;
-          }
-        }
-        .keyboard {
-          .btn {
-            margin: 7px;
-            height: 3rem;
-            width: 3rem;
-            min-width: 40px;
-            // font-size: 1.5rem;
-          }
-          &.keyboard-utility {
-            .btn {
-              font-size: 1.7rem;
-            }
-          }
+          margin: 13px 13px 0;
         }
       }
-    }
-  }
-  #{$outer-wrapper} {
-    &#{$open} {
-      div.calculator {
-        /* prettier-ignore */
-        // transform: matrix3d(3, 0, 0, 0.002, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3);
-      }
-
-      $circle-diam: 1rem;
       .sidebar {
-        height: 100vh;
-        .circle {
-          height: $circle-diam;
-          width: $circle-diam;
-          &:after {
-            height: $circle-diam * 1.333;
-            width: $circle-diam * 1.333;
-            top: -0.16rem;
-            left: -0.16rem;
+        .keyboard {
+          .btn-theme-type {
           }
-        }
-        div#circle1 {
-          ~ .keyboard {
-            @include on-circle(
-              $item-count: 3,
-              $circle-width: 100%,
-              $circle-height: 100%,
-              $circle-radius: 125%,
-              $item-size: 2.25rem
-            );
-          }
-        }
-        #circle2 {
-          ~ .keyboard {
-            @include on-circle(
-              $item-count: 5,
-              $circle-width: 100%,
-              $circle-height: 100%,
-              $circle-radius: 125%,
-              $item-size: 2.25rem
-            );
+          .btn-theme {
           }
         }
       }
-      &#{$anim} {
-        .sidebar {
-          div#circle3 {
-            ~ .keyboard {
-              @include on-circle(
-                $item-count: 3,
-                $circle-width: 100%,
-                $circle-height: 100%,
-                $circle-radius: 125%,
-                $item-size: 2.25rem
-              );
-            }
-          }
-        }
-      }
-
-      &#{$picture} {
-        .sidebar {
-          div#circle3 {
-            ~ .keyboard {
-              @include on-circle(
-                $item-count: 2,
-                $circle-width: 100%,
-                $circle-height: 100%,
-                $circle-radius: 125%,
-                $item-size: 2.25rem
-              );
-            }
-          }
-        }
-      }
-
-      .keyboard {
-        .btn {
-          min-width: 2rem;
-          font-size: 0.8rem;
-        }
-      }
-      // }//
     }
   }
 }
 
-// layout 2
-@include respond-below(md) {
+///////////// landscape
+/////// xs
+/////// open
+@include respond-below(xs) {
   @include orientation(landscape) {
-    body {
-      margin: 0;
-    }
     #{$outer-wrapper} {
-      & {
-        height: 100vh;
-        width: 100%;
-        max-width: unset !important;
-        margin: 0;
-        padding: 0;
-      }
-      &#{$layout-2} {
-        div.calculator {
-          flex-direction: row;
-          max-width: none;
-          position: fixed;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          border-radius: 0;
-          border: 0;
-          p.title {
-            font-size: 2rem;
-            line-height: 1rem;
-            margin: 13px 13px 5px;
-            font-weight: 100;
-            width: 0;
-          }
-          .settings {
-            .fa.fa-cog {
-              font-size: 1.5rem;
-            }
-          }
-          .display {
-            margin: 17px 6px;
-            margin: 50px 0px 10px;
-            // padding: 0px 5px;
-            width: 100%;
-            height: fit-content;
-            max-width: 50%;
-            .calculation,
-            .result,
-            .result_err {
-              overflow-wrap: anywhere;
-            }
-            .calculation {
-              // font-size: 1.3rem;
-              // min-height: 2rem;
-            }
-            .result,
-            .result_err {
-              // font-size: 1.8rem;
-            }
-          }
-          .main-keyboards {
-            margin: 50px 0;
-          }
-          .keyboard {
-            .btn {
-              margin: 7px;
-              margin: 0 7px 10px;
-              height: 3rem;
-              width: 3rem;
-              min-width: 40px;
-              // font-size: 1.5rem;
-            }
-            &.keyboard-utility {
-              flex-grow: 1;
-              max-width: 200%;
-              .btn {
-                font-size: 1.7rem;
-              }
-            }
-          }
+      &#{$open} {
+        .calculator {
         }
-      }
-    }
-    #{$outer-wrapper} {
-      &#{$open} &#{$layout-2} {
-        div.calculator {
-          /* prettier-ignore */
-          // transform: matrix3d(3, 0, 0, 0.002, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3);
-        }
-
-        $circle-diam: 1rem;
-        .sidebar {
-          height: 100vh;
-          .circle {
-            height: $circle-diam;
-            width: $circle-diam;
-            &:after {
-              height: $circle-diam * 1.333;
-              width: $circle-diam * 1.333;
-              top: -0.16rem;
-              left: -0.16rem;
-            }
-          }
-          div#circle1 {
-            ~ .keyboard {
-              @include on-circle(
-                $item-count: 3,
-                $circle-width: 100%,
-                $circle-height: 100%,
-                $circle-radius: 125%,
-                $item-size: 2.25rem
-              );
-            }
-          }
-          #circle2 {
-            ~ .keyboard {
-              @include on-circle(
-                $item-count: 5,
-                $circle-width: 100%,
-                $circle-height: 100%,
-                $circle-radius: 125%,
-                $item-size: 2.25rem
-              );
-            }
-          }
-        }
-        &#{$anim} {
-          .sidebar {
-            div#circle3 {
-              ~ .keyboard {
-                @include on-circle(
-                  $item-count: 3,
-                  $circle-width: 100%,
-                  $circle-height: 100%,
-                  $circle-radius: 125%,
-                  $item-size: 2.25rem
-                );
-              }
-            }
-          }
-        }
-
-        &#{$picture} {
-          .sidebar {
-            div#circle3 {
-              ~ .keyboard {
-                @include on-circle(
-                  $item-count: 2,
-                  $circle-width: 100%,
-                  $circle-height: 100%,
-                  $circle-radius: 125%,
-                  $item-size: 2.25rem
-                );
-              }
-            }
-          }
-        }
-
-        .keyboard {
-          .btn {
-            min-width: 2rem;
-            font-size: 0.8rem;
-          }
-        }
-        // }//
       }
     }
   }

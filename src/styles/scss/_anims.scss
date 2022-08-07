@@ -26,10 +26,10 @@
 
 .move-it {
   transition: transform .25s;
-  &:hover {
-    transform: rotateY(360deg); /* needs Y at 0 deg to behave properly*/
+  // &:hover {
+  //   transform: rotateY(360deg); /* needs Y at 0 deg to behave properly*/
     
-  }
+  // }
 }
 
 #slither {

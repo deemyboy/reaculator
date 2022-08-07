@@ -1,10 +1,12 @@
-import { themeKeys } from "./keys";
-import { numberKeys } from "./keys";
-import { functionKeys } from "./keys";
-import { utilityKeys } from "./keys";
-import { themeTypeKeys } from "./keys";
-import { animKeys } from "./keys";
-import { pictureKeys } from "./keys";
+import {
+  themeKeys,
+  numberKeys,
+  functionKeys,
+  utilityKeys,
+  themeTypeKeys,
+  animKeys,
+  pictureKeys,
+} from "./keys";
 
 export const keyboards = [
   {
