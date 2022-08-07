@@ -51,6 +51,7 @@ const Key = React.forwardRef((props, ref) => {
         className={setKeyClasses(props.kObj)}
         onClick={(e) => props.handleClick(e)}
         size="large"
+        title={props.kObj.title}
         variant={"outlined"}
       >
         {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
