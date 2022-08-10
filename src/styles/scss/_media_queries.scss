@@ -1,7 +1,7 @@
 @use "sass:math";
 /* A map of breakpoints.
   $breakpoints: (
-    xs: 576px,
+    xs: 580px,
     sm: 767px,
     md: 992px,
     lg: 1200px,
@@ -150,25 +150,22 @@
 ///////////// ///////////// /////////////
 
 ///////////// portrait
-/////// xs
+/////// xxxs
 
-@include respond-below(xs) {
+@include respond-below(xxxs) {
   #{$outer-wrapper} {
-    .calculator {
+    div.calculator {
       .settings {
         i.fa-cog {
-          font-size: 1.6rem;
         }
       }
       > p.title {
-        font-size: 2rem;
-        line-height: 1rem;
-        margin: 15px 5px;
       }
-      .keyboard {
-        .btn {
-          min-width: 40px;
+      div.keyboard {
+        button.btn {
+          min-width: 50px;
           &.btn-lg {
+            margin: 5px;
             font-size: 1.5rem;
           }
         }
@@ -188,15 +185,104 @@
 }
 
 ///////////// portrait
-/////// sm - md
+/////// xxs
 
-@include respond-between(sm, md) {
+@include respond-below(xxs) {
+  #{$outer-wrapper} {
+    div.calculator {
+      .settings {
+        i.fa-cog {
+        }
+      }
+      > p.title {
+      }
+      div.keyboard {
+        .btn {
+          min-width: 55px;
+          &.btn-lg {
+            margin: 8px;
+            font-size: 1.8rem;
+          }
+        }
+      }
+    }
+    .sidebar {
+      .keyboard {
+        button {
+        }
+      }
+    }
+    &#{$open} {
+    }
+  }
+  #{$outer-wrapper} {
+  }
+}
+
+///////////// portrait
+/////// xs
+
+
+@include respond-below(xs) {
+  #{$outer-wrapper} {
+    div.calculator {
+      // max-width: unset;
+      // width: 100%;
+      // position: fixed;
+      // top: 0;
+      // left: 0;
+      // right: 0;
+      // bottom: 0;
+      .settings {
+        i.fa-cog {
+          font-size: 1.6rem;  
+        }
+      }
+      > p.title {
+        font-size: 2rem;
+        line-height: 1rem;
+        margin: 15px 5px;
+      }
+      .keyboard {
+        .btn {
+          min-width: 60px;
+          margin: 8px;
+          &.btn-lg {
+            font-size: 2rem;
+          }
+        }
+      }
+    }
+    .sidebar {
+      .keyboard {
+        button {
+        }
+      }
+    }
+    &#{$open} {
+    }
+  }
+  #{$outer-wrapper} {
+  }
+}
+
+///////////// portrait
+/////// sm
+
+@include respond-below(sm) {
   #{$outer-wrapper} {
     & {
       margin-top: 0;
     }
     // sizes here
-    .calculator {
+    div.calculator {
+      // max-width: unset;
+      // width: 100%;
+      // position: fixed;
+      // top: 0;
+      // left: 0;
+      // right: 0;
+      // bottom: 0;
       > .title {
       }
       .display {
@@ -245,16 +331,37 @@
 }
 
 ///////////// portrait
-/////// sm - md
+/////// 
 /////// open
 
-@include respond-between(sm, md) {
+@include respond-below(md) {
   #{$outer-wrapper} {
+      &{
+        max-width: unset$i;
+      }
+    div.calculator {
+      max-width: unset;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    .sidebar {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 100%;
+      right: 0;
+      bottom: 0;
+    }
     &#{$open} {
       //sizes here
-      .calculator {
+      div.calculator {
       }
       .sidebar {
+        left: 50%;
       }
     }
   }
@@ -264,7 +371,7 @@
 /////////// landscape section ///////////
 ///////////// ///////////// /////////////
 
-///////////// portrait
+///////////// landscape
 /////// md
 
 @include respond-below(md) {
@@ -274,9 +381,9 @@
     }
     #{$outer-wrapper} {
       & {
-        height: 100vh;
-        width: 100%;
-        max-width: unset !important;
+        // height: 100vh;
+        // width: 100%;
+        // max-width: unset !important;
         margin: 0;
         padding: 0;
       }
@@ -375,19 +482,19 @@
           margin: 14px 13px 10px;
           padding: 0px 5px;
           .calculation {
-            font-size: 1.3rem;
-            min-height: 2rem;
+            font-size: 2rem;
+            min-height: 3rem;
           }
           .result,
           .result_err {
-            font-size: 1.8rem;
+            font-size: 3rem;
           }
         }
         .keyboard {
           .btn {
             margin: 5px;
-            height: 4rem;
-            width: 4rem;
+            height: 4.5rem;
+            width: 4.5rem;
             font-size: 2rem;
           }
         }
@@ -420,6 +527,18 @@
           font-size: 2rem;
           line-height: 1rem;
           margin: 13px 13px 0;
+        }
+        .display {
+          margin: 14px 13px 10px;
+          padding: 0px 5px;
+          .calculation {
+            font-size: 1.3rem;
+            min-height: 2rem;
+          }
+          .result,
+          .result_err {
+            font-size: 1.8rem;
+          }
         }
       }
       .sidebar {

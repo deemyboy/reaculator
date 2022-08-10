@@ -364,7 +364,7 @@ $themes: (
     &#{$open} {
 
     .sidebar {
-      background-color: transparentize(themed(backgroundColor), .4);
+      background-color: transparentize(themed(backgroundColor), .2);
     }
 }
 }

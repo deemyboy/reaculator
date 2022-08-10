@@ -143,7 +143,6 @@ class Calculator extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
-    // window.removeEventListener("load", this.handleLoad);
   }
 
   setCookie = (cookieData) => {
@@ -278,18 +277,15 @@ class Calculator extends Component {
       resultData.value = "";
       resultData.resultClass = this.state.resultData.resultDefaultClass;
 
-      this.setState(
-        {
-          num1: "",
-          num2: "",
-          op1: "",
-          op2: "",
-          resultData,
-          userInput: "",
-          keyErr: false,
-        }
-        // this.value
-      );
+      this.setState({
+        num1: "",
+        num2: "",
+        op1: "",
+        op2: "",
+        resultData,
+        userInput: "",
+        keyErr: false,
+      });
     }
     if (key === "c") {
       let { userInput } = this.state;
@@ -590,8 +586,6 @@ class Calculator extends Component {
       dotMatches2.push(dotMatch2);
     } while ((dotMatch2 = DOT_RGX.exec(numToProcess)) != null);
 
-    // return;
-
     // if called in error ie. handle no dots
     if (dotMatches.length < 1) {
       return numToProcess;
@@ -700,40 +694,48 @@ class Calculator extends Component {
     this.setCookie(cookieData);
   };
 
-  getKeyboard = (keyboardName) => {
-    let _keyboard = keyboards.find((keyboard) => {
+  getKeyboardData = (keyboardName) => {
+    let _keyboardData = keyboards.find((keyboard) => {
       return keyboard.name === keyboardName ? keyboard : undefined;
     });
-    _keyboard.onClick = this[_keyboard.onClickFunction];
-    return _keyboard;
+    _keyboardData.onClick = this[_keyboardData.onClickFunction];
+    return _keyboardData;
   };
 
   getSidebarData = (themeType) => {
     let sidebarData = {
       isOpen: this.state.sidebarIsOpen,
     };
-    let components = [
-      {
-        keyboard: this.getKeyboard("theme-type"),
-        selected: this.state.themeType,
-      },
-      {
-        keyboard: this.getKeyboard("theme"),
-        selected: this.state.theme,
-      },
-    ];
+    let components = [];
+    components.push(
+      <Keyboard
+        selected={this.state.themeType}
+        props={this.getKeyboardData("theme-type")}
+      />
+    );
+    components.push(
+      <Keyboard
+        selected={this.state.theme}
+        props={this.getKeyboardData("theme")}
+      />
+    );
 
     if (themeType === "anim") {
-      components.push({
-        keyboard: this.getKeyboard("animation"),
-        selected: this.state.animation,
-      });
+      components.push(
+        <Keyboard
+          selected={this.state.animation}
+          props={this.getKeyboardData("animation")}
+        />
+      );
     } else if (themeType === "picture") {
-      components.push({
-        keyboard: this.getKeyboard("picture-type"),
-        selected: this.state.pictureType,
-      });
+      components.push(
+        <Keyboard
+          selected={this.state.pictureType}
+          props={this.getKeyboardData("picture-type")}
+        />
+      );
     }
+
     sidebarData.components = components;
     return sidebarData;
   };
@@ -784,12 +786,7 @@ class Calculator extends Component {
       _num2 = processDecimal(_num2);
     }
 
-    // if (op2) {
-    //   _num2 = processDecimal(_num2);
-    // }
-
     calculationData.value = _num1 + _op1 + _num2;
-    // calculationData = calculationData;
     if (calculationData.value !== this.state.calculationData.value) {
       this.setState({ calculationData });
     }
@@ -881,7 +878,6 @@ class Calculator extends Component {
       resultData.value = String(resultData.value);
     }
     this.setState({ resultData }, () => this.postResultClearUp());
-    // this.setState(resultData);
   };
 
   formatResult = (resValue) => {
@@ -902,17 +898,8 @@ class Calculator extends Component {
       num2 = "";
       op1 = op2;
       op2 = "";
-      // userInput = "";
       userInput = value + op1;
     }
-    // } else {
-    //   op2 = op2;
-    //   num1 = num1;
-    //   num2 = num2;
-    //   op1 = op1;
-    //   // _userInput = "";
-    //   // _userInput = value;
-    // }
 
     this.setState({
       num1,
@@ -961,7 +948,7 @@ class Calculator extends Component {
   render = () => {
     return (
       <Container
-        className={`container layout-2 ${
+        className={`container ${
           this.state.sidebarIsOpen === true ? "open" : ""
         } ${this.state.themeType} ${this.state.theme.toLowerCase()} ${
           this.state.pictureType
@@ -979,15 +966,13 @@ class Calculator extends Component {
           <i className="fa fa-cog" aria-hidden="true"></i>
         </p>
         <Grid
+          container
           onClick={this.closeSidebar}
           onTouchStart={this.closeSidebar}
           direction={"column"}
           id="canvas-container"
           className={"calculator"}
           meta-name="display and keyboards"
-          xs={8}
-          sm={8}
-          md={8}
         >
           <Canvas ref={this.animate} canvasId={this.state.canvasId} />
           <Typography className="title">{this.state.title}</Typography>
@@ -999,22 +984,14 @@ class Calculator extends Component {
           />
           {/* ------------ main keyboards ---------------- */}
           <Grid container className="main-keyboards" meta-name="main keyboards">
+            <Keyboard xs={7} md={7} props={this.getKeyboardData("number")} />
+            <Keyboard xs={5} md={5} props={this.getKeyboardData("function")} />
             <Keyboard
-              xs={6}
-              md={6}
-              props={this.getKeyboard("number")}
-            ></Keyboard>
-            <Keyboard
-              xs={6}
-              md={6}
-              props={this.getKeyboard("function")}
-            ></Keyboard>
-            <Keyboard
-              xs={6}
-              md={6}
+              xs={12}
+              md={12}
               lg={12}
-              props={this.getKeyboard("utility")}
-            ></Keyboard>
+              props={this.getKeyboardData("utility")}
+            />
           </Grid>
         </Grid>
         {/* ------------ sidebar ---------------- */}

@@ -3,8 +3,7 @@ import { Keyboard } from "./keyboard";
 import { keyboards } from "../js/keyboards";
 import Grid from "@mui/material/Grid";
 
-export function Sidebar(propsIn) {
-  const { ...props } = propsIn.props;
+export function Sidebar({props}) {
   let className = "sidebar";
   if (props.isOpen) {
     className += " " + "open";
@@ -27,21 +26,9 @@ export function Sidebar(propsIn) {
     >
       {components.map((component, i) => {
         return (
-          // <Grid
-          //   key={i}
-          //   item={true}
-          //   sm={6}
-          //   md={6}
-          //   display={"flex"}
-          //   // flexBasis={"10%!important"}
-          //   alignItems="center"
-          // >
-            <Keyboard
-              key={i + 10}
-              selected={component.selected}
-              props={component.keyboard}
-            />
-          // </Grid>
+        <React.Fragment key={i+567}>
+            {component}
+        </React.Fragment>
         );
       })}
     </Grid>

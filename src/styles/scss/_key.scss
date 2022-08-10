@@ -262,8 +262,8 @@
   .sidebar {
     .keyboard {
       .btn {
-        border: 2px solid themed(keyboardBorderColor);
-        background-color: themed(primaryButtonBgColor);
+        border: 2px solid transparentize(themed(keyboardBorderColor),.5);
+        background-color: transparentize(themed(primaryButtonBgColor),.5);
       }
       &.keyboard-theme-type {
         .btn {
