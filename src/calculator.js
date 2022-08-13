@@ -63,7 +63,7 @@ class Calculator extends Component {
         var tag = document.createElement("script");
         tag.id = _id;
         tag.async = false;
-        let _src = `./animation-${_scriptName}.js`;
+        let _src = `/public/animation-${_scriptName}.js`;
         tag.src = _src;
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(tag);
@@ -96,7 +96,7 @@ class Calculator extends Component {
         var tag = document.createElement("script");
         tag.id = _id;
         tag.async = false;
-        let _src = `./animation-${_scriptName}.js`;
+        let _src = `/public/animation-${_scriptName}.js`;
         tag.src = _src;
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(tag);
@@ -173,6 +173,7 @@ class Calculator extends Component {
 
     // prevent these keys firing
     // ctrl key 17, shift key 16 alt key 18
+    // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
     if (
       !(e.keyCode === 17) &&
       !(e.keyCode === 16) &&
