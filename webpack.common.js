@@ -8,7 +8,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
   filename: "./index.html",
 });
 
-var path = require('path');
+var path = require("path");
 
 module.exports = {
   resolve: {
@@ -23,32 +23,31 @@ module.exports = {
           loader: "babel-loader",
         },
       },
-    //   {
-    //     test: /\.s[ac]ss$/i,
-    //     use: [
-    //       "style-loader",
-    //       {
-    //         loader: "css-loader",
-    //         options: {
-    //           sourceMap: true,
-    //         },
-    //       },
-    //       {
-    //         loader: "sass-loader",
-    //         options: {
-    //           sourceMap: true,
-    //           // sassOptions: {
-    //           //   outputStyle: "compressed",
-    //           // },
-    //         },
-    //       },
-    //     ],
-    //   },
+      //   {
+      //     test: /\.s[ac]ss$/i,
+      //     use: [
+      //       "style-loader",
+      //       {
+      //         loader: "css-loader",
+      //         options: {
+      //           sourceMap: true,
+      //         },
+      //       },
+      //       {
+      //         loader: "sass-loader",
+      //         options: {
+      //           sourceMap: true,
+      //           // sassOptions: {
+      //           //   outputStyle: "compressed",
+      //           // },
+      //         },
+      //       },
+      //     ],
+      //   },
     ],
   },
   plugins: [htmlPlugin],
 
-  
   // plugins: [
   //   htmlPlugin,
   //   new webpack.DefinePlugin({ //<--key to reduce React's size

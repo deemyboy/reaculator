@@ -1,8 +1,8 @@
 import * as React from "react";
+import { Grid } from "@mui/material";
 
 import Calculation from "./calculation";
 import Result from "./result";
-import { Grid } from "@mui/material";
 
 const Display = React.forwardRef((props, ref) => {
   const displayClass = "display";

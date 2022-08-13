@@ -1,7 +1,8 @@
 import React from "react";
+import { Grid } from "@mui/material";
+
 import { Keyboard } from "./keyboard";
 import { keyboards } from "../js/keyboards";
-import { Grid } from "@mui/material";
 
 export function Sidebar({props}) {
   let className = "sidebar";

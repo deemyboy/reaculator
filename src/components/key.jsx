@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import {Button} from "@mui/material";
 
 const Key = React.forwardRef((props, ref) => {
   const setKeyClasses = (keyObj) => {
