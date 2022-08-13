@@ -4,18 +4,16 @@ $still: ".still";
 $moving: ".moving";
 $showing: ".showing";
 $color: ".color";
-$anim: ".anim";
+$animation: ".animation";
 $selected: ".selected";
 $outer-wrapper: "#calculator > .container";
-$layout-1: ".layout-1";
-$layout-2: ".layout-2";
 $i: #{"!"}important;
 
 $grid-breakpoints: (
   xxxxs: 0,
   xxxs: 380px,
   xxs: 480px,
-  xs: 576px,
+  xs: 580px,
   sm: 767px,
   md: 992px,
   lg: 1200px,

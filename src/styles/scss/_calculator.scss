@@ -4,7 +4,7 @@
   .calculator {
     display: flex;
     position: relative;
-    border-radius: $s-1r;
+    border-radius: $s-05r;
     border: 3px solid;
     @include transition(all 0.25s);
     z-index: 1;

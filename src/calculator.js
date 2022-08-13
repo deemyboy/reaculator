@@ -6,22 +6,12 @@ import Canvas from "./components/canvas";
 import { Sidebar } from "./components/sidebar";
 import Cookies from "universal-cookie";
 import { keyboards } from "./js/keyboards";
-import { themeKeys } from "./js/keys";
 import { numberKeys } from "./js/keys";
 import { functionKeys } from "./js/keys";
 import { utilityKeys } from "./js/keys";
 import { allowedKeys } from "./js/keys";
-import { themeTypeKeys } from "./js/keys";
-import { animKeys } from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
-import {
-  DOT_RGX,
-  UTIL_OP_RGX,
-  DOT_RGX_NN_GR,
-  MATH_OP_RGX_NN_GR,
-  DBL_MTH_OP_RGX_NN_GR,
-  SNGL_MTH_OP_RGX_NN_GR,
-} from "./utils/constants";
+import * as CONSTANTS from "./utils/constants";
 class Calculator extends Component {
   displayRef = React.createRef();
   canvasRef = React.createRef();
@@ -30,7 +20,7 @@ class Calculator extends Component {
 
     this.state.theme = this.getCookie("currentTheme", "theme");
     this.state.themeType = this.getCookie("currentThemeType", "themeType");
-    this.state.animation = this.getCookie("currentAnim", "anim");
+    this.state.animation = this.getCookie("currentAnimation", "animation");
     this.state.pictureType = this.getCookie(
       "currentPictureType",
       "pictureType"
@@ -47,19 +37,14 @@ class Calculator extends Component {
       className: "calculation",
       value: "",
     },
-    displayClass: "display",
     resultData: {
       className: "result",
       value: "",
       defaultClass: "result",
       errorClass: "result_err",
     },
-    canvasId: "cvs",
     sidebarIsOpen: false,
     keyErr: false,
-    numberKeyboardClass: "keyboard-number",
-    functionKeyboardClass: "keyboard-function",
-    utilityKeyboardClass: "keyboard-utility",
     num1: "",
     num2: "",
     op1: "",
@@ -70,15 +55,15 @@ class Calculator extends Component {
   componentDidMount() {
     document.addEventListener("keydown", (e) => this.handleKeyPress(e));
 
-    let _id = "anim-script",
+    let _id = "animation-script",
       _scriptName = this.state.animation;
 
-    if (this.state.themeType === "anim") {
+    if (this.state.themeType === "animation") {
       var loadScript = function () {
         var tag = document.createElement("script");
         tag.id = _id;
         tag.async = false;
-        let _src = `./anim-${_scriptName}.js`;
+        let _src = `./animation-${_scriptName}.js`;
         tag.src = _src;
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(tag);
@@ -100,18 +85,18 @@ class Calculator extends Component {
   }
 
   componentDidUpdate(nextProps, nextState) {
-    let _id = "anim-script",
+    let _id = "animation-script",
       _scriptName = this.state.animation;
 
     if (
-      this.state.themeType === "anim" &&
+      this.state.themeType === "animation" &&
       this.state.animation !== nextState.animation
     ) {
       var loadScript = function () {
         var tag = document.createElement("script");
         tag.id = _id;
         tag.async = false;
-        let _src = `./anim-${_scriptName}.js`;
+        let _src = `./animation-${_scriptName}.js`;
         tag.src = _src;
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(tag);
@@ -143,7 +128,6 @@ class Calculator extends Component {
 
   componentWillUnmount() {
     document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
-    // window.removeEventListener("load", this.handleLoad);
   }
 
   setCookie = (cookieData) => {
@@ -189,7 +173,17 @@ class Calculator extends Component {
 
     // prevent these keys firing
     // ctrl key 17, shift key 16 alt key 18
-    if (!(e.keyCode === 17) && !(e.keyCode === 16) && !(e.keyCode === 18)) {
+    if (
+      !(e.keyCode === 17) &&
+      !(e.keyCode === 16) &&
+      !(e.keyCode === 18) &&
+      !(e.keyCode === 91) &&
+      !(e.keyCode === 93) &&
+      !(e.keyCode === 37) &&
+      !(e.keyCode === 38) &&
+      !(e.keyCode === 39) &&
+      !(e.keyCode === 40)
+    ) {
       var _button = document.getElementById(_key.id);
     } else {
       return;
@@ -229,7 +223,10 @@ class Calculator extends Component {
       return;
     }
 
-    if (this.state.op2 === "=" || SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1)) {
+    if (
+      this.state.op2 === "=" ||
+      CONSTANTS.SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1)
+    ) {
       userInput = this.preProcessUserInput(inputData);
     }
 
@@ -263,7 +260,7 @@ class Calculator extends Component {
       userInput += key;
     }
 
-    if (UTIL_OP_RGX.test(key)) {
+    if (CONSTANTS.UTIL_OP_RGX.test(key)) {
       this.handleUtilityOperator(key);
       return;
     }
@@ -278,18 +275,15 @@ class Calculator extends Component {
       resultData.value = "";
       resultData.resultClass = this.state.resultData.resultDefaultClass;
 
-      this.setState(
-        {
-          num1: "",
-          num2: "",
-          op1: "",
-          op2: "",
-          resultData,
-          userInput: "",
-          keyErr: false,
-        }
-        // this.value
-      );
+      this.setState({
+        num1: "",
+        num2: "",
+        op1: "",
+        op2: "",
+        resultData,
+        userInput: "",
+        keyErr: false,
+      });
     }
     if (key === "c") {
       let { userInput } = this.state;
@@ -341,7 +335,7 @@ class Calculator extends Component {
 
     // [a]  repeated 0
     // handles  00 or 00000 or 00000000000
-    if (+userInput === 0 && !DOT_RGX_NN_GR.test(userInput)) {
+    if (+userInput === 0 && !CONSTANTS.DOT_RGX_NN_GR.test(userInput)) {
       this.setState({ userInput: "0", num1: "0" });
       return;
     }
@@ -350,8 +344,8 @@ class Calculator extends Component {
     if (
       op1 &&
       op1 !== "" &&
-      DBL_MTH_OP_RGX_NN_GR.test(op1) &&
-      SNGL_MTH_OP_RGX_NN_GR.test(userInput.slice(-1)) &&
+      CONSTANTS.DBL_MTH_OP_RGX_NN_GR.test(op1) &&
+      CONSTANTS.SNGL_MTH_OP_RGX_NN_GR.test(userInput.slice(-1)) &&
       userInput.slice(userInput.indexOf(op1), -1) !== op1
     ) {
       this.setState({ userInput: userInput.slice(0, -1) });
@@ -433,7 +427,7 @@ class Calculator extends Component {
   };
 
   processNumber = (num) => {
-    if (DOT_RGX_NN_GR.test(num)) {
+    if (CONSTANTS.DOT_RGX_NN_GR.test(num)) {
       return (num = this.formatDecimal(num));
     } else {
       return num;
@@ -488,15 +482,15 @@ class Calculator extends Component {
     if (
       userInput &&
       userInput.length > 0 &&
-      SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1) &&
-      MATH_OP_RGX_NN_GR.test(inputData.key)
+      CONSTANTS.SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1) &&
+      CONSTANTS.MATH_OP_RGX_NN_GR.test(inputData.key)
     ) {
       this.setState({ num1: _resVal });
       return _resVal;
     } else if (
       userInput &&
       userInput.length > 0 &&
-      SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1) &&
+      CONSTANTS.SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1) &&
       /^-?\d+$/.test(inputData.key)
     ) {
       this.setState({
@@ -510,8 +504,9 @@ class Calculator extends Component {
     if (
       userInput &&
       userInput.length > 0 &&
-      (this.state.op2 === "=" || SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1)) &&
-      MATH_OP_RGX_NN_GR.test(inputData.key)
+      (this.state.op2 === "=" ||
+        CONSTANTS.SNGL_MTH_OP_RGX_NN_GR.test(this.state.op1)) &&
+      CONSTANTS.MATH_OP_RGX_NN_GR.test(inputData.key)
     ) {
       let _resVal = this.state.resultData.value;
 
@@ -582,15 +577,13 @@ class Calculator extends Component {
       dotMatches = [],
       dotMatches2 = [];
 
-    while ((dotMatch = DOT_RGX.exec(numToProcess)) != null) {
+    while ((dotMatch = CONSTANTS.DOT_RGX.exec(numToProcess)) != null) {
       dotMatches.push(dotMatch.index);
     }
 
     do {
       dotMatches2.push(dotMatch2);
-    } while ((dotMatch2 = DOT_RGX.exec(numToProcess)) != null);
-
-    // return;
+    } while ((dotMatch2 = CONSTANTS.DOT_RGX.exec(numToProcess)) != null);
 
     // if called in error ie. handle no dots
     if (dotMatches.length < 1) {
@@ -612,37 +605,19 @@ class Calculator extends Component {
   };
 
   toggleSidebar = (e) => {
+    e.preventDefault();
     e.stopPropagation();
-    let _isOpen = this.state.sidebarIsOpen;
-
-    if (!_isOpen) {
-      _isOpen = true;
-    } else {
-      _isOpen = false;
-    }
-
-    this.setState({ sidebarIsOpen: _isOpen });
+    this.setState((prevState) => ({
+      sidebarIsOpen: !prevState.sidebarIsOpen,
+    }));
   };
 
   closeSidebar = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     this.setState({
       sidebarIsOpen: false,
     });
-  };
-
-  toggleKeyboard = (e) => {
-    e.stopPropagation();
-    let _key = "IsOpen";
-    // only allow interaction on visible sidebar
-    if (this.state.sidebarIsOpen) {
-      _key = _key.replace(/^/, e.target.id);
-      if (!this.state[_key]) {
-        this.setState({ [_key]: true });
-      } else {
-        this.setState({ [_key]: false });
-      }
-    }
   };
 
   onSelectThemeType = (e) => {
@@ -673,11 +648,11 @@ class Calculator extends Component {
     this.setCookie(cookieData);
   };
 
-  onSelectAnim = (e) => {
+  onSelectAnimation = (e) => {
     e.stopPropagation();
     let cookieData = {};
     let _animation = e.target.id;
-    cookieData.cookieLabel = "currentAnim";
+    cookieData.cookieLabel = "currentAnimation";
     cookieData.cookieValue = _animation;
     cookieData.cookiePath = "/";
     this.setState({
@@ -700,41 +675,62 @@ class Calculator extends Component {
     this.setCookie(cookieData);
   };
 
-  getKeyboard = (keyboardName) => {
-    let _keyboard = keyboards.find((keyboard) => {
+  getKeyboardData = (keyboardName) => {
+    let _keyboardData = keyboards.find((keyboard) => {
       return keyboard.name === keyboardName ? keyboard : undefined;
     });
-    _keyboard.onClick = this[_keyboard.onClickFunction];
-    return _keyboard;
+    _keyboardData.onClick = this[_keyboardData.onClickFunction];
+    return _keyboardData;
   };
 
-  getSidebarData = (themeType) => {
+  getSidebarKeyboardNames = () => {
+    const defaultSidebarKeyboardNames = ["theme-type", "theme"];
+
+    let sidebarKeyboardNames = defaultSidebarKeyboardNames;
+    sidebarKeyboardNames.push(
+      this.state.themeType === "animation" ? "animation" : "picture-type"
+    );
+    return sidebarKeyboardNames;
+  };
+
+  getKeyboardOnclick = (keyboardName) => {
+    switch (keyboardName) {
+      case "theme-type":
+        return this.onSelectThemeType;
+      case "theme":
+        return this.onSelectTheme;
+      case "animation":
+        return this.onSelectAnimation;
+      case "picture-type":
+        return this.onSelectPictureType;
+      default:
+        return;
+    }
+  };
+
+  getSelected = (keyboardName) => {
+    switch (keyboardName) {
+      case "theme-type":
+        return this.state.themeType;
+      case "theme":
+        return this.state.theme;
+      case "animation":
+        return this.state.animation;
+      case "picture-type":
+        return this.state.pictureType;
+      default:
+        return;
+    }
+  };
+
+  getSidebarData = () => {
+    let keyboardNames = this.getSidebarKeyboardNames();
     let sidebarData = {
       isOpen: this.state.sidebarIsOpen,
+      keyboardNames: keyboardNames,
+      getSelected: this.getSelected,
+      getKeyboardOnclick: this.getKeyboardOnclick,
     };
-    let components = [
-      {
-        keyboard: this.getKeyboard("theme-type"),
-        selected: this.state.themeType,
-      },
-      {
-        keyboard: this.getKeyboard("theme"),
-        selected: this.state.theme,
-      },
-    ];
-
-    if (themeType === "anim") {
-      components.push({
-        keyboard: this.getKeyboard("animation"),
-        selected: this.state.animation,
-      });
-    } else if (themeType === "picture") {
-      components.push({
-        keyboard: this.getKeyboard("picture-type"),
-        selected: this.state.pictureType,
-      });
-    }
-    sidebarData.components = components;
     return sidebarData;
   };
 
@@ -778,18 +774,13 @@ class Calculator extends Component {
       _op1 = "";
     }
 
-    if (_num1 === "." || DOT_RGX_NN_GR.test(_num1)) {
+    if (_num1 === "." || CONSTANTS.DOT_RGX_NN_GR.test(_num1)) {
       _num1 = processDecimal(_num1);
-    } else if (_num2 === "." || (DOT_RGX_NN_GR.test(_num2) && op2)) {
+    } else if (_num2 === "." || (CONSTANTS.DOT_RGX_NN_GR.test(_num2) && op2)) {
       _num2 = processDecimal(_num2);
     }
 
-    // if (op2) {
-    //   _num2 = processDecimal(_num2);
-    // }
-
     calculationData.value = _num1 + _op1 + _num2;
-    // calculationData = calculationData;
     if (calculationData.value !== this.state.calculationData.value) {
       this.setState({ calculationData });
     }
@@ -828,14 +819,14 @@ class Calculator extends Component {
 
     // dble number maths but no num2
     if (
-      DBL_MTH_OP_RGX_NN_GR.test(_op) &&
+      CONSTANTS.DBL_MTH_OP_RGX_NN_GR.test(_op) &&
       (!_num2 || _num2 === "") &&
       _num2 !== 0
     ) {
       return;
     }
 
-    if (!SNGL_MTH_OP_RGX_NN_GR.test(_op) && (!_op2 || _op2 === "")) {
+    if (!CONSTANTS.SNGL_MTH_OP_RGX_NN_GR.test(_op) && (!_op2 || _op2 === "")) {
       return;
     }
 
@@ -881,7 +872,6 @@ class Calculator extends Component {
       resultData.value = String(resultData.value);
     }
     this.setState({ resultData }, () => this.postResultClearUp());
-    // this.setState(resultData);
   };
 
   formatResult = (resValue) => {
@@ -902,17 +892,8 @@ class Calculator extends Component {
       num2 = "";
       op1 = op2;
       op2 = "";
-      // userInput = "";
       userInput = value + op1;
     }
-    // } else {
-    //   op2 = op2;
-    //   num1 = num1;
-    //   num2 = num2;
-    //   op1 = op1;
-    //   // _userInput = "";
-    //   // _userInput = value;
-    // }
 
     this.setState({
       num1,
@@ -961,7 +942,7 @@ class Calculator extends Component {
   render = () => {
     return (
       <Container
-        className={`container layout-2 ${
+        className={`container ${
           this.state.sidebarIsOpen === true ? "open" : ""
         } ${this.state.themeType} ${this.state.theme.toLowerCase()} ${
           this.state.pictureType
@@ -970,27 +951,22 @@ class Calculator extends Component {
       >
         {/* ------------ app ---------------- */}
         {/* ------------ display and keyboards---------------- */}
-        <p
-          className="settings"
-          onClick={this.toggleSidebar}
-          onTouchStart={this.toggleSidebar}
-        >
+        <p className="settings" onClick={this.toggleSidebar}>
           {" "}
           <i className="fa fa-cog" aria-hidden="true"></i>
         </p>
         <Grid
+          container
           onClick={this.closeSidebar}
-          onTouchStart={this.closeSidebar}
           direction={"column"}
           id="canvas-container"
           className={"calculator"}
           meta-name="display and keyboards"
-          xs={8}
-          sm={8}
-          md={8}
         >
-          <Canvas ref={this.animate} canvasId={this.state.canvasId} />
-          <Typography className="title">{this.state.title}</Typography>
+          <Canvas ref={this.animate} id={CONSTANTS.CANVAS_CONTAINER_ID} />
+          <Typography className="title">
+            {CONSTANTS.APPLICATION_TITLE}
+          </Typography>
           {/* ------------ display ---------------- */}
           <Display
             calculationData={this.state.calculationData}
@@ -999,26 +975,18 @@ class Calculator extends Component {
           />
           {/* ------------ main keyboards ---------------- */}
           <Grid container className="main-keyboards" meta-name="main keyboards">
+            <Keyboard xs={7} md={7} props={this.getKeyboardData("number")} />
+            <Keyboard xs={5} md={5} props={this.getKeyboardData("function")} />
             <Keyboard
-              xs={6}
-              md={6}
-              props={this.getKeyboard("number")}
-            ></Keyboard>
-            <Keyboard
-              xs={6}
-              md={6}
-              props={this.getKeyboard("function")}
-            ></Keyboard>
-            <Keyboard
-              xs={6}
-              md={6}
+              xs={12}
+              md={12}
               lg={12}
-              props={this.getKeyboard("utility")}
-            ></Keyboard>
+              props={this.getKeyboardData("utility")}
+            />
           </Grid>
         </Grid>
         {/* ------------ sidebar ---------------- */}
-        <Sidebar props={this.getSidebarData(this.state.themeType)} />
+        <Sidebar props={this.getSidebarData()} />
       </Container>
     );
   };

@@ -279,12 +279,12 @@ export const themeTypeKeys = [
     type: "thype",
   },
   {
-    id: "anim",
-    value: "anim",
+    id: "animation",
+    value: "animation",
     specialClass: "move-it",
     uniChar: "\u221E",
     uniChar: "\uD83D\uDE80",
-    title: "choose anim theme",
+    title: "choose animation theme",
     keycode: 65,
     code: "KeyA",
     type: "thype",
@@ -328,10 +328,10 @@ export const animKeys = [
   {
     id: "slither",
     value: "slither",
-    specialClass: "btn-anim-choose",
+    specialClass: "btn-animation-choose",
     // uniChar: "\uD83D\uDD00",
     uniChar: "\u219D",
-    title: "choose anim",
+    title: "choose animation",
     keycode: null,
     code: "",
     type: "animChs",
@@ -339,11 +339,11 @@ export const animKeys = [
   {
     id: "fireworks",
     value: "fireworks",
-    specialClass: "btn-anim-choose",
+    specialClass: "btn-animation-choose",
     // uniChar: "\uD83C\uDF86",// firework
     // uniChar: "\uD83C\uDF87",// sparkler
     uniChar: "\uD83D\uDCA5", // explosion
-    title: "choose anim",
+    title: "choose animation",
     keycode: null,
     code: "",
     type: "animChs",
@@ -351,12 +351,12 @@ export const animKeys = [
   {
     id: "twist",
     value: "twist",
-    specialClass: "btn-anim-choose",
+    specialClass: "btn-animation-choose",
     // uniChar: "\uD83D\uDD00",// twisted-right
     // uniChar: "\uD83D\uDD01",// Clockwise Rightwards and Leftwards Open Circle Arrows
     // uniChar: "\uD83C\uDF0C" ,// milkyway symbol
     uniChar: "\uD83D\uDCAB", // dizzy symbol
-    title: "choose anim",
+    title: "choose animation",
     keycode: null,
     code: "",
     type: "animChs",

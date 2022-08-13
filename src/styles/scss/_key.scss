@@ -17,7 +17,7 @@
         content: "";
         // float: left;
         display: block;
-        padding-top: 100%; /* initial ratio of 1:1*/
+        padding-top: $ps-1; /* initial ratio of 1:1*/
       }
     }
   }
@@ -113,7 +113,7 @@
       border-color: darken(themed(primaryButtonBorderColor), 90%);
     }
   }
-  &#{$anim} {
+  &#{$animation} {
     .btn-primary {
       background-color: transparentize(themed(primaryButtonBgColor), 0.2);
       color: darken(themed(primaryButtonTextColor), 10%);
@@ -146,7 +146,7 @@
       border-color: darken(themed(secondaryButtonBorderColor), 90%);
     }
   }
-  &#{$anim} {
+  &#{$animation} {
     .btn-secondary {
       background-color: transparentize(
         darken(themed(secondaryButtonBgColor), 10%),
@@ -216,7 +216,7 @@
     }
   }
 
-  &#{$anim} {
+  &#{$animation} {
     .btn-success {
       background-color: transparentize(
         darken($btn-success-bg-color, 10%),
@@ -262,8 +262,8 @@
   .sidebar {
     .keyboard {
       .btn {
-        border: 2px solid themed(keyboardBorderColor);
-        background-color: themed(primaryButtonBgColor);
+        border: 2px solid transparentize(themed(keyboardBorderColor),.2);
+        background-color: transparentize(themed(primaryButtonBgColor),.2);
       }
       &.keyboard-theme-type {
         .btn {
@@ -311,7 +311,7 @@
   }
 }
 
-.btn-anim-choose {
+.btn-animation-choose {
   background-image: linear-gradient(
     to left,
     violet,

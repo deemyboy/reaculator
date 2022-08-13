@@ -1,5 +1,3 @@
-
-
 var cvs,
   ctx,
   img,
@@ -13,7 +11,7 @@ var cvs,
   size,
   lines,
   frame;
-  
+
 function reset(canvas) {
   var newCanvas = canvas.cloneNode(false);
   canvas.parentNode.replaceChild(newCanvas, canvas);
@@ -26,7 +24,6 @@ function init() {
   cvs = reset(cvs);
   ctx = cvs.getContext("2d"); /* Error in getContext("2d") */
 
-
   (w = cvs.width = cvs.parentNode.clientWidth),
     (h = cvs.height = cvs.parentNode.clientHeight),
     (spawnProb = 1),
@@ -37,7 +34,7 @@ function init() {
     (size = [0.5, 3]),
     (lines = []),
     (frame = (Math.random() * 360) | 0);
-  anim();
+  animate();
 }
 
 function rand(ar) {
@@ -87,8 +84,8 @@ Line.prototype.use = function () {
   ctx.stroke();
 };
 
-function anim() {
-  window.requestAnimationFrame(anim);
+function animate() {
+  window.requestAnimationFrame(animate);
 
   ++frame;
 

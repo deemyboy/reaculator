@@ -5,8 +5,9 @@ import Result from "./result";
 import { Grid } from "@mui/material";
 
 const Display = React.forwardRef((props, ref) => {
+  const displayClass = "display";
   return (
-    <Grid sx={{}} className={props.displayClass} ref={ref}>
+    <Grid sx={{}} className={displayClass} ref={ref}>
       <Calculation calculationData={props.calculationData}>
         500 x 100
       </Calculation>

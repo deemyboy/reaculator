@@ -1,17 +1,31 @@
 import React from "react";
 import { Keyboard } from "./keyboard";
 import { keyboards } from "../js/keyboards";
-import Grid from "@mui/material/Grid";
+import { Grid } from "@mui/material";
 
-export function Sidebar(propsIn) {
-  const { ...props } = propsIn.props;
+export function Sidebar({props}) {
   let className = "sidebar";
   if (props.isOpen) {
     className += " " + "open";
   }
 
-  const components = props.components;
+  // const keyboards = props.map((props.keyboardNames, i));
 
+  
+  const getKeyboard = (keyboardName) => {
+    let _keyboardData = keyboards.find((keyboard) => {
+      return keyboard.name === keyboardName ? keyboard : undefined;
+    });
+
+    _keyboardData.onClick = props.getKeyboardOnclick(keyboardName);
+    _keyboardData.selected = props.getSelected(keyboardName);
+      
+
+      return <Keyboard
+        selected={_keyboardData.selected}
+        props={_keyboardData}
+      />;
+  };
 
   return (
     <Grid
@@ -19,29 +33,14 @@ export function Sidebar(propsIn) {
       direction="column"
       className={className}
       meta-name="sidebar"
-      xs={6}
-      sm={6}
-      md={6}
       justifyContent="space-around"
       alignItems={"center"}
     >
-      {components.map((component, i) => {
+      {props.keyboardNames.map((kbn, i) => {
         return (
-          // <Grid
-          //   key={i}
-          //   item={true}
-          //   sm={6}
-          //   md={6}
-          //   display={"flex"}
-          //   // flexBasis={"10%!important"}
-          //   alignItems="center"
-          // >
-            <Keyboard
-              key={i + 10}
-              selected={component.selected}
-              props={component.keyboard}
-            />
-          // </Grid>
+        <React.Fragment key={i+567}>
+            {getKeyboard(kbn)}
+        </React.Fragment>
         );
       })}
     </Grid>

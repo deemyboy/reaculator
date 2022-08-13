@@ -41,7 +41,7 @@ export const keyboards = [
   },
   {
     name: "animation",
-    className: "keyboard-theme",
+    className: "keyboard-animation",
     keys: animKeys,
     onClickFunction: "onSelectAnim",
   },
