@@ -337,7 +337,7 @@ $themes: (
     .sidebar {
     }
   }
-  &#{$anim} {
+  &#{$animation} {
     .calculator {
       border-color: themed(borderColor);
       .display {
@@ -364,7 +364,7 @@ $themes: (
     &#{$open} {
 
     .sidebar {
-      background-color: transparentize(themed(backgroundColor), .2);
+      background-color: transparentize(themed(backgroundColor), .1);
     }
 }
 }

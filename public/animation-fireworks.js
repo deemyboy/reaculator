@@ -269,8 +269,8 @@ void main(){
     if (this.y > h) this.dead = true;
   };
 
-  function anim() {
-    window.requestAnimationFrame(anim);
+  function animate() {
+    window.requestAnimationFrame(animate);
 
     webgl.clear();
 
@@ -284,7 +284,7 @@ void main(){
 
     webgl.draw(gl.LINES);
   }
-  anim();
+  animate();
 
   window.addEventListener("resize", function () {
     w = cvs.width = cvs.parentNode.clientWidth;

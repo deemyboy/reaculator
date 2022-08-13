@@ -3,11 +3,8 @@ import { pink } from "@mui/material/colors";
 import React from "react";
 import Key from "./key";
 
-export function Keyboard({props, selected}) {
+export function Keyboard({props, selected, xs, md, lg}) {
   const ref = React.createRef();
-  let _className = props.className,
-    _keyErr = props.keyErr,
-    _keys = [];
 
   props.keys.forEach((key) => {
     if (selected && selected === key.id) {
@@ -15,27 +12,26 @@ export function Keyboard({props, selected}) {
     } else {
       key.selected = false;
     }
-    key.passClickHandler = props.onClick;
-    _keys.push(key);
   });
   return (
-      <div
-        xs={props.xs}
-        md={props.md}
-        lg={props.lg}
-        className={`keyboard ${_className}`}
+    <Grid
+      item={true}
+        xs={xs}
+        md={md}
+        lg={lg}
+        className={`keyboard ${props.className}`}
       >
-        {_keys.map((ky) => {
+        {props.keys.map((ky) => {
           return (
             <Key
               ref={ref}
               key={ky.id}
               kObj={ky}
-              handleClick={ky.passClickHandler}
-              keyErr={_keyErr}
+              handleClick={props.onClick}
+              keyErr={props.keyErr}
             />
           );
         })}
-      </div>
+      </Grid>
   );
 }

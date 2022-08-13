@@ -227,7 +227,7 @@
   #{$outer-wrapper} {
     div.calculator {
       // max-width: unset;
-      // width: 100%;
+      // width: $ps-1;
       // position: fixed;
       // top: 0;
       // left: 0;
@@ -277,7 +277,7 @@
     // sizes here
     div.calculator {
       // max-width: unset;
-      // width: 100%;
+      // width: $ps-1;
       // position: fixed;
       // top: 0;
       // left: 0;
@@ -310,7 +310,7 @@
       }
       .keyboard {
         display: flex;
-        flex-direction: column;
+        // flex-direction: column;
         align-content: center;
         button {
           padding: 0;
@@ -323,6 +323,9 @@
       .keyboard-theme {
         .btn-theme {
         }
+      }
+      .keyboard-animation {
+        
       }
       .sidebar-keyboard-wrapper {
       }
@@ -341,7 +344,7 @@
       }
     div.calculator {
       max-width: unset;
-      width: 100%;
+      width: $ps-1;
       position: fixed;
       top: 0;
       left: 0;
@@ -349,10 +352,10 @@
       bottom: 0;
     }
     .sidebar {
-      width: 100%;
+      width: $ps-1;
       position: fixed;
       top: 0;
-      left: 100%;
+      left: $ps-1;
       right: 0;
       bottom: 0;
     }
@@ -361,7 +364,7 @@
       div.calculator {
       }
       .sidebar {
-        left: 50%;
+        left: 0;
       }
     }
   }
@@ -382,7 +385,7 @@
     #{$outer-wrapper} {
       & {
         // height: 100vh;
-        // width: 100%;
+        // width: $ps-1;
         // max-width: unset !important;
         margin: 0;
         padding: 0;
@@ -428,7 +431,7 @@
         }
       }
       div.sidebar {
-        height: 100%;
+        height: $ps-1;
       }
     }
   }
@@ -439,7 +442,7 @@
         }
       }
 
-      &#{$anim} {
+      &#{$animation} {
         .sidebar {
         }
       }
@@ -460,7 +463,7 @@
   @include orientation(landscape) {
     #{$outer-wrapper} {
       & {
-        width: 100%;
+        width: $ps-1;
         margin-top: 0;
         padding-left: $s-1r$i;
         padding-right: $s-1r$i;
@@ -517,7 +520,7 @@
   @include orientation(landscape) {
     #{$outer-wrapper} {
       & {
-        width: 100%;
+        width: $ps-1;
         margin-top: $s-05r$i;
         padding-left: $s-1r$i;
         padding-right: $s-1r$i;

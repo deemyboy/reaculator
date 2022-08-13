@@ -15,7 +15,7 @@ function initWebgl() {
   var ww = (cvs.width = cvs.parentNode.clientWidth),
     wh = (cvs.height = cvs.parentNode.clientHeight);
 
-  const anim = function () {
+  const animate = function () {
     renderer = new THREE.WebGLRenderer({
       canvas: document.getElementById("cvs"),
       antialias: true,
@@ -38,7 +38,7 @@ function initWebgl() {
 
     window.addEventListener("click", switchColor);
   };
-  anim();
+  animate();
 }
 var switchColor = function () {
   picked++;
