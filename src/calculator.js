@@ -31,7 +31,7 @@ class Calculator extends Component {
     title: "Reaculator",
     theme: "Ocean",
     themeType: "color",
-    animation: "slither",
+    animation: "",
     pictureType: "still",
     calculationData: {
       className: "calculation",
@@ -63,9 +63,7 @@ class Calculator extends Component {
         var tag = document.createElement("script");
         tag.id = _id;
         tag.async = false;
-        // let _src = `/public/animation-${_scriptName}.js`;
-        let _src =
-          process.env.REACT_APP_PUBLIC_PATH + `/animation-${_scriptName}.js`;
+        let _src = `./animation-${_scriptName}.js`;
         tag.src = _src;
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(tag);
@@ -98,9 +96,7 @@ class Calculator extends Component {
         var tag = document.createElement("script");
         tag.id = _id;
         tag.async = false;
-        // let _src = `/public/animation-${_scriptName}.js`;
-        let _src =
-          process.env.REACT_APP_PUBLIC_PATH + `/animation-${_scriptName}.js`;
+        let _src = `./animation-${_scriptName}.js`;
         tag.src = _src;
         var body = document.getElementsByTagName("body")[0];
         body.appendChild(tag);
