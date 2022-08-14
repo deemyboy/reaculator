@@ -1,15 +1,5 @@
-import React, { useRef } from "react";
+import React from "react";
 document.addEventListener("DOMContentLoaded", function (event) {
-  // ReactDOM.render(
-  //   <React.StrictMode>
-  //     <Provider store={store}>
-  //   <BrowserRouter>
-  //     <DashApp />
-  //   </BrowserRouter>
-  //   </Provider>
-  //   </React.StrictMode>,
-  //   document.getElementById("root")
-  // );
 });
 
 const Canvas = React.forwardRef((props, ref) => {

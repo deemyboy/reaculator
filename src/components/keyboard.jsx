@@ -1,6 +1,6 @@
-import { Grid } from "@mui/material";
-import { pink } from "@mui/material/colors";
 import React from "react";
+import { Grid } from "@mui/material";
+
 import Key from "./key";
 
 export function Keyboard({props, selected, xs, md, lg}) {

@@ -1,10 +1,15 @@
 @use "sass:math";
 /* A map of breakpoints.
   $breakpoints: (
-    xs: 580px,
-    sm: 767px,
-    md: 992px,
-    lg: 1200px,
+  xxxxs: 0,
+  xxxs: 380px,
+  xxs: 480px,
+  xs: 580px,
+  sm: 767px,
+  md: 992px,
+  lg: 1200px,
+  xl: 1400px,
+  xxl: 1600px,
   );
 */
 @mixin respond-above($bp) {
@@ -112,7 +117,6 @@
   }
 }
 
-
 ///////////// ///////////// /////////////
 /////////// generic section /////////////
 ///////////// ///////////// /////////////
@@ -144,7 +148,6 @@
   }
 }
 
-
 ///////////// ///////////// /////////////
 /////////// portrait section ////////////
 ///////////// ///////////// /////////////
@@ -164,9 +167,9 @@
       div.keyboard {
         button.btn {
           min-width: 50px;
+          margin: 5px;
+          font-size: 1.5rem;
           &.btn-lg {
-            margin: 5px;
-            font-size: 1.5rem;
           }
         }
       }
@@ -198,11 +201,9 @@
       }
       div.keyboard {
         .btn {
-          min-width: 55px;
-          &.btn-lg {
-            margin: 8px;
-            font-size: 1.8rem;
-          }
+          // min-width: inherit;
+          margin: 5px;
+          font-size: 1.8rem;
         }
       }
     }
@@ -222,7 +223,6 @@
 ///////////// portrait
 /////// xs
 
-
 @include respond-below(xs) {
   #{$outer-wrapper} {
     div.calculator {
@@ -235,7 +235,7 @@
       // bottom: 0;
       .settings {
         i.fa-cog {
-          font-size: 1.6rem;  
+          font-size: 1.6rem;
         }
       }
       > p.title {
@@ -247,9 +247,7 @@
         .btn {
           min-width: 60px;
           margin: 8px;
-          &.btn-lg {
-            font-size: 2rem;
-          }
+          font-size: 2rem;
         }
       }
     }
@@ -276,13 +274,6 @@
     }
     // sizes here
     div.calculator {
-      // max-width: unset;
-      // width: $ps-1;
-      // position: fixed;
-      // top: 0;
-      // left: 0;
-      // right: 0;
-      // bottom: 0;
       > .title {
       }
       .display {
@@ -295,13 +286,10 @@
         }
       }
       .keyboard {
-        border-radius: 1rem;
         justify-content: space-evenly;
-
         button {
         }
       }
-
     }
     .sidebar {
       > .title {
@@ -310,7 +298,6 @@
       }
       .keyboard {
         display: flex;
-        // flex-direction: column;
         align-content: center;
         button {
           padding: 0;
@@ -325,7 +312,6 @@
         }
       }
       .keyboard-animation {
-        
       }
       .sidebar-keyboard-wrapper {
       }
@@ -334,14 +320,14 @@
 }
 
 ///////////// portrait
-/////// 
+///////
 /////// open
 
 @include respond-below(md) {
   #{$outer-wrapper} {
-      &{
-        max-width: unset$i;
-      }
+    & {
+      max-width: unset$i;
+    }
     div.calculator {
       max-width: unset;
       width: $ps-1;
@@ -379,16 +365,21 @@
 
 @include respond-below(md) {
   @include orientation(landscape) {
+    :root {
+      font-size: 12px;
+    }
     body {
       margin: 0;
     }
     #{$outer-wrapper} {
       & {
-        // height: 100vh;
-        // width: $ps-1;
-        // max-width: unset !important;
         margin: 0;
         padding: 0;
+      }
+      .settings {
+        i.fa.fa-cog {
+          font-size: 1.5rem;
+        }
       }
       div.calculator {
         max-width: none;
@@ -404,25 +395,25 @@
           margin: 13px 13px 5px;
           font-weight: 100;
         }
-        .settings {
-          .fa.fa-cog {
-            font-size: 1.5rem;
-          }
-        }
         .display {
-          margin: 17px 6px;
+          margin: 8px 6px 5px;
+          padding: 5px;
           .calculation {
+            font-size: 1.3rem;
+            min-height: 2rem;
           }
           .result,
           .result_err {
+            font-size: 2rem;
           }
         }
         .keyboard {
           .btn {
-            margin: 7px;
-            height: 5rem;
-            width: 5rem;
-            font-size: 3rem;
+            min-width: 0;
+            margin: 5px;
+            height: 2.8rem;
+            width: 3.6rem;
+            // font-size: 1.6rem;
           }
           &.keyboard-utility {
             .btn {
@@ -432,6 +423,9 @@
       }
       div.sidebar {
         height: $ps-1;
+        .keyboard {
+          margin: $s-1r 0;
+        }
       }
     }
   }
@@ -451,13 +445,11 @@
         .sidebar {
         }
       }
-
-
     }
   }
 }
-  
-  ///////////// landscape
+
+///////////// landscape
 /////// sm
 @include respond-below(sm) {
   @include orientation(landscape) {
@@ -468,6 +460,11 @@
         padding-left: $s-1r$i;
         padding-right: $s-1r$i;
       }
+      .settings {
+        i.fa.fa-cog {
+          font-size: 1.5rem;
+        }
+      }
       div.calculator {
         max-width: none;
         p.title {
@@ -475,11 +472,6 @@
           line-height: 1rem;
           margin: 13px 13px 5px;
           font-weight: 100;
-        }
-        .settings {
-          .fa.fa-cog {
-            font-size: 1.5rem;
-          }
         }
         .display {
           margin: 14px 13px 10px;
@@ -495,10 +487,11 @@
         }
         .keyboard {
           .btn {
+            min-width: 0;
             margin: 5px;
-            height: 4.5rem;
-            width: 4.5rem;
-            font-size: 2rem;
+            height: 3rem;
+            width: 3rem;
+            font-size: 1.5rem;
           }
         }
       }
@@ -568,4 +561,24 @@
       }
     }
   }
+}
+
+/* ============================================== */
+/* Smaller devices                                */
+/* Android Landscape                      320x240 */
+/* ============================================== */
+@media screen and (min-width: 240px) and (max-width: 320px) {
+  /* ADD YOUR CSS ADJUSTMENTS BELOW HERE */
+  :root {
+    font-size: 4px;
+  }
+}
+
+/* ============================================== */
+/* Smaller devices                                */
+/* Android Portrait                       240x320 */
+/* ============================================== */
+@media screen and (max-width: 240px) {
+  /* ADD YOUR CSS ADJUSTMENTS BELOW HERE */
+  //
 }

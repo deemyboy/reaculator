@@ -1,5 +1,5 @@
 import React from "react";
-import Paper from '@mui/material/Paper';
+import {Paper} from '@mui/material';
 
 const Result = React.forwardRef((props, ref) => {
   let { value, className} = props.resultData;
