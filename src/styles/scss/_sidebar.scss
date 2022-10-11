@@ -9,7 +9,7 @@
   right: 0;
   transform: scaleX(0);
   transform-origin: right;
-  border-radius: 0 $s-1r $s-1r 0;
+  border-radius: $s-05r;
   justify-content: left$i;
   .keyboard {
     margin-top: $s-2r;
@@ -28,7 +28,6 @@
   div.sidebar {
     transform: scaleX(1) $i;
     z-index: 2;
-    border-radius: 0 $s-1r $s-1r 0;
     .title {
     }
   }

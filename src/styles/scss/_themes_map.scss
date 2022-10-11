@@ -253,7 +253,6 @@ $themes: (
   ),
 );
 
-// @import "themes.scss";
 
 @mixin themify($themes: $themes) {
   @each $theme, $map in $themes {
@@ -329,7 +328,7 @@ $themes: (
       }
     }
     .settings {
-      .fa.fa-cog {
+      .cog {
         color: darken(themed(calculatorTitleTextColor), 12%);
       }
     }
@@ -339,19 +338,17 @@ $themes: (
   }
   &#{$animation} {
     .calculator {
-      border-color: themed(borderColor);
+      border-color: black;
       .display {
         background-color: #abbaa7b0;
       }
     }
     .settings {
-      .fa.fa-cog {
-        // color: themed(sidebarTitleTextColor);
+      .cog {
         color: darken(themed(calculatorTitleTextColor), 5%);
       }
     }
     .sidebar {
-      //   background-color: #000;
       .keyboard {
         background-color: transparentize(
               lighten(themed(keyboardBackground), 0%),
@@ -364,7 +361,7 @@ $themes: (
     &#{$open} {
 
     .sidebar {
-      background-color: transparentize(themed(backgroundColor), .1);
+      background-color: transparentize(themed(backgroundColor), .2);
     }
 }
 }
