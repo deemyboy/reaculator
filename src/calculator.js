@@ -5,9 +5,11 @@ import Canvas from "./components/canvas";
 import Sidebar from "./components/sidebar";
 import Cookies from "universal-cookie";
 import keyboards from "./js/keyboards";
-import { numberKeys, functionKeys, utilityKeys, allowedKeys } from "./js/keys";
+import regexParser from "./js/regex_parser";
+import { numberKeys, functionKeys, utilityKeys, ALLOWED_KEYS } from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./utils/constants";
+
 import "./styles/main.scss";
 
 class Calculator extends Component {
@@ -47,7 +49,7 @@ class Calculator extends Component {
         num2: "",
         op1: "",
         op2: "",
-        userInput: "",
+        rawUserInput: "",
     };
 
     componentDidMount() {
@@ -198,7 +200,7 @@ class Calculator extends Component {
                 _button.focus(timeout);
                 var timeout = setTimeout(() => _button.blur(), 200);
             }
-            if (allowedKeys.includes(e.keyCode)) {
+            if (ALLOWED_KEYS.includes(e.keyCode)) {
                 let keyData = {
                     key: e.key,
                     ctrlKey: e.ctrlKey,
@@ -214,24 +216,35 @@ class Calculator extends Component {
                 if (e.key === "*") {
                     keyData.key = "x";
                 }
+
+                // quick hack to get * key to do x function
+                if (e.key === "Escape") {
+                    keyData.key = "a";
+                }
                 this.handleUserInput(keyData);
             }
         }
     };
 
     handleUserInput = (inputData) => {
-        let { userInput } = this.state;
+        let { rawUserInput } = this.state;
 
-        // if maths error then prevent all input except a for ac
+        // if maths error then prevent all input except esc for ac
         if (this.state.keyErr && inputData.key !== "a") {
             return;
         }
 
+        const unaryOpParser = new regexParser(
+            CONSTANTS.UNARY_OP_REGEX_NON_GREEDY
+        );
+        console.log(unaryOpParser.pregExec(inputData.key));
+        console.log(unaryOpParser.pregTest(inputData.key));
+        console.log(unaryOpParser.pregMatch(inputData.key));
         if (
             this.state.op2 === "=" ||
-            CONSTANTS.UNARY_OP_RGX_NN_GR.test(this.state.op1)
+            CONSTANTS.UNARY_OP_REGEX_NON_GREEDY.test(this.state.op1)
         ) {
-            userInput = this.preProcessUserInput(inputData);
+            rawUserInput = this.preProcessUserInput(inputData);
         }
 
         const { key, shiftKey, ctrlKey, keyCode } = { ...inputData };
@@ -255,21 +268,21 @@ class Calculator extends Component {
         // no shift or ctrl keys involved
         // append key value
         if (!shiftKey && !ctrlKey) {
-            userInput += key;
+            rawUserInput += key;
         }
 
         // compound input
         // allow "+" => shift & "=" key
         if (shiftKey && keyCode === 187) {
-            userInput += key;
+            rawUserInput += key;
         }
 
-        if (CONSTANTS.UTIL_OP_RGX.test(key)) {
+        if (CONSTANTS.UTIL_OP_REGEX_GREEDY.test(key)) {
             this.handleUtilityOperator(key);
             return;
         }
 
-        this.setState({ userInput }, this.parseUserInput);
+        this.setState({ rawUserInput }, this.parseUserInput);
     };
 
     handleUtilityOperator = (key) => {
@@ -285,12 +298,14 @@ class Calculator extends Component {
                 op1: "",
                 op2: "",
                 resultData,
-                userInput: "",
+                rawUserInput: "",
+                processedUserInput: "",
                 keyErr: false,
             });
         }
-        if (key === "c") {
-            let { userInput } = this.state;
+        if (key === "Backspace") {
+            console.log("Backspace");
+            let { rawUserInput } = this.state;
         }
         // if (key === "=") {
         //     `297: num1: ${this.state.num1} num2: ${this.state.num2} op1: ${this.state.op1} op2: ${this.state.op2}`
@@ -309,114 +324,129 @@ class Calculator extends Component {
         }
     };
 
+    parseDecimal = (num) => {
+        if (num.length < 1) {
+            return;
+        }
+        if (num === ".") {
+            return "0.";
+        }
+        if (num.charAt(0) === "." && Number.isInteger(+num)) {
+            return num.slice(0, -1);
+        } else if (num.slice(-1) !== "." && Number.isInteger(+num)) {
+            return String(+num);
+        }
+    };
+
     parseUserInput = () => {
-        const re =
-            /([-]?\d*\.?\d*)([srx\-+\/my]?)([-]?\d*\.?\d*)([srx\-=+\/my]?)/dgi;
+        const { rawUserInput } = this.state,
+            re =
+                // /([-]?\d*\.?\d*)([srx\-+\/my]?)([-]?\d*\.?\d*)([srx\-=+\/my]?)/dgi;
+                /([-]?\d*\.?\d*)?([srx\-+\/my]{1}?)([-]?\d*\.?\d*)([srx\-=+\/my]){1}?/dgi; //12102022
 
-        let matches = re.exec(this.state.userInput);
+        let matches = re.exec(rawUserInput),
+            // let matches = rawUserInput.match(re),
+            processedUserInput;
 
-        let matchesNum1 = matches[1],
-            matchesOp1 = matches[2],
-            matchesNum2 = matches[3],
-            matchesOp2 = matches[4];
-
-        let { num1, num2, op1, op2, userInput } = { ...this.state };
+        console.log("matches : ", matches);
 
         // exceptions
         ////////////
-
         // handle operators entered before numerals
-        // reset user input
-        // allow "." as we see below in [b]
-        if (
-            isNaN(userInput.charAt(0)) &&
-            userInput.length === 1 &&
-            userInput.charAt(0) !== "."
-        ) {
-            this.setState({ userInput: "" });
-            return;
-        }
+        // reset user rawUserInput
 
         // [a]  repeated 0
         // handles  00 or 00000 or 00000000000
-        if (+userInput === 0 && !CONSTANTS.DOT_RGX_NN_GR.test(userInput)) {
-            this.setState({ userInput: "0", num1: "0" });
+        if (
+            +rawUserInput === 0 &&
+            !CONSTANTS.DOT_REGEX_NON_GREEDY.test(rawUserInput)
+        ) {
+            processedUserInput = (+rawUserInput).toString();
+        }
+        // [a]  repeated 0
+        // handles  00 or 00000 or 00000000000
+        if (
+            +rawUserInput === 0 &&
+            !CONSTANTS.DOT_REGEX_NON_GREEDY.test(rawUserInput)
+        ) {
+            console.log(
+                "rawUserInput.match(CONSTANTS.DOT_REGEX_NON_GREEDY).length",
+                rawUserInput.match(CONSTANTS.DOT_REGEX_NON_GREEDY).length
+            );
+            // if()
+            // processedUserInput = (+rawUserInput).toString();
+        }
+        console.log(
+            processedUserInput,
+            rawUserInput,
+            +rawUserInput,
+            CONSTANTS.DOT_REGEX_NON_GREEDY.test(rawUserInput)
+        );
+        return;
+        if (
+            isNaN(rawUserInput.charAt(0)) &&
+            rawUserInput.length === 1 &&
+            rawUserInput.charAt(0) !== "."
+        ) {
+            this.setState({ rawUserInput: "" });
             return;
         }
+
+        if (rawUserInput)
+            if (rawUserInput.length === 1 && rawUserInput.charAt(0) === ".") {
+                rawUserInput = this.parseDecimal(rawUserInput);
+            }
 
         // single maths op in op2
         if (
             op1 &&
             op1 !== "" &&
-            CONSTANTS.BINARY_OP_RGX_NN_GR.test(op1) &&
-            CONSTANTS.UNARY_OP_RGX_NN_GR.test(userInput.slice(-1)) &&
-            userInput.slice(userInput.indexOf(op1), -1) !== op1
+            CONSTANTS.BINARY_OP_REGEX_NON_GREEDY.test(op1) &&
+            CONSTANTS.UNARY_OP_REGEX_NON_GREEDY.test(rawUserInput.slice(-1)) &&
+            rawUserInput.slice(rawUserInput.indexOf(op1), -1) !== op1
         ) {
-            this.setState({ userInput: userInput.slice(0, -1) });
+            this.setState({ rawUserInput: rawUserInput.slice(0, -1) });
             return;
         }
 
-        if (
-            matchesNum1 !== "" &&
-            matchesOp1 === "" &&
-            matchesNum2 === "" &&
-            matchesOp2 === ""
-        ) {
-            num1 = matchesNum1;
+        if (_Num1 !== "" && _Op1 === "" && _Num2 === "" && _Op2 === "") {
+            num1 = Number(_Num1).toString();
+        } else if (_Num1 !== "" && _Op1 !== "" && _Num2 === "" && _Op2 === "") {
+            op1 = _Op1;
         } else if (
-            matchesNum1 !== "" &&
-            matchesOp1 !== "" &&
-            matchesNum2 === "" &&
-            matchesOp2 === ""
+            _Num1 !== "" &&
+            _Op1 !== "" &&
+            _Num2 === "" &&
+            _Op2 !== "" &&
+            _Op2 !== "="
         ) {
-            op1 = matchesOp1;
+            op1 = _Op2;
+            this.setState({ rawUserInput: rawUserInput.slice(0, -2) + _Op2 });
         } else if (
-            matchesNum1 !== "" &&
-            matchesOp1 !== "" &&
-            matchesNum2 === "" &&
-            matchesOp2 !== "" &&
-            matchesOp2 !== "="
+            (_Num1 !== "" &&
+                _Op1 !== "" &&
+                _Num2 !== "" &&
+                !isNaN(parseFloat(_Num2)) &&
+                _Op2 === "") ||
+            (_Num1 !== "" && _Op1 !== "" && _Num2 === "." && _Op2 === "")
         ) {
-            op1 = matchesOp2;
-            this.setState({ userInput: userInput.slice(0, -2) + matchesOp2 });
+            num2 = Number(_Num2).toString();
+        } else if (_Num1 !== "" && _Op1 !== "" && _Num2 !== "" && _Op2 !== "") {
+            op2 = _Op2;
         } else if (
+            (_Num1 !== "" && _Op1 === "" && _Num2 === "" && _Op2 !== "") ||
             (matchesNum1 !== "" &&
-                matchesOp1 !== "" &&
-                matchesNum2 !== "" &&
-                !isNaN(parseFloat(matchesNum2)) &&
-                matchesOp2 === "") ||
-            (matchesNum1 !== "" &&
-                matchesOp1 !== "" &&
-                matchesNum2 === "." &&
-                matchesOp2 === "")
+                _Op1 !== "" &&
+                _Num2 === "" &&
+                _Op2 !== "") ||
+            (isNaN(parseFloat(_Num2)) && _Num2 !== "" && _Num2 !== ".")
         ) {
-            num2 = matchesNum2;
-        } else if (
-            matchesNum1 !== "" &&
-            matchesOp1 !== "" &&
-            matchesNum2 !== "" &&
-            matchesOp2 !== ""
-        ) {
-            op2 = matchesOp2;
-        } else if (
-            (matchesNum1 !== "" &&
-                matchesOp1 === "" &&
-                matchesNum2 === "" &&
-                matchesOp2 !== "") ||
-            (matchesNum1 !== "" &&
-                matchesOp1 !== "" &&
-                matchesNum2 === "" &&
-                matchesOp2 !== "") ||
-            (isNaN(parseFloat(matchesNum2)) &&
-                matchesNum2 !== "" &&
-                matchesNum2 !== ".")
-        ) {
-            if (matchesNum2 === "-") {
-                op1 = matchesNum2;
-            } else if (matchesOp2 === "=") {
-                num1 = matchesNum1;
+            if (_Num2 === "-") {
+                op1 = _Num2;
+            } else if (_Op2 === "=") {
+                num1 = Number(_Num1).toString();
             }
-            this.setState({ userInput: userInput.slice(0, -1) });
+            this.setState({ rawUserInput: rawUserInput.slice(0, -1) });
         }
 
         this.setState(
@@ -430,9 +460,22 @@ class Calculator extends Component {
         );
     };
 
+    parseUnaryRawUserInput = (input) => {
+        console.log("parseUnaryRawUserInput hit");
+        if (CONSTANTS.MATH_OP_REGEX_NON_GREEDY.test(input)) {
+            console.log("MATH_OP_REGEX_NON_GREEDY hit");
+            return;
+        }
+        if (CONSTANTS.DOT_REGEX_NON_GREEDY.test(input)) {
+            console.log("DOT_REGEX_NON_GREEDY hit");
+            return this.processDecimal(input);
+        }
+        return input;
+    };
+
     processNumber = (num) => {
-        if (CONSTANTS.DOT_RGX_NN_GR.test(num)) {
-            return (num = this.formatDecimal(num));
+        if (CONSTANTS.DOT_REGEX_NON_GREEDY.test(num)) {
+            return (num = this.processDecimal(num));
         } else {
             return num;
         }
@@ -478,7 +521,7 @@ class Calculator extends Component {
         // || user used single number maths operator s = squre or r = sqrt
         // delete last char
         //set userInput as result
-        let { userInput } = this.state;
+        let { rawUserInput } = this.state;
         let _resVal = this.state.resultData.value;
 
         // single maths
@@ -486,15 +529,15 @@ class Calculator extends Component {
         if (
             userInput &&
             userInput.length > 0 &&
-            CONSTANTS.UNARY_OP_RGX_NN_GR.test(this.state.op1) &&
-            CONSTANTS.MATH_OP_RGX_NN_GR.test(inputData.key)
+            CONSTANTS.UNARY_OP_REGEX_NON_GREEDY.test(this.state.op1) &&
+            CONSTANTS.MATH_OP_REGEX_NON_GREEDY.test(inputData.key)
         ) {
             this.setState({ num1: _resVal });
             return _resVal;
         } else if (
             userInput &&
             userInput.length > 0 &&
-            CONSTANTS.UNARY_OP_RGX_NN_GR.test(this.state.op1) &&
+            CONSTANTS.UNARY_OP_REGEX_NON_GREEDY.test(this.state.op1) &&
             /^-?\d+$/.test(inputData.key)
         ) {
             this.setState({
@@ -509,8 +552,8 @@ class Calculator extends Component {
             userInput &&
             userInput.length > 0 &&
             (this.state.op2 === "=" ||
-                CONSTANTS.UNARY_OP_RGX_NN_GR.test(this.state.op1)) &&
-            CONSTANTS.MATH_OP_RGX_NN_GR.test(inputData.key)
+                CONSTANTS.UNARY_OP_REGEX_NON_GREEDY.test(this.state.op1)) &&
+            CONSTANTS.MATH_OP_REGEX_NON_GREEDY.test(inputData.key)
         ) {
             let _resVal = this.state.resultData.value;
 
@@ -575,19 +618,23 @@ class Calculator extends Component {
         }
     };
 
-    formatDecimal = (numToProcess) => {
+    processDecimal = (numToProcess) => {
         let dotMatch,
             dotMatch2,
             dotMatches = [],
             dotMatches2 = [];
 
-        while ((dotMatch = CONSTANTS.DOT_RGX.exec(numToProcess)) != null) {
+        while (
+            (dotMatch = CONSTANTS.DOT_REGEX_GREEDY.exec(numToProcess)) != null
+        ) {
             dotMatches.push(dotMatch.index);
         }
 
         do {
             dotMatches2.push(dotMatch2);
-        } while ((dotMatch2 = CONSTANTS.DOT_RGX.exec(numToProcess)) != null);
+        } while (
+            (dotMatch2 = CONSTANTS.DOT_REGEX_GREEDY.exec(numToProcess)) != null
+        );
 
         // if called in error ie. handle no dots
         if (dotMatches.length < 1) {
@@ -600,8 +647,8 @@ class Calculator extends Component {
                 return numToProcess;
             }
         } else {
-            let _userInput = this.state.userInput;
-            this.setState({ userInput: this.state.userInput.slice(0, -1) });
+            let _userInput = this.state.rawUserInput;
+            this.setState({ userInput: this.state.rawUserInput.slice(0, -1) });
 
             // remove last char which has to be a "."
             return numToProcess.slice(0, -1);
@@ -752,19 +799,6 @@ class Calculator extends Component {
                 });
         };
 
-        const processDecimal = (num) => {
-            if (num.slice(-1) === "." && Number.isInteger(+num)) {
-                return num.slice(0, -1);
-            } else if (num.slice(-1) !== "." && Number.isInteger(+num)) {
-                return String(+num);
-            } else if (num === ".") {
-                this.setState({ userInput: "0." });
-                return "0.";
-            } else {
-                return num;
-            }
-        };
-
         const { num1, op1, num2, op2 } = { ...this.state };
 
         let _num1, _op1, _num2;
@@ -783,11 +817,11 @@ class Calculator extends Component {
             _op1 = "";
         }
 
-        if (_num1 === "." || CONSTANTS.DOT_RGX_NN_GR.test(_num1)) {
+        if (_num1 === "." || CONSTANTS.DOT_REGEX_NON_GREEDY.test(_num1)) {
             _num1 = processDecimal(_num1);
         } else if (
             _num2 === "." ||
-            (CONSTANTS.DOT_RGX_NN_GR.test(_num2) && op2)
+            (CONSTANTS.DOT_REGEX_NON_GREEDY.test(_num2) && op2)
         ) {
             _num2 = processDecimal(_num2);
         }
@@ -831,14 +865,17 @@ class Calculator extends Component {
 
         // dble number maths but no num2
         if (
-            CONSTANTS.BINARY_OP_RGX_NN_GR.test(_op) &&
+            CONSTANTS.BINARY_OP_REGEX_NON_GREEDY.test(_op) &&
             (!_num2 || _num2 === "") &&
             _num2 !== 0
         ) {
             return;
         }
 
-        if (!CONSTANTS.UNARY_OP_RGX_NN_GR.test(_op) && (!_op2 || _op2 === "")) {
+        if (
+            !CONSTANTS.UNARY_OP_REGEX_NON_GREEDY.test(_op) &&
+            (!_op2 || _op2 === "")
+        ) {
             return;
         }
 
@@ -892,7 +929,7 @@ class Calculator extends Component {
 
     postResultClearUp = () => {
         let { value } = { ...this.state.resultData };
-        let { num1, num2, op1, op2, userInput } = { ...this.state };
+        let { num1, num2, op1, op2, rawUserInput } = { ...this.state };
 
         if (!isFinite(value)) {
             this.setResultErrorClass();
