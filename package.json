@@ -1,6 +1,6 @@
 {
   "name": "calc",
-  "homepage": "http://calc.deemyweb.co.uk",
+  "homepage": "https://calc.deemyweb.co.uk",
   "version": "5.0.0",
   "description": "online calculator with MUI",
   "main": "index.js",
