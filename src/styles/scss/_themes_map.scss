@@ -287,7 +287,7 @@ $themes: (
     background-color: themed(backgroundColor);
     border-color: themed(borderColor);
     .title {
-      color: themed(calculatorTitleTextColor);
+      color: themed(textColor);
     }
     .display {
       background-color: #abbaa7;
@@ -297,6 +297,12 @@ $themes: (
   }
   .sidebar {
     background-color: themed(backgroundColor);
+    .keyboard {
+      border-color: themed(borderColor);
+      p.sidebar_kb_title, button, p.sidebar_btn_title {
+        color: darken(themed(calculatorTitleTextColor), 12%);
+      }
+    }
   }
 }
 

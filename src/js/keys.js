@@ -214,6 +214,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
+        showTitle: true,
     },
     {
         id: "midnight",
@@ -224,6 +225,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
+        showTitle: true,
     },
     {
         id: "ocean",
@@ -234,6 +236,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
+        showTitle: true,
     },
     {
         id: "storm",
@@ -244,6 +247,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
+        showTitle: true,
     },
     {
         id: "jungle",
@@ -254,6 +258,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
+        showTitle: true,
     },
 ];
 
@@ -267,6 +272,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
+        showTitle: true,
     },
     {
         id: "color",
@@ -277,6 +283,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
+        showTitle: true,
     },
     {
         id: "animation",
@@ -288,6 +295,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
+        showTitle: true,
     },
 ];
 
@@ -301,6 +309,7 @@ export const imageKeys = [
         keycode: 65,
         code: "KeyA",
         type: "imgChs",
+        showTitle: true,
     },
     {
         id: "rays",
@@ -311,6 +320,7 @@ export const imageKeys = [
         keycode: 65,
         code: "KeyA",
         type: "imgChs",
+        showTitle: true,
     },
     {
         id: "leaves",
@@ -321,6 +331,7 @@ export const imageKeys = [
         keycode: 65,
         code: "KeyA",
         type: "imgChs",
+        showTitle: true,
     },
 ];
 
@@ -335,6 +346,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
+        showTitle: true,
     },
     {
         id: "fireworks",
@@ -347,6 +359,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
+        showTitle: true,
     },
     {
         id: "twist",
@@ -360,6 +373,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
+        showTitle: true,
     },
 ];
 
@@ -377,6 +391,7 @@ export const pictureKeys = [
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
+        showTitle: true,
     },
     {
         id: "moving",
@@ -387,5 +402,6 @@ export const pictureKeys = [
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
+        showTitle: true,
     },
 ];

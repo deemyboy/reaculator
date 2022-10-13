@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 const Key = React.forwardRef((props, ref) => {
     const setKeyClasses = (keyObj) => {
@@ -33,7 +34,7 @@ const Key = React.forwardRef((props, ref) => {
             classes += " " + selected;
         }
         if (errState) {
-            if (keyObj.value !== "Escape") {
+            if (keyObj.value !== "a") {
                 classes += " " + errClass;
             } else {
                 classes += " " + useMeClass;
@@ -42,20 +43,33 @@ const Key = React.forwardRef((props, ref) => {
 
         return classes;
     };
+    let title;
+    if (props.kObj.showTitle) {
+        title = (
+            <Typography className="sidebar_btn_title">
+                {props.kObj.title}
+            </Typography>
+        );
+    } else {
+        title = "";
+    }
 
     return (
         <React.Fragment>
-            <Button
-                ref={ref.id}
-                id={props.kObj.id}
-                className={setKeyClasses(props.kObj)}
-                onClick={(e) => props.handleClick(e)}
-                size="large"
-                title={props.kObj.title}
-                variant={"outlined"}
-            >
-                {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
-            </Button>
+            <Box className="sidebar_btn_wrapper">
+                {title}
+                <Button
+                    ref={ref.id}
+                    id={props.kObj.id}
+                    className={setKeyClasses(props.kObj)}
+                    onClick={(e) => props.handleClick(e)}
+                    size="large"
+                    title={props.kObj.title}
+                    variant={"outlined"}
+                >
+                    {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
+                </Button>
+            </Box>
         </React.Fragment>
     );
 });

@@ -122,7 +122,7 @@
 ///////////// ///////////// /////////////
 
 ///////////// both portrait and landscape
-/////// xs
+/////// md
 @include respond-below(md) {
   #{$outer-wrapper} {
     & {
@@ -157,11 +157,14 @@
 
 @include respond-below(xxxs) {
   #{$outer-wrapper} {
-    div.calculator {
-      .settings {
-        .cog {
-        }
+    p.settings {
+    top: 0;
+    right: -0.25rem;
+      i.fa.fa-cog {
+        font-size: 1rem;
       }
+    }
+    div.calculator {
       > p.title {
       }
       div.keyboard {
@@ -176,7 +179,18 @@
     }
     .sidebar {
       .keyboard {
+        height: 28%;
+        p.sidebar_kb_title {
+          font-size: 1rem;
+        }
+        p.sidebar_btn_title{
+          font-weight: 300;
+          font-size: 0.8rem;
+          line-height: 1;
+        }
         button {
+          width: 40px;
+          height: 40px;
         }
       }
     }
@@ -184,6 +198,10 @@
     }
   }
   #{$outer-wrapper} {
+  }
+}
+@include respond-below(md) {
+  @include orientation(landscape) {
   }
 }
 
@@ -297,8 +315,7 @@
         margin-top: -1.5rem;
       }
       .keyboard {
-        display: flex;
-        align-content: center;
+        justify-content: space-around;
         button {
           padding: 0;
         }
@@ -424,6 +441,7 @@
       div.sidebar {
         height: $ps-1;
         .keyboard {
+          height: 27%;
           margin: $s-1r 0;
         }
       }
@@ -497,6 +515,7 @@
       }
       .sidebar {
         .keyboard {
+          height: 27%;
           .btn-theme-type {
           }
           .btn-theme {
@@ -562,6 +581,97 @@
     }
   }
 }
+
+///////////// landscape
+/////// xxs
+
+@include respond-below(xxs) {
+  @include orientation(landscape) {
+    #{$outer-wrapper} {
+      div.calculator {
+        .settings {
+          i.fa-cog {
+          }
+        }
+        > p.title {
+        }
+        div.keyboard {
+          .btn {
+            // min-width: inherit;
+            margin: 5px;
+            font-size: 1.8rem;
+          }
+        }
+      }
+      div.sidebar {
+        .keyboard {
+          height: 26%;
+          p.sidebar_kb_title {
+            font-size: 1.3rem;
+          }
+          p.sidebar_btn_title{
+            font-weight: 300;
+            font-size: 1.2rem;
+            line-height: 1;
+          }
+          button {
+            width: 40px;
+            height: 40px;
+          }
+        }
+      }
+      &#{$open} {
+      }
+    }
+    #{$outer-wrapper} {
+    }
+  }
+}
+
+///////////// landscape
+/////// xxxs
+  @include respond-below(xxxs) {
+    @include orientation(landscape) {
+      #{$outer-wrapper} {
+        div.calculator {
+          .settings {
+            i.fa-cog {
+            }
+          }
+          > p.title {
+          }
+          div.keyboard {
+            button.btn {
+              &.btn-lg {
+              }
+            }
+          }
+        }
+        div.sidebar {
+          .keyboard {
+            height: 26%;
+            p.sidebar_kb_title {
+              font-size: 1.3rem;
+            }
+            p.sidebar_btn_title{
+              font-weight: 300;
+              font-size: 1rem;
+              line-height: 1;
+            }
+            button {
+              width: 40px;
+              height: 40px;
+            }
+          }
+        }
+        &#{$open} {
+        }
+      }
+      #{$outer-wrapper} {
+      }
+    }
+  }
+
 
 /* ============================================== */
 /* Smaller devices                                */

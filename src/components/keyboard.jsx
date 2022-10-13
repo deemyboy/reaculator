@@ -1,9 +1,10 @@
 import React from "react";
 import { Grid } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 import Key from "./key";
 
-function Keyboard({ props, selected, xs, md, lg }) {
+export function Keyboard({ props, selected, xs, md, lg }) {
     const ref = React.createRef();
 
     props.keys.forEach((key) => {
@@ -13,6 +14,14 @@ function Keyboard({ props, selected, xs, md, lg }) {
             key.selected = false;
         }
     });
+    let title;
+    if (props.showTitle) {
+        title = (
+            <Typography className="sidebar_kb_title">{props.name}</Typography>
+        );
+    } else {
+        title = "";
+    }
     return (
         <Grid
             item={true}
@@ -21,6 +30,7 @@ function Keyboard({ props, selected, xs, md, lg }) {
             lg={lg}
             className={`keyboard ${props.className}`}
         >
+            {title}
             {props.keys.map((ky) => {
                 return (
                     <Key
