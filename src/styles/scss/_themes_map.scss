@@ -301,7 +301,7 @@ $themes: (
     .keyboard {
       border-color: themed(borderColor);
       p.sidebar_kb_title, button, p.sidebar_btn_title {
-        color:themed(sidebarTitleTextColor);
+        color: darken(themed(calculatorTitleTextColor), 12%);
       }
     }
   }
