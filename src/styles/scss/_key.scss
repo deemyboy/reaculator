@@ -83,7 +83,7 @@
       min-width: 0;
       &:hover,
       &:active {
-        filter: grayscale(30%);
+        filter: grayscale(40%);
       }
       &.selected {
         filter: grayscale(0);
@@ -262,8 +262,6 @@
   .sidebar {
     .keyboard {
       .btn {
-        border: 2px solid transparentize(themed(keyboardBorderColor),.2);
-        background-color: transparentize(themed(primaryButtonBgColor),.2);
       }
       &.keyboard-theme-type {
         .btn {
@@ -309,17 +307,4 @@
       // min-width: 3rem;
     }
   }
-}
-
-.btn-animation-choose {
-  background-image: linear-gradient(
-    to left,
-    violet,
-    indigo,
-    blue,
-    green,
-    yellow,
-    orange,
-    red
-  );
 }
