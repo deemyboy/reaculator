@@ -68,18 +68,16 @@ class Calculator extends Component {
                 var body = document.getElementsByTagName("body")[0];
                 body.appendChild(tag);
             };
+            var removeScript = function (id) {
+                if (document.getElementById(id)) {
+                    document.getElementById(id).remove();
+                }
+            };
             if (document.getElementById(_id)) {
-                var tag = document.getElementById(_id);
-                tag.remove();
+                removeScript(_id);
             }
             loadScript();
         } else if (document.getElementById(_id)) {
-            var removeScript = function (id) {
-                var tag = document.getElementById(id);
-                if (tag) {
-                    tag.remove();
-                }
-            };
             removeScript(_id);
         }
     }
@@ -233,13 +231,14 @@ class Calculator extends Component {
         if (this.state.keyErr && inputData.key !== "a") {
             return;
         }
-
-        const unaryOpParser = new regexParser(
-            CONSTANTS.UNARY_OP_REGEX_NON_GREEDY
-        );
-        console.log(unaryOpParser.pregExec(inputData.key));
-        console.log(unaryOpParser.pregTest(inputData.key));
-        console.log(unaryOpParser.pregMatch(inputData.key));
+        rawUserInput += inputData.key;
+        this.setState({ rawUserInput });
+        const unaryMathsParser = new regexParser(CONSTANTS.UNARY_MATHS_REGEX);
+        console.log(rawUserInput);
+        console.log(unaryMathsParser.pregExec(rawUserInput));
+        console.log(unaryMathsParser.pregTest(rawUserInput));
+        console.log(unaryMathsParser.pregMatch(rawUserInput));
+        return;
         if (
             this.state.op2 === "=" ||
             CONSTANTS.UNARY_OP_REGEX_NON_GREEDY.test(this.state.op1)
@@ -382,6 +381,7 @@ class Calculator extends Component {
             +rawUserInput,
             CONSTANTS.DOT_REGEX_NON_GREEDY.test(rawUserInput)
         );
+        // if()
         return;
         if (
             isNaN(rawUserInput.charAt(0)) &&
