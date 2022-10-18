@@ -736,7 +736,6 @@ class Calculator extends Component {
 
     getSidebarKeyboardNames = () => {
         const defaultSidebarKeyboardNames = ["theme-type", "theme"];
-
         let sidebarKeyboardNames = defaultSidebarKeyboardNames;
 
         if (this.state.themeType !== "color") {

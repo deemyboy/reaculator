@@ -92,8 +92,8 @@
 ///////////// ///////////// /////////////
 /////////// basic structure  ////////////
 ///////////// ///////////// /////////////
+/////// xs: 580px
 /////// open
-
 @include respond-below(xs) {
   #{$outer-wrapper} {
     & {
@@ -122,7 +122,7 @@
 ///////////// ///////////// /////////////
 
 ///////////// both portrait and landscape
-/////// md
+///////md: 992px
 @include respond-below(md) {
   #{$outer-wrapper} {
     & {
@@ -153,14 +153,13 @@
 ///////////// ///////////// /////////////
 
 ///////////// portrait
-/////// xxxs
-
+/////// xxxs: 380px
 @include respond-below(xxxs) {
   #{$outer-wrapper} {
     p.settings {
     top: 0;
     right: -0.25rem;
-      i.fa.fa-cog {
+      .cog {
         font-size: 1rem;
       }
     }
@@ -206,10 +205,12 @@
 }
 
 ///////////// portrait
-/////// xxs
-
+/////// xxs: 480px
 @include respond-below(xxs) {
   #{$outer-wrapper} {
+    canvas {
+      border-radius: 0
+    }
     div.calculator {
       .settings {
         .cog {
@@ -219,15 +220,17 @@
       }
       div.keyboard {
         .btn {
-          // min-width: inherit;
-          margin: 5px;
           font-size: 1.8rem;
+          height: $btn-main-mob;
+          width: $btn-main-mob;
+          margin: 5px;
         }
       }
     }
     .sidebar {
       .keyboard {
         button {
+          border-radius: $btn-main-mob-border-radius;
         }
       }
     }
@@ -239,8 +242,7 @@
 }
 
 ///////////// portrait
-/////// xs
-
+/////// xs: 580px
 @include respond-below(xs) {
   #{$outer-wrapper} {
     div.calculator {
@@ -263,7 +265,8 @@
       }
       .keyboard {
         .btn {
-          min-width: 60px;
+          height: $btn-main-mob;
+          width: $btn-main-mob;
           margin: 8px;
           font-size: 2rem;
         }
@@ -283,8 +286,7 @@
 }
 
 ///////////// portrait
-/////// sm
-
+/////// sm: 767px
 @include respond-below(sm) {
   #{$outer-wrapper} {
     & {
@@ -337,9 +339,8 @@
 }
 
 ///////////// portrait
-///////
+/////// md: 992px
 /////// open
-
 @include respond-below(md) {
   #{$outer-wrapper} {
     & {
@@ -378,7 +379,7 @@
 ///////////// ///////////// /////////////
 
 ///////////// landscape
-/////// md
+///////md: 992px
 
 @include respond-below(md) {
   @include orientation(landscape) {
@@ -468,7 +469,7 @@
 }
 
 ///////////// landscape
-/////// sm
+/////// sm: 767px
 @include respond-below(sm) {
   @include orientation(landscape) {
     #{$outer-wrapper} {
@@ -527,7 +528,7 @@
 }
 
 ///////////// landscape
-/////// xs
+/////// xs: 580px
 @include respond-below(xs) {
   @include orientation(landscape) {
     #{$outer-wrapper} {
@@ -564,16 +565,9 @@
           }
         }
       }
-    }
-  }
-}
-
-///////////// landscape
-/////// xs
-/////// open
-@include respond-below(xs) {
-  @include orientation(landscape) {
-    #{$outer-wrapper} {
+      ///////////// landscape
+      /////// xs: 580px
+      /////// open
       &#{$open} {
         .calculator {
         }
@@ -583,14 +577,22 @@
 }
 
 ///////////// landscape
-/////// xxs
+/////// xs: 580px
+@include respond-below(xs) {
+  @include orientation(landscape) {
+    #{$outer-wrapper} {
+    }
+  }
+}
 
+///////////// landscape
+/////// xxs: 480px
 @include respond-below(xxs) {
   @include orientation(landscape) {
     #{$outer-wrapper} {
       div.calculator {
         .settings {
-          i.fa-cog {
+          .cog {
           }
         }
         > p.title {
@@ -629,13 +631,13 @@
 }
 
 ///////////// landscape
-/////// xxxs
+/////// xxxs: 380px
   @include respond-below(xxxs) {
     @include orientation(landscape) {
       #{$outer-wrapper} {
         div.calculator {
           .settings {
-            i.fa-cog {
+            .cog {
             }
           }
           > p.title {

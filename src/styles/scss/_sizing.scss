@@ -1,3 +1,4 @@
+@use 'sass:math';
 // rem sizes
 $s-01r: 0.1rem;
 $s-025r: 0.25rem;
@@ -20,3 +21,19 @@ $ps-3: 33%;
 $ps-4: 25%;
 $ps-5: 25%;
 $ps-10: 10%;
+
+// buttons
+$btn-main-pc: 3rem;
+$btn-main-tab: 3rem;
+$btn-main-mob: 4rem;
+$btn-sidebar-pc: 3rem;
+$btn-sidebar-tab: 3rem;
+$btn-sidebar-mob: 4rem;
+
+$btn-main-pc-border-radius: math.div($btn-main-pc,2);
+$btn-main-tab-border-radius: math.div($btn-main-tab,2);
+$btn-main-mob-border-radius: math.div($btn-main-mob,2);
+$btn-sidebar-pc-border-radius: math.div($btn-sidebar-pc,2);
+$btn-sidebar-tab-border-radius: math.div($btn-sidebar-tab,2);
+$btn-sidebar-mob-border-radius: math.div($btn-sidebar-mob,2);
+
