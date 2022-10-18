@@ -11,9 +11,12 @@ const DIGITS_PRESENT_REGEX_GREEDY = /\d+/g,
     BINARY_MATHS_NUMBER_REGEX =
         /^-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}$/,
     BIG_PATTERN =
-        /((-?[0-9]+\.?[0-9]*)([s|r]{1}))?((-?[0-9]+\.?[0-9]*)([+|\-|x|\/|y]{1})(-?[0-9]+\.?[0-9]*)([+|\-|x|\/]{1}))?/,
-    DOUBLE_HYPHEN_PRESENT_REGEX = /\d+-{2}\d+/g,
+        /(?:^(-?\.?(?:0|[1-9]\d*)\.?(?:\d*))(s|r)$|^(-?\.?(?:0|[1-9]\d*)\.?(?:\d*))(\+|\-|x|\/|y)(-?\.?(?:0|[1-9]\d*)\.?(?:\d*))(\+|\-|x|\/|y)$)/,
+    DOUBLE_HYPHEN_PRESENT_REGEX = /(\d+-{2}\d+)/g,
     DOUBLE_HYPHEN_AB_CAPTURE_REGEX = /-?\d+\.*\d*/g;
+const FULLY_FLEX_DECIMAL_REGEX = /((-?\d*\.?\d*)([s|r]{1}))/;
+const NEW_REGEX =
+    /(?:^((-?\d*\.?\d*)(s|r){1})$|^((-?\d*\.?\d*)+(\+|-|x|\/|y){1}(-?\d*\.?\d*)(\+|-|x|\/|y){1})$)/;
 
 const doMaths = (input) => {
     console.log("input to test", input);
@@ -23,42 +26,62 @@ const doMaths = (input) => {
         return;
     }
     console.log("test1 PASSED - digits present -> ", input);
-    console.log("test2 - testing hyphens -> ", input);
+    console.log("test2 - testing for double hyphens eg -- or ----  -> ", input);
     if (input.match(/-{2}/g)) {
         console.log(
-            `"FAILED - number of hyphens > 1 -> ",
+            ` double hyphens found! ",
             ${input.match(/-+/g).length},
             " input -> ",
             ${input}`
         );
-        processHyphens(input);
+        processDoubleHyphens(input);
+        return;
     }
-    console.log(
-        `"test 2 PASSED - number of hyphens 1 or less -> ",
-     ${input.match(/-+/g)},
-        " input -> ",
-        ${input}`
-    );
-    // console.log(input, COMPUTATION_PATTERN.exec(input));
-    console.log("doing maths!", input);
-    console.log(
-        input.match(BIG_PATTERN)[1]
-            ? getMathOperation(
+    console.log(`test 2 PASSED - NO double hyphens present `);
+
+    // test3 viable computation values
+    // console.log("test3 viable computation values");
+    console.log("time for doing maths!", input);
+
+    console.log("0", input.match(BIG_PATTERN)[0]);
+    console.log("1", input.match(BIG_PATTERN)[1]);
+    console.log("2", input.match(BIG_PATTERN)[2]);
+    console.log("3", input.match(BIG_PATTERN)[3]);
+    console.log("4", input.match(BIG_PATTERN)[4]);
+    console.log("5", input.match(BIG_PATTERN)[5]);
+    console.log("6", input.match(BIG_PATTERN)[6]);
+
+    // return;
+
+    let result = input.match(BIG_PATTERN)
+        ? // console.log(
+          !input.match(BIG_PATTERN)[3]
+            ? // unary maths
+              getMathOperation(
+                  input.match(BIG_PATTERN)[2],
+                  input.match(BIG_PATTERN)[1]
+              )
+            : // binary maths
+              getMathOperation(
+                  input.match(BIG_PATTERN)[4],
                   input.match(BIG_PATTERN)[3],
-                  input.match(BIG_PATTERN)[2]
+                  input.match(BIG_PATTERN)[5]
               )
-            : getMathOperation(
-                  input.match(BIG_PATTERN)[6],
-                  input.match(BIG_PATTERN)[5],
-                  input.match(BIG_PATTERN)[7]
-              )
-    );
+        : null;
+    //   )
+    null;
+
+    if (result) {
+        console.log("and the result is ", +result);
+    } else {
+        console.log("maths failed");
+    }
 };
 
 const doMaths2 = (obj) => (operator, num1, num2) => {
-    console.log(obj[operator], typeof operator, num1, num2);
+    console.log(obj[operator], operator, num1, num2);
     return operator === "s"
-        ? obj[operator](num1, 2)
+        ? obj[operator](num1)
         : operator === "r"
         ? obj[operator](num1)
         : operator === "x"
@@ -74,8 +97,8 @@ const doMaths2 = (obj) => (operator, num1, num2) => {
         : "";
 };
 
-const processHyphens = (input) => {
-    console.log("processHyphens", input);
+const processDoubleHyphens = (input) => {
+    console.log("processing DoubleHyphens", input);
     let match,
         re = /-/g,
         matches = [];
@@ -84,44 +107,76 @@ const processHyphens = (input) => {
         matches.push(match.index);
     }
     console.log(`'hyphen count ->  ${matches.length}, matches -> ${matches}`);
-    console.log(`DOUBLE_HYPHEN_PRESENT_REGEX test ->  ${input}`);
+    console.log(
+        `DOUBLE_HYPHEN_PRESENT_REGEX test ->  ${input} : ${DOUBLE_HYPHEN_PRESENT_REGEX.test(
+            input
+        )}
+        
+        ${DOUBLE_HYPHEN_PRESENT_REGEX.lastIndex}
+        
+        `
+    );
+    DOUBLE_HYPHEN_PRESENT_REGEX.lastIndex = 0;
     if (DOUBLE_HYPHEN_PRESENT_REGEX.test(input)) {
-        handleSubtractMinusNumber(input);
+        DOUBLE_HYPHEN_PRESENT_REGEX.lastIndex = 0;
+        // console.log(
+        //     `DOUBLE_HYPHEN_PRESENT_REGEX test -> (${input}) : result ${DOUBLE_HYPHEN_PRESENT_REGEX.test(
+        //         input
+        //     )}`
+        // );
+        // console.log(
+        //     `DOUBLE_HYPHEN_PRESENT_REGEX test -> (${input}) : result ${input.match(
+        //         DOUBLE_HYPHEN_PRESENT_REGEX
+        //     )}`
+        // );
+
+        handleSubtractNegativeNumber(input);
+    } else {
+        console.log(`no true double hyphens suc as '43.5--6' were found`);
+        return;
     }
 
     return;
 };
 
-const handleSubtractMinusNumber = (input) => {
-    console.log("handleSubtractMinusNumber", input);
-    console.log(
+const handleSubtractNegativeNumber = (input) => {
+    console.log("handleSubtractNegativeNumber", input);
+    // console.log(
+    //     "-",
+    //     input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[0],
+    //     input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1]
+    // );
+    return doMaths2(
         "-",
         input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[0],
         input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1]
     );
-    return getMathOperation(
-        "-",
-        input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[0],
-        input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1]
-    );
-    return;
 };
 
 const math = {
+    // square root
     r: Math.sqrt,
-    s: Math.pow,
+    // square
+    s: function (a) {
+        return a ** 2;
+    },
+    //  multiply
     x: function (a, b) {
         return a * b;
     },
+    //  x raised to y
     y: function (a, b) {
         return a ** b;
     },
+    //  addition
     "+": function (a, b) {
         return +a + +b;
     },
+    //  subtraction
     "-": function (a, b) {
         return +a - +b;
     },
+    //  division
     "/": function (a, b) {
         return +a / +b;
     },
@@ -129,15 +184,29 @@ const math = {
 
 const getMathOperation = doMaths2(math);
 
-let str = "9x6x";
-let str2 = "9.r9435x";
-let str2a = "9.s9435x";
-let str3 = "9+6x";
+let st = "9r";
+let sta = "9.r";
+let st2 = ".s";
+let st2a = ".9s";
+let st2b = "9.s";
+let st2c = "9y";
+let str = "9r6x";
+let stra = "9.r9435x";
+let str2 = ".s9435x";
+let str2a = ".9s9435x";
+let str2b = "9.s9435x";
+let str2c = "9s9435x";
+let str3 = "9x6";
+let str3b = "9x6x";
+let str3a = "9+6x";
 let str4 = "9y3x";
 let str5 = "9-3x";
 let str6 = "9/2x";
 let str7 = "9-2-";
-let str8 = "-9--2-";
+let str7a = "-9-2-";
+let str7b = "9--2-";
+let str7c = "-9--2-";
+let str8 = "--9--2-";
 let str9 = "-9+-2-";
 let str10 = "94342.656--2x";
 let str10a = "94342.656----2x";
@@ -148,41 +217,81 @@ let str13 = "......";
 let str14 = "";
 let str15 = " ";
 let str16 = "   ";
-// console.log(doMaths(str)); //  "9x6x"
-console.log(doMaths(str2)); //  "9.r9435x"
-console.log(doMaths(str2a)); //  "9.s9435x"
-// console.log(doMaths(str3)); //  "9+6x"
-// console.log(doMaths(str4)); //  "9y3x"
-// console.log(doMaths(str5)); //  "9-3x"
-// console.log(doMaths(str6)); //  "9/2x"
-// console.log(doMaths(str7)); //  "9-2-"
-// console.log(doMaths(str8)); //  "-9--2-"
-// console.log(doMaths(str9)); //  "-9+-2-"
-// console.log(doMaths(str10)); //  "94342.656--2x"
-// console.log(doMaths(str10a)); //  "94342.656----2x"
-// console.log(doMaths(str11)); //  "------------------------------"
-// console.log(doMaths(str11a)); //  "---3---------------------------"
-// console.log(doMaths(str12)); //  "."
-// console.log(doMaths(str13)); //  "......"
-// console.log(doMaths(str14)); //  ""
-// console.log(doMaths(str15)); //  " "
-// console.log(doMaths(str16)); //  "   "
-testValues = [
-    "-9s",
-    "--9s",
-    "95.6r",
-    "95..6r",
-    "95.6r34.5x",
-    "95.6+34.5x",
-    "95.6x",
-    "95.6/",
-    "95.6-34.5y",
-    "95.6-34.5r",
-    "95.6+-34.5-",
-    "95.6+--34.5-",
-    "95.6--34.5-",
-    "95.6-34..5-",
-    "-95.6-34.5-",
-    "-95.6-x345-",
-    "-95.6-345-",
+
+// console.log(doMaths(str)); // "9r6x";
+// console.log(doMaths(stra)); // "9.r9435x";
+// console.log(doMaths(str2)); // ".s9435x";
+// console.log(doMaths(str2a)); // ".9s9435x";
+// console.log(doMaths(str2b)); // "9.s9435x";
+// console.log(doMaths(str2c)); // "9s9435x";
+// console.log(doMaths(str3)); // "9x6";
+// console.log(doMaths(str3b)); // "9x6x";
+// console.log(doMaths(str3a)); // "9+6x";
+// console.log(doMaths(str4)); // "9y3x";
+// console.log(doMaths(str5)); // "9-3x";
+// console.log(doMaths(str6)); // "9/2x";
+// console.log(doMaths(str7)); // "9-2-";
+// console.log(doMaths(str7a)); // "-9-2-";
+// console.log(doMaths(str7b)); // "9--2-";
+// console.log(doMaths(str7c)); // "-9--2-";
+// console.log(doMaths(str8)); // "--9--2-";
+// console.log(doMaths(str9)); // "-9+-2-";
+// console.log(doMaths(str10)); // "94342.656--2x";
+// console.log(doMaths(str10a)); // "94342.656----2x";
+// console.log(doMaths(str11)); // "------------";
+// console.log(doMaths(str11a)); // "------3--";
+// console.log(doMaths(str12)); // ".";
+// console.log(doMaths(str13)); // "......";
+// console.log(doMaths(str14)); // "";
+// console.log(doMaths(str15)); // " ";
+// console.log(doMaths(str16)); // "   ";
+
+testData = [
+    "9r",
+    "9.r",
+    ".s",
+    ".9s",
+    "9.s",
+    // "9y",
+    // "9r6x",
+    // "9.r9435x",
+    // ".s9435x",
+    // ".9s9435x",
+    // "9.s9435x",
+    // "9s9435x",
+    // "9x6",
+    "9x6x",
+    "9+6x",
+    "9y3x",
+    "9-3x",
+    "-9.534/2x",
+    // "9-2-",
+    // "-9-2-",
+    "9--2-",
+    // "-9--2-",
+    // "--9--2-",
+    // "-9+-2-",
+    // "94342.656--2x",
+    "94342.656----2x",
+    // "------------",
+    // "------3--",
+    // ".",
+    // "......",
+    // "",
+    // " ",
+    // "   ",
 ];
+
+const runTests = (data, pattern) => {
+    for (d of data) {
+        console.log("====================================");
+        // console.log("test", d, pattern.test(d));
+        // console.log("exec", pattern.exec(d));
+        // console.log("match", d, d.match(pattern));
+        console.log("doMaths", doMaths(d));
+    }
+};
+
+// runTests(testData, DOUBLE_HYPHEN_AB_CAPTURE_REGEX);
+// runTests(testData, BIG_PATTERN);
+runTests(testData, NEW_REGEX);
