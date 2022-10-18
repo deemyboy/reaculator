@@ -1,25 +1,27 @@
 #{$outer-wrapper} {
     .settings {
+        @include transition(all 0.25s);
         z-index: 3;
         position: absolute;
-        top: 0.25rem;
-        right: 0.25rem;
+        top: -1rem;
+        right: 0;
         margin: 0;
-        padding: 0;
-        .fa.fa-cog {
-            transition: all 0.25s;
-            font-size: 2rem;
-            // &:hover {
-            //     transform: rotate(90deg);
-            // }
+        transform: scale(1);
+        .cog {
+            position: relative;
+            font-size: 3rem;
+            &:before {
+                content: "\2699";
+            }
+            
         }
     }
-
+    
     // open
     &#{$open} {
         .settings {
-            .fa.fa-cog {
-                transform: rotate(90deg);
+            transform: scale(.7) rotate(0.5turn);
+            .cog {
             }
         }
     }
