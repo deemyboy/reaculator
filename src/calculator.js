@@ -689,11 +689,14 @@ class Calculator extends Component {
 
     getSidebarKeyboardNames = () => {
         const defaultSidebarKeyboardNames = ["theme-type", "theme"];
-
         let sidebarKeyboardNames = defaultSidebarKeyboardNames;
-        sidebarKeyboardNames.push(
-            this.state.themeType === "animation" ? "animation" : "picture-type"
-        );
+        if (this.state.themeType !== "color") {
+            sidebarKeyboardNames.push(
+                this.state.themeType === "animation"
+                    ? "animation"
+                    : "picture-type"
+            );
+        }
         return sidebarKeyboardNames;
     };
 
@@ -963,7 +966,7 @@ class Calculator extends Component {
                 {/* ------------ display and keyboards---------------- */}
                 <p className="settings" onClick={this.toggleSidebar}>
                     {" "}
-                    <i className="fa fa-cog" aria-hidden="true"></i>
+                    <i className="cog" aria-hidden="true"></i>
                 </p>
                 <Grid
                     container

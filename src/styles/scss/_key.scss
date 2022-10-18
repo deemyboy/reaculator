@@ -78,8 +78,8 @@
       filter: grayscale(90%);
       @include transition(all 0.25s);
       padding: 0;
-      width: 50px;
-      height: 50px;
+      width: $btn-main-mob;
+      height: $btn-main-mob;
       min-width: 0;
       &:hover,
       &:active {
