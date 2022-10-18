@@ -19,7 +19,6 @@
     width: 95%;
     border: $s-01r solid;
     border-radius: 5px;
-    grid-template-columns: repeat(auto-fill);
     z-index: 4;
     height: 30%;
     @include transition(all 0.25s ease);
@@ -41,6 +40,7 @@
           font-size: 1.5rem;
           justify-self: center;
           text-align: center;
+          line-height: normal;
         }
     }
     
