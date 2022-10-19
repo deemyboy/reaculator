@@ -417,21 +417,19 @@
           margin: 8px 6px 5px;
           padding: 5px;
           .calculation {
-            font-size: 1.3rem;
+            font-size: 2rem;
             min-height: 2rem;
           }
           .result,
           .result_err {
-            font-size: 2rem;
+            font-size: 2.5rem;
           }
         }
         .keyboard {
           .btn {
-            min-width: 0;
-            margin: 5px;
-            height: 2.8rem;
-            width: 3.6rem;
-            // font-size: 1.6rem;
+            margin: 5px 2rem 0;
+            height: 2.6rem;
+            width: 5rem;
           }
           &.keyboard-utility {
             .btn {
@@ -439,11 +437,24 @@
           }
         }
       }
+
       div.sidebar {
         height: $ps-1;
         .keyboard {
-          height: 27%;
-          margin: $s-1r 0;
+          margin: $s-06r 0 0 0;
+          padding-bottom: $s-1r;
+          .sidebar_kb_title 
+          {
+              line-height: 1;
+          }
+          .sidebar_btn_wrapper 
+          {
+            p.sidebar_btn_title {
+              line-height: 1;
+            }
+          }
+          .btn {
+          }
         }
       }
     }

@@ -34,6 +34,7 @@ export function Keyboard({ props, selected, xs, md, lg }) {
             {props.keys.map((ky) => {
                 return (
                     <Key
+                        location={props.location}
                         ref={ref}
                         key={ky.id}
                         kObj={ky}
