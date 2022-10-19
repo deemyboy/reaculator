@@ -3,20 +3,15 @@ const mathPatterns = {
     binary: /^-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}$/, // BINARY_MATHS_REGEX
 };
 const DIGITS_PRESENT_REGEX_GREEDY = /\d+/g,
-    COMPUTATION_PATTERN =
-        /(-?[0-9]+\.?[0-9]*[s|r]{1})?(-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1})?/,
     BINARY_OP_REGEX_GREEDY = /[+\-x\/]/gi,
     UNARY_MATHS_OPERATOR_REGEX = /[sr]/i,
     UNARY_MATHS_NUMBER_REGEX = /-?[0-9]*\.?[0-9]*/,
     BINARY_MATHS_NUMBER_REGEX =
         /^-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}$/,
-    BIG_PATTERN =
+    COMPUTATION_PATTERN =
         /(?:^(-?\.?(?:0|[1-9]\d*)\.?(?:\d*))(s|r)$|^(-?\.?(?:0|[1-9]\d*)\.?(?:\d*))(\+|\-|x|\/|y)(-?\.?(?:0|[1-9]\d*)\.?(?:\d*))(\+|\-|x|\/|y)$)/,
     DOUBLE_HYPHEN_PRESENT_REGEX = /(\d+-{2}\d+)/g,
     DOUBLE_HYPHEN_AB_CAPTURE_REGEX = /-?\d+\.*\d*/g;
-const FULLY_FLEX_DECIMAL_REGEX = /((-?\d*\.?\d*)([s|r]{1}))/;
-const NEW_REGEX =
-    /(?:^((-?\d*\.?\d*)(s|r){1})$|^((-?\d*\.?\d*)+(\+|-|x|\/|y){1}(-?\d*\.?\d*)(\+|-|x|\/|y){1})$)/;
 
 const doMaths = (input) => {
     console.log("input to test", input);
@@ -34,44 +29,44 @@ const doMaths = (input) => {
             " input -> ",
             ${input}`
         );
-        processDoubleHyphens(input);
-        return;
+        // processDoubleHyphens(input);
+        // return;
+    } else {
+        console.log(`test 2 PASSED - NO double hyphens present `);
     }
-    console.log(`test 2 PASSED - NO double hyphens present `);
-
     // test3 viable computation values
     // console.log("test3 viable computation values");
     console.log("time for doing maths!", input);
-
-    console.log("0", input.match(BIG_PATTERN)[0]);
-    console.log("1", input.match(BIG_PATTERN)[1]);
-    console.log("2", input.match(BIG_PATTERN)[2]);
-    console.log("3", input.match(BIG_PATTERN)[3]);
-    console.log("4", input.match(BIG_PATTERN)[4]);
-    console.log("5", input.match(BIG_PATTERN)[5]);
-    console.log("6", input.match(BIG_PATTERN)[6]);
-
+    if (input.match(COMPUTATION_PATTERN)) {
+        console.log("0", input.match(COMPUTATION_PATTERN)[0]);
+        console.log("1", input.match(COMPUTATION_PATTERN)[1]);
+        console.log("2", input.match(COMPUTATION_PATTERN)[2]);
+        console.log("3", input.match(COMPUTATION_PATTERN)[3]);
+        console.log("4", input.match(COMPUTATION_PATTERN)[4]);
+        console.log("5", input.match(COMPUTATION_PATTERN)[5]);
+        console.log("6", input.match(COMPUTATION_PATTERN)[6]);
+    }
     // return;
 
-    let result = input.match(BIG_PATTERN)
+    let result = input.match(COMPUTATION_PATTERN)
         ? // console.log(
-          !input.match(BIG_PATTERN)[3]
+          !input.match(COMPUTATION_PATTERN)[3]
             ? // unary maths
               getMathOperation(
-                  input.match(BIG_PATTERN)[2],
-                  input.match(BIG_PATTERN)[1]
+                  input.match(COMPUTATION_PATTERN)[2],
+                  input.match(COMPUTATION_PATTERN)[1]
               )
             : // binary maths
               getMathOperation(
-                  input.match(BIG_PATTERN)[4],
-                  input.match(BIG_PATTERN)[3],
-                  input.match(BIG_PATTERN)[5]
+                  input.match(COMPUTATION_PATTERN)[4],
+                  input.match(COMPUTATION_PATTERN)[3],
+                  input.match(COMPUTATION_PATTERN)[5]
               )
         : null;
     //   )
     null;
 
-    if (result) {
+    if (result || result === 0) {
         console.log("and the result is ", +result);
     } else {
         console.log("maths failed");
@@ -94,7 +89,7 @@ const doMaths2 = (obj) => (operator, num1, num2) => {
         ? obj[operator](num1, num2)
         : operator === "/"
         ? obj[operator](num1, num2)
-        : "";
+        : "banana";
 };
 
 const processDoubleHyphens = (input) => {
@@ -112,27 +107,13 @@ const processDoubleHyphens = (input) => {
             input
         )}
         
-        ${DOUBLE_HYPHEN_PRESENT_REGEX.lastIndex}
-        
         `
     );
     DOUBLE_HYPHEN_PRESENT_REGEX.lastIndex = 0;
     if (DOUBLE_HYPHEN_PRESENT_REGEX.test(input)) {
-        DOUBLE_HYPHEN_PRESENT_REGEX.lastIndex = 0;
-        // console.log(
-        //     `DOUBLE_HYPHEN_PRESENT_REGEX test -> (${input}) : result ${DOUBLE_HYPHEN_PRESENT_REGEX.test(
-        //         input
-        //     )}`
-        // );
-        // console.log(
-        //     `DOUBLE_HYPHEN_PRESENT_REGEX test -> (${input}) : result ${input.match(
-        //         DOUBLE_HYPHEN_PRESENT_REGEX
-        //     )}`
-        // );
-
         handleSubtractNegativeNumber(input);
     } else {
-        console.log(`no true double hyphens suc as '43.5--6' were found`);
+        console.log(`no true double hyphens such as '43.5--6' were found`);
         return;
     }
 
@@ -146,11 +127,17 @@ const handleSubtractNegativeNumber = (input) => {
     //     input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[0],
     //     input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1]
     // );
-    return doMaths2(
-        "-",
-        input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[0],
-        input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1]
-    );
+    let num1, num2;
+    if (input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)) {
+        if (input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1] < 0) {
+            num2 = `(${input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1]})`;
+        }
+    }
+    num1 = input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[0];
+    if (!num2) {
+        num2 = input.match(DOUBLE_HYPHEN_AB_CAPTURE_REGEX)[1];
+    }
+    return getMathOperation("-", num1, num2);
 };
 
 const math = {
@@ -247,11 +234,11 @@ let str16 = "   ";
 // console.log(doMaths(str16)); // "   ";
 
 testData = [
-    "9r",
-    "9.r",
-    ".s",
-    ".9s",
-    "9.s",
+    // "9r",
+    // "9.r",
+    // ".s",
+    // ".9s",
+    // "9.s",
     // "9y",
     // "9r6x",
     // "9.r9435x",
@@ -260,26 +247,29 @@ testData = [
     // "9.s9435x",
     // "9s9435x",
     // "9x6",
-    "9x6x",
-    "9+6x",
-    "9y3x",
-    "9-3x",
+    // "9x6x",
+    // "9+6x",
+    // "9y3x",
+    // "9-3x",
     "-9.534/2x",
-    // "9-2-",
-    // "-9-2-",
+    "9-2-",
+    "-9--2-",
+    "-9+2-",
+    "9+-2-",
     "9--2-",
-    // "-9--2-",
-    // "--9--2-",
-    // "-9+-2-",
-    // "94342.656--2x",
+    "9--5-",
+    "9+-9-",
+    "-9+-2-",
+    "-9--2-",
+    "94342.656--2x",
     "94342.656----2x",
-    // "------------",
-    // "------3--",
-    // ".",
-    // "......",
-    // "",
-    // " ",
-    // "   ",
+    "------------",
+    "------3--",
+    ".",
+    "......",
+    "",
+    " ",
+    "   ",
 ];
 
 const runTests = (data, pattern) => {
@@ -293,5 +283,5 @@ const runTests = (data, pattern) => {
 };
 
 // runTests(testData, DOUBLE_HYPHEN_AB_CAPTURE_REGEX);
-// runTests(testData, BIG_PATTERN);
-runTests(testData, NEW_REGEX);
+// runTests(testData, COMPUTATION_PATTERN);
+runTests(testData);
