@@ -267,7 +267,7 @@ class Calculator extends Component {
         //     rawUserInput += key;
         // }
 
-        if (CONSTANTS.UTIL_OP_REGEX_GREEDY.test(key)) {
+        if (CONSTANTS.UTIL_OPERATOR_REGEX_GREEDY.test(key)) {
             this.handleUtilityOperator(key);
             return;
         }
@@ -332,14 +332,15 @@ class Calculator extends Component {
         let resultData = { ...this.state.resultData },
             _result;
         let calculationData = { ...this.state.calculationData };
-        _result = doMaths(this.state.rawUserInput);
-
+        if (this.state.rawUserInput.length > 1) {
+            _result = doMaths(this.state.rawUserInput);
+        } else {
+            _result = doMaths(this.state.rawUserInput);
+        }
         const _rawUserInput = this.state.rawUserInput;
         if (_result.computed) {
             resultData.value = _result.value;
-            calculationData.value = this.processforCalculationDisplay(
-                this.state.rawUserInput
-            );
+            calculationData.value = this.state.rawUserInput;
 
             this.setState({
                 resultData,
@@ -347,7 +348,7 @@ class Calculator extends Component {
                 rawUserInput: prepforNextCalculation(this.state.rawUserInput),
             });
         } else {
-            calculationData.value = _result.value;
+            calculationData.value = this.state.rawUserInput;
             this.state.rawUserInput;
             this.setState({
                 calculationData,
@@ -356,16 +357,40 @@ class Calculator extends Component {
         }
     };
 
-    processforCalculationDisplay = (input) => {
-        const operatorChar = input.charAt(input.length - 1);
-        let displayChar;
-        for (const key of functionKeys) {
-            if (operatorChar === key.value) {
-                displayChar = key.calculationDisplayChar;
-            }
-        }
-        return input.substring(0, input.length - 1) + displayChar;
-    };
+    // processforCalculationDisplay = (input) => {
+    //     if()
+    //     const operatorChar = input.charAt(input.length - 1);
+    //     let displayChar = "";
+    //     for (const key of functionKeys) {
+    //         if (operatorChar === key.value && key.calculationDisplayChar) {
+    //             displayChar = key.calculationDisplayChar;
+    //             input =
+    //                 input.substring(0, input.length - 1) +
+    //                 key.calculationDisplayChar;
+    //         }
+    //     }
+    //     console.log(` processforCalculationDisplay before return${input}`);
+    //     return input;
+    // };
+
+    // preProcessforMaths = (input) => {
+    //     if (1) {
+    //         //
+    //     }
+    //     const operatorChar = input.charAt(input.length - 1);
+    //     let displayChar = "";
+    //     for (const key of functionKeys) {
+    //         if (operatorChar === key.calculationDisplayChar) {
+    //             displayChar = key.calculationDisplayChar;
+    //         }
+    //     }
+    //     console.log(
+    //         `preProcessforMaths before return${
+    //             input.substring(0, input.length - 1) + displayChar
+    //         }`
+    //     );
+    //     return input.substring(0, input.length - 1) + displayChar;
+    // };
 
     setResultData = (data, callback) => {
         let resultData = { ...this.state.resultData };

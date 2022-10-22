@@ -1,4 +1,4 @@
-import formatCalculationData from "./format_calculation_data.mjs";
+import formatCalculation from "./format_calculation.mjs";
 import { patternStack } from "../utils/constants.js";
 
 const DIGITS_PRESENT_REGEX_GREEDY = /\d+/g,
@@ -30,9 +30,8 @@ export const doMaths = (input) => {
     let result = {};
     result.value = input;
     console.log("input to test", input);
-    // console.log("test1 - testing for digits  -> ", input);
     console.log(input.match(patternStack.INTEGER_MATH_CATCHER));
-    return result;
+    // return result;
     if (!patternStack.INTEGER_MATH_CATCHER.test(input)) {
         console.log("FAILED - NOT valid computational unit");
         // result.test1 = false;
@@ -40,21 +39,29 @@ export const doMaths = (input) => {
     }
     // console.log("time for doing maths!", input);
 
+    // result.value = patternStack.INTEGER_MATH_CATCHER.test(input)
+    //     ? !input.match(patternStack.INTEGER_MATH_CATCHER)[3]
+    //         ? // unary maths
+    //           getMathOperation(
+    //               input.match(patternStack.INTEGER_MATH_CATCHER)[2],
+    //               input.match(patternStack.INTEGER_MATH_CATCHER)[1]
+    //           )
+    //         : // binary maths
+    //           getMathOperation(
+    //               input.match(patternStack.INTEGER_MATH_CATCHER)[4],
+    //               input.match(patternStack.INTEGER_MATH_CATCHER)[3],
+    //               input.match(patternStack.INTEGER_MATH_CATCHER)[5]
+    //           )
+    //     : null;
+    // null;
+    console.log(input.match(patternStack.INTEGER_MATH_CATCHER));
     result.value = patternStack.INTEGER_MATH_CATCHER.test(input)
-        ? !input.match(patternStack.INTEGER_MATH_CATCHER)[3]
-            ? // unary maths
-              getMathOperation(
-                  input.match(patternStack.INTEGER_MATH_CATCHER)[2],
-                  input.match(patternStack.INTEGER_MATH_CATCHER)[1]
-              )
-            : // binary maths
-              getMathOperation(
-                  input.match(patternStack.INTEGER_MATH_CATCHER)[4],
-                  input.match(patternStack.INTEGER_MATH_CATCHER)[3],
-                  input.match(patternStack.INTEGER_MATH_CATCHER)[5]
-              )
+        ? getMathOperation(
+              input.match(patternStack.INTEGER_MATH_CATCHER)[2],
+              input.match(patternStack.INTEGER_MATH_CATCHER)[1],
+              input.match(patternStack.INTEGER_MATH_CATCHER)[3]
+          )
         : null;
-    null;
 
     if (result.value || result.value === 0) {
         console.log("and the result is ", +result.value);
@@ -63,7 +70,7 @@ export const doMaths = (input) => {
     } else {
         console.log("maths failed", input);
         result.value = input;
-        result = formatCalculationData(input);
+        result = formatCalculation(input);
         result.computed = false;
         return result;
     }

@@ -1,6 +1,6 @@
 import { patternStack } from "../utils/constants.js";
-export const formatCalculationData = (input) => {
-    console.log("formatCalculationData", input);
+export const formatCalculation = (input) => {
+    console.log("formatCalculation", input);
     let _formatted = {};
     _formatted.computed = false;
     for (const key in patternStack) {
@@ -19,7 +19,7 @@ export const formatCalculationData = (input) => {
     return _formatted;
 };
 
-const formatCalculationData2 = (repairs) => (pattern, name, input, result) => {
+const formatCalculation2 = (repairs) => (pattern, name, input, result) => {
     console.log(pattern, name, input);
     if (pattern.test(input) && !result.computed) {
         let lastIndex = pattern.lastIndex;
@@ -74,14 +74,22 @@ const repairStack = {
 
     NUM1_INTEGER_WITH_OPERATOR_CATCHER: function (input) {
         console.log(`NUM1_INTEGER_WITH_OPERATOR_CATCHER ${input}`);
-        return;
+        return input;
+    },
+    BINARY_INTEGERS_CATCHER: function (input, p) {
+        console.log(`BINARY_INTEGERS_CATCHER ${input}`);
+        return input;
     },
     INTEGER_MATH_CATCHER: function (input, p) {
         console.log(`INTEGER_MATH_CATCHER ${input}`);
-        return "";
+        return input;
     },
 };
 
-const getPatternOperation = formatCalculationData2(repairStack);
+const pregReplaceOperators = (input) => {
+    //
+};
 
-export default formatCalculationData;
+const getPatternOperation = formatCalculation2(repairStack);
+
+export default formatCalculation;
