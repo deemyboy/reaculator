@@ -5,13 +5,13 @@ import Canvas from "./components/canvas";
 import Sidebar from "./components/sidebar";
 import Cookies from "universal-cookie";
 import keyboards from "./js/keyboards";
-import regexParser from "./js/regex_parser";
+// import regexParser from "./js/regex_parser";
 import { numberKeys, functionKeys, utilityKeys, ALLOWED_KEYS } from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
-import * as CONSTANTS from "./utils/constants";
+import * as CONSTANTS from "./js/constants";
 import doMaths from "./js/maths_engine.mjs";
 import prepforNextCalculation from "./js/prep_for_next_calculation.mjs";
-
+import formatCalculation from "./js/format_calculation.mjs";
 import "./styles/main.scss";
 
 class Calculator extends Component {
@@ -196,6 +196,7 @@ class Calculator extends Component {
         }
         if (!e.repeat) {
             if (_button === null || _button === undefined) {
+                return;
             } else if (_button !== null || _button !== undefined) {
                 _button.focus(timeout);
                 var timeout = setTimeout(() => _button.blur(), 200);
@@ -204,6 +205,7 @@ class Calculator extends Component {
                 let keyData = {
                     key: e.key,
                     ctrlKey: e.ctrlKey,
+                    metaKey: e.metaKey,
                     shiftKey: e.shiftKey,
                     keyCode: e.keyCode,
                 };
@@ -237,7 +239,7 @@ class Calculator extends Component {
         // this.setState({ rawUserInput });
         // console.log(`rawUserInput ${rawUserInput}`);
 
-        const { key, shiftKey, ctrlKey, keyCode } = { ...inputData };
+        const { key, shiftKey, ctrlKey, metaKey, keyCode } = { ...inputData };
 
         // exceptions
         ////
@@ -261,11 +263,16 @@ class Calculator extends Component {
         //     rawUserInput += key;
         // }
 
-        // compound input
+        // // compound input
         // allow "+" => shift & "=" key
         // if (shiftKey && keyCode === 187) {
         //     rawUserInput += key;
         // }
+
+        // prevent ctrl/cmd + r triggering sqr root
+        if ((ctrlKey && keyCode === 82) || (metaKey && keyCode === 82)) {
+            return;
+        }
 
         if (CONSTANTS.UTIL_OPERATOR_REGEX_GREEDY.test(key)) {
             this.handleUtilityOperator(key);
@@ -330,30 +337,42 @@ class Calculator extends Component {
 
     parseUserInput = () => {
         let resultData = { ...this.state.resultData },
+            calculationData = { ...this.state.calculationData },
             _result;
-        let calculationData = { ...this.state.calculationData };
-        if (this.state.rawUserInput.length > 1) {
-            _result = doMaths(this.state.rawUserInput);
-        } else {
-            _result = doMaths(this.state.rawUserInput);
-        }
         const _rawUserInput = this.state.rawUserInput;
+        // if (this.state.rawUserInput.length > 1) {
+        _result = doMaths(this.state.rawUserInput);
+        // } else {
+        //     _result = doMaths(this.state.rawUserInput);
+        // }
         if (_result.computed) {
+            console.log(`_result.computed ${_result.computed}`);
             resultData.value = _result.value;
             calculationData.value = this.state.rawUserInput;
+            calculationData = formatCalculation(calculationData);
 
             this.setState({
                 resultData,
                 calculationData,
-                rawUserInput: prepforNextCalculation(this.state.rawUserInput),
+                // rawUserInput: prepforNextCalculation(this.state.rawUserInput),
+                rawUserInput: this.state.rawUserInput,
             });
         } else {
+            console.log(`NOT _result.computed ${_result}`);
+            // calculationData.updateUserInput = false;
             calculationData.value = this.state.rawUserInput;
-            this.state.rawUserInput;
-            this.setState({
-                calculationData,
-                rawUserInput: _result.value,
-            });
+            calculationData = formatCalculation(calculationData);
+            if (calculationData.updateUserInput) {
+                this.setState({
+                    calculationData,
+                    rawUserInput: calculationData.value,
+                });
+            } else {
+                this.setState({
+                    calculationData: { ...calculationData },
+                });
+            }
+            // this.state.rawUserInput;
         }
     };
 

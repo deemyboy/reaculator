@@ -1,82 +1,76 @@
-import formatCalculation from "./format_calculation.mjs";
-import { patternStack } from "../utils/constants.js";
-
-const DIGITS_PRESENT_REGEX_GREEDY = /\d+/g,
-    BINARY_OP_REGEX_GREEDY = /[+\-x\/]/gi,
-    UNARY_MATHS_OPERATOR_REGEX = /[sr]/i,
-    UNARY_MATHS_NUMBER_REGEX = /-?[0-9]*\.?[0-9]*/,
-    BINARY_MATHS_NUMBER_REGEX =
-        /^-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}-?[0-9]+\.?[0-9]*[+|\-|x|\/]{1}$/,
-    DOUBLE_DOT_CATCHER = /(\.{2})/g,
-    INITIAL_SOLITARY_DOT_CATCHER = /^\.$/,
-    INITIAL_SOLITARY_DOT_WITH_REPEATED_DOT_CATCHER = /^\.(?!.*\.+)/g,
-    NUM1_CATCHER_WITH_LEADING_ZERO_REGEX =
-        /^(-?(0|[1-9])*\.?\d*)(?:[xy\-+\/])(-?(?:0|[1-9])*\.?\d*)/g,
-    NUM1_CATCHER = /^(-?\d*\.?\d*)(?:[xy\/\-+])(?:-?\d*\.?\d*)/g,
-    NUM2_CATCHER = /^(?:-?\d*\.?\d*)(?:[xy\/\-+])(-?\d*\.?\d*)/g,
-    OPERATOR_CATCHER = /^(?:-?\d*\.?\d*)([xy\/\-+])(?:-?\d*\.?\d*)/g,
-    INITIAL_SINGLE_DOT_CATCHER = /^(?!\.\.)\.{1}/g,
-    INITIAL_DOUBLE_DOT_CATCHER = /^(\.{2})/g,
-    MULTI_DOUBLE_DOT_CATCHER = /(\.{2})/g,
-    STANDALONE_NUM2_CATCHER =
-        /^(-?(?:0|[1-9])*\.?\d*)([xy\-+\/])(-?(?:(?:0|[1-9])*\.?\d*))/g,
-    // patternStack.INTEGER_MATH_CATCHER =
-    //     /^(-?(?:0|[1-9])*\.?\d*)([s|r])$|^(-?(?:0|[1-9])*\.?\d*)([xy\-+\/])(-?(?:(?:0|[1-9])*\.?\d*))$/,
-    // ^(-?(?:0|[1-9])*\.?\d*)([s|r])$|^((?!^\d\\+-$)-?(?:0|[1-9])*\.?\d*)(?!^[xy\-+\/]\d+$)(?:[xy\-+\/])(-?(?:(?:0|[1-9])*\.?\d*))$
-    DOUBLE_HYPHEN_PRESENT_REGEX = /(\d+-{2}\d+)/g,
-    DOUBLE_HYPHEN_AB_CAPTURE_REGEX = /-?\d+\.*\d*/g;
+import { patternStack } from "../js/constants.js";
 
 export const doMaths = (input) => {
-    let result = {};
-    result.value = input;
-    console.log("input to test", input);
-    console.log(input.match(patternStack.INTEGER_MATH_CATCHER));
-    // return result;
-    if (!patternStack.INTEGER_MATH_CATCHER.test(input)) {
-        console.log("FAILED - NOT valid computational unit");
-        // result.test1 = false;
-        // return result;
-    }
-    // console.log("time for doing maths!", input);
+    const extractComputationParts = (input) => {
+        let matches = patternStack.VALID_NUMBER.exec(input);
 
-    // result.value = patternStack.INTEGER_MATH_CATCHER.test(input)
-    //     ? !input.match(patternStack.INTEGER_MATH_CATCHER)[3]
-    //         ? // unary maths
-    //           getMathOperation(
-    //               input.match(patternStack.INTEGER_MATH_CATCHER)[2],
-    //               input.match(patternStack.INTEGER_MATH_CATCHER)[1]
-    //           )
-    //         : // binary maths
-    //           getMathOperation(
-    //               input.match(patternStack.INTEGER_MATH_CATCHER)[4],
-    //               input.match(patternStack.INTEGER_MATH_CATCHER)[3],
-    //               input.match(patternStack.INTEGER_MATH_CATCHER)[5]
-    //           )
-    //     : null;
-    // null;
-    console.log(input.match(patternStack.INTEGER_MATH_CATCHER));
-    result.value = patternStack.INTEGER_MATH_CATCHER.test(input)
-        ? getMathOperation(
-              input.match(patternStack.INTEGER_MATH_CATCHER)[2],
-              input.match(patternStack.INTEGER_MATH_CATCHER)[1],
-              input.match(patternStack.INTEGER_MATH_CATCHER)[3]
-          )
-        : null;
+        let computationObject = {
+            num1: "",
+            num2: "",
+            op1: "",
+            op2: "",
+        };
+        if (matches) {
+            if (matches[1]) {
+                computationObject.num1 = matches[1] ? matches[1] : matches[2];
+                computationObject.op1 = matches[3];
+                computationObject.num2 = matches[4] ? matches[4] : matches[5];
+                computationObject.op2 = matches[6];
+            } else {
+                computationObject.num1 = matches[7];
+                computationObject.op1 = matches[8];
+                computationObject.num2 = undefined;
+                computationObject.op2 = undefined;
+            }
+        }
+        return computationObject;
+    };
+    let result = {},
+        // _computationalUnit = {
+        //     num1: "",
+        //     num2: "",
+        //     op1: "",
+        //     op2: "",
+        // };
+        _computationalUnit = extractComputationParts(input);
+
+    console.log("doMaths _computationalUnit", _computationalUnit);
+    console.log(input.match(patternStack.MATH_CATCHER), input);
+    // return result;
+    if (!patternStack.MATH_CATCHER.test(input)) {
+        console.log("FAILED - NOT valid computational unit");
+        result.computed = false;
+        return result;
+    }
+    console.log("time for doing maths!", input);
+
+    result.value =
+        // unary maths
+        //     getMathOperation(
+        //     _computationalUnit.op1,
+        //     _computationalUnit.num1
+        // );
+        getMathOperation(
+            _computationalUnit.op1,
+            _computationalUnit.num1,
+            _computationalUnit.num2
+        );
 
     if (result.value || result.value === 0) {
         console.log("and the result is ", +result.value);
         result.computed = true;
         return result;
     } else {
-        console.log("maths failed", input);
-        result.value = input;
-        result = formatCalculation(input);
+        // console.log("maths failed", computationalUnit);
+        // result.value = computationalUnit;
+        // result = input;
         result.computed = false;
         return result;
     }
 };
 
 const doMaths2 = (functionStack) => (operator, num1, num2) => {
+    console.log(operator, num1, num2);
     return operator === "s" || operator === "r"
         ? functionStack[operator](num1)
         : operator === "x" ||
@@ -266,6 +260,46 @@ const universalDoubleDotTestData = [
     "-9.3423424.",
 ];
 
+const computation_unit_test_data = [
+    "0",
+    "1",
+    "123",
+    "-0",
+    "-1",
+    "-123",
+    "00",
+    "01",
+    "0123",
+    "-00",
+    "-01",
+    "-0123",
+    "0.0",
+    "0.0001",
+    "1.0",
+    "123.0",
+    "-0.0",
+    "-1.0",
+    "-123.0",
+    "0.35",
+    "1.35",
+    "123.35",
+    "-0.35",
+    "-1.35",
+    "-123.35",
+    "0.034",
+    "1.034",
+    "123.034",
+    "-0.034",
+    "-1.034",
+    "-123.034",
+    "00.034",
+    "01.034",
+    "0123.034",
+    "-00.034",
+    "-01.034",
+    "-0123.034",
+];
+
 const runTests = (data, pattern) => {
     console.log("test", data);
     for (let d of data) {
@@ -283,3 +317,80 @@ const runTests = (data, pattern) => {
 // runTests(repZeroTestData);
 
 export default doMaths;
+
+// 0
+// 1
+// 123
+// -0
+// -1
+// -123
+// 00
+// 01
+// 0123
+// -00
+// -01
+// -0123
+// 0.0
+// 0.0001
+// 1.0
+// 123.0
+// -0.0
+// -1.0
+// -123.0
+// 0.35
+// 1.35
+// 123.35
+// -0.35
+// -1.35
+// -123.35
+// 0.034
+// 1.034
+// 123.034
+// -0.034
+// -1.034
+// -123.034
+// 00.034
+// 01.034
+// 0123.034
+// -00.034
+// -01.034
+// -0123.034
+// ..
+// .
+// ...234...45.435..435.45...54353......5.5.55.5..5.5.55...
+// 5.  . . .. .545. ..45.5..4  . . .r  .. .. .  . .  ..
+// ..
+// .5
+// -.5x
+// 5.x46
+// 5.x-4.6
+// -5.4x.
+// -5.4x.6
+// -5.4x4.6
+// -5.4x-4.6
+// -56.4--4.6
+// -0.4--4.6
+// -000.4--4.6
+// -0.4x-4.6
+// -000/-4.6
+// -000.4/-4.6
+// -0.4--4.6
+// ​
+// 5.7-
+// 5.7s
+// -
+// +
+
+// 0x0.0
+// 1x1.0
+// 123x123.0
+// 0.0x0
+// 1.0x1
+// 123.0x123
+
+// 0.0
+// 1.0
+// 123.0
+// 0
+// 1
+// 123
