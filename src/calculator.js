@@ -317,7 +317,8 @@ class Calculator extends Component {
         //   }
         // }
         if (key === "m") {
-            this.toggleSign();
+            // this.toggleSign();
+            return;
         }
     };
 
@@ -358,7 +359,7 @@ class Calculator extends Component {
                 rawUserInput: this.state.rawUserInput,
             });
         } else {
-            console.log(`NOT _result.computed ${_result}`);
+            console.log(`NOT _result.computed ${_result.computed}`);
             // calculationData.updateUserInput = false;
             calculationData.value = this.state.rawUserInput;
             calculationData = formatCalculation(calculationData);
@@ -572,21 +573,27 @@ class Calculator extends Component {
     };
 
     toggleSign = () => {
-        let { num1 } = { ...this.state };
-        let { op1 } = { ...this.state };
-        let { num2 } = { ...this.state };
+        console.log(
+            "toggleSign",
+            "this.state.rawUserInput",
+            this.state.rawUserInput
+        );
+        // let { num1 } = { ...this.state };
+        // let { op1 } = { ...this.state };
+        // let { num2 } = { ...this.state };
 
-        if (!num2) {
-            this.setState({
-                num1: String(num1 * -1),
-                userInput: String(num1 * -1) + op1,
-            });
-        } else {
-            this.setState({
-                num2: String(num2 * -1),
-                userInput: num1 + op1 + String(num2 * -1),
-            });
-        }
+        // if (!num2) {
+        //     this.setState({
+        //         num1: String(num1 * -1),
+        //         userInput: String(num1 * -1) + op1,
+        //     });
+        // } else {
+        //     this.setState({
+        //         num2: String(num2 * -1),
+        //         userInput: num1 + op1 + String(num2 * -1),
+        //     });
+        // }
+        return;
     };
 
     GridItem({ classes }) {

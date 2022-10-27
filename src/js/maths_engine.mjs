@@ -12,13 +12,13 @@ export const doMaths = (input) => {
         };
         if (matches) {
             if (matches[1]) {
-                computationObject.num1 = matches[1] ? matches[1] : matches[2];
-                computationObject.op1 = matches[3];
-                computationObject.num2 = matches[4] ? matches[4] : matches[5];
-                computationObject.op2 = matches[6];
+                computationObject.num1 = matches[1];
+                computationObject.op1 = matches[2];
+                computationObject.num2 = matches[3];
+                computationObject.op2 = matches[4];
             } else {
-                computationObject.num1 = matches[7];
-                computationObject.op1 = matches[8];
+                computationObject.num1 = matches[5];
+                computationObject.op1 = matches[6];
                 computationObject.num2 = undefined;
                 computationObject.op2 = undefined;
             }

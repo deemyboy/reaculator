@@ -16,23 +16,27 @@ export const CANVAS_CONTAINER_ID = "cvs";
 export const patternStack = {
     INITIAL_OPERATOR_CATCHER: /^[xy\/\-+=rsacm]$/,
     NUM1_INVISIBLE_ZERO_CATCHER: /(^-?\.\d*)/,
-    NUM2_INVISIBLE_ZERO_CATCHER: /(?!^-\.)[xy\/\-+](-?\.\d*$)/,
-    NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER:
-        /(?![xy\/\-+]\.\d*$)\d*([xy\/\-+])-?\.\d*$/d,
-    LEADING_ZERO_CATCHER: /(^(?!^-$)-?0\d+\.?$)/,
-    UNIVERSAL_REPEATED_ZERO_CATCHER: /^-?0{2,}\.?\d$/,
-    UNIVERSAL_DOUBLE_DOT_CATCHER:
-        /(^-?\d*\.\d*\.$)|(^-?\d*\.\d*[xy\/\-+]-?\d*\.\d*\.$)|(^-?\d*\.\d*\.[xy\/\-+]-?\d*\.\d*)$/,
+    // NUM2_INVISIBLE_ZERO_CATCHER: /(?!^-\.)[xy\/\-+](-?\.\d*$)/,
+    NUM2_INVISIBLE_ZERO_CATCHER: /(?![xy\/\-+]\.\d*$)\d*([xy\/\-+])-?\.\d*$/d,
+    // LEADING_ZERO_CATCHER: /(-?0+)\d+\.\d*|(-?0+)\d+/,
+    NUM1_TRAILING_DECIMAL_ZERO_CATCHER:
+        /^-?(0+[1-9]+[xy\/\-+rs])|^-?\d+\.(0+)[xy\/\-+rs]/d,
+    NUM2_REPEATED_INITIAL_ZERO_CATCHER: /.*[xy\/\-+]-?0{2,}$/,
+    // NUM2_ZERO_CATCHER:
+    //     /([xy\/\-+])((-?0{2,})[1-9]+)$|(([xy\/\-+])(-?0{2,}))$|(?:-?\d+|\.)([xy\/\-+])(-?0{1,}[1-9]+\.\d+)$|[xy\/\-+](-?0{2,})\.\d+$/d,
+    NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER:
+        /(.*)([xy\/\-+])(-?0{1,}\.0+)([xy\/\-+])$/d,
+    NUM1_REPEATED_ZERO_CATCHER: /^-?0{1,}\.?\d$/,
+    UNIVERSAL_EXTRA_DOT_CATCHER: /\d+\.\d+\./,
+    UNIVERSAL_DOUBLE_DOT_CATCHER: /\.\./,
     UNNARY_MATH_CATCHER: /^(-?\d*\.?\d*)([rs=])$/,
     MATH_CATCHER:
-        /^(-?\d+)([rs=])$|^(-?\d*\.?\d*)([xy\/\-+])(-?\d*\.?\d*)([xy\/\-+=])$/,
+        /^(-?\d*\.?\d*)([rs=])$|^(-?\d*\.?\d*)([xy\/\-+])(-?\d*\.?\d*)([xy\/\-+=])$/,
     DOUBLE_OPERATOR_CATCHER:
         /(?!^-?\d*\.?\d*[xy\/+-]-)^(-?\d*\.?\d*)([xy\/\-+]{2})/,
     NUM1_FLOATING_DOT_CATCHER:
         /(?!^-?\d+\.\d+)^-?(\d+\.[xy\/\-+])|^(-?\d*\.)([rs=])$/,
     NUM2_FLOATING_DOT_CATCHER: /(?!^-?\d+\.\d+)[xy\/\-+](-?\d+\.[xy\/\-+])$/,
-    VALID_COMPUTATIONAL_UNIT:
-        /(^-?0$)|((?!-?0\d+)^-?\d+$)|(^-?0\.\d+$)|((?!-?0\d+)^-?\d+\.\d+$)/,
     VALID_NUMBER:
-        /((?!^-?\d+\.)^-?\d+)?(^-?\d+\.?\d*)?([xy\/\-+])((?!-?\d+\.)-?\d+)?(-?\d+\.\d*)?([xy\/\-+=]$)|^(-?\d*\.?\d*)([rs=])$/d,
+        /(^-?\d+\.?\d*)([xy\/\-+])(-?\d+\.?\d*)([xy\/\-+=]$)|^(-?\d*\.?\d*)([rs=])$/,
 };
