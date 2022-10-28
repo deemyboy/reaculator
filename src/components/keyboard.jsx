@@ -17,7 +17,7 @@ export function Keyboard({ props, selected, xs, md, lg }) {
     let title;
     if (props.showTitle) {
         title = (
-            <Typography className="sidebar_kb_title">{props.name}</Typography>
+            <Typography className="sidebar-kb-title">{props.name}</Typography>
         );
     } else {
         title = "";

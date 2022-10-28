@@ -46,7 +46,7 @@ const Key = React.forwardRef((props, ref) => {
     let title, subTitle;
     if (props.kObj.showTitle) {
         title = (
-            <Typography className="sidebar_btn_title">
+            <Typography className="sidebar-btn-title">
                 {props.kObj.title}
             </Typography>
         );
@@ -55,7 +55,7 @@ const Key = React.forwardRef((props, ref) => {
     }
     if (props.kObj.subTitle) {
         subTitle = (
-            <Typography className="btn_sub_title">
+            <Typography className="btn-subtitle">
                 {props.kObj.subTitle}
             </Typography>
         );
@@ -64,9 +64,10 @@ const Key = React.forwardRef((props, ref) => {
     }
 
     let boxClassName;
-    // const boxEnd = (</Box>);
     if (props.location === "sidebar") {
-        boxClassName = "sidebar_btn_wrapper";
+        boxClassName = "sidebar-btn-wrapper";
+    } else if (props.location === "main") {
+        boxClassName = "main-btn-wrapper";
     }
 
     return (

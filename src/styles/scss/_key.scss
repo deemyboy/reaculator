@@ -1,6 +1,19 @@
 // buttons
 .calculator {
   .keyboard {
+    .main-btn-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .btn {
+        //
+      }
+      p.btn-subtitle {
+        position: relative;
+        top: -2rem;
+        height: 0;
+      }
+    }
     .btn-lg {
       font-size: 2rem;
       line-height: 0;
@@ -162,6 +175,13 @@
     }
   }
 
+  .main-btn-wrapper {
+    .btn.btn-danger + p.btn-subtitle {
+      color: themed(secondaryButtonTextColor);
+      color: #fff;
+    }
+  }
+
   .btn-danger {
     color: #fff;
     background-color: $btn-danger-bg-color;
@@ -258,6 +278,17 @@
 // colors
 @include themify($themes) {
   .keyboard {
+    .main-btn-wrapper {
+      .btn {
+        //
+      }
+      .btn-primary + p.btn-subtitle {
+        color: themed(primaryButtonTextColor);
+      }
+      .btn-secondary + p.btn-subtitle {
+        color: themed(secondaryButtonTextColor);
+      }
+    }
   }
   .sidebar {
     .keyboard {

@@ -282,53 +282,70 @@ class Calculator extends Component {
         this.setState({ rawUserInput }, this.parseUserInput);
     };
 
-    handleUtilityOperator = (key) => {
-        let resultData = { ...this.state.resultData };
-
-        if (key === "a") {
-            resultData.value = "";
-            resultData.resultClass = this.state.resultData.defaultClass;
-
-            this.setState({
-                num1: "",
-                num2: "",
-                op1: "",
-                op2: "",
-                resultData,
-                rawUserInput: "",
-                processedUserInput: "",
-                keyErr: false,
-            });
-        }
-    };
-
     parseUserInput = () => {
         let resultData = { ...this.state.resultData },
             calculationData = { ...this.state.calculationData },
-            _result;
-        const _rawUserInput = this.state.rawUserInput;
+            _result,
+            _rawUserInput;
         _result = doMaths(this.state.rawUserInput);
+        console.log("calculationData", calculationData);
+
         if (_result.computed) {
+            calculationData.value = this.state.rawUserInput;
             console.log(`_result.computed ${_result.computed}`);
             resultData.value = _result.value;
-            calculationData.value = this.state.rawUserInput;
+            calculationData.resultComputed = true;
+            calculationData.previousResultValue = _result.value.toString();
             calculationData = formatCalculation(calculationData);
-
+            if (calculationData.equalsPressed) {
+                delete calculationData.equalsPressed;
+                _rawUserInput = _result.value.toString();
+                calculationData.value = _result.value.toString();
+            } else {
+                //
+            }
             this.setState({
                 resultData,
                 calculationData,
-                // rawUserInput: prepforNextCalculation(this.state.rawUserInput),
-                rawUserInput: this.state.rawUserInput,
+                rawUserInput: _rawUserInput,
             });
         } else {
-            console.log(`NOT _result.computed ${_result.computed}`);
-            // calculationData.updateUserInput = false;
-            calculationData.value = this.state.rawUserInput;
+            console.log(
+                "NOT _result.computed",
+                _result.computed,
+                "calculationData",
+                calculationData
+            );
+            if (resultData.value) {
+                console.log(
+                    "resultData.value",
+                    resultData.value,
+                    " | calculationData",
+                    calculationData
+                );
+                calculationData.value = this.state.rawUserInput;
+            }
+            if (calculationData.continuingAfterEqualsValue) {
+                // this.state.rawUserInput =
+                calculationData.value =
+                    calculationData.continuingAfterEqualsValue;
+                delete calculationData.continuingAfterEqualsValue;
+            } else {
+                calculationData.value = this.state.rawUserInput;
+            }
+
             calculationData = formatCalculation(calculationData);
             if (calculationData.updateUserInput) {
+                delete calculationData.updateUserInput;
+                resultData.value = calculationData.clearResult
+                    ? ""
+                    : calculationData.value;
+                delete calculationData.clearResult;
+
                 this.setState({
                     calculationData,
                     rawUserInput: calculationData.value,
+                    resultData,
                 });
             } else {
                 this.setState({

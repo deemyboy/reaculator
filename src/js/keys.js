@@ -98,10 +98,12 @@ export const numberKeys = [
         id: 11,
         value: "m",
         uniChar: "\u00B1",
+        uniChar: "\u207A\u2215\u208b",
         title: "plus minus (m)",
         keycode: 77,
         code: "KeyM",
         type: "num",
+        subTitle: "m",
     },
 ];
 
@@ -198,8 +200,8 @@ export const utilityKeys = [
         code: "Backspace",
         type: "func",
         subTitle: "\u2190", // left arrow
-        subTitle: "\u27A9", // left arrow 3d
-        subTitle: "bksp",
+        // subTitle: "\u27A9", // left arrow 3d
+        // subTitle: "bksp",
     },
     {
         id: 18,
