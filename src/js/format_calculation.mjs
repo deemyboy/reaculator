@@ -5,15 +5,6 @@ export const formatCalculation = (inputData) => {
     let _formattedData;
     for (const key in patternStack) {
         _formattedData = undefined;
-        // console.log(
-        //     "const key in patternStack key ",
-        //     key,
-        //     " inputData ",
-        //     inputData,
-        //     " _formattedData",
-        //     _formattedData
-        // );
-        // console.log("_formattedData", _formattedData);
         _formattedData = getPatternOperation(
             patternStack[key],
             key,
@@ -27,18 +18,12 @@ export const formatCalculation = (inputData) => {
 
 const formatCalculation2 =
     (repairs) => (pattern, name, inputData, formattedData) => {
-        // console.log("formatCalculation2", name, inputData, formattedData);
+        console.log("formatCalculation2", name, inputData, formattedData);
         if (pattern.test(inputData.value) && !formattedData) {
-            console.log(
-                `formatCalculation2 | ${name}, inputData= ${inputData}`
-            );
-            // let lastIndex = pattern.lastIndex;
+            console.log("formatCalculation2 |", name, "inputData=", inputData);
             formattedData = repairs[name](inputData);
-            // if (formattedData) {
             return formattedData;
-        }
-        // }
-        else {
+        } else {
             return inputData;
         }
     };
@@ -85,16 +70,6 @@ const repairStack = {
         inputData.updateUserInput = true;
         return inputData;
     },
-    // LEADING_ZERO_CATCHER: function (inputData) {
-    //     console.log(`LEADING_ZERO_CATCHER ${inputData.value}`);
-    //     let _value = inputData.value;
-    //     let matches = _value.match(patternStack.LEADING_ZERO_CATCHER);
-    //     let matches2 = patternStack.LEADING_ZERO_CATCHER.exec(_value);
-
-    //     inputData.value = inputData.value.substring(0, matches.index + 1);
-    //     inputData.updateUserInput = true;
-    //     return inputData;
-    // },
     NUM1_TRAILING_DECIMAL_ZERO_CATCHER: function (inputData) {
         console.log(`NUM1_TRAILING_DECIMAL_ZERO_CATCHER ${inputData.value}`);
         let _value = inputData.value;
@@ -112,24 +87,6 @@ const repairStack = {
         }
         return inputData;
     },
-    // NUM2_ZERO_CATCHER: function (inputData) {
-    //     console.log(`NUM2_ZERO_CATCHER ${inputData.value}`);
-    //     let _value = inputData.value;
-    //     let matches = _value.match(patternStack.NUM2_ZERO_CATCHER);
-    //     if (matches) {
-    //         // 5+00 <- int num2
-    //         // indices 4 full match
-    //         //         5 operator
-    //         //         6 zeros
-    //         if (matches.indices[4]) {
-    //             _value = _value.replace(/.$/, "");
-    //             inputData.value = _value;
-    //             inputData.updateUserInput = true;
-    //         }
-    //     }
-
-    //     return inputData;
-    // },
     NUM2_REPEATED_INITIAL_ZERO_CATCHER: function (inputData) {
         console.log(`NUM2_REPEATED_INITIAL_ZERO_CATCHER ${inputData.value}`);
         let _value = inputData.value;
@@ -235,6 +192,45 @@ const repairStack = {
     },
     VALID_NUMBER: function (inputData) {
         console.log(`VALID_NUMBER ${inputData.value}`);
+        return inputData;
+    },
+    PLUS_MINUS_CATCHER: function (inputData) {
+        console.log(`PLUS_MINUS_CATCHER ${inputData.value}`);
+        let _value = inputData.value;
+        let matches = _value.match(patternStack.PLUS_MINUS_CATCHER);
+        if (matches) {
+            let _num = matches[1] ? matches[1] : matches[4];
+            let _num1 = matches[2] ? matches[2] : "";
+            let _op = matches[3] ? matches[3] : "";
+            _num = (+_num * -1).toString();
+            if (matches[1]) {
+                _value = _num + _op;
+            } else {
+                _value = _num1 + _op + _num;
+            }
+            inputData.value = _value;
+            inputData.updateUserInput = true;
+        }
+        return inputData;
+    },
+    M_CATCHER: function (inputData) {
+        console.log(`M_CATCHER ${inputData.value}`);
+        return inputData;
+    },
+    C_CATCHER: function (inputData) {
+        console.log(`C_CATCHER ${inputData.value}`);
+        let _value = inputData.value;
+        let matches = _value.match(patternStack.C_CATCHER);
+        if (matches) {
+            inputData.value = matches[1].replace(/.$/, "");
+            inputData.updateUserInput = true;
+        }
+        return inputData;
+    },
+    A_CATCHER: function (inputData) {
+        console.log(`A_CATCHER ${inputData.value}`);
+        inputData.value = "";
+        inputData.updateUserInput = true;
         return inputData;
     },
 };

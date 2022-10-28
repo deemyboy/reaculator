@@ -171,6 +171,7 @@ class Calculator extends Component {
     };
 
     handleKeyPress = (e) => {
+        console.log(e);
         var _code = e.keyCode;
         var _key = utilityKeys.concat(numberKeys, functionKeys).filter((k) => {
             return k.keycode === e.keyCode;
@@ -223,6 +224,10 @@ class Calculator extends Component {
                 if (e.key === "Escape") {
                     keyData.key = "a";
                 }
+                if (e.key === "Backspace") {
+                    console.log("Backspace");
+                    keyData.key = "c";
+                }
                 this.handleUserInput(keyData);
             }
         }
@@ -274,11 +279,6 @@ class Calculator extends Component {
             return;
         }
 
-        if (CONSTANTS.UTIL_OPERATOR_REGEX_GREEDY.test(key)) {
-            this.handleUtilityOperator(key);
-            return;
-        }
-
         this.setState({ rawUserInput }, this.parseUserInput);
     };
 
@@ -287,7 +287,7 @@ class Calculator extends Component {
 
         if (key === "a") {
             resultData.value = "";
-            resultData.resultClass = this.state.resultData.resultDefaultClass;
+            resultData.resultClass = this.state.resultData.defaultClass;
 
             this.setState({
                 num1: "",
@@ -300,40 +300,6 @@ class Calculator extends Component {
                 keyErr: false,
             });
         }
-        if (key === "Backspace") {
-            console.log("Backspace");
-            let { rawUserInput } = this.state;
-        }
-        // if (key === "=") {
-        //     `297: num1: ${this.state.num1} num2: ${this.state.num2} op1: ${this.state.op1} op2: ${this.state.op2}`
-        //   );
-        //   if (
-        //     this.state.num1 &&
-        //     this.state.num1 !== "" &&
-        //     this.state.num2 &&
-        //     this.state.num2 !== ""
-        //   ) {
-        //     this.updateOperator("=");
-        //   }
-        // }
-        if (key === "m") {
-            // this.toggleSign();
-            return;
-        }
-    };
-
-    parseDecimal = (num) => {
-        if (num.length < 1) {
-            return;
-        }
-        if (num === ".") {
-            return "0.";
-        }
-        if (num.charAt(0) === "." && Number.isInteger(+num)) {
-            return num.slice(0, -1);
-        } else if (num.slice(-1) !== "." && Number.isInteger(+num)) {
-            return String(+num);
-        }
     };
 
     parseUserInput = () => {
@@ -341,11 +307,7 @@ class Calculator extends Component {
             calculationData = { ...this.state.calculationData },
             _result;
         const _rawUserInput = this.state.rawUserInput;
-        // if (this.state.rawUserInput.length > 1) {
         _result = doMaths(this.state.rawUserInput);
-        // } else {
-        //     _result = doMaths(this.state.rawUserInput);
-        // }
         if (_result.computed) {
             console.log(`_result.computed ${_result.computed}`);
             resultData.value = _result.value;
@@ -374,61 +336,6 @@ class Calculator extends Component {
                 });
             }
             // this.state.rawUserInput;
-        }
-    };
-
-    // processforCalculationDisplay = (input) => {
-    //     if()
-    //     const operatorChar = input.charAt(input.length - 1);
-    //     let displayChar = "";
-    //     for (const key of functionKeys) {
-    //         if (operatorChar === key.value && key.calculationDisplayChar) {
-    //             displayChar = key.calculationDisplayChar;
-    //             input =
-    //                 input.substring(0, input.length - 1) +
-    //                 key.calculationDisplayChar;
-    //         }
-    //     }
-    //     console.log(` processforCalculationDisplay before return${input}`);
-    //     return input;
-    // };
-
-    // preProcessforMaths = (input) => {
-    //     if (1) {
-    //         //
-    //     }
-    //     const operatorChar = input.charAt(input.length - 1);
-    //     let displayChar = "";
-    //     for (const key of functionKeys) {
-    //         if (operatorChar === key.calculationDisplayChar) {
-    //             displayChar = key.calculationDisplayChar;
-    //         }
-    //     }
-    //     console.log(
-    //         `preProcessforMaths before return${
-    //             input.substring(0, input.length - 1) + displayChar
-    //         }`
-    //     );
-    //     return input.substring(0, input.length - 1) + displayChar;
-    // };
-
-    setResultData = (data, callback) => {
-        let resultData = { ...this.state.resultData };
-
-        if (data.resultClass) {
-            resultData.resultClass = data.resultClass;
-        } else {
-            resultData.resultClass = this.state.resultData.resultDefaultClass;
-        }
-        if (data.value) {
-            resultData.value = data.value;
-        } else {
-            resultData.value = resultData.value;
-        }
-        if (callback) {
-            this.setState({ resultData }, () => callback());
-        } else {
-            this.setState({ resultData });
         }
     };
 
@@ -570,30 +477,6 @@ class Calculator extends Component {
         let { resultData } = { ...this.state };
         resultData.resultClass = this.state.resultData.resultErrorClass;
         this.setState({ resultData, keyErr: true });
-    };
-
-    toggleSign = () => {
-        console.log(
-            "toggleSign",
-            "this.state.rawUserInput",
-            this.state.rawUserInput
-        );
-        // let { num1 } = { ...this.state };
-        // let { op1 } = { ...this.state };
-        // let { num2 } = { ...this.state };
-
-        // if (!num2) {
-        //     this.setState({
-        //         num1: String(num1 * -1),
-        //         userInput: String(num1 * -1) + op1,
-        //     });
-        // } else {
-        //     this.setState({
-        //         num2: String(num2 * -1),
-        //         userInput: num1 + op1 + String(num2 * -1),
-        //     });
-        // }
-        return;
     };
 
     GridItem({ classes }) {
