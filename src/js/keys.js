@@ -197,6 +197,9 @@ export const utilityKeys = [
         keycode: 8,
         code: "Backspace",
         type: "func",
+        subTitle: "\u2190", // left arrow
+        subTitle: "\u27A9", // left arrow 3d
+        subTitle: "bksp",
     },
     {
         id: 18,
@@ -207,8 +210,10 @@ export const utilityKeys = [
         keycode: 27,
         code: "Escape",
         type: "func",
+        subTitle: "esc",
     },
 ];
+
 export const themeKeys = [
     {
         id: "fire",

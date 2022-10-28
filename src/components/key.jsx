@@ -43,7 +43,7 @@ const Key = React.forwardRef((props, ref) => {
 
         return classes;
     };
-    let title;
+    let title, subTitle;
     if (props.kObj.showTitle) {
         title = (
             <Typography className="sidebar_btn_title">
@@ -52,6 +52,15 @@ const Key = React.forwardRef((props, ref) => {
         );
     } else {
         title = "";
+    }
+    if (props.kObj.subTitle) {
+        subTitle = (
+            <Typography className="btn_sub_title">
+                {props.kObj.subTitle}
+            </Typography>
+        );
+    } else {
+        subTitle = "";
     }
 
     let boxClassName;
@@ -75,6 +84,7 @@ const Key = React.forwardRef((props, ref) => {
                 >
                     {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
                 </Button>
+                {subTitle}
             </Box>
         </React.Fragment>
     );
