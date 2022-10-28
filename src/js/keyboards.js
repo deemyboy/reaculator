@@ -15,6 +15,7 @@ export const keyboards = [
         keys: numberKeys,
         onClickFunction: "handleClick",
         showTitle: false,
+        location: "main",
     },
     {
         name: "function",
@@ -22,6 +23,7 @@ export const keyboards = [
         keys: functionKeys,
         onClickFunction: "handleClick",
         showTitle: false,
+        location: "main",
     },
     {
         name: "utility",
@@ -29,6 +31,7 @@ export const keyboards = [
         keys: utilityKeys,
         onClickFunction: "handleClick",
         showTitle: false,
+        location: "main",
     },
     {
         name: "theme-type",
@@ -36,6 +39,7 @@ export const keyboards = [
         keys: themeTypeKeys,
         onClickFunction: "onSelectThemeType",
         showTitle: true,
+        location: "sidebar",
     },
     {
         name: "theme",
@@ -43,6 +47,7 @@ export const keyboards = [
         keys: themeKeys,
         onClickFunction: "onSelectTheme",
         showTitle: true,
+        location: "sidebar",
     },
     {
         name: "animation",
@@ -50,6 +55,7 @@ export const keyboards = [
         keys: animKeys,
         onClickFunction: "onSelectAnim",
         showTitle: true,
+        location: "sidebar",
     },
     {
         name: "picture-type",
@@ -57,6 +63,8 @@ export const keyboards = [
         keys: pictureKeys,
         onClickFunction: "onSelectPictureType",
         showTitle: true,
+        location: "sidebar",
     },
 ];
+
 export default keyboards;

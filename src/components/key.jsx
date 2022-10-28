@@ -54,9 +54,15 @@ const Key = React.forwardRef((props, ref) => {
         title = "";
     }
 
+    let boxClassName;
+    // const boxEnd = (</Box>);
+    if (props.location === "sidebar") {
+        boxClassName = "sidebar_btn_wrapper";
+    }
+
     return (
         <React.Fragment>
-            <Box className="sidebar_btn_wrapper">
+            <Box className={boxClassName}>
                 {title}
                 <Button
                     ref={ref.id}
