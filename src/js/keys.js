@@ -159,7 +159,7 @@ export const functionKeys = [
         id: 21,
         value: "r",
         uniChar: "\u221A" + "2",
-        calculationDisplayChar: "\u221A" + "2",
+        calculationDisplayChar: "\u221A",
         // calculationDisplayChar: "\u00B2\u221A",
         title: "square root (r)",
         keycode: 82,

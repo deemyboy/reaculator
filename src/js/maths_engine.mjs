@@ -1,8 +1,27 @@
-import { patternStack } from "../js/constants.js";
+import {
+    patternStack,
+    UNARY_OPERATOR_REGEX,
+    BINARY_OPERATOR_REGEX,
+    VALID_NUMBER,
+} from "../js/constants.js";
+import { functionKeys } from "./keys.js";
 
-export const doMaths = (input) => {
-    const extractComputationParts = (input) => {
-        let matches = patternStack.VALID_NUMBER.exec(input);
+export const convertFromUnicodeToChar = (_input) => {
+    let count = 0;
+    [..._input].forEach((c) => {
+        [...functionKeys].forEach((k) => {
+            if (k.uniChar === c) {
+                _input = _input.replace(_input.charAt(count), k.value);
+            }
+        });
+        count++;
+    });
+    return _input;
+};
+
+export const tryMaths = (input, resultValue) => {
+    const extractComputationParts = (_input) => {
+        let matches = VALID_NUMBER.exec(_input);
 
         let computationObject = {
             num1: "",
@@ -25,52 +44,53 @@ export const doMaths = (input) => {
         }
         return computationObject;
     };
-    let result = {},
-        // _computationalUnit = {
-        //     num1: "",
-        //     num2: "",
-        //     op1: "",
-        //     op2: "",
-        // };
+    input = convertFromUnicodeToChar(input);
+
+    // console.log("tryMaths _computationalUnit", _computationalUnit);
+    // if (!patternStack.MATH_CATCHER.test(input)) {
+    //     console.log("FAILED - NOT valid computational unit");
+    //     let _failed = {};
+    //     _failed.computed = false;
+    //     return _failed;
+    // }
+
+    let _result = {},
         _computationalUnit = extractComputationParts(input);
 
-    console.log("doMaths _computationalUnit", _computationalUnit);
-    console.log(input.match(patternStack.MATH_CATCHER), input);
-    // return result;
-    if (!patternStack.MATH_CATCHER.test(input)) {
-        console.log("FAILED - NOT valid computational unit");
-        result.computed = false;
-        return result;
-    }
-    console.log("time for doing maths!", input);
+    // console.log("time for doing maths!", input);
 
-    result.value =
-        // unary maths
-        //     getMathOperation(
-        //     _computationalUnit.op1,
-        //     _computationalUnit.num1
-        // );
-        getMathOperation(
-            _computationalUnit.op1,
-            _computationalUnit.num1,
-            _computationalUnit.num2
-        );
+    _result.value = getMathOperation(
+        _computationalUnit.op1,
+        _computationalUnit.num1,
+        _computationalUnit.num2
+    );
 
-    if (result.value || result.value === 0) {
-        console.log("and the result is ", +result.value);
-        result.computed = true;
-        return result;
+    if (_result.value || _result.value === 0) {
+        // console.log("and the result is ", +_result.value);
+        _result.computed = true;
+        if (UNARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
+            if (!resultValue) {
+                _result.operationType = "unaryPrimaryOperation";
+            } else {
+                _result.operationType = "unarySecondaryOperation";
+            }
+        }
+        if (BINARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
+            if (!resultValue) {
+                _result.operationType = "binaryPrimaryOperation";
+            } else {
+                _result.operationType = "binarySecondaryOperation";
+            }
+        }
+        _result.operator = input.match(/.$/g)[0];
     } else {
-        // console.log("maths failed", computationalUnit);
-        // result.value = computationalUnit;
-        // result = input;
-        result.computed = false;
-        return result;
+        _result.computed = false;
     }
+    return _result;
 };
 
-const doMaths2 = (functionStack) => (operator, num1, num2) => {
-    console.log(operator, num1, num2);
+const tryMaths2 = (functionStack) => (operator, num1, num2) => {
+    // console.log(operator, num1, num2);
     return operator === "s" || operator === "r"
         ? functionStack[operator](num1)
         : operator === "x" ||
@@ -87,15 +107,15 @@ const mathFunctionStack = {
     r: Math.sqrt,
     // square
     s: function (a) {
-        return a ** 2;
+        return (+a) ** 2;
     },
     //  multiply
     x: function (a, b) {
-        return a * b;
+        return +a * +b;
     },
     //  x raised to y
     y: function (a, b) {
-        return a ** b;
+        return (+a) ** +b;
     },
     //  addition
     "+": function (a, b) {
@@ -111,7 +131,7 @@ const mathFunctionStack = {
     },
 };
 
-const getMathOperation = doMaths2(mathFunctionStack);
+const getMathOperation = tryMaths2(mathFunctionStack);
 
 const testData = [
     // "9r",
@@ -307,7 +327,7 @@ const runTests = (data, pattern) => {
         // console.log("test", d, pattern.test(d));
         // console.log("exec", pattern.exec(d));
         // console.log("match", d, d.match(pattern));
-        doMaths(d);
+        tryMaths(d);
     }
 };
 
@@ -316,7 +336,7 @@ const runTests = (data, pattern) => {
 // runTests(num1TestData);
 // runTests(repZeroTestData);
 
-export default doMaths;
+export default tryMaths;
 
 // 0
 // 1

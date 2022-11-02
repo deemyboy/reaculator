@@ -1,28 +1,33 @@
 import { patternStack } from "../js/constants.js";
+import { functionKeys } from "../js/keys.js";
 export const formatCalculation = (inputData) => {
     console.log("formatCalculation", inputData);
     let _formattedData;
     if (inputData.resultComputed) {
-        console.log("we just completed a math!");
+        // console.log("we just completed a math!", inputData);
         delete inputData.resultComputed;
-        console.log(inputData.value.charAt(inputData.value.length - 1));
-        if (
-            inputData.resultValue &&
-            inputData.value.charAt(inputData.value.length - 1) !== "="
-        ) {
-            inputData.value =
-                inputData.resultValue +
-                inputData.value.charAt(inputData.value.length - 1);
-            // delete inputData.resultValue;
-        } else {
-            inputData.value = inputData.value.replace(/.$/, "");
-            inputData.equalsPressed = true;
-        }
-        return inputData;
-        // } else if (inputData.nextOperator) {
-        //     inputData.value = inputData.value + inputData.nextOperator;
-        //     return inputData;
+        // console.log(inputData.value.charAt(inputData.value.length - 1));
     }
+    // if (
+    //     inputData.resultValue &&
+    //     inputData.value.charAt(inputData.value.length - 1) !== "="
+    // ) {
+    //     inputData.value =
+    //         inputData.resultValue +
+    //         inputData.value.charAt(inputData.value.length - 1);
+    //     // delete inputData.resultValue;
+    // } else {
+    //     inputData.value = inputData.value.replace(/.$/, "");
+    //     inputData.equalsPressed = true;
+    // }
+    // return inputData;
+    // } else if (inputData.nextOperator) {
+    //     inputData.value = inputData.value + inputData.nextOperator;
+    //     return inputData;
+    // }
+
+    // NOT resultComputed simple formatting
+    // console.log("NO result - simple formatting!", inputData);
     for (const key in patternStack) {
         _formattedData = undefined;
         _formattedData = getPatternOperation(
@@ -210,10 +215,6 @@ const repairStack = {
         inputData.updateUserInput = true;
         return inputData;
     },
-    VALID_NUMBER: function (inputData) {
-        // console.log(`VALID_NUMBER ${inputData.value}`);
-        return inputData;
-    },
     PLUS_MINUS_CATCHER: function (inputData) {
         // console.log(`PLUS_MINUS_CATCHER ${inputData.value}`);
         let _value = inputData.value;
@@ -252,6 +253,36 @@ const repairStack = {
         inputData.value = "";
         inputData.updateUserInput = true;
         inputData.clearResult = true;
+        inputData.clearAll = true;
+        return inputData;
+    },
+    UNICHAR_REPLACEMENT_CATCHER: function (inputData) {
+        console.log(`UNICHAR_REPLACEMENT_CATCHER ${inputData.value}`);
+        const getCalculationDisplayChar = (char) => {
+            //
+            let _key = functionKeys.find((k) => {
+                return k.value === char;
+            });
+            if (_key && _key.calculationDisplayChar) {
+                return _key.calculationDisplayChar;
+            } else {
+                return char;
+            }
+        };
+        let idx = patternStack.UNICHAR_REPLACEMENT_CATCHER.exec(
+                inputData.value
+            ).index,
+            _charToReplace = inputData.value.charAt(idx);
+        // _charToReplace = "s";
+
+        inputData.value = inputData.value.replace(
+            // "/",
+            _charToReplace,
+            getCalculationDisplayChar(_charToReplace)
+        );
+
+        inputData.updateUserInput = true;
+        console.log(inputData.value.charAt(idx).codePointAt(0).toString(16));
         return inputData;
     },
 };
