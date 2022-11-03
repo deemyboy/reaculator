@@ -9,17 +9,24 @@ import { functionKeys } from "./keys.js";
 export const convertFromUnicodeToChar = (_input) => {
     let count = 0;
     [..._input].forEach((c) => {
-        [...functionKeys].forEach((k) => {
-            if (k.uniChar === c) {
-                _input = _input.replace(_input.charAt(count), k.value);
-            }
-        });
+        if (!/\d/.test(c)) {
+            let found = false;
+            [...functionKeys].forEach((k) => {
+                if (found === false) {
+                    if (k.uniChar === c) {
+                        _input = _input.replace(_input.charAt(count), k.value);
+                        found = true;
+                    }
+                }
+            });
+        }
         count++;
     });
     return _input;
 };
 
-export const tryMaths = (input, resultValue) => {
+export const doMaths = (computationData) => {
+    // let
     const extractComputationParts = (_input) => {
         let matches = VALID_NUMBER.exec(_input);
 
@@ -44,9 +51,12 @@ export const tryMaths = (input, resultValue) => {
         }
         return computationObject;
     };
-    input = convertFromUnicodeToChar(input);
 
-    // console.log("tryMaths _computationalUnit", _computationalUnit);
+    computationData.rawUserInput = convertFromUnicodeToChar(
+        computationData.rawUserInput
+    );
+
+    // console.log("doMaths _computationalUnit", _computationalUnit);
     // if (!patternStack.MATH_CATCHER.test(input)) {
     //     console.log("FAILED - NOT valid computational unit");
     //     let _failed = {};
@@ -55,41 +65,43 @@ export const tryMaths = (input, resultValue) => {
     // }
 
     let _result = {},
-        _computationalUnit = extractComputationParts(input);
+        _computationalUnit = extractComputationParts(
+            computationData.rawUserInput
+        );
 
     // console.log("time for doing maths!", input);
 
-    _result.value = getMathOperation(
+    _result.resultValue = getMathOperation(
         _computationalUnit.op1,
         _computationalUnit.num1,
         _computationalUnit.num2
-    );
+    ).toString();
 
-    if (_result.value || _result.value === 0) {
-        // console.log("and the result is ", +_result.value);
+    if (_result.resultValue || _result.resultValue === 0) {
+        // console.log("and the result is ", +_result.resultValue);
         _result.computed = true;
         if (UNARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-            if (!resultValue) {
+            if (!computationData.resultValue) {
                 _result.operationType = "unaryPrimaryOperation";
             } else {
                 _result.operationType = "unarySecondaryOperation";
             }
         }
         if (BINARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-            if (!resultValue) {
+            if (!computationData.resultValue) {
                 _result.operationType = "binaryPrimaryOperation";
             } else {
                 _result.operationType = "binarySecondaryOperation";
             }
         }
-        _result.operator = input.match(/.$/g)[0];
+        _result.operator = computationData.rawUserInput.match(/.$/g)[0];
     } else {
         _result.computed = false;
     }
-    return _result;
+    return (computationData = { ...computationData, ..._result });
 };
 
-const tryMaths2 = (functionStack) => (operator, num1, num2) => {
+const doMaths2 = (functionStack) => (operator, num1, num2) => {
     // console.log(operator, num1, num2);
     return operator === "s" || operator === "r"
         ? functionStack[operator](num1)
@@ -131,7 +143,7 @@ const mathFunctionStack = {
     },
 };
 
-const getMathOperation = tryMaths2(mathFunctionStack);
+const getMathOperation = doMaths2(mathFunctionStack);
 
 const testData = [
     // "9r",
@@ -327,7 +339,7 @@ const runTests = (data, pattern) => {
         // console.log("test", d, pattern.test(d));
         // console.log("exec", pattern.exec(d));
         // console.log("match", d, d.match(pattern));
-        tryMaths(d);
+        doMaths(d);
     }
 };
 
@@ -336,7 +348,7 @@ const runTests = (data, pattern) => {
 // runTests(num1TestData);
 // runTests(repZeroTestData);
 
-export default tryMaths;
+export default doMaths;
 
 // 0
 // 1

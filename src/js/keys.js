@@ -143,6 +143,7 @@ export const functionKeys = [
         keycode: 191,
         code: "Slash",
         type: "func",
+        subTitle: "/",
     },
     {
         id: 15,
