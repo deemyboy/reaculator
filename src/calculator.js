@@ -9,8 +9,12 @@ import keyboards from "./js/keyboards";
 import { numberKeys, functionKeys, utilityKeys, ALLOWED_KEYS } from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./js/constants";
-import { doMaths, convertFromUnicodeToChar } from "./js/maths_engine.mjs";
-import formatCalculation from "./js/format_calculation.mjs";
+import {
+    doMaths,
+    convertFromUnicodeToChar,
+    convertFromCharToUnicode,
+} from "./js/maths_engine.mjs";
+import formatComputableString from "./js/format_computable_string.mjs";
 import "./styles/main.scss";
 
 class Calculator extends Component {
@@ -167,10 +171,6 @@ class Calculator extends Component {
     };
 
     handleKeyPress = (e) => {
-        var _key = utilityKeys.concat(numberKeys, functionKeys).filter((k) => {
-            return k.keycode === e.keyCode;
-        })[0];
-
         // prevent these keys firing
         // ctrl key 17, shift key 16 alt key 18
         // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
@@ -185,7 +185,14 @@ class Calculator extends Component {
             !(e.keyCode === 39) &&
             !(e.keyCode === 40)
         ) {
-            var _button = document.getElementById(_key.id);
+            var _key = utilityKeys
+                .concat(numberKeys, functionKeys)
+                .filter((k) => {
+                    return k.keycode === e.keyCode;
+                })[0];
+            if (_key) {
+                var _button = document.getElementById(_key.id);
+            }
         } else {
             return;
         }
@@ -257,21 +264,6 @@ class Calculator extends Component {
             return;
         }
 
-        // handle shift & ctrl keys to stop "Control" and "Shift" being inserted into userInput
-
-        // simple input
-        // no shift or ctrl keys involved
-        // append key value
-        // if (!shiftKey && !ctrlKey) {
-        //     rawUserInput += key;
-        // }
-
-        // // compound input
-        // allow "+" => shift & "=" key
-        // if (shiftKey && keyCode === 187) {
-        //     rawUserInput += key;
-        // }
-
         // prevent ctrl/cmd + r triggering sqr root
         if ((ctrlKey && keyCode === 82) || (metaKey && keyCode === 82)) {
             return;
@@ -285,52 +277,12 @@ class Calculator extends Component {
     };
 
     parseUserInput = () => {
-        let computationData = { ...this.state.computationData },
-            _result;
-        // resultData = { ...this.state.resultData },
-        // calculationData = { ...this.state.calculationData },
-        // { rawUserInput } = this.state,
+        let computationData = { ...this.state.computationData };
 
-        const getMathType = (computationType, char) => {
-            if (
-                computationType === "unaryPrimaryOperation" ||
-                computationType === "unarySecondaryOperation"
-            ) {
-                if (CONSTANTS.CONTINUING_MATH_OPERATOR_CATCHER.test(char)) {
-                    return "continuing";
-                } else {
-                    return "fresh";
-                }
-            }
-        };
-
-        if (computationData.resultValue !== undefined) {
-            // [resultData, rawUserInput, calculationData] =
-            //     this.preMathsFormatting(
-            //         resultData,
-            //         rawUserInput,
-            //         calculationData,
-            //         getMathType(
-            //             resultData.computationType,
-            //             rawUserInput.charAt(rawUserInput.length - 1)
-            //         )
-            //     );
-            // console.log(resultData, rawUserInput);
-            // if (rawUserInput) {
-            // computationData = this.prepareForNextCalculation();
-            // console.log(
-            //     "rawUserInput",
-            //     rawUserInput,
-            //     "resultData",
-            //     this.state.resultData,
-            //     "this.state.calculationData",
-            //     this.state.calculationData
-            // );
-            // }
-        } else {
-            // resultData = { ...this.state.resultData };
-            computationData = { ...this.state.computationData };
-        }
+        // if (computationData.resultValue !== undefined) {
+        // } else {
+        //     computationData = { ...this.state.computationData };
+        // }
         if (
             CONSTANTS.patternStack.MATH_CATCHER.test(
                 convertFromUnicodeToChar(computationData.rawUserInput)
@@ -355,14 +307,8 @@ class Calculator extends Component {
          * we cannot do maths so continue to store the input in calculation data
          */
         else {
-            // console.log(
-            //     "CONSTANTS.patternStack.MATH_CATCHER.test",
-            //     CONSTANTS.patternStack.MATH_CATCHER.test(
-            //         convertFromUnicodeToChar(computationData.rawUserInput)
-            //     )
-            // );
             computationData.calculationValue = computationData.rawUserInput;
-            computationData = formatCalculation(computationData);
+            computationData = formatComputableString(computationData);
             if (computationData.updateUserInput) {
                 delete computationData.updateUserInput;
                 (computationData.rawUserInput =
@@ -402,22 +348,22 @@ class Calculator extends Component {
         // maths operator
         //
 
-        const getFormatType = (formatType) => {
-            if (UNARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-                if (!resultValue) {
-                    _result.unaryPrimaryOperation = true;
-                } else if (!resultValue) {
-                    _result.unarySecondaryOperation = true;
-                }
-            }
-            if (BINARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-                if (!resultValue) {
-                    _result.binaryPrimaryOperation = true;
-                } else if (resultValue) {
-                    _result.binarySecondaryOperation = true;
-                }
-            }
-        };
+        // const getFormatType = (formatType) => {
+        //     if (UNARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
+        //         if (!resultValue) {
+        //             _result.unaryPrimaryOperation = true;
+        //         } else if (!resultValue) {
+        //             _result.unarySecondaryOperation = true;
+        //         }
+        //     }
+        //     if (BINARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
+        //         if (!resultValue) {
+        //             _result.binaryPrimaryOperation = true;
+        //         } else if (resultValue) {
+        //             _result.binarySecondaryOperation = true;
+        //         }
+        //     }
+        // };
 
         // [_result, rawUserInput] = this.preMathsFormatting(
         //     _result,
@@ -429,7 +375,7 @@ class Calculator extends Component {
         // computationData.resultComputed = true;
         // computationData.computationType = _result.operationType;
         // computationData.previousResultValue = _result.value.toString();
-        // computationData = formatCalculation(computationData);
+        // computationData = formatComputableString(computationData);
         // this.setState({
         //     computationData,
         // });
@@ -457,22 +403,34 @@ class Calculator extends Component {
             this.state.computationData,
             this.state.computationData.resultValue
         );
-        if (computationData.operator !== "=") {
+        if (computationData.computed) {
+            delete computationData.computed;
+        }
+        if (
+            operator !== "=" &&
+            !CONSTANTS.UNARY_OPERATOR_REGEX.test(operator)
+        ) {
             /**
              * maths operator
              */
             computationData.rawUserInput = resultValue + operator;
-        } else {
+        } else if (CONSTANTS.UNARY_OPERATOR_REGEX.test(operator)) {
+            console.log("UNARY_OPERATOR_REGEX hit - s or r pressed");
             // computationData.calculationValue ="";
-            computationData.rawUserInput = "";
+            // computationData.rawUserInput = "";
             // computationData.resultValue = "";
+            computationData.rawUserInput = resultValue;
+
+            computationData.calculationValue = convertFromCharToUnicode(
+                calculationValue + operator
+            );
         }
 
         this.setState(
             {
                 computationData: computationData,
-            },
-            this.parseUserInput
+            }
+            // this.parseUserInput
         );
     };
 

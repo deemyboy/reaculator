@@ -1,7 +1,7 @@
 // allowed key codes for keyPress event handler
 export const ALLOWED_KEYS = [
-    8, 13, 16, 17, 27, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 67, 77, 82,
-    83, 88, 89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109,
+    8, 13, 16, 17, 27, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 67, 77, 82, 83,
+    88, 89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109,
     110, 111, 187, 189, 190, 191,
 ];
 
@@ -97,8 +97,8 @@ export const numberKeys = [
     {
         id: 11,
         value: "m",
-        uniChar: "\u00B1",
-        uniChar: "\u207A\u2215\u208b",
+        // uniChar: "\u00B1",
+        uniChar: "\u207A\u2044-",
         title: "plus minus (m)",
         keycode: 77,
         code: "KeyM",
@@ -128,6 +128,7 @@ export const functionKeys = [
         id: 13,
         value: "x",
         uniChar: "\u00D7",
+        calculationDisplayChar: "\u00D7",
         title: "multiply (x)",
         keycode: 88,
         code: "KeyX",
@@ -159,9 +160,8 @@ export const functionKeys = [
     {
         id: 21,
         value: "r",
-        uniChar: "\u221A" + "2",
+        uniChar: "\u221A2",
         calculationDisplayChar: "\u221A",
-        // calculationDisplayChar: "\u00B2\u221A",
         title: "square root (r)",
         keycode: 82,
         code: "KeyR",
@@ -173,7 +173,7 @@ export const functionKeys = [
         id: 20,
         value: "y",
         uniChar: "\uD835\uDC65\u02B8",
-        calculationDisplayChar: "\uD835\uDC65\u02B8",
+        calculationDisplayChar: "\u02B8",
         title: "x to the power y (y)",
         keycode: 89,
         code: "KeyY",
@@ -200,7 +200,8 @@ export const utilityKeys = [
         keycode: 8,
         code: "Backspace",
         type: "func",
-        subTitle: "\u2190", // left arrow
+        subTitle: "\u232b", // erase left
+        // subTitle: "\u2190", // left arrow
         // subTitle: "\u27A9", // left arrow 3d
         // subTitle: "bksp",
     },

@@ -1,30 +1,21 @@
-import { patternStack } from "../js/constants.js";
-import { functionKeys } from "../js/keys.js";
-export const formatCalculation = (computationData) => {
-    // console.log("formatCalculation", computationData);
+import { patternStack } from "./constants.js";
+import { functionKeys } from "./keys.js";
+import {
+    convertFromUnicodeToChar,
+    convertFromCharToUnicode,
+} from "./maths_engine.mjs";
+
+export const formatComputableString = (computationData) => {
+    // console.log("formatComputableString", computationData);
+    computationData.calculationValue = convertFromUnicodeToChar(
+        computationData.calculationValue
+    );
     let _formattedData;
     if (computationData.resultComputed) {
         // console.log("we just completed a math!", computationData);
         delete computationData.resultComputed;
         // console.log(computationData.calculationValue.charAt(computationData.calculationValue.length - 1));
     }
-    // if (
-    //     computationData.resultValue &&
-    //     computationData.calculationValue.charAt(computationData.calculationValue.length - 1) !== "="
-    // ) {
-    //     computationData.calculationValue =
-    //         computationData.resultValue +
-    //         computationData.calculationValue.charAt(computationData.calculationValue.length - 1);
-    //     // delete computationData.resultValue;
-    // } else {
-    //     computationData.calculationValue = computationData.calculationValue.replace(/.$/, "");
-    //     computationData.equalsPressed = true;
-    // }
-    // return computationData;
-    // } else if (computationData.nextOperator) {
-    //     computationData.calculationValue = computationData.calculationValue + computationData.nextOperator;
-    //     return computationData;
-    // }
 
     // NOT resultComputed simple formatting
     // console.log("NO result - simple formatting!", computationData);
@@ -37,16 +28,21 @@ export const formatCalculation = (computationData) => {
             _formattedData
         );
     }
+    if (_formattedData.calculationValue) {
+        _formattedData.calculationValue = convertFromCharToUnicode(
+            _formattedData.calculationValue
+        );
+    }
 
     return _formattedData;
 };
 
-const formatCalculation2 =
+const formatComputableString2 =
     (repairs) => (pattern, name, computationData, formattedData) => {
-        // console.log("formatCalculation2", name, computationData, formattedData);
+        // console.log("formatComputableString2", name, computationData, formattedData);
         if (pattern.test(computationData.calculationValue) && !formattedData) {
             console.log(
-                "formatCalculation2 |",
+                "formatComputableString2 |",
                 name,
                 "computationData=",
                 computationData
@@ -251,6 +247,8 @@ const repairStack = {
     },
     M_CATCHER: function (computationData) {
         // console.log(`M_CATCHER ${computationData.calculationValue}`);
+        computationData.calculationValue =
+            computationData.calculationValue.replace(/.$/, "");
         return computationData;
     },
     C_CATCHER: function (computationData) {
@@ -258,62 +256,72 @@ const repairStack = {
         let _value = computationData.calculationValue;
         let matches = _value.match(patternStack.C_CATCHER);
         if (matches) {
-            computationData.calculationValue = matches[1].replace(/.$/, "");
-            computationData.updateUserInput = true;
+            computationData.calculationValue =
+                computationData.calculationValue.replace(/.c$/, "");
+            computationData.rawUserInput = computationData.rawUserInput.replace(
+                /.c$/,
+                ""
+            );
+            // computationData.updateUserInput = true;
         }
         return computationData;
     },
     A_CATCHER: function (computationData) {
-        // console.log(`A_CATCHER ${computationData.calculationValue}`);
-        computationData.calculationValue = "";
-        computationData.updateUserInput = true;
-        computationData.clearResult = true;
-        computationData.clearAll = true;
-        return computationData;
-    },
-    UNICHAR_REPLACEMENT_CATCHER: function (computationData) {
-        console.log(
-            `UNICHAR_REPLACEMENT_CATCHER ${computationData.calculationValue}`
-        );
-        const getCalculationDisplayChar = (char) => {
-            //
-            let _key = functionKeys.find((k) => {
-                return k.value === char;
-            });
-            if (_key && _key.calculationDisplayChar) {
-                return _key.calculationDisplayChar;
-            } else {
-                return char;
-            }
+        console.log(`A_CATCHER ${computationData.calculationValue}`);
+        computationData = {
+            calculationClassName: "calculation",
+            calculationValue: undefined,
+            resultClassName: "result",
+            resultDefaultClass: "result",
+            resultErrorClass: "result_err",
+            resultValue: undefined,
+            rawUserInput: undefined,
         };
-        let idx = patternStack.UNICHAR_REPLACEMENT_CATCHER.exec(
-                computationData.calculationValue
-            ).index,
-            _charToReplace = computationData.calculationValue.charAt(idx);
-        // _charToReplace = "s";
-
-        computationData.calculationValue =
-            computationData.calculationValue.replace(
-                // "/",
-                _charToReplace,
-                getCalculationDisplayChar(_charToReplace)
-            );
-
-        computationData.updateUserInput = true;
-        console.log(
-            computationData.calculationValue
-                .charAt(idx)
-                .codePointAt(0)
-                .toString(16)
-        );
         return computationData;
     },
+    // UNICHAR_REPLACEMENT_CATCHER: function (computationData) {
+    //     console.log(
+    //         `UNICHAR_REPLACEMENT_CATCHER ${computationData.calculationValue}`
+    //     );
+    //     const getCalculationDisplayChar = (char) => {
+    //         //
+    //         let _key = functionKeys.find((k) => {
+    //             return k.value === char;
+    //         });
+    //         if (_key && _key.calculationDisplayChar) {
+    //             return _key.calculationDisplayChar;
+    //         } else {
+    //             return char;
+    //         }
+    //     };
+    //     let idx = patternStack.UNICHAR_REPLACEMENT_CATCHER.exec(
+    //             computationData.calculationValue
+    //         ).index,
+    //         _charToReplace = computationData.calculationValue.charAt(idx);
+    //     // _charToReplace = "s";
+
+    //     computationData.calculationValue =
+    //         computationData.calculationValue.replace(
+    //             // "/",
+    //             _charToReplace,
+    //             getCalculationDisplayChar(_charToReplace)
+    //         );
+
+    //     computationData.updateUserInput = true;
+    //     console.log(
+    //         computationData.calculationValue
+    //             .charAt(idx)
+    //             .codePointAt(0)
+    //             .toString(16)
+    //     );
+    //     return computationData;
+    // },
 };
 
 const pregReplaceOperators = (computationData) => {
     //
 };
 
-const getPatternOperation = formatCalculation2(repairStack);
+const getPatternOperation = formatComputableString2(repairStack);
 
-export default formatCalculation;
+export default formatComputableString;

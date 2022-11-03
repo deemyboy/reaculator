@@ -12,9 +12,31 @@ export const convertFromUnicodeToChar = (_input) => {
         if (!/\d/.test(c)) {
             let found = false;
             [...functionKeys].forEach((k) => {
-                if (found === false) {
-                    if (k.uniChar === c) {
+                if (found === false && k.calculationDisplayChar) {
+                    if (k.calculationDisplayChar === c) {
                         _input = _input.replace(_input.charAt(count), k.value);
+                        found = true;
+                    }
+                }
+            });
+        }
+        count++;
+    });
+    return _input;
+};
+
+export const convertFromCharToUnicode = (_input) => {
+    let count = 0;
+    [..._input].forEach((c) => {
+        if (!/\d/.test(c)) {
+            let found = false;
+            [...functionKeys].forEach((k) => {
+                if (found === false && k.calculationDisplayChar) {
+                    if (k.value === c) {
+                        _input = _input.replace(
+                            _input.charAt(count),
+                            k.calculationDisplayChar
+                        );
                         found = true;
                     }
                 }
