@@ -14,7 +14,7 @@ import {
     convertFromUnicodeToChar,
     convertFromCharToUnicode,
 } from "./js/maths_engine.mjs";
-import formatComputableString from "./js/format_computable_string.mjs";
+import purifyRawUserInput from "./js/purify_raw_user_input.mjs";
 import "./styles/main.scss";
 
 class Calculator extends Component {
@@ -39,26 +39,24 @@ class Calculator extends Component {
         animation: "",
         pictureType: "still",
         calculationData: {
-            className: "calculation",
+            className: "default",
             value: "",
         },
         resultData: {
-            className: "result",
+            className: "default",
             value: undefined,
-            defaultClass: "result",
-            errorClass: "result_err",
         },
         sidebarIsOpen: false,
         keyErr: false,
         rawUserInput: "",
         computationData: {
-            calculationClassName: "calculation",
             calculationValue: undefined,
-            resultClassName: "result",
-            resultDefaultClass: "result",
-            resultErrorClass: "result_err",
-            resultValue: undefined,
+            computed: undefined,
+            nextChar: undefined,
+            operationType: undefined,
+            operator: undefined,
             rawUserInput: undefined,
+            resultValue: undefined,
         },
     };
 
@@ -344,8 +342,8 @@ class Calculator extends Component {
             this.setState(
                 {
                     computationData,
-                },
-                this.postResultPreperation
+                }
+                // this.postResultPreperation
             );
             // no result from a maths computation
             // continue to process the user input
@@ -359,19 +357,19 @@ class Calculator extends Component {
          */
         else {
             computationData.calculationValue = computationData.rawUserInput;
-            computationData = formatComputableString(computationData);
-            if (computationData.updateUserInput) {
-                delete computationData.updateUserInput;
-                (computationData.rawUserInput =
-                    computationData.calculationValue),
-                    this.setState({
-                        computationData,
-                    });
-            } else {
-                this.setState({
-                    computationData: { ...computationData },
-                });
-            }
+            computationData = purifyRawUserInput(computationData);
+            // if (computationData.updateUserInput) {
+            //     delete computationData.updateUserInput;
+            //     (computationData.rawUserInput =
+            //         computationData.calculationValue),
+            //         this.setState({
+            //             computationData,
+            //         });
+            // } else {
+            this.setState({
+                computationData: { ...computationData },
+            });
+            // }
             return;
         }
 
@@ -426,7 +424,7 @@ class Calculator extends Component {
         // computationData.resultComputed = true;
         // computationData.computationType = _result.operationType;
         // computationData.previousResultValue = _result.value.toString();
-        // computationData = formatComputableString(computationData);
+        // computationData = purifyRawUserInput(computationData);
         // this.setState({
         //     computationData,
         // });
@@ -435,16 +433,12 @@ class Calculator extends Component {
 
     postResultPreperation = () => {
         let {
-                calculationClassName,
                 calculationValue,
                 computed,
                 nextChar,
                 operationType,
                 operator,
                 rawUserInput,
-                resultClassName,
-                resultDefaultClass,
-                resultErrorClass,
                 resultValue,
             } = this.state.computationData,
             computationData = this.state.computationData;
@@ -489,16 +483,12 @@ class Calculator extends Component {
             this.state.computationData.resultValue
         );
         let {
-                calculationClassName,
                 calculationValue,
                 computed,
                 nextChar,
                 operationType,
                 operator,
                 rawUserInput,
-                resultClassName,
-                resultDefaultClass,
-                resultErrorClass,
                 resultValue,
             } = this.state.computationData,
             computationData = this.state.computationData;
@@ -816,9 +806,9 @@ class Calculator extends Component {
         return sidebarData;
     };
 
-    setResultErrorClass = () => {
+    setResultClass = () => {
         let { resultData } = { ...this.state };
-        resultData.resultClass = this.state.resultData.resultErrorClass;
+        resultData.resultClass = this.state.resultData;
         this.setState({ resultData, keyErr: true });
     };
 
@@ -865,8 +855,8 @@ class Calculator extends Component {
                     </Typography>
                     {/* ------------ display ---------------- */}
                     <Display
-                        calculationData={{ ...this.state.computationData }}
-                        resultData={{ ...this.state.computationData }}
+                        calculationData={{ ...this.state.calculationData }}
+                        resultData={{ ...this.state.resultData }}
                     />
                     {/* ------------ main keyboards ---------------- */}
                     <Grid

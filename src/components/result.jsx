@@ -3,6 +3,10 @@ import { Paper } from "@mui/material";
 
 const Result = React.forwardRef((props, ref) => {
     let { resultValue, resultClassName } = props.resultData;
+
+    const resultErrorClassName = "result_err",
+        resultDefaultClassName = "result";
+
     resultValue = resultValue ? resultValue : "0";
     return (
         <React.Fragment>
