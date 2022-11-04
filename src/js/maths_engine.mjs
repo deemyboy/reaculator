@@ -78,14 +78,6 @@ export const doMaths = (computationData) => {
         computationData.rawUserInput
     );
 
-    // console.log("doMaths _computationalUnit", _computationalUnit);
-    // if (!patternStack.MATH_CATCHER.test(input)) {
-    //     console.log("FAILED - NOT valid computational unit");
-    //     let _failed = {};
-    //     _failed.computed = false;
-    //     return _failed;
-    // }
-
     let _result = {},
         _computationalUnit = extractComputationParts(
             computationData.rawUserInput

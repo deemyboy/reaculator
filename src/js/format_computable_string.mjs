@@ -11,13 +11,13 @@ export const formatComputableString = (computationData) => {
         computationData.calculationValue
     );
     let _formattedData;
-    if (computationData.resultComputed) {
-        // console.log("we just completed a math!", computationData);
-        delete computationData.resultComputed;
-        // console.log(computationData.calculationValue.charAt(computationData.calculationValue.length - 1));
-    }
+    // if (computationData.computed) {
+    //     // console.log("we just completed a math!", computationData);
+    //     delete computationData.computed;
+    //     // console.log(computationData.calculationValue.charAt(computationData.calculationValue.length - 1));
+    // }
 
-    // NOT resultComputed simple formatting
+    // NOT computed simple formatting
     // console.log("NO result - simple formatting!", computationData);
     for (const key in patternStack) {
         _formattedData = undefined;

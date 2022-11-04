@@ -279,6 +279,57 @@ class Calculator extends Component {
     parseUserInput = () => {
         let computationData = { ...this.state.computationData };
 
+        /**
+         * 2 situations
+         *
+         * 1. not ready for maths
+         * a. fresh
+         * b. secondary
+         *
+         * 2. ready for maths
+         * a. fresh math
+         * b. secondary math
+         *
+         * 4. fresh math
+         * 5. secondary math
+         *
+         * hallmarks
+         *
+         * fresh math
+         *
+         *      (current) result value -    null
+         *      computed -                  false
+         *      previous result -           null
+         *      previous operator -         null
+         *      computation type -          null
+         *      next operator -             null
+         *
+         * secondary math
+         *
+         *      (current) result value -    NOT null
+         *      computed -                  true
+         *      previous result -           NOT null
+         *      previous operator -         NOT null
+         *      computation type -          unary or binary
+         *          unary
+         *      next operator -             null
+         *          binary
+         *      next operator -             NOT null
+         *
+         * tests to do
+         *
+         * 1. fresh or secondary
+         *  is computed true
+         *
+         *  yes - pre-process
+         *  no - is this 4
+         *  yes - 4
+         *  no - 1
+         *  is it 1a?
+         *  yes - do 1a
+         *  no - do ib
+         *
+         */
         // if (computationData.resultValue !== undefined) {
         // } else {
         //     computationData = { ...this.state.computationData };
@@ -426,12 +477,9 @@ class Calculator extends Component {
             );
         }
 
-        this.setState(
-            {
-                computationData: computationData,
-            }
-            // this.parseUserInput
-        );
+        this.setState({
+            computationData: computationData,
+        });
     };
 
     prepareForNextCalculation = () => {
