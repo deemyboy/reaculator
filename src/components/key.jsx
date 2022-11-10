@@ -1,93 +1,123 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button } from "@mui/material";
 import { Typography, Box } from "@mui/material";
+import HandleClickContext from "../js/context";
 
-const Key = React.forwardRef((props, ref) => {
+import {
+    numberKeys,
+    functionKeys,
+    utilityKeys,
+    themeTypeKeys,
+    themeKeys,
+    animKeys,
+    pictureKeys,
+} from "../js/keys";
+
+const Key = (props) => {
+    const handleClick = useContext(HandleClickContext);
     const setKeyClasses = (keyObj) => {
-        let classes = "btn btn-lg";
-        const numClass = "btn-primary";
-        const funcClass = "btn-secondary";
-        const thmClass = "btn-theme";
-        const thmTypeClass = "btn-theme-type";
-        const picTypeClass = "btn-pic-type";
-        const errClass = "btn-error";
-        const useMeClass = "btn-use-me";
+        let classNames = "btn btn-lg";
+
+        const classStack = {
+            numClass: "btn-primary",
+            funcClass: "btn-secondary",
+            thmClass: "btn-theme",
+            thmTypeClass: "btn-theme-type",
+            picTypeClass: "btn-pic-type",
+            errClass: "btn-error",
+            useMeClass: "btn-use-me",
+        };
         const specialClass = keyObj.specialClass ? keyObj.specialClass : "";
         const errState = props.keyErr ? props.keyErr : "";
         const selected = keyObj.selected ? "selected" : "";
 
         if (keyObj.type === "num") {
-            classes += " " + numClass;
+            classNames += " " + classStack.numClass;
         } else if (keyObj.type === "func") {
-            classes += " " + funcClass;
+            classNames += " " + classStack.funcClass;
         } else if (keyObj.type === "thm") {
-            classes += " " + thmClass;
+            classNames += " " + classStack.thmClass;
         } else if (keyObj.type === "thype") {
-            classes += " " + thmTypeClass;
+            classNames += " " + classStack.thmTypeClass;
         } else if (keyObj.type === "picTypeChs") {
-            classes += " " + picTypeClass;
+            classNames += " " + classStack.picTypeClass;
         }
         if (specialClass) {
-            classes += " " + specialClass;
+            classNames += " " + specialClass;
         }
         if (selected) {
-            classes += " " + selected;
+            classNames += " " + selected;
         }
         if (errState) {
             if (keyObj.value !== "a") {
-                classes += " " + errClass;
+                classNames += " " + errClass;
             } else {
-                classes += " " + useMeClass;
+                classNames += " " + useMeClass;
             }
         }
 
-        return classes;
+        return classNames;
     };
-    let title, subTitle;
-    if (props.kObj.showTitle) {
-        title = (
-            <Typography className="sidebar-btn-title">
-                {props.kObj.title}
-            </Typography>
-        );
+    const keys = [
+        ...numberKeys,
+        ...functionKeys,
+        ...utilityKeys,
+        ...themeTypeKeys,
+        ...themeKeys,
+        ...animKeys,
+        ...pictureKeys,
+    ];
+    let _title, _subTitle;
+
+    const _key = keys.find((key) => {
+        return key.id === props.id;
+    });
+
+    const { id, value, title, keycode, code, type, location } = _key;
+
+    const { uniChar } = _key || "";
+    const { specialClass } = _key || "";
+    const { showTitle } = _key || "";
+    const { calculationDisplayChar } = _key || "";
+    const { subTitle } = _key || "";
+
+    if (showTitle) {
+        _title = <Typography className="sidebar-btn-title">{title}</Typography>;
     } else {
-        title = "";
+        _title = "";
     }
-    if (props.kObj.subTitle) {
-        subTitle = (
-            <Typography className="btn-subtitle">
-                {props.kObj.subTitle}
-            </Typography>
+    if (subTitle) {
+        _subTitle = (
+            <Typography className="btn-subtitle">{subTitle}</Typography>
         );
     } else {
-        subTitle = "";
+        _subTitle = "";
     }
 
     let boxClassName;
-    if (props.location === "sidebar") {
+    if (location === "sidebar") {
         boxClassName = "sidebar-btn-wrapper";
-    } else if (props.location === "main") {
+    } else if (location === "main") {
         boxClassName = "main-btn-wrapper";
     }
 
     return (
         <React.Fragment>
             <Box className={boxClassName}>
-                {title}
+                {_title}
                 <Button
-                    ref={ref.id}
-                    id={props.kObj.id}
-                    className={setKeyClasses(props.kObj)}
-                    onClick={(e) => props.handleClick(e)}
+                    id={id}
+                    className={setKeyClasses(_key)}
+                    onClick={(e) => handleClick(e)}
                     size="large"
-                    title={props.kObj.title}
+                    title={title}
                     variant={"outlined"}
                 >
-                    {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
+                    {uniChar ? uniChar : value}
                 </Button>
-                {subTitle}
+                {_subTitle}
             </Box>
         </React.Fragment>
     );
-});
+};
 export default Key;

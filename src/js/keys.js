@@ -1,3 +1,11 @@
+// import {
+//     handleClick,
+//     onSelectThemeType,
+//     onSelectTheme,
+//     onSelectAnimation,
+//     onSelectPictureType,
+// } from "../calculator";
+
 // allowed key codes for keyPress event handler
 export const ALLOWED_KEYS = [
     8, 13, 16, 17, 27, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 67, 77, 82, 83,
@@ -13,6 +21,7 @@ export const numberKeys = [
         keycode: 49,
         code: "Digit1",
         type: "num",
+        location: "main",
     },
     {
         id: 2,
@@ -21,6 +30,7 @@ export const numberKeys = [
         keycode: 50,
         code: "Digit2",
         type: "num",
+        location: "main",
     },
     {
         id: 3,
@@ -29,6 +39,7 @@ export const numberKeys = [
         keycode: 51,
         code: "Digit3",
         type: "num",
+        location: "main",
     },
     {
         id: 4,
@@ -37,6 +48,7 @@ export const numberKeys = [
         keycode: 52,
         code: "Digit4",
         type: "num",
+        location: "main",
     },
     {
         id: 5,
@@ -45,6 +57,7 @@ export const numberKeys = [
         keycode: 53,
         code: "Digit5",
         type: "num",
+        location: "main",
     },
     {
         id: 6,
@@ -53,6 +66,7 @@ export const numberKeys = [
         keycode: 54,
         code: "Digit6",
         type: "num",
+        location: "main",
     },
     {
         id: 7,
@@ -61,6 +75,7 @@ export const numberKeys = [
         keycode: 55,
         code: "Digit7",
         type: "num",
+        location: "main",
     },
     {
         id: 8,
@@ -69,6 +84,7 @@ export const numberKeys = [
         keycode: 56,
         code: "Digit8",
         type: "num",
+        location: "main",
     },
     {
         id: 9,
@@ -77,6 +93,7 @@ export const numberKeys = [
         keycode: 57,
         code: "Digit9",
         type: "num",
+        location: "main",
     },
     {
         id: 0,
@@ -85,6 +102,7 @@ export const numberKeys = [
         keycode: 48,
         code: "Digit0",
         type: "num",
+        location: "main",
     },
     {
         id: 10,
@@ -93,6 +111,7 @@ export const numberKeys = [
         keycode: 190,
         code: "Period",
         type: "num",
+        location: "main",
     },
     {
         id: 11,
@@ -103,6 +122,7 @@ export const numberKeys = [
         keycode: 77,
         code: "KeyM",
         type: "num",
+        location: "main",
         subTitle: "m",
     },
 ];
@@ -115,6 +135,7 @@ export const functionKeys = [
         keycode: 187,
         code: "Equal",
         type: "func",
+        location: "main",
     },
     {
         id: 12,
@@ -123,6 +144,7 @@ export const functionKeys = [
         keycode: 189,
         code: "Minus",
         type: "func",
+        location: "main",
     },
     {
         id: 13,
@@ -133,6 +155,7 @@ export const functionKeys = [
         keycode: 88,
         code: "KeyX",
         type: "func",
+        location: "main",
         subTitle: "x",
     },
     {
@@ -144,6 +167,7 @@ export const functionKeys = [
         keycode: 191,
         code: "Slash",
         type: "func",
+        location: "main",
         subTitle: "/",
     },
     {
@@ -155,6 +179,7 @@ export const functionKeys = [
         keycode: 83,
         code: "KeyS",
         type: "func",
+        location: "main",
         subTitle: "s",
     },
     {
@@ -166,6 +191,7 @@ export const functionKeys = [
         keycode: 82,
         code: "KeyR",
         type: "func",
+        location: "main",
         ctrlKey: false,
         subTitle: "r",
     },
@@ -178,6 +204,7 @@ export const functionKeys = [
         keycode: 89,
         code: "KeyY",
         type: "func",
+        location: "main",
         subTitle: "y",
     },
     {
@@ -188,6 +215,7 @@ export const functionKeys = [
         keycode: 187,
         code: "Equal",
         type: "func",
+        location: "main",
     },
 ];
 
@@ -200,6 +228,7 @@ export const utilityKeys = [
         keycode: 8,
         code: "Backspace",
         type: "func",
+        location: "main",
         subTitle: "\u232b", // erase left
         // subTitle: "\u2190", // left arrow
         // subTitle: "\u27A9", // left arrow 3d
@@ -214,65 +243,8 @@ export const utilityKeys = [
         keycode: 27,
         code: "Escape",
         type: "func",
+        location: "main",
         subTitle: "esc",
-    },
-];
-
-export const themeKeys = [
-    {
-        id: "fire",
-        value: "fire",
-        specialClass: "btn-fire fire",
-        uniChar: "\uD83D\uDD25",
-        title: "fire",
-        keycode: 55,
-        code: "Digit7",
-        type: "thm",
-        showTitle: true,
-    },
-    {
-        id: "midnight",
-        value: "midnight",
-        specialClass: "btn-midnight midnight",
-        uniChar: "\uD83C\uDF03",
-        title: "midnight",
-        keycode: 55,
-        code: "Digit7",
-        type: "thm",
-        showTitle: true,
-    },
-    {
-        id: "ocean",
-        value: "ocean",
-        specialClass: "btn-ocean ocean",
-        uniChar: "\uD83C\uDF0A",
-        title: "ocean",
-        keycode: 55,
-        code: "Digit7",
-        type: "thm",
-        showTitle: true,
-    },
-    {
-        id: "storm",
-        value: "storm",
-        specialClass: "btn-storm storm",
-        uniChar: "\u2614",
-        title: "storm",
-        keycode: 55,
-        code: "Digit7",
-        type: "thm",
-        showTitle: true,
-    },
-    {
-        id: "jungle",
-        value: "jungle",
-        specialClass: "btn-jungle jungle",
-        uniChar: "\uD83C\uDF33",
-        title: "jungle",
-        keycode: 55,
-        code: "Digit7",
-        type: "thm",
-        showTitle: true,
     },
 ];
 
@@ -286,6 +258,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
+        location: "sidebar",
         showTitle: true,
     },
     {
@@ -297,6 +270,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
+        location: "sidebar",
         showTitle: true,
     },
     {
@@ -309,42 +283,70 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
+        location: "sidebar",
         showTitle: true,
     },
 ];
 
-export const imageKeys = [
+export const themeKeys = [
     {
-        id: "trees",
-        value: "trees",
-        specialClass: "btn-img-choose",
-        uniChar: "\uD83D\uDCF7",
-        title: "picture image",
-        keycode: 65,
-        code: "KeyA",
-        type: "imgChs",
+        id: "fire",
+        value: "fire",
+        specialClass: "btn-fire fire",
+        uniChar: "\uD83D\uDD25",
+        title: "fire",
+        keycode: 55,
+        code: "Digit7",
+        type: "thm",
+        location: "sidebar",
         showTitle: true,
     },
     {
-        id: "rays",
-        value: "rays",
-        specialClass: "btn-img-choose",
-        uniChar: "\uD83C\uDFA8",
-        title: "color image",
-        keycode: 65,
-        code: "KeyA",
-        type: "imgChs",
+        id: "midnight",
+        value: "midnight",
+        specialClass: "btn-midnight midnight",
+        uniChar: "\uD83C\uDF03",
+        title: "midnight",
+        keycode: 55,
+        code: "Digit7",
+        type: "thm",
+        location: "sidebar",
         showTitle: true,
     },
     {
-        id: "leaves",
-        value: "leaves",
-        specialClass: "btn-img-choose",
-        uniChar: "\uD83C\uDFA8",
-        title: "color image",
-        keycode: 65,
-        code: "KeyA",
-        type: "imgChs",
+        id: "ocean",
+        value: "ocean",
+        specialClass: "btn-ocean ocean",
+        uniChar: "\uD83C\uDF0A",
+        title: "ocean",
+        keycode: 55,
+        code: "Digit7",
+        type: "thm",
+        location: "sidebar",
+        showTitle: true,
+    },
+    {
+        id: "storm",
+        value: "storm",
+        specialClass: "btn-storm storm",
+        uniChar: "\u2614",
+        title: "storm",
+        keycode: 55,
+        code: "Digit7",
+        type: "thm",
+        location: "sidebar",
+        showTitle: true,
+    },
+    {
+        id: "jungle",
+        value: "jungle",
+        specialClass: "btn-jungle jungle",
+        uniChar: "\uD83C\uDF33",
+        title: "jungle",
+        keycode: 55,
+        code: "Digit7",
+        type: "thm",
+        location: "sidebar",
         showTitle: true,
     },
 ];
@@ -360,6 +362,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
+        location: "sidebar",
         showTitle: true,
     },
     {
@@ -373,6 +376,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
+        location: "sidebar",
         showTitle: true,
     },
     {
@@ -387,6 +391,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
+        location: "sidebar",
         showTitle: true,
     },
 ];
@@ -405,6 +410,7 @@ export const pictureKeys = [
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
+        location: "sidebar",
         showTitle: true,
     },
     {
@@ -416,6 +422,7 @@ export const pictureKeys = [
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
+        location: "sidebar",
         showTitle: true,
     },
 ];

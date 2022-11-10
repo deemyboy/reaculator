@@ -1,12 +1,19 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
 import Sidebar from "./components/sidebar";
 import Cookies from "universal-cookie";
-import keyboards from "./js/keyboards";
-// import regexParser from "./js/regex_parser";
-import { numberKeys, functionKeys, utilityKeys, ALLOWED_KEYS } from "./js/keys";
+import {
+    numberKeys,
+    functionKeys,
+    utilityKeys,
+    themeTypeKeys,
+    themeKeys,
+    animKeys,
+    pictureKeys,
+    ALLOWED_KEYS,
+} from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./js/constants";
 import {
@@ -16,57 +23,199 @@ import {
 } from "./js/maths_engine.mjs";
 import purifyRawUserInput from "./js/purify_raw_user_input.mjs";
 import "./styles/main.scss";
+import keyboards from "./js/keyboards";
 
-class Calculator extends Component {
-    displayRef = React.createRef();
-    canvasRef = React.createRef();
-    constructor(props) {
-        super(props);
+const cookie = new Cookies();
 
-        this.state.theme = this.getCookie("currentTheme", "theme");
-        this.state.themeType = this.getCookie("currentThemeType", "themeType");
-        this.state.animation = this.getCookie("currentAnimation", "animation");
-        this.state.pictureType = this.getCookie(
-            "currentPictureType",
-            "pictureType"
-        );
-    }
+import {
+    HandleClickContextProvider,
+    OnSelectContextProvider,
+} from "./js/context";
 
-    state = {
-        title: "Reaculator",
-        theme: "Ocean",
-        themeType: "color",
-        animation: "",
-        pictureType: "still",
-        calculationData: {
-            className: "default",
-            value: "",
-        },
-        resultData: {
-            className: "default",
-            value: undefined,
-        },
-        sidebarIsOpen: false,
-        keyErr: false,
-        rawUserInput: "",
-        computationData: {
-            calculationValue: undefined,
-            computed: undefined,
-            nextChar: undefined,
-            operationType: undefined,
-            operator: undefined,
-            rawUserInput: undefined,
-            resultValue: undefined,
-        },
+const Calculator = () => {
+    // displayRef = React.createRef();
+    const displayRef = useRef(null);
+    // canvasRef = React.createRef();
+    const canvasRef = useRef(null);
+    // constructor(props) {
+    //     super(props);
+
+    //     theme = getCookie("currentTheme", "theme");
+    //     themeType = getCookie("currentThemeType", "themeType");
+    //     animation = getCookie("currentAnimation", "animation");
+    //     pictureType = getCookie(
+    //         "currentPictureType",
+    //         "pictureType"
+    //     );
+    // }
+
+    const title = "Reaculator";
+
+    const handleClick = (e) => {
+        console.log(e);
+        e.target.blur();
+        const keyClicked = utilityKeys
+            .concat(numberKeys, functionKeys)
+            .filter((k) => {
+                return k.id.toString() === e.target.id;
+            });
+        let _clickData = {
+            key: keyClicked[0].value ? keyClicked[0].value : "",
+            ctrlKey: false,
+            shiftKey: false,
+        };
+        setClickData(_clickData);
     };
 
-    componentDidMount() {
-        document.addEventListener("keydown", (e) => this.handleKeyPress(e));
+    const onSelectThemeType = (e) => {
+        e.stopPropagation();
+        let cookieData = {};
+        let _themeTypeData = {};
+        _themeTypeData.currentSetting = e.target.id;
+        cookieData.cookieLabel = "currentThemeType";
+        cookieData.cookieValue = _themeTypeData.currentSetting;
+        cookieData.cookiePath = "/";
+        setThemeType(_themeTypeData.currentSetting);
+    };
+
+    const onSelectTheme = (e) => {
+        e.stopPropagation();
+        let cookieData = {};
+        let _themesData = {};
+        _themesData.currentSetting = e.target.id;
+        cookieData.cookieLabel = "currentTheme";
+        cookieData.cookieValue = _themesData.currentSetting;
+        cookieData.cookiePath = "/";
+        setTheme(_themesData.currentSetting);
+        // setCookie(cookieData);
+    };
+
+    const onSelectAnimation = (e) => {
+        e.stopPropagation();
+        let cookieData = {};
+        let _animation = e.target.id;
+        cookieData.cookieLabel = "currentAnimation";
+        cookieData.cookieValue = _animation;
+        cookieData.cookiePath = "/";
+        setAnimation(_animation);
+        // setCookie(cookieData);
+    };
+
+    const onSelectPictureType = (e) => {
+        e.stopPropagation();
+        let cookieData = {};
+        let _pictureType = {};
+        _pictureType = e.target.id;
+        cookieData.cookieLabel = "currentPictureType";
+        cookieData.cookieValue = _pictureType;
+        cookieData.cookiePath = "/";
+        setPictureType(_pictureType);
+        // setCookie(cookieData);
+    };
+
+    const [clickData, setClickData] = useState({
+        key: undefined,
+        ctrlKey: false,
+        shiftKey: false,
+    });
+
+    const [theme, setTheme] = useState("Ocean");
+
+    const [themeType, setThemeType] = useState("color");
+
+    useEffect(() => {
+        let _visibleKeyboards = getVisibleSidebarKeyboards();
+        sidebarData.keyboardNames = _visibleKeyboards;
+        setSidebarData({ ...sidebarData });
+    }, [themeType]);
+
+    const [animation, setAnimation] = useState("fireworks");
+
+    const [pictureType, setPictureType] = useState("still");
+
+    const [calculationData, setCalculationData] = useState({
+        className: "default",
+        value: "",
+    });
+
+    const [resultData, setResultData] = useState({
+        className: "default",
+        value: undefined,
+    });
+
+    const toggleSidebar = (e) => {
+        console.log(e, sidebarData);
+        e.preventDefault();
+        e.stopPropagation();
+        sidebarData.isOpen = !sidebarData.isOpen;
+        setSidebarData({ ...sidebarData });
+    };
+
+    const closeSidebar = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        sidebarData.isOpen = false;
+        setSidebarData({ ...sidebarData });
+    };
+
+    const getVisibleSidebarKeyboards = () => {
+        const defaultSidebarKeyboardNames = ["theme-type", "theme"];
+        let sidebarVisibleKeyboardNames = defaultSidebarKeyboardNames;
+
+        if (themeType !== "color") {
+            sidebarVisibleKeyboardNames.push(
+                themeType === "animation" ? "animation" : "picture-type"
+            );
+        }
+        // setSidebarData(
+        //     (sidebarData.keyboardNames = sidebarVisibleKeyboardNames)
+        // );
+        return sidebarVisibleKeyboardNames;
+    };
+
+    const [sidebarData, setSidebarData] = useState({
+        // keyboardNames: "",
+        // defaultSidebarKeyboardNames: ["theme-type", "theme"],
+        // keyboardNames: ["theme-type", "theme"],
+        keyboardNames: getVisibleSidebarKeyboards(),
+        isOpen: false,
+        selected: "",
+    });
+
+    const [keyErr, setKeyErr] = useState(false);
+
+    const [computationData, setComputationData] = useState({
+        calculationValue: undefined,
+        computed: undefined,
+        nextChar: undefined,
+        operationType: undefined,
+        operator: undefined,
+        rawUserInput: undefined,
+        resultValue: undefined,
+    });
+
+    // const getSidebarData = () => {
+    //     let sidebarData = {
+    //         isOpen: sidebarOpen,
+    //         keyboardNames: keyboardNames,
+    //         selected: getSelected(),
+    //     };
+    //     setSidebarData(sidebarData);
+    // };
+
+    useEffect(() => {
+        document.addEventListener("keydown", (e) => handleKeyPress(e));
 
         let _id = "animation-script",
-            _scriptName = this.state.animation;
+            _scriptName = animation;
 
-        if (this.state.themeType === "animation") {
+        const removeScript = (id) => {
+            if (document.getElementById(id)) {
+                document.getElementById(id).remove();
+            }
+        };
+
+        if (themeType === "animation") {
             var loadScript = function () {
                 var tag = document.createElement("script");
                 tag.id = _id;
@@ -76,11 +225,6 @@ class Calculator extends Component {
                 var body = document.getElementsByTagName("body")[0];
                 body.appendChild(tag);
             };
-            var removeScript = function (id) {
-                if (document.getElementById(id)) {
-                    document.getElementById(id).remove();
-                }
-            };
             if (document.getElementById(_id)) {
                 removeScript(_id);
             }
@@ -88,16 +232,13 @@ class Calculator extends Component {
         } else if (document.getElementById(_id)) {
             removeScript(_id);
         }
-    }
+        // }
 
-    componentDidUpdate(nextProps, nextState) {
-        let _id = "animation-script",
-            _scriptName = this.state.animation;
+        // useEffect((nextProps, nextState) => {
+        // let _id = "animation-script",
+        //     _scriptName = animation;
 
-        if (
-            this.state.themeType === "animation" &&
-            this.state.animation !== nextState.animation
-        ) {
+        if (themeType === "animation") {
             var loadScript = function () {
                 var tag = document.createElement("script");
                 tag.id = _id;
@@ -114,61 +255,95 @@ class Calculator extends Component {
             }
             loadScript();
         } else if (document.getElementById(_id)) {
-            var removeScript = function (id) {
-                var tag = document.getElementById(id);
-                if (tag) {
-                    tag.remove();
-                }
-            };
+            // var removeScript = function (id) {
+            //     var tag = document.getElementById(id);
+            //     if (tag) {
+            //         tag.remove();
+            //     }
+            // };
             removeScript(_id);
         }
-    }
+        // }
 
-    componentWillUnmount() {
-        document.removeEventListener("keydown", (e) => this.handleKeyPress(e));
-    }
+        // useEffect(() => {
+        document.removeEventListener("keydown", (e) => handleKeyPress(e));
+    }),
+        [sidebarData, animation];
 
-    setCookie = (cookieData) => {
-        let d = new Date();
-        let year = d.getFullYear();
-        let month = d.getMonth();
-        let day = d.getDate();
-        let expires = new Date(year + 1, month, day);
+    //    const [cookieData, setCookie] = useState(
+    //       {   d:  new Date(),
+    //          year:  d.getFullYear(),
+    //          month:  d.getMonth(),
+    //          day:  d.getDate(),
+    //          expires:  new Date(year + 1, month, day),
+    //            path: cookieData.cookiePath,
+    //            label: undefined,
+    //          value:undefined,
+    // }
 
-        const cookie = new Cookies();
+    // );
+    // const     setCookie(
+    //     cookie.set(
+    //     cookieData.cookieLabel,
+    //     cookieData.cookieValue,
+    //     path,
+    //     expires)
+    //     );
 
-        const path = cookieData.cookiePath;
-        cookie.set(
-            cookieData.cookieLabel,
-            cookieData.cookieValue,
-            path,
-            expires
+    // const     getCookie = (cookieLabel, cookieDefault) => {
+    //         const cookie = new Cookies();
+    //         return cookie.get(cookieLabel)
+    //             ? cookie.get(cookieLabel)
+    //             : state[cookieDefault];
+    //     };
+
+    const makeKeyboard = (keyboardName) => {
+        const data = keyboards.find((kb) => {
+            return kb.name === keyboardName;
+        });
+        return (
+            <HandleClickContextProvider value={handleClick}>
+                <Keyboard props={data} />
+            </HandleClickContextProvider>
         );
     };
 
-    getCookie = (cookieLabel, cookieDefault) => {
-        const cookie = new Cookies();
-        return cookie.get(cookieLabel)
-            ? cookie.get(cookieLabel)
-            : this.state[cookieDefault];
-    };
-
-    handleClick = (e) => {
-        e.target.blur();
-        const keyClicked = utilityKeys
-            .concat(numberKeys, functionKeys)
-            .filter((k) => {
-                return k.id.toString() === e.target.id;
-            });
-        let clickData = {
-            key: keyClicked[0].value ? keyClicked[0].value : "",
-            ctrlKey: false,
-            shiftKey: false,
+    const makeSidebar = (data) => {
+        const getOnSelect = (keyboardName) => {
+            return onSelectStack[keyboardName];
         };
-        this.handleUserInput(clickData);
+
+        const onSelectStack = {
+            "theme-type": onSelectThemeType,
+            theme: onSelectTheme,
+            animation: onSelectAnimation,
+            "picture-type": onSelectPictureType,
+        };
+        let _keyboards = [],
+            _keyboardData = {},
+            _data = data,
+            _onSelect;
+
+        data.keyboardNames.map((keyboardName) => {
+            _onSelect = getOnSelect(onSelectStack);
+            _keyboards.push(
+                <HandleClickContextProvider value={getOnSelect(keyboardName)}>
+                    <Keyboard
+                        props={keyboards.find((kb) => {
+                            return kb.name === keyboardName;
+                        })}
+                    />
+                </HandleClickContextProvider>
+            );
+            // delete _data.keyboardNames;
+            _keyboardData.keyboards = _keyboards;
+        });
+
+        _data.keyboards = _keyboards;
+        return <Sidebar props={_data} />;
     };
 
-    handleKeyPress = (e) => {
+    const handleKeyPress = (e) => {
         // prevent these keys firing
         // ctrl key 17, shift key 16 alt key 18
         // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
@@ -227,16 +402,14 @@ class Calculator extends Component {
                     console.log("Backspace");
                     keyData.key = "c";
                 }
-                this.handleUserInput(keyData);
+                handleUserInput(keyData);
             }
         }
     };
 
-    handleUserInput = (inputData) => {
-        let { computationData } = this.state;
-
+    const handleUserInput = (inputData) => {
         // if maths error then prevent all input except esc for ac
-        if (this.state.keyErr && inputData.key !== "a") {
+        if (keyErr && inputData.key !== "a") {
             return;
         }
         if (computationData.rawUserInput) {
@@ -268,14 +441,16 @@ class Calculator extends Component {
         }
         if (computationData.computed) {
             computationData.nextChar = inputData.key;
-            this.setState({ computationData }, this.prepareForNextCalculation);
+            setComputationData(computationData);
+            prepareForNextCalculation();
         } else {
-            this.setState({ computationData }, this.parseUserInput);
+            setComputationData(computationData);
+            parseUserInput();
         }
     };
 
-    parseUserInput = () => {
-        let computationData = { ...this.state.computationData };
+    const parseUserInput = () => {
+        // let computationData = { ...computationData };
 
         /**
          * 2 situations
@@ -330,7 +505,7 @@ class Calculator extends Component {
          */
         // if (computationData.resultValue !== undefined) {
         // } else {
-        //     computationData = { ...this.state.computationData };
+        //     computationData = { ...computationData };
         // }
         if (
             CONSTANTS.patternStack.MATH_CATCHER.test(
@@ -338,13 +513,9 @@ class Calculator extends Component {
             )
         ) {
             // we can do maths
-            computationData = doMaths({ ...this.state.computationData });
-            this.setState(
-                {
-                    computationData,
-                }
-                // this.postResultPreperation
-            );
+            computationData = doMaths({ ...computationData });
+            setComputationData(computationData);
+            // postResultPreperation();
             // no result from a maths computation
             // continue to process the user input
             //  build up calculation string
@@ -357,7 +528,9 @@ class Calculator extends Component {
          */
         else {
             computationData.calculationValue = computationData.rawUserInput;
-            computationData = purifyRawUserInput(computationData);
+            computationData = setComputationData(
+                purifyRawUserInput(computationData)
+            );
             // if (computationData.updateUserInput) {
             //     delete computationData.updateUserInput;
             //     (computationData.rawUserInput =
@@ -366,9 +539,6 @@ class Calculator extends Component {
             //             computationData,
             //         });
             // } else {
-            this.setState({
-                computationData: { ...computationData },
-            });
             // }
             return;
         }
@@ -431,7 +601,7 @@ class Calculator extends Component {
         // END result.computed ==  true
     };
 
-    postResultPreperation = () => {
+    const postResultPreperation = () => {
         let {
                 calculationValue,
                 computed,
@@ -440,13 +610,13 @@ class Calculator extends Component {
                 operator,
                 rawUserInput,
                 resultValue,
-            } = this.state.computationData,
-            computationData = this.state.computationData;
+            } = computationData,
+            computationData = computationData;
 
         console.log(
             "postResultPreperation",
-            this.state.computationData,
-            this.state.computationData.resultValue
+            computationData,
+            computationData.resultValue
         );
         if (computationData.computed) {
             delete computationData.computed;
@@ -471,16 +641,14 @@ class Calculator extends Component {
             );
         }
 
-        this.setState({
-            computationData: computationData,
-        });
+        setComputationData(computationData);
     };
 
-    prepareForNextCalculation = () => {
+    const prepareForNextCalculation = () => {
         console.log(
             "prepareForNextCalculation",
-            this.state.computationData,
-            this.state.computationData.resultValue
+            computationData,
+            computationData.resultValue
         );
         let {
                 calculationValue,
@@ -490,8 +658,8 @@ class Calculator extends Component {
                 operator,
                 rawUserInput,
                 resultValue,
-            } = this.state.computationData,
-            computationData = this.state.computationData;
+            } = computationData,
+            computationData = computationData;
         if (computationData.hasOwnProperty("computed")) {
             delete computationData.computed;
         }
@@ -506,16 +674,12 @@ class Calculator extends Component {
             }
         }
 
-        this.setState(
-            {
-                computationData: computationData,
-            },
-            this.parseUserInput
-        );
+        setComputationData(computationData);
+        parseUserInput();
     };
 
-    getComputationData = () => {
-        return { ...this.state.computationData };
+    const getComputationData = () => {
+        return { ...computationData };
     };
     //  {
     // // let calculationData = {};
@@ -524,7 +688,7 @@ class Calculator extends Component {
     //         calculationValue,
     //         calculationClass,
     //     }),
-    //     this.state.computationData
+    //     computationData
     // );
     // };
 
@@ -672,221 +836,71 @@ class Calculator extends Component {
     //     ));
     // };
 
-    toggleSidebar = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.setState((prevState) => ({
-            sidebarIsOpen: !prevState.sidebarIsOpen,
-        }));
-    };
-
-    closeSidebar = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.setState({
-            sidebarIsOpen: false,
-        });
-    };
-
-    onSelectThemeType = (e) => {
-        e.stopPropagation();
-        let cookieData = {};
-        let _themeTypeData = {};
-        _themeTypeData.currentSetting = e.target.id;
-        cookieData.cookieLabel = "currentThemeType";
-        cookieData.cookieValue = _themeTypeData.currentSetting;
-        cookieData.cookiePath = "/";
-        this.setState({
-            themeType: _themeTypeData.currentSetting,
-        });
-        this.setCookie(cookieData);
-    };
-
-    onSelectTheme = (e) => {
-        e.stopPropagation();
-        let cookieData = {};
-        let _themesData = {};
-        _themesData.currentSetting = e.target.id;
-        cookieData.cookieLabel = "currentTheme";
-        cookieData.cookieValue = _themesData.currentSetting;
-        cookieData.cookiePath = "/";
-        this.setState({
-            theme: _themesData.currentSetting,
-        });
-        this.setCookie(cookieData);
-    };
-
-    onSelectAnimation = (e) => {
-        e.stopPropagation();
-        let cookieData = {};
-        let _animation = e.target.id;
-        cookieData.cookieLabel = "currentAnimation";
-        cookieData.cookieValue = _animation;
-        cookieData.cookiePath = "/";
-        this.setState({
-            animation: _animation,
-        });
-        this.setCookie(cookieData);
-    };
-
-    onSelectPictureType = (e) => {
-        e.stopPropagation();
-        let cookieData = {};
-        let _pictureType = {};
-        _pictureType = e.target.id;
-        cookieData.cookieLabel = "currentPictureType";
-        cookieData.cookieValue = _pictureType;
-        cookieData.cookiePath = "/";
-        this.setState({
-            pictureType: _pictureType,
-        });
-        this.setCookie(cookieData);
-    };
-
-    getKeyboardData = (keyboardName) => {
-        let _keyboardData = keyboards.find((keyboard) => {
-            return keyboard.name === keyboardName ? keyboard : undefined;
-        });
-        _keyboardData.onClick = this[_keyboardData.onClickFunction];
-        return _keyboardData;
-    };
-
-    getSidebarKeyboardNames = () => {
-        const defaultSidebarKeyboardNames = ["theme-type", "theme"];
-        let sidebarKeyboardNames = defaultSidebarKeyboardNames;
-
-        if (this.state.themeType !== "color") {
-            sidebarKeyboardNames.push(
-                this.state.themeType === "animation"
-                    ? "animation"
-                    : "picture-type"
-            );
-        }
-        return sidebarKeyboardNames;
-    };
-
-    getKeyboardOnclick = (keyboardName) => {
+    const getSelected = (keyboardName) => {
         switch (keyboardName) {
             case "theme-type":
-                return this.onSelectThemeType;
+                return themeType;
             case "theme":
-                return this.onSelectTheme;
+                return theme;
             case "animation":
-                return this.onSelectAnimation;
+                return animation;
             case "picture-type":
-                return this.onSelectPictureType;
+                return pictureType;
             default:
                 return;
         }
     };
 
-    getSelected = (keyboardName) => {
-        switch (keyboardName) {
-            case "theme-type":
-                return this.state.themeType;
-            case "theme":
-                return this.state.theme;
-            case "animation":
-                return this.state.animation;
-            case "picture-type":
-                return this.state.pictureType;
-            default:
-                return;
-        }
+    const setResultClass = (newClassName) => {
+        resultData.className = newClassName;
+        setResultData(resultData);
     };
 
-    getSidebarData = () => {
-        let keyboardNames = this.getSidebarKeyboardNames();
-        let sidebarData = {
-            isOpen: this.state.sidebarIsOpen,
-            keyboardNames: keyboardNames,
-            getSelected: this.getSelected,
-            getKeyboardOnclick: this.getKeyboardOnclick,
-        };
-        return sidebarData;
-    };
-
-    setResultClass = () => {
-        let { resultData } = { ...this.state };
-        resultData.resultClass = this.state.resultData;
-        this.setState({ resultData, keyErr: true });
-    };
-
-    GridItem({ classes }) {
-        return (
-            // From 0 to 600px wide (smart-phones), I take up 12 columns, or the whole device width!
-            // From 600-690px wide (tablets), I take up 6 out of 12 columns, so 2 columns fit the screen.
-            // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
-            <Grid item xs={12} sm={6} md={3}>
-                <Paper className={classes.paper}>item</Paper>
-            </Grid>
-        );
-    }
-
-    render = () => {
-        return (
-            <Container
-                className={`container ${
-                    this.state.sidebarIsOpen === true ? "open" : ""
-                } ${this.state.themeType} ${this.state.theme.toLowerCase()} ${
-                    this.state.pictureType
-                }`}
-                sx={{ p: "0!important" }}
+    return (
+        <Container
+            className={`container ${
+                sidebarData.isOpen === true ? "open" : ""
+            } ${themeType} ${theme.toLowerCase()} ${pictureType}`}
+            sx={{ p: "0!important" }}
+        >
+            {/* ------------ app ---------------- */}
+            {/* ------------ display and keyboards---------------- */}
+            <p className="settings" onClick={toggleSidebar}>
+                <i className="cog" aria-hidden="true"></i>
+            </p>
+            <Grid
+                container
+                onClick={closeSidebar}
+                direction={"column"}
+                id="canvas-container"
+                className={"calculator"}
+                meta-name="display and keyboards"
             >
-                {/* ------------ app ---------------- */}
-                {/* ------------ display and keyboards---------------- */}
-                <p className="settings" onClick={this.toggleSidebar}>
-                    <i className="cog" aria-hidden="true"></i>
-                </p>
+                <Canvas ref={canvasRef} id={CONSTANTS.CANVAS_CONTAINER_ID} />
+                <Typography className="title">
+                    {CONSTANTS.APPLICATION_TITLE}
+                </Typography>
+                {/* ------------ display ---------------- */}
+                <Display
+                    calculationData={{ ...calculationData }}
+                    resultData={{ ...resultData }}
+                />
+                {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container
-                    onClick={this.closeSidebar}
-                    direction={"column"}
-                    id="canvas-container"
-                    className={"calculator"}
-                    meta-name="display and keyboards"
+                    className="main-keyboards"
+                    meta-name="main keyboards"
                 >
-                    <Canvas
-                        ref={this.animate}
-                        id={CONSTANTS.CANVAS_CONTAINER_ID}
-                    />
-                    <Typography className="title">
-                        {CONSTANTS.APPLICATION_TITLE}
-                    </Typography>
-                    {/* ------------ display ---------------- */}
-                    <Display
-                        calculationData={{ ...this.state.calculationData }}
-                        resultData={{ ...this.state.resultData }}
-                    />
-                    {/* ------------ main keyboards ---------------- */}
-                    <Grid
-                        container
-                        className="main-keyboards"
-                        meta-name="main keyboards"
-                    >
-                        <Keyboard
-                            xs={7}
-                            md={7}
-                            props={this.getKeyboardData("number")}
-                        />
-                        <Keyboard
-                            xs={5}
-                            md={5}
-                            props={this.getKeyboardData("function")}
-                        />
-                        <Keyboard
-                            xs={12}
-                            md={12}
-                            lg={12}
-                            props={this.getKeyboardData("utility")}
-                        />
-                    </Grid>
+                    {makeKeyboard("number")}
+                    {makeKeyboard("function")}
+                    {makeKeyboard("utility")}
                 </Grid>
-                {/* ------------ sidebar ---------------- */}
-                <Sidebar props={this.getSidebarData()} />
-            </Container>
-        );
-    };
-}
+            </Grid>
+            {/* ------------ sidebar ---------------- */}
+            {/* <Sidebar props={sidebarData} /> */}
+            {makeSidebar(sidebarData)}
+        </Container>
+    );
+};
 
 export default Calculator;

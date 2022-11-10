@@ -1,27 +1,12 @@
 import React from "react";
 import { Grid } from "@mui/material";
 
-import Keyboard from "./keyboard";
-import keyboards from "../js/keyboards";
-
-function Sidebar({ props }) {
+const Sidebar = (props) => {
     let className = "sidebar";
-    if (props.isOpen) {
-        className += " " + "open";
-    }
 
-    const getKeyboard = (keyboardName) => {
-        let _keyboardData = keyboards.find((keyboard) => {
-            return keyboard.name === keyboardName ? keyboard : undefined;
-        });
+    const { keyboards } = props.props;
 
-        _keyboardData.onClick = props.getKeyboardOnclick(keyboardName);
-        _keyboardData.selected = props.getSelected(keyboardName);
-
-        return (
-            <Keyboard selected={_keyboardData.selected} props={_keyboardData} />
-        );
-    };
+    let i = 0;
 
     return (
         <Grid
@@ -32,14 +17,11 @@ function Sidebar({ props }) {
             justifyContent="space-around"
             alignItems={"center"}
         >
-            {props.keyboardNames.map((kbn, i) => {
-                return (
-                    <React.Fragment key={i + 567}>
-                        {getKeyboard(kbn)}
-                    </React.Fragment>
-                );
+            {keyboards.map((keyboard) => {
+                i++;
+                return <React.Fragment key={i}>{keyboard}</React.Fragment>;
             })}
         </Grid>
     );
-}
+};
 export default Sidebar;

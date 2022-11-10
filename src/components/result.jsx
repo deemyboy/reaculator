@@ -1,7 +1,7 @@
 import React from "react";
 import { Paper } from "@mui/material";
 
-const Result = React.forwardRef((props, ref) => {
+const Result = (props) => {
     let { resultValue, resultClassName } = props.resultData;
 
     const resultErrorClassName = "result_err",
@@ -13,5 +13,5 @@ const Result = React.forwardRef((props, ref) => {
             <Paper className={resultClassName}>{resultValue}</Paper>
         </React.Fragment>
     );
-});
+};
 export default Result;
