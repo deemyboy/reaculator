@@ -379,21 +379,21 @@ export const animKeys = [
         location: "sidebar",
         showTitle: true,
     },
-    {
-        id: "twist",
-        value: "twist",
-        specialClass: "btn-animation-choose",
-        // uniChar: "\uD83D\uDD00",// twisted-right
-        // uniChar: "\uD83D\uDD01",// Clockwise Rightwards and Leftwards Open Circle Arrows
-        // uniChar: "\uD83C\uDF0C" ,// milkyway symbol
-        uniChar: "\uD83D\uDCAB", // dizzy symbol
-        title: "twist",
-        keycode: null,
-        code: "",
-        type: "animChs",
-        location: "sidebar",
-        showTitle: true,
-    },
+    // {
+    //     id: "twist",
+    //     value: "twist",
+    //     specialClass: "btn-animation-choose",
+    //     // uniChar: "\uD83D\uDD00",// twisted-right
+    //     // uniChar: "\uD83D\uDD01",// Clockwise Rightwards and Leftwards Open Circle Arrows
+    //     // uniChar: "\uD83C\uDF0C" ,// milkyway symbol
+    //     uniChar: "\uD83D\uDCAB", // dizzy symbol
+    //     title: "twist",
+    //     keycode: null,
+    //     code: "",
+    //     type: "animChs",
+    //     location: "sidebar",
+    //     showTitle: true,
+    // },
 ];
 
 // 0xD83C 0xDFAE ps4 controller

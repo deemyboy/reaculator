@@ -21,7 +21,7 @@ import {
     convertFromUnicodeToChar,
     convertFromCharToUnicode,
 } from "./js/maths_engine.mjs";
-import purifyRawUserInput from "./js/purify_raw_user_input.mjs";
+import processInput from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
 
@@ -167,16 +167,10 @@ const Calculator = () => {
                 themeType === "animation" ? "animation" : "picture-type"
             );
         }
-        // setSidebarData(
-        //     (sidebarData.keyboardNames = sidebarVisibleKeyboardNames)
-        // );
         return sidebarVisibleKeyboardNames;
     };
 
     const [sidebarData, setSidebarData] = useState({
-        // keyboardNames: "",
-        // defaultSidebarKeyboardNames: ["theme-type", "theme"],
-        // keyboardNames: ["theme-type", "theme"],
         keyboardNames: getVisibleSidebarKeyboards(),
         isOpen: false,
         selected: "",
@@ -193,15 +187,6 @@ const Calculator = () => {
         rawUserInput: undefined,
         resultValue: undefined,
     });
-
-    // const getSidebarData = () => {
-    //     let sidebarData = {
-    //         isOpen: sidebarOpen,
-    //         keyboardNames: keyboardNames,
-    //         selected: getSelected(),
-    //     };
-    //     setSidebarData(sidebarData);
-    // };
 
     useEffect(() => {
         document.addEventListener("keydown", (e) => handleKeyPress(e));
@@ -232,11 +217,6 @@ const Calculator = () => {
         } else if (document.getElementById(_id)) {
             removeScript(_id);
         }
-        // }
-
-        // useEffect((nextProps, nextState) => {
-        // let _id = "animation-script",
-        //     _scriptName = animation;
 
         if (themeType === "animation") {
             var loadScript = function () {
@@ -255,17 +235,8 @@ const Calculator = () => {
             }
             loadScript();
         } else if (document.getElementById(_id)) {
-            // var removeScript = function (id) {
-            //     var tag = document.getElementById(id);
-            //     if (tag) {
-            //         tag.remove();
-            //     }
-            // };
             removeScript(_id);
         }
-        // }
-
-        // useEffect(() => {
         document.removeEventListener("keydown", (e) => handleKeyPress(e));
     }),
         [sidebarData, animation];
@@ -302,40 +273,37 @@ const Calculator = () => {
             return kb.name === keyboardName;
         });
         return (
-            <HandleClickContextProvider value={handleClick}>
+            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
                 <Keyboard props={data} />
             </HandleClickContextProvider>
         );
     };
 
-    const makeSidebar = (data) => {
-        const getOnSelect = (keyboardName) => {
-            return onSelectStack[keyboardName];
-        };
-
+    const getOnSelect = (keyboardName) => {
         const onSelectStack = {
+            number: handleClick,
+            function: handleClick,
+            utility: handleClick,
             "theme-type": onSelectThemeType,
             theme: onSelectTheme,
             animation: onSelectAnimation,
             "picture-type": onSelectPictureType,
         };
+        return onSelectStack[keyboardName];
+    };
+
+    const makeSidebar = (data) => {
         let _keyboards = [],
             _keyboardData = {},
-            _data = data,
-            _onSelect;
+            _data = data;
 
         data.keyboardNames.map((keyboardName) => {
-            _onSelect = getOnSelect(onSelectStack);
-            _keyboards.push(
-                <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                    <Keyboard
-                        props={keyboards.find((kb) => {
-                            return kb.name === keyboardName;
-                        })}
-                    />
-                </HandleClickContextProvider>
-            );
-            // delete _data.keyboardNames;
+            let _keyboardName = () => {
+                keyboards.find((kb) => {
+                    return kb.name === keyboardName;
+                });
+            };
+            _keyboards.push(makeKeyboard(keyboardName));
             _keyboardData.keyboards = _keyboards;
         });
 
@@ -450,8 +418,6 @@ const Calculator = () => {
     };
 
     const parseUserInput = () => {
-        // let computationData = { ...computationData };
-
         /**
          * 2 situations
          *
@@ -503,10 +469,6 @@ const Calculator = () => {
          *  no - do ib
          *
          */
-        // if (computationData.resultValue !== undefined) {
-        // } else {
-        //     computationData = { ...computationData };
-        // }
         if (
             CONSTANTS.patternStack.MATH_CATCHER.test(
                 convertFromUnicodeToChar(computationData.rawUserInput)
@@ -515,90 +477,18 @@ const Calculator = () => {
             // we can do maths
             computationData = doMaths({ ...computationData });
             setComputationData(computationData);
-            // postResultPreperation();
             // no result from a maths computation
             // continue to process the user input
-            //  build up calculation string
-            //  continue to purify user input
-        }
-        // if (!_result.computed) {
-
-        /**
-         * we cannot do maths so continue to store the input in calculation data
-         */
-        else {
+            // build up calculation string
+            // continue to purify user input
+        } else {
+            /**
+             * we cannot do maths so continue to store the input in calculation data
+             */
             computationData.calculationValue = computationData.rawUserInput;
-            computationData = setComputationData(
-                purifyRawUserInput(computationData)
-            );
-            // if (computationData.updateUserInput) {
-            //     delete computationData.updateUserInput;
-            //     (computationData.rawUserInput =
-            //         computationData.calculationValue),
-            //         this.setState({
-            //             computationData,
-            //         });
-            // } else {
-            // }
+            computationData = setComputationData(processInput(computationData));
             return;
         }
-
-        // result.computed ==  true
-        // a valid computational unit was achieved
-        //  we are post-result processing
-        //      2 ways to arrive here
-        //
-        //      A
-        //          i   unary operator after num1 || rs - unaryPrimaryOperation
-        //          ii   binary operator after num1, op1 || num2 = xy\/\-+ - binaryPrimaryOperation
-        //      B   "="" after num1, op1, num2 || num2 = "="
-        //
-        //      2 choices here
-        //          press an operator
-        //          press a number
-        //
-        //      what happens if
-        //          Ai + unary operator     unOperation
-        //          Ai + binary operator    binOperation
-        //          Ai + number
-        //
-        //              operator
-        // number
-        // maths operator
-        //
-
-        // const getFormatType = (formatType) => {
-        //     if (UNARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-        //         if (!resultValue) {
-        //             _result.unaryPrimaryOperation = true;
-        //         } else if (!resultValue) {
-        //             _result.unarySecondaryOperation = true;
-        //         }
-        //     }
-        //     if (BINARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-        //         if (!resultValue) {
-        //             _result.binaryPrimaryOperation = true;
-        //         } else if (resultValue) {
-        //             _result.binarySecondaryOperation = true;
-        //         }
-        //     }
-        // };
-
-        // [_result, rawUserInput] = this.preMathsFormatting(
-        //     _result,
-        //     rawUserInput
-        // );
-        // computationData.calculationValue = computationData.rawUserInput;
-        // console.log("_result.computed", _result);
-        // computationData.resultValue = _result.value;
-        // computationData.resultComputed = true;
-        // computationData.computationType = _result.operationType;
-        // computationData.previousResultValue = _result.value.toString();
-        // computationData = purifyRawUserInput(computationData);
-        // this.setState({
-        //     computationData,
-        // });
-        // END result.computed ==  true
     };
 
     const postResultPreperation = () => {
@@ -664,7 +554,6 @@ const Calculator = () => {
             delete computationData.computed;
         }
         if (computationData.operator !== "=") {
-            // computationData.
             /**
              * maths operator + number
              */
@@ -677,164 +566,6 @@ const Calculator = () => {
         setComputationData(computationData);
         parseUserInput();
     };
-
-    const getComputationData = () => {
-        return { ...computationData };
-    };
-    //  {
-    // // let calculationData = {};
-    // return (
-    //     ([calculationData.value, calculationData.class] = {
-    //         calculationValue,
-    //         calculationClass,
-    //     }),
-    //     computationData
-    // );
-    // };
-
-    // preMathsFormatting = (
-    //     resultData,
-    //     rawUserInput,
-    //     calculationData,
-    //     mathType
-    // ) => {
-    //     let _operator = resultData.operator;
-
-    //     console.log(
-    //         "postResultFormatting",
-    //         resultData,
-    //         rawUserInput,
-    //         calculationData,
-    //         mathType
-    //     );
-
-    //     const formatData =
-    //         (formatters) => (resData, rawUInput, calcData, mType) => {
-    //             const _computationType = resData.computationType;
-    //             console.log("formatData called");
-    //             // return _computationType === "unaryPrimaryOperation" ||
-    //             //     _computationType === "unarySecondaryOperation"
-    //             return mType === "fresh"
-    //                 ? formatters[mType][_computationType](
-    //                       resData,
-    //                       rawUInput,
-    //                       calcData
-    //                   )
-    //                 : mType === "continuing"
-    //                 ? formatters[mType][_computationType](
-    //                       resData,
-    //                       rawUInput,
-    //                       calcData
-    //                   )
-    //                 : 1;
-
-    //             // computationType === "binaryPrimaryOperation";
-    //             // computationType === "binarySecondaryOperation";
-    //         };
-
-    //     const formatStack = {
-    //         fresh: {
-    //             unaryPrimaryOperation: function (
-    //                 resultData,
-    //                 rawUserInput,
-    //                 calcData
-    //             ) {
-    //                 //
-    //                 console.log("formatStack", "unaryPrimaryOperation");
-    //                 if (
-    //                     CONSTANTS.CONTINUING_MATH_OPERATOR_CATCHER.test(
-    //                         rawUserInput.charAt(rawUserInput.length - 1)
-    //                     )
-    //                 ) {
-    //                     rawUserInput =
-    //                         computationData.resultValue +
-    //                         rawUserInput.substring(
-    //                             CONSTANTS.CONTINUING_MATH_OPERATOR_CATCHER.exec(
-    //                                 rawUserInput
-    //                             ).index
-    //                         );
-    //                 } else {
-    //                     console.log(
-    //                         CONSTANTS.CONTINUING_MATH_OPERATOR_CATCHER.exec(
-    //                             rawUserInput
-    //                         )
-    //                     );
-    //                     // tbc
-    //                     rawUserInput = rawUserInput.substring(
-    //                         CONSTANTS.CONTINUING_MATH_OPERATOR_CATCHER.exec(
-    //                             rawUserInput
-    //                         ).index + 1
-    //                     );
-    //                     computationData.resultValue = undefined;
-    //                 }
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //             unarySecondaryOperation: function (resultData, rawUserInput) {
-    //                 console.log("formatStack", "unarySecondaryOperation");
-    //                 if (_operator === "=") {
-    //                     //
-    //                 } else {
-    //                     //
-    //                 }
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //             binaryPrimaryOperation: function (resultData, rawUserInput) {
-    //                 if (_operator === "=") {
-    //                     //
-    //                 } else {
-    //                     //
-    //                 }
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //             binarySecondaryOperation: function (resultData, rawUserInput) {
-    //                 if (_operator === "=") {
-    //                     //
-    //                 } else {
-    //                     //
-    //                 }
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //         },
-    //         continuing: {
-    //             unaryPrimaryOperation: function (resultData, rawUserInput) {
-    //                 //
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //             unarySecondaryOperation: function (resultData, rawUserInput) {
-    //                 if (_operator === "=") {
-    //                     //
-    //                 } else {
-    //                     //
-    //                 }
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //             binaryPrimaryOperation: function (resultData, rawUserInput) {
-    //                 if (_operator === "=") {
-    //                     //
-    //                 } else {
-    //                     //
-    //                 }
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //             binarySecondaryOperation: function (resultData, rawUserInput) {
-    //                 if (_operator === "=") {
-    //                     //
-    //                 } else {
-    //                     //
-    //                 }
-    //                 return [resultData, rawUserInput, calcData];
-    //             },
-    //         },
-    //     };
-    //     const doFormatting = formatData(formatStack);
-
-    //     return ([resultData, rawUserInput, calcData] = doFormatting(
-    //         resultData,
-    //         rawUserInput,
-    //         calculationData,
-    //         mathType
-    //     ));
-    // };
 
     const getSelected = (keyboardName) => {
         switch (keyboardName) {

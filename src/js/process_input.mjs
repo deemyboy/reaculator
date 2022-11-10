@@ -5,8 +5,8 @@ import {
     convertFromCharToUnicode,
 } from "./maths_engine.mjs";
 
-export const purifyRawUserInput = (computationData) => {
-    // console.log("purifyRawUserInput", computationData);
+export const processInput = (computationData) => {
+    // console.log("processInput", computationData);
     computationData.rawUserInput = convertFromUnicodeToChar(
         computationData.rawUserInput
     );
@@ -323,4 +323,4 @@ const pregReplaceOperators = (computationData) => {
 
 const getPatternOperation = purifyRawUserInput2(repairStack);
 
-export default purifyRawUserInput;
+export default processInput;
