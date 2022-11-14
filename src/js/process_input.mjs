@@ -1,77 +1,45 @@
 import { patternStack } from "./constants.js";
-import { functionKeys } from "./keys.js";
 import {
     convertFromUnicodeToChar,
     convertFromCharToUnicode,
 } from "./maths_engine.mjs";
 
-export const processInput = (computationData) => {
-    // console.log("processInput", computationData);
-    computationData.rawUserInput = convertFromUnicodeToChar(
-        computationData.rawUserInput
-    );
-    let _formattedData;
-    // if (computationData.computed) {
-    //     // console.log("we just completed a math!", computationData);
-    //     delete computationData.computed;
-    //     // console.log(computationData.rawUserInput.charAt(computationData.rawUserInput.length - 1));
-    // }
+export const processRawInput = (input) => {
+    // console.log("processRawInput", input);
+    // input = convertFromUnicodeToChar(input);
 
-    // NOT computed simple formatting
-    // console.log("NO result - simple formatting!", computationData);
     for (const key in patternStack) {
-        _formattedData = undefined;
-        _formattedData = getPatternOperation(
-            patternStack[key],
-            key,
-            computationData,
-            _formattedData
-        );
+        var _input = getPatternOperation(patternStack[key], key, input);
+        if (_input) {
+            return _input;
+        }
     }
-    if (_formattedData.rawUserInput) {
-        _formattedData.rawUserInput = convertFromCharToUnicode(
-            _formattedData.rawUserInput
-        );
-    }
-
-    return _formattedData;
+    return input;
 };
 
-const purifyRawUserInput2 =
-    (repairs) => (pattern, name, computationData, formattedData) => {
-        // console.log("purifyRawUserInput2", name, computationData, formattedData);
-        if (pattern.test(computationData.rawUserInput) && !formattedData) {
-            console.log(
-                "purifyRawUserInput2 |",
-                name,
-                "computationData=",
-                computationData
-            );
-            formattedData = repairs[name](computationData);
-            return formattedData;
-        } else {
-            return computationData;
-        }
-    };
+const processRawInput2 = (repairs) => (pattern, name, input) => {
+    // console.log("processRawInput2", name, input);
+    console.log("processRawInput2 |", name);
+    if (pattern.test(input)) {
+        input = repairs[name](input);
+        return input;
+    }
+};
 
 const repairStack = {
-    INITIAL_OPERATOR_CATCHER: function (computationData) {
-        console.log(`INITIAL_OPERATOR_CATCHER ${computationData.rawUserInput}`);
-        computationData.rawUserInput = "";
-        return computationData;
+    INITIAL_OPERATOR_CATCHER: function (input) {
+        console.log(`INITIAL_OPERATOR_CATCHER ${input}`);
+        input = "";
+        return input;
     },
-    NUM1_INVISIBLE_ZERO_CATCHER: function (computationData) {
-        console.log(
-            `NUM1_INVISIBLE_ZERO_CATCHER ${computationData.rawUserInput}`
-        );
-        computationData.rawUserInput = "0" + computationData.rawUserInput;
-        return computationData;
+    NUM1_INVISIBLE_ZERO_CATCHER: function (input) {
+        console.log(`NUM1_INVISIBLE_ZERO_CATCHER ${input}`);
+        input = "0" + input;
+        return input;
     },
-    NUM2_INVISIBLE_ZERO_CATCHER: function (computationData) {
-        console.log(
-            `NUM2_INVISIBLE_ZERO_CATCHER ${computationData.rawUserInput}`
-        );
-        let _value = computationData.rawUserInput;
+    NUM2_INVISIBLE_ZERO_CATCHER: function (input) {
+        console.log(`NUM2_INVISIBLE_ZERO_CATCHER ${input}`);
+        let _value = input;
         let matches = patternStack.NUM2_INVISIBLE_ZERO_CATCHER.exec(_value);
 
         let idx = matches.indices[1][0];
@@ -79,14 +47,12 @@ const repairStack = {
         let _num2 = _value.substring(idx + 1);
         let _operator = _value.substring(idx, idx + 1);
         _num2 = "0" + _num2;
-        computationData.rawUserInput = _num1 + _operator + _num2;
-        return computationData;
+        input = _num1 + _operator + _num2;
+        return input;
     },
-    NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER: function (computationData) {
-        console.log(
-            `NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER ${computationData.rawUserInput}`
-        );
-        let _value = computationData.rawUserInput;
+    NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER: function (input) {
+        console.log(`NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER ${input}`);
+        let _value = input;
         let matches =
             patternStack.NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER.exec(_value);
 
@@ -95,14 +61,12 @@ const repairStack = {
         let _num2 = _value.substring(idx + 1);
         let _operator = _value.substring(idx, idx + 1);
         _num2 = "0" + _num2;
-        computationData.rawUserInput = _num1 + _operator + _num2;
-        return computationData;
+        input = _num1 + _operator + _num2;
+        return input;
     },
-    NUM1_TRAILING_DECIMAL_ZERO_CATCHER: function (computationData) {
-        console.log(
-            `NUM1_TRAILING_DECIMAL_ZERO_CATCHER ${computationData.rawUserInput}`
-        );
-        let _value = computationData.rawUserInput;
+    NUM1_TRAILING_DECIMAL_ZERO_CATCHER: function (input) {
+        console.log(`NUM1_TRAILING_DECIMAL_ZERO_CATCHER ${input}`);
+        let _value = input;
         let matches = _value.match(
             patternStack.NUM1_TRAILING_DECIMAL_ZERO_CATCHER
         );
@@ -111,33 +75,29 @@ const repairStack = {
                 let _operator = _value.charAt(_value.length - 1);
                 _value = _value.replace(/.$/, "");
                 _value = Number(_value).toString();
-                computationData.rawUserInput = _value + _operator;
+                input = _value + _operator;
             }
         }
-        return computationData;
+        return input;
     },
-    NUM2_REPEATED_INITIAL_ZERO_CATCHER: function (computationData) {
-        console.log(
-            `NUM2_REPEATED_INITIAL_ZERO_CATCHER ${computationData.rawUserInput}`
-        );
-        let _value = computationData.rawUserInput;
+    NUM2_REPEATED_INITIAL_ZERO_CATCHER: function (input) {
+        console.log(`NUM2_REPEATED_INITIAL_ZERO_CATCHER ${input}`);
+        let _value = input;
         let matches = _value.match(
             patternStack.NUM2_REPEATED_INITIAL_ZERO_CATCHER
         );
         if (matches) {
             _value = _value.replace(/.$/, "");
-            computationData.rawUserInput = _value;
+            input = _value;
         }
 
-        return computationData;
+        return input;
     },
-    NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER: function (
-        computationData
-    ) {
+    NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER: function (input) {
         console.log(
-            `NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER ${computationData.rawUserInput}`
+            `NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER ${input}`
         );
-        let matches = computationData.rawUserInput.match(
+        let matches = input.match(
             patternStack.NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER
         );
         // 0.00x <- float num2 + operator
@@ -145,88 +105,66 @@ const repairStack = {
             let _num1 = matches[1];
             let _op1 = matches[2];
             let _op2 = matches[4];
-            computationData.rawUserInput = _num1 + _op1 + "0" + _op2;
+            input = _num1 + _op1 + "0" + _op2;
         }
 
-        return computationData;
+        return input;
     },
-    NUM1_REPEATED_ZERO_CATCHER: function (computationData) {
-        console.log(
-            `NUM1_REPEATED_ZERO_CATCHER ${computationData.rawUserInput}`
-        );
-        computationData.rawUserInput = Number(
-            computationData.rawUserInput
-        ).toString();
-        return computationData;
+    NUM1_REPEATED_ZERO_CATCHER: function (input) {
+        console.log(`NUM1_REPEATED_ZERO_CATCHER ${input}`);
+        input = Number(input).toString();
+        return input;
     },
 
-    UNIVERSAL_EXTRA_DOT_CATCHER: function (computationData) {
-        // console.log(`UNIVERSAL_EXTRA_DOT_CATCHER ${computationData.rawUserInput}`);
-        computationData.rawUserInput = computationData.rawUserInput.substring(
-            0,
-            computationData.rawUserInput.length - 1
-        );
-        return computationData;
+    UNIVERSAL_EXTRA_DOT_CATCHER: function (input) {
+        // console.log(`UNIVERSAL_EXTRA_DOT_CATCHER ${input}`);
+        input = input.substring(0, input.length - 1);
+        return input;
     },
-    UNIVERSAL_DOUBLE_DOT_CATCHER: function (computationData) {
-        // console.log(`UNIVERSAL_DOUBLE_DOT_CATCHER ${computationData.rawUserInput}`);
-        computationData.rawUserInput = computationData.rawUserInput.substring(
-            0,
-            computationData.rawUserInput.length - 1
-        );
-        return computationData;
+    UNIVERSAL_DOUBLE_DOT_CATCHER: function (input) {
+        // console.log(`UNIVERSAL_DOUBLE_DOT_CATCHER ${input}`);
+        input = input.substring(0, input.length - 1);
+        return input;
     },
-    NUM1_INTEGER_WITH_OPERATOR_CATCHER: function (computationData) {
-        // console.log(`NUM1_INTEGER_WITH_OPERATOR_CATCHER ${computationData.rawUserInput}`);
-        computationData.rawUserInput = computationData.rawUserInput.substring(
-            0,
-            computationData.rawUserInput.length - 1
-        );
-        return computationData;
+    NUM1_INTEGER_WITH_OPERATOR_CATCHER: function (input) {
+        // console.log(`NUM1_INTEGER_WITH_OPERATOR_CATCHER ${input}`);
+        input = input.substring(0, input.length - 1);
+        return input;
     },
-    UNNARY_MATH_CATCHER: function (computationData) {
-        // console.log(`UNNARY_MATH_CATCHER ${computationData.rawUserInput}`);
-        return computationData;
+    UNNARY_MATH_CATCHER: function (input) {
+        // console.log(`UNNARY_MATH_CATCHER ${input}`);
+        return input;
     },
-    BINARY_MATH_CATCHER: function (computationData) {
-        // console.log(`BINARY_MATH_CATCHER ${computationData.rawUserInput}`);
-        return computationData;
+    BINARY_MATH_CATCHER: function (input) {
+        // console.log(`BINARY_MATH_CATCHER ${input}`);
+        return input;
     },
-    MATH_CATCHER: function (computationData) {
-        // console.log(`MATH_CATCHER ${computationData.rawUserInput}`);
-        return computationData;
+    MATH_CATCHER: function (input) {
+        // console.log(`MATH_CATCHER ${input}`);
+        return input;
     },
-    DOUBLE_OPERATOR_CATCHER: function (computationData) {
-        // console.log(`DOUBLE_OPERATOR_CATCHER ${computationData.rawUserInput}`);
-        computationData.rawUserInput = computationData.rawUserInput.substring(
-            0,
-            computationData.rawUserInput.length - 1
-        );
-        return computationData;
+    DOUBLE_OPERATOR_CATCHER: function (input) {
+        // console.log(`DOUBLE_OPERATOR_CATCHER ${input}`);
+        input = input.substring(0, input.length - 1);
+        return input;
     },
-    NUM1_FLOATING_DOT_CATCHER: function (computationData) {
-        // console.log(`NUM1_FLOATING_DOT_CATCHER ${computationData.rawUserInput}`);
+    NUM1_FLOATING_DOT_CATCHER: function (input) {
+        // console.log(`NUM1_FLOATING_DOT_CATCHER ${input}`);
         const re = /\./;
 
-        computationData.rawUserInput = computationData.rawUserInput.replace(
-            re,
-            ""
-        );
-        return computationData;
+        input = input.replace(re, "");
+        return input;
     },
-    NUM2_FLOATING_DOT_CATCHER: function (computationData) {
-        // console.log(`NUM2_FLOATING_DOT_CATCHER ${computationData.rawUserInput}`);
+    NUM2_FLOATING_DOT_CATCHER: function (input) {
+        // console.log(`NUM2_FLOATING_DOT_CATCHER ${input}`);
         const re = /\./;
 
-        computationData.rawUserInput = computationData.rawUserInput.replace(
-            re,
-            ""
-        );
-        return computationData;
+        input = input.replace(re, "");
+        return input;
     },
-    PLUS_MINUS_CATCHER: function (computationData) {
-        // console.log(`PLUS_MINUS_CATCHER ${computationData.rawUserInput}`);
-        let _value = computationData.rawUserInput;
+    PLUS_MINUS_CATCHER: function (input) {
+        // console.log(`PLUS_MINUS_CATCHER ${input}`);
+        let _value = input;
         let matches = _value.match(patternStack.PLUS_MINUS_CATCHER);
         if (matches) {
             let _num = matches[1] ? matches[1] : matches[4];
@@ -238,89 +176,31 @@ const repairStack = {
             } else {
                 _value = _num1 + _op + _num;
             }
-            computationData.rawUserInput = _value;
+            input = _value;
         }
-        return computationData;
+        return input;
     },
-    M_CATCHER: function (computationData) {
-        // console.log(`M_CATCHER ${computationData.rawUserInput}`);
-        computationData.rawUserInput = computationData.rawUserInput.replace(
-            /.$/,
-            ""
-        );
-        return computationData;
+    M_CATCHER: function (input) {
+        // console.log(`M_CATCHER ${input}`);
+        input = input.replace(/.$/, "");
+        return input;
     },
-    C_CATCHER: function (computationData) {
-        // console.log(`C_CATCHER ${computationData.rawUserInput}`);
-        let _value = computationData.rawUserInput;
+    C_CATCHER: function (input) {
+        // console.log(`C_CATCHER ${input}`);
+        let _value = input;
         let matches = _value.match(patternStack.C_CATCHER);
         if (matches) {
-            computationData.rawUserInput = computationData.rawUserInput.replace(
-                /.c$/,
-                ""
-            );
-            computationData.rawUserInput = computationData.rawUserInput.replace(
-                /.c$/,
-                ""
-            );
+            input = input.replace(/.c$/, "");
         }
-        return computationData;
+        return input;
     },
-    A_CATCHER: function (computationData) {
-        console.log(`A_CATCHER ${computationData.rawUserInput}`);
-        computationData = {
-            calculationClassName: "calculation",
-            rawUserInput: undefined,
-            resultClassName: "result",
-            resultDefaultClass: "result",
-            resultErrorClass: "result_err",
-            resultValue: undefined,
-            rawUserInput: undefined,
-        };
-        return computationData;
+    A_CATCHER: function (input) {
+        console.log(`A_CATCHER ${input}`);
+        let allClear;
+        return undefined;
     },
-    // UNICHAR_REPLACEMENT_CATCHER: function (computationData) {
-    //     console.log(
-    //         `UNICHAR_REPLACEMENT_CATCHER ${computationData.rawUserInput}`
-    //     );
-    //     const getCalculationDisplayChar = (char) => {
-    //         //
-    //         let _key = functionKeys.find((k) => {
-    //             return k.value === char;
-    //         });
-    //         if (_key && _key.calculationDisplayChar) {
-    //             return _key.calculationDisplayChar;
-    //         } else {
-    //             return char;
-    //         }
-    //     };
-    //     let idx = patternStack.UNICHAR_REPLACEMENT_CATCHER.exec(
-    //             computationData.rawUserInput
-    //         ).index,
-    //         _charToReplace = computationData.rawUserInput.charAt(idx);
-    //     // _charToReplace = "s";
-
-    //     computationData.rawUserInput =
-    //         computationData.rawUserInput.replace(
-    //             // "/",
-    //             _charToReplace,
-    //             getCalculationDisplayChar(_charToReplace)
-    //         );
-
-    //     console.log(
-    //         computationData.rawUserInput
-    //             .charAt(idx)
-    //             .codePointAt(0)
-    //             .toString(16)
-    //     );
-    //     return computationData;
-    // },
 };
 
-const pregReplaceOperators = (computationData) => {
-    //
-};
+const getPatternOperation = processRawInput2(repairStack);
 
-const getPatternOperation = purifyRawUserInput2(repairStack);
-
-export default processInput;
+export default processRawInput;

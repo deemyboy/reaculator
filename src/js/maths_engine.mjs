@@ -1,20 +1,16 @@
-import {
-    patternStack,
-    UNARY_OPERATOR_REGEX,
-    BINARY_OPERATOR_REGEX,
-    VALID_NUMBER,
-} from "../js/constants.js";
+import { patternStack, VALID_NUMBER } from "../js/constants.js";
 import { functionKeys } from "./keys.js";
 
-export const convertFromUnicodeToChar = (_input) => {
-    let count = 0;
-    [..._input].forEach((c) => {
+export const convertFromUnicodeToChar = (unicode) => {
+    let count = 0,
+        _char;
+    [...unicode].forEach((c) => {
         if (!/\d/.test(c)) {
             let found = false;
             [...functionKeys].forEach((k) => {
                 if (found === false && k.calculationDisplayChar) {
                     if (k.calculationDisplayChar === c) {
-                        _input = _input.replace(_input.charAt(count), k.value);
+                        _char = unicode.replace(unicode.charAt(count), k.value);
                         found = true;
                     }
                 }
@@ -22,19 +18,20 @@ export const convertFromUnicodeToChar = (_input) => {
         }
         count++;
     });
-    return _input;
+    return _char;
 };
 
-export const convertFromCharToUnicode = (_input) => {
-    let count = 0;
-    [..._input].forEach((c) => {
+export const convertFromCharToUnicode = (char) => {
+    let count = 0,
+        _unicode;
+    [...char].forEach((c) => {
         if (!/\d/.test(c)) {
             let found = false;
             [...functionKeys].forEach((k) => {
                 if (found === false && k.calculationDisplayChar) {
                     if (k.value === c) {
-                        _input = _input.replace(
-                            _input.charAt(count),
+                        char = char.replace(
+                            _unicode.charAt(count),
                             k.calculationDisplayChar
                         );
                         found = true;
@@ -44,11 +41,10 @@ export const convertFromCharToUnicode = (_input) => {
         }
         count++;
     });
-    return _input;
+    return _unicode;
 };
 
-export const doMaths = (computationData) => {
-    // let
+export const doMaths = (input) => {
     const extractComputationParts = (_input) => {
         let matches = VALID_NUMBER.exec(_input);
 
@@ -74,45 +70,30 @@ export const doMaths = (computationData) => {
         return computationObject;
     };
 
-    computationData.rawUserInput = convertFromUnicodeToChar(
-        computationData.rawUserInput
-    );
-
     let _result = {},
-        _computationalUnit = extractComputationParts(
-            computationData.rawUserInput
-        );
+        _computationalUnit = extractComputationParts(input);
 
     // console.log("time for doing maths!", input);
 
-    _result.resultValue = getMathOperation(
-        _computationalUnit.op1,
-        _computationalUnit.num1,
-        _computationalUnit.num2
-    ).toString();
+    if (patternStack.MATH_CATCHER.test(input)) {
+        _result.value = getMathOperation(
+            _computationalUnit.op1,
+            _computationalUnit.num1,
+            _computationalUnit.num2
+        ).toString();
+    }
 
-    if (_result.resultValue || _result.resultValue === 0) {
-        // console.log("and the result is ", +_result.resultValue);
+    if (_result.value || _result.value === 0) {
+        // console.log("and the result is ", +_result.value);
         _result.computed = true;
-        if (UNARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-            if (!computationData.resultValue) {
-                _result.operationType = "unaryPrimaryOperation";
-            } else {
-                _result.operationType = "unarySecondaryOperation";
-            }
-        }
-        if (BINARY_OPERATOR_REGEX.test(_computationalUnit.op1)) {
-            if (!computationData.resultValue) {
-                _result.operationType = "binaryPrimaryOperation";
-            } else {
-                _result.operationType = "binarySecondaryOperation";
-            }
-        }
-        _result.operator = computationData.rawUserInput.match(/.$/g)[0];
+        _result.num1 = _computationalUnit.num1;
+        _result.op1 = _computationalUnit.op1;
+        _result.num2 = _computationalUnit.num2;
+        _result.op2 = _computationalUnit.op2;
     } else {
         _result.computed = false;
     }
-    return (computationData = { ...computationData, ..._result });
+    return _result;
 };
 
 const doMaths2 = (functionStack) => (operator, num1, num2) => {

@@ -4,13 +4,8 @@ const HandleClickContext = React.createContext({});
 
 export const HandleClickContextProvider = HandleClickContext.Provider;
 
-const OnSelectContext = React.createContext({});
+const CalculationContext = React.createContext({});
 
-export const OnSelectContextProvider = OnSelectContext.Provider;
+export const CalculationContextProvider = CalculationContext.Provider;
 
 export default HandleClickContext;
-
-// OnSelectThemeType;
-// OnSelectTheme;
-// OnSelectAnimation;
-// OnSelectPictureType;

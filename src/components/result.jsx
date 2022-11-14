@@ -2,15 +2,15 @@ import React from "react";
 import { Paper } from "@mui/material";
 
 const Result = (props) => {
-    let { resultValue, resultClassName } = props.resultData;
+    let { value, resultClassName } = props.resultData;
 
     const resultErrorClassName = "result_err",
         resultDefaultClassName = "result";
 
-    resultValue = resultValue ? resultValue : "0";
+    value = value ? value : "0";
     return (
         <React.Fragment>
-            <Paper className={resultClassName}>{resultValue}</Paper>
+            <Paper className={resultClassName}>{value}</Paper>
         </React.Fragment>
     );
 };

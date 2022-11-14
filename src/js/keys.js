@@ -13,6 +13,8 @@ export const ALLOWED_KEYS = [
     110, 111, 187, 189, 190, 191,
 ];
 
+export const DISALLOWED_KEYS = [16, 17, 18, 37, 38, 39, 40, 91, 93];
+
 export const numberKeys = [
     {
         id: 1,
@@ -236,7 +238,7 @@ export const utilityKeys = [
     },
     {
         id: 18,
-        value: "ac",
+        value: "a",
         specialClass: "btn-danger",
         uniChar: "\u0061\u0063",
         title: "all clear (esc)",

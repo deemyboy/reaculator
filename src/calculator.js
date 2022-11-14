@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
@@ -13,6 +13,7 @@ import {
     animKeys,
     pictureKeys,
     ALLOWED_KEYS,
+    DISALLOWED_KEYS,
 } from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./js/constants";
@@ -21,7 +22,7 @@ import {
     convertFromUnicodeToChar,
     convertFromCharToUnicode,
 } from "./js/maths_engine.mjs";
-import processInput from "./js/process_input.mjs";
+import { processRawInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
 
@@ -29,7 +30,7 @@ const cookie = new Cookies();
 
 import {
     HandleClickContextProvider,
-    OnSelectContextProvider,
+    CalculationContextProvider,
 } from "./js/context";
 
 const Calculator = () => {
@@ -52,19 +53,17 @@ const Calculator = () => {
     const title = "Reaculator";
 
     const handleClick = (e) => {
-        console.log(e);
         e.target.blur();
+        const _keyData = {};
         const keyClicked = utilityKeys
             .concat(numberKeys, functionKeys)
             .filter((k) => {
                 return k.id.toString() === e.target.id;
             });
-        let _clickData = {
-            key: keyClicked[0].value ? keyClicked[0].value : "",
-            ctrlKey: false,
-            shiftKey: false,
-        };
-        setClickData(_clickData);
+        let key = keyClicked[0].value ? keyClicked[0].value : "";
+        _keyData.key = key;
+        _keyData.timeStamp = e.timeStamp;
+        setInputData(_keyData);
     };
 
     const onSelectThemeType = (e) => {
@@ -113,11 +112,20 @@ const Calculator = () => {
         // setCookie(cookieData);
     };
 
-    const [clickData, setClickData] = useState({
+    const [inputData, setInputData] = useState({
         key: undefined,
-        ctrlKey: false,
-        shiftKey: false,
+        timeStamp: undefined,
     });
+
+    const isInitialMount = useRef(true);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            handleUserInput();
+        }
+    }, [inputData]);
 
     const [theme, setTheme] = useState("Ocean");
 
@@ -138,10 +146,29 @@ const Calculator = () => {
         value: "",
     });
 
-    const [resultData, setResultData] = useState({
+    const initialResultData = {
         className: "default",
         value: undefined,
+        computed: undefined,
+        num1: undefined,
+        op1: undefined,
+        num2: undefined,
+        op2: undefined,
+    };
+
+    const [resultData, setResultData] = useState({
+        ...initialResultData,
     });
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            handleUserInput();
+        }
+    }, [inputData]);
+
+    const handleResult = () => {};
 
     const toggleSidebar = (e) => {
         console.log(e, sidebarData);
@@ -178,19 +205,30 @@ const Calculator = () => {
 
     const [keyErr, setKeyErr] = useState(false);
 
-    const [computationData, setComputationData] = useState({
+    const initialComputationData = {
+        rawInput: undefined,
+        parsedInput: undefined,
         calculationValue: undefined,
         computed: undefined,
         nextChar: undefined,
-        operationType: undefined,
-        operator: undefined,
-        rawUserInput: undefined,
+        op1: undefined,
+        op2: undefined,
         resultValue: undefined,
+    };
+
+    const [computationData, setComputationData] = useState({
+        ...initialComputationData,
     });
 
     useEffect(() => {
-        document.addEventListener("keydown", (e) => handleKeyPress(e));
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            tryMath();
+        }
+    }, [computationData.rawInput]);
 
+    useEffect(() => {
         let _id = "animation-script",
             _scriptName = animation;
 
@@ -237,9 +275,15 @@ const Calculator = () => {
         } else if (document.getElementById(_id)) {
             removeScript(_id);
         }
-        document.removeEventListener("keydown", (e) => handleKeyPress(e));
     }),
         [sidebarData, animation];
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyPress);
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    });
 
     //    const [cookieData, setCookie] = useState(
     //       {   d:  new Date(),
@@ -311,260 +355,117 @@ const Calculator = () => {
         return <Sidebar props={_data} />;
     };
 
-    const handleKeyPress = (e) => {
-        // prevent these keys firing
-        // ctrl key 17, shift key 16 alt key 18
-        // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
-        if (
-            !(e.keyCode === 17) &&
-            !(e.keyCode === 16) &&
-            !(e.keyCode === 18) &&
-            !(e.keyCode === 91) &&
-            !(e.keyCode === 93) &&
-            !(e.keyCode === 37) &&
-            !(e.keyCode === 38) &&
-            !(e.keyCode === 39) &&
-            !(e.keyCode === 40)
-        ) {
-            var _key = utilityKeys
-                .concat(numberKeys, functionKeys)
-                .filter((k) => {
-                    return k.keycode === e.keyCode;
-                })[0];
-            if (_key) {
-                var _button = document.getElementById(_key.id);
-            }
-        } else {
-            return;
-        }
-        if (!e.repeat) {
-            if (_button === null || _button === undefined) {
+    const handleKeyPress = useCallback(
+        (e) => {
+            const _keyData = {};
+            // prevent these keys firing
+            // ctrl key 17, shift key 16 alt key 18
+            // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
+            const {
+                key,
+                shiftKey,
+                ctrlKey,
+                metaKey,
+                keyCode,
+                repeat,
+                timeStamp,
+            } = e;
+            if (!DISALLOWED_KEYS.includes(keyCode)) {
+                var _key = utilityKeys
+                    .concat(numberKeys, functionKeys)
+                    .filter((k) => {
+                        return k.keycode === keyCode;
+                    })[0];
+                if (_key) {
+                    var _button = document.getElementById(_key.id);
+                }
+            } else {
                 return;
-            } else if (_button !== null || _button !== undefined) {
-                _button.focus(timeout);
-                var timeout = setTimeout(() => _button.blur(), 200);
             }
-            if (ALLOWED_KEYS.includes(e.keyCode)) {
-                let keyData = {
-                    key: e.key,
-                    ctrlKey: e.ctrlKey,
-                    metaKey: e.metaKey,
-                    shiftKey: e.shiftKey,
-                    keyCode: e.keyCode,
-                };
-                // quick hack to get enter key to do = function
-                if (e.key === "Enter") {
-                    keyData.key = "=";
+            if (!repeat) {
+                if (_button === null || _button === undefined) {
+                    return;
+                } else if (_button !== null || _button !== undefined) {
+                    _button.focus(timeout);
+                    var timeout = setTimeout(() => _button.blur(), 200);
                 }
+                if (ALLOWED_KEYS.includes(keyCode)) {
+                    // exceptions
+                    ////
+                    if (ctrlKey && key !== "") {
+                        return;
+                    }
+                    // handle shift key pressed by itself
+                    // prevent going forward
+                    // shift key only allowed with "+" key
+                    // shift key alone keyCode === 16
+                    if (shiftKey && keyCode === 16) {
+                        return;
+                    }
 
-                // quick hack to get * key to do x function
-                if (e.key === "*") {
-                    keyData.key = "x";
+                    // prevent ctrl/cmd + r triggering sqr root
+                    if (
+                        (ctrlKey && keyCode === 82) ||
+                        (metaKey && keyCode === 82)
+                    ) {
+                        return;
+                    }
                 }
-
-                // quick hack to get * key to do x function
-                if (e.key === "Escape") {
-                    keyData.key = "a";
-                }
-                if (e.key === "Backspace") {
-                    console.log("Backspace");
-                    keyData.key = "c";
-                }
-                handleUserInput(keyData);
+                _keyData.key = key;
+                _keyData.timeStamp = timeStamp;
+                setInputData(_keyData);
             }
-        }
-    };
+        },
+        [inputData]
+    );
 
-    const handleUserInput = (inputData) => {
+    const handleUserInput = () => {
         // if maths error then prevent all input except esc for ac
-        if (keyErr && inputData.key !== "a") {
+
+        let _computationData = { ...computationData },
+            { rawInput } = _computationData || "";
+        const { key } = inputData;
+        if (keyErr && key !== "a") {
             return;
         }
-        if (computationData.rawUserInput) {
-            computationData.rawUserInput += inputData.key;
+        if (rawInput) {
+            rawInput += key;
         } else {
-            computationData.rawUserInput = inputData.key;
+            rawInput = key;
         }
-        // this.setState({ rawUserInput });
-        // console.log(`rawUserInput ${rawUserInput}`);
-
-        const { key, shiftKey, ctrlKey, metaKey, keyCode } = { ...inputData };
-
-        // exceptions
-        ////
-        if (ctrlKey && key !== "") {
-            return;
-        }
-        // handle shift key pressed by itself
-        // prevent going forward
-        // shift key only allowed with "+" key
-        // shift key alone keyCode === 16
-        if (shiftKey && keyCode === 16) {
-            return;
-        }
-
-        // prevent ctrl/cmd + r triggering sqr root
-        if ((ctrlKey && keyCode === 82) || (metaKey && keyCode === 82)) {
-            return;
-        }
-        if (computationData.computed) {
-            computationData.nextChar = inputData.key;
-            setComputationData(computationData);
-            prepareForNextCalculation();
-        } else {
-            setComputationData(computationData);
-            parseUserInput();
-        }
+        _computationData.rawInput = processRawInput(rawInput);
+        setComputationData({ ..._computationData });
     };
 
-    const parseUserInput = () => {
-        /**
-         * 2 situations
-         *
-         * 1. not ready for maths
-         * a. fresh
-         * b. secondary
-         *
-         * 2. ready for maths
-         * a. fresh math
-         * b. secondary math
-         *
-         * 4. fresh math
-         * 5. secondary math
-         *
-         * hallmarks
-         *
-         * fresh math
-         *
-         *      (current) result value -    null
-         *      computed -                  false
-         *      previous result -           null
-         *      previous operator -         null
-         *      computation type -          null
-         *      next operator -             null
-         *
-         * secondary math
-         *
-         *      (current) result value -    NOT null
-         *      computed -                  true
-         *      previous result -           NOT null
-         *      previous operator -         NOT null
-         *      computation type -          unary or binary
-         *          unary
-         *      next operator -             null
-         *          binary
-         *      next operator -             NOT null
-         *
-         * tests to do
-         *
-         * 1. fresh or secondary
-         *  is computed true
-         *
-         *  yes - pre-process
-         *  no - is this 4
-         *  yes - 4
-         *  no - 1
-         *  is it 1a?
-         *  yes - do 1a
-         *  no - do ib
-         *
-         */
-        if (
-            CONSTANTS.patternStack.MATH_CATCHER.test(
-                convertFromUnicodeToChar(computationData.rawUserInput)
-            )
-        ) {
-            // we can do maths
-            computationData = doMaths({ ...computationData });
-            setComputationData(computationData);
-            // no result from a maths computation
-            // continue to process the user input
-            // build up calculation string
-            // continue to purify user input
-        } else {
-            /**
-             * we cannot do maths so continue to store the input in calculation data
-             */
-            computationData.calculationValue = computationData.rawUserInput;
-            computationData = setComputationData(processInput(computationData));
-            return;
-        }
-    };
+    const tryMath = () => {
+        const { rawInput } = computationData || undefined;
+        console.log("tryMath", rawInput);
 
-    const postResultPreperation = () => {
-        let {
-                calculationValue,
-                computed,
-                nextChar,
-                operationType,
-                operator,
-                rawUserInput,
-                resultValue,
-            } = computationData,
-            computationData = computationData;
+        // if (rawInput) {
+        //     if (CONSTANTS.patternStack.MATH_CATCHER.test(rawInput)) {
+        // we can do maths
 
-        console.log(
-            "postResultPreperation",
-            computationData,
-            computationData.resultValue
-        );
-        if (computationData.computed) {
-            delete computationData.computed;
-        }
-        if (
-            operator !== "=" &&
-            !CONSTANTS.UNARY_OPERATOR_REGEX.test(operator)
-        ) {
-            /**
-             * maths operator
-             */
-            computationData.rawUserInput = resultValue + operator;
-        } else if (CONSTANTS.UNARY_OPERATOR_REGEX.test(operator)) {
-            console.log("UNARY_OPERATOR_REGEX hit - s or r pressed");
-            // computationData.calculationValue ="";
-            // computationData.rawUserInput = "";
-            // computationData.resultValue = "";
-            computationData.rawUserInput = resultValue;
-
-            computationData.calculationValue = convertFromCharToUnicode(
-                calculationValue + operator
+        let _resultData = doMaths(rawInput);
+        if (_resultData.computed) {
+            console.log(
+                "we have returned from doing maths",
+                "_resultData",
+                _resultData
             );
-        }
 
-        setComputationData(computationData);
-    };
-
-    const prepareForNextCalculation = () => {
-        console.log(
-            "prepareForNextCalculation",
-            computationData,
-            computationData.resultValue
-        );
-        let {
-                calculationValue,
-                computed,
-                nextChar,
-                operationType,
-                operator,
-                rawUserInput,
-                resultValue,
-            } = computationData,
-            computationData = computationData;
-        if (computationData.hasOwnProperty("computed")) {
-            delete computationData.computed;
+            const { computed, op1, num1, num2, op2, value } = _resultData;
+            setResultData({ ...resultData, ..._resultData });
+        } else {
+            let _calculationData = { ...calculationData };
+            _calculationData.value = rawInput;
+            console.log(
+                " // no result from a maths computationc continue to process the user input build up calculation string continue to purify user input code",
+                _resultData,
+                _calculationData,
+                rawInput
+            );
+            setCalculationData(_calculationData);
         }
-        if (computationData.operator !== "=") {
-            /**
-             * maths operator + number
-             */
-            if (/\d/.test(computationData.nextChar)) {
-                computationData.rawUserInput =
-                    resultValue + operator + nextChar;
-            }
-        }
-
-        setComputationData(computationData);
-        parseUserInput();
     };
 
     const getSelected = (keyboardName) => {
@@ -612,10 +513,12 @@ const Calculator = () => {
                     {CONSTANTS.APPLICATION_TITLE}
                 </Typography>
                 {/* ------------ display ---------------- */}
-                <Display
-                    calculationData={{ ...calculationData }}
-                    resultData={{ ...resultData }}
-                />
+                <CalculationContextProvider value={calculationData}>
+                    <Display
+                        // calculationData={{ ...calculationData }}
+                        resultData={{ ...resultData }}
+                    />
+                </CalculationContextProvider>
                 {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container

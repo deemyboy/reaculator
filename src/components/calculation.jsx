@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import Paper from "@mui/material/Paper";
+import CalculationContext from "../js/context";
 
-const Calculation = (props) => {
-    const { value, className } = props.calculationData;
+const Calculation = () => {
+    const { calculationData } = useContext(CalculationContext);
+    const { value } = calculationData || "";
+    const { className } = calculationData || "";
     const defaultClassName = "calculation";
     const errClassName = "calculation_err";
     let _className = defaultClassName;

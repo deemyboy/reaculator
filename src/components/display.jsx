@@ -11,9 +11,7 @@ const Display = (props) => {
     }
     return (
         <Grid sx={{}} className={displayClass}>
-            <Calculation calculationData={props.calculationData}>
-                500 x 100
-            </Calculation>
+            <Calculation>500 x 100</Calculation>
             <p className="clearIt"></p>
             <Result resultData={props.resultData}>50000</Result>
         </Grid>
