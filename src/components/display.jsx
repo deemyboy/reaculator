@@ -1,19 +1,26 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { Grid } from "@mui/material";
+import { DisplayContext } from "../js/context";
 
-import Calculation from "./calculation";
-import Result from "./result";
+import Line from "./line";
 
 const Display = (props) => {
+    const lines = useContext(DisplayContext);
     let displayClass = "display";
     if (props.displayClass) {
         displayClass = props.displayClass;
     }
     return (
         <Grid sx={{}} className={displayClass}>
-            <Calculation>500 x 100</Calculation>
-            <p className="clearIt"></p>
-            <Result resultData={props.resultData}>50000</Result>
+            {lines.map((line) => {
+                return (
+                    <Line
+                        key={Math.random()}
+                        className={line.className}
+                        value={line.value}
+                    />
+                );
+            })}
         </Grid>
     );
 };

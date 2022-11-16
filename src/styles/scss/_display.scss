@@ -20,14 +20,11 @@
             font-size: 2rem;
             min-height: 3rem;
         }
-        .clearIt {
-            margin: 0;
-        }
         .result {
             font-size: 3rem;
+            min-height: 4rem;
         }
-
-        .result_err {
+        .result_error {
             @extend .result;
             color: red;
         }

@@ -3,7 +3,7 @@ export const UNARY_OPERATOR_REGEX = /[sr]/;
 export const APPLICATION_TITLE = "Reaculator";
 export const CANVAS_CONTAINER_ID = "cvs";
 export const CONTINUING_MATH_OPERATOR_CATCHER = /[xy\/\-+rs]/;
-export const VALID_NUMBER =
+export const VALID_COMPUTATION =
     /(^-?\d+\.?\d*)([xy\/\-+])(-?\d+\.?\d*)([xy\/\-+=]$)|^(-?\d*\.?\d*)([rs=])$/;
 export const UNICHAR_REPLACEMENT_CATCHER = /[x\/sry]/;
 
@@ -23,7 +23,8 @@ export const patternStack = {
     MATH_CATCHER:
         /^(-?\d+\.?\d*)([rs=])$|^(-?\d+\.?\d*)([xy\/\-+])(-?\d+\.?\d*)([xy\/\-+=])$/,
     DOUBLE_OPERATOR_CATCHER:
-        /(?!^-?\d*\.?\d*[xy\/\-+]-)^(-?\d*\.?\d*)([xy\/\-+rs]{2})/,
+        // /(?!^-?\d*\.?\d*[xy\/\-+]-)^(-?\d*\.?\d*)([xy\/\-+rs]{2})/,
+        /^(?!\d+\.?\d*(?:s|r))^(-?\d+\.?\d*)([xy\/\-+rs]{2})|(?![xy\/\-+](-?\d+\.?\d*)(?:=|r|s))[xy\/\-+](-?\d+\.?\d*)([xy\/\-+=rs]){2}/,
     NUM1_FLOATING_DOT_CATCHER:
         /(?!^-?\d+\.\d+)^-?(\d+\.[xy\/\-+])|^(-?\d*\.)([rs=])$/,
     NUM2_FLOATING_DOT_CATCHER: /(?!^-?\d+\.\d+)[xy\/\-+](-?\d+\.[xy\/\-+])$/,

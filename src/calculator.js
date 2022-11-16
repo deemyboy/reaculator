@@ -8,20 +8,12 @@ import {
     numberKeys,
     functionKeys,
     utilityKeys,
-    themeTypeKeys,
-    themeKeys,
-    animKeys,
-    pictureKeys,
     ALLOWED_KEYS,
     DISALLOWED_KEYS,
 } from "./js/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./js/constants";
-import {
-    doMaths,
-    convertFromUnicodeToChar,
-    convertFromCharToUnicode,
-} from "./js/maths_engine.mjs";
+import { doMath, unicodify, deunicodify } from "./js/maths_engine.mjs";
 import { processRawInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
@@ -30,13 +22,10 @@ const cookie = new Cookies();
 
 import {
     HandleClickContextProvider,
-    CalculationContextProvider,
+    DisplayContextProvider,
 } from "./js/context";
 
 const Calculator = () => {
-    // displayRef = React.createRef();
-    const displayRef = useRef(null);
-    // canvasRef = React.createRef();
     const canvasRef = useRef(null);
     // constructor(props) {
     //     super(props);
@@ -119,6 +108,7 @@ const Calculator = () => {
 
     const isInitialMount = useRef(true);
 
+    // handleUserInput
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
@@ -131,6 +121,7 @@ const Calculator = () => {
 
     const [themeType, setThemeType] = useState("color");
 
+    // setSidebarData - visibleKeyboards
     useEffect(() => {
         let _visibleKeyboards = getVisibleSidebarKeyboards();
         sidebarData.keyboardNames = _visibleKeyboards;
@@ -141,14 +132,55 @@ const Calculator = () => {
 
     const [pictureType, setPictureType] = useState("still");
 
-    const [calculationData, setCalculationData] = useState({
-        className: "default",
+    const getClassNames = (componentData) => {
+        if (appState === "error") {
+            componentData.className =
+                componentData.defaultClassName +
+                " " +
+                componentData.errorClassName;
+        } else {
+            componentData.className = componentData.defaultClassName;
+        }
+        return componentData;
+    };
+
+    const initialCalculationData = {
+        className: "calculation",
+        defaultClassName: "calculation",
+        errorClassName: "calculation_error",
         value: "",
+    };
+
+    const [calculationData, setCalculationData] = useState({
+        ...initialCalculationData,
     });
 
+    const resetCalculationData = () => {
+        console.log("resetCalculationData");
+        setCalculationData(initialCalculationData);
+    };
+
+    const makeCalculationData = () => {
+        console.log("makeCalculationData");
+
+        let _calculationData = { ...calculationData };
+        // if (!resultData.computed) {
+        let _rawInput = computationData.rawInput || undefined;
+        // } else {
+        // }
+        // convert symbols to unicode if present
+        _calculationData.value = /[x\/sry]/.test(_rawInput)
+            ? unicodify(_rawInput)
+            : _rawInput;
+
+        setCalculationData(_calculationData);
+    };
+
     const initialResultData = {
-        className: "default",
-        value: undefined,
+        className: "result",
+        defaultClassName: "result",
+        errorClassName: "result_error",
+        value: 0,
         computed: undefined,
         num1: undefined,
         op1: undefined,
@@ -160,18 +192,31 @@ const Calculator = () => {
         ...initialResultData,
     });
 
-    useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            handleUserInput();
-        }
-    }, [inputData]);
+    const resetResultData = () => {
+        setResultData(initialResultData);
+    };
 
-    const handleResult = () => {};
+    const [postResultData, setPostResultData] = useState({
+        rawInput: undefined,
+        value: undefined,
+        computed: undefined,
+        num1: undefined,
+        op1: undefined,
+        num2: undefined,
+        op2: undefined,
+    });
+
+    const handleResult = () => {
+        let _resultData = { ...resultData };
+        let { value, computed, num1, op1, num2, op2 } = _resultData;
+        if (!op2) {
+            // unary math
+        } else {
+            // binary math
+        }
+    };
 
     const toggleSidebar = (e) => {
-        console.log(e, sidebarData);
         e.preventDefault();
         e.stopPropagation();
         sidebarData.isOpen = !sidebarData.isOpen;
@@ -203,7 +248,7 @@ const Calculator = () => {
         selected: "",
     });
 
-    const [keyErr, setKeyErr] = useState(false);
+    const [keyError, setKeyError] = useState(false);
 
     const initialComputationData = {
         rawInput: undefined,
@@ -220,14 +265,48 @@ const Calculator = () => {
         ...initialComputationData,
     });
 
+    // makeCalculationData
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-            tryMath();
+            makeCalculationData();
         }
-    }, [computationData.rawInput]);
+    }, [computationData]);
 
+    const [appState, setAppState] = useState();
+
+    const lines = [getClassNames(calculationData), getClassNames(resultData)];
+
+    //  appState
+    useEffect(() => {
+        let _appState;
+        if (resultData.error) {
+            _appState = "error";
+        } else {
+            _appState = "default";
+        }
+        setAppState(_appState);
+    }, [resultData.error]);
+
+    // tryMath
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            if (
+                CONSTANTS.patternStack.MATH_CATCHER.test(
+                    computationData.rawInput
+                )
+            ) {
+                tryMath();
+            } else {
+                // makeCalculationData();
+            }
+        }
+    }, [computationData.rawInput, resultData.value]);
+
+    // animation
     useEffect(() => {
         let _id = "animation-script",
             _scriptName = animation;
@@ -278,6 +357,7 @@ const Calculator = () => {
     }),
         [sidebarData, animation];
 
+    // key press event listeners
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress);
         return () => {
@@ -420,12 +500,12 @@ const Calculator = () => {
     );
 
     const handleUserInput = () => {
-        // if maths error then prevent all input except esc for ac
-
+        // console.log("handleUserInput");
         let _computationData = { ...computationData },
             { rawInput } = _computationData || "";
         const { key } = inputData;
-        if (keyErr && key !== "a") {
+        // if maths error then prevent all input except esc for ac
+        if (keyError && key !== "a") {
             return;
         }
         if (rawInput) {
@@ -434,38 +514,117 @@ const Calculator = () => {
             rawInput = key;
         }
         _computationData.rawInput = processRawInput(rawInput);
-        setComputationData({ ..._computationData });
+        setComputationData(_computationData);
+    };
+
+    const preProcessResultData = () => {
+        let _resultData = { ...resultData };
+        console.log("preProcessResultData hit");
+        let nextChar = computationData.rawInput.charAt(
+            computationData.rawInput.length - 1
+        );
+
+        let { computed, op1, num1, num2, op2, value, rawInput } = _resultData;
+        console.log(
+            computed,
+            op1,
+            num1,
+            num2,
+            "op2 = ",
+            op2,
+            !op2,
+            value,
+            rawInput,
+            "nextChar",
+            nextChar,
+            computationData.rawInput
+        );
+        if (!op2) {
+            // unary maths
+            if (/\d/.test(nextChar)) {
+                // number pressed
+                // does not intend to continue maths
+                // reset
+                console.log(
+                    " // unary maths | number pressed does not intend to | NOT continue"
+                );
+                resetResultData();
+                setComputationData({ ...computationData, rawInput: nextChar });
+            } else {
+                console.log(" // unary maths | operator pressed | DO continue");
+                _resultData.computed = false;
+                setResultData({ ..._resultData });
+                setComputationData({
+                    ...computationData,
+                    rawInput: value + nextChar,
+                });
+                resetCalculationData();
+            }
+        } else {
+            // binary maths
+            if (/\d/.test(nextChar)) {
+                console.log(" // binary maths | NUMBER");
+                if (op2 === "=") {
+                    console.log(
+                        " // binary maths | NUMBER | TRIGGER -> = | NOT continue"
+                    );
+                    // non continuing
+                    resetResultData();
+                    setComputationData({
+                        ...computationData,
+                        rawInput: nextChar,
+                    });
+                } else {
+                    //
+                    console.log(
+                        " // binary maths | NUMBER | TRIGGER -> op | DO continue"
+                    );
+                    _resultData.computed = false;
+                    setResultData({ ..._resultData });
+                    setComputationData({
+                        ...computationData,
+                        rawInput: value + op2 + nextChar,
+                    });
+                    // resetCalculationData();
+                }
+            } else {
+                console.log(" // binary maths | OPERATOR");
+                console.log(" // binary maths | op pressed check previous op");
+                if (op2 === "=") {
+                    console.log(
+                        " // binary maths | op pressed after = pressed  | DO continue"
+                    );
+                    // CONTINUING
+                    _resultData.computed = false;
+                    setResultData({ ..._resultData });
+                    setComputationData({
+                        ...computationData,
+                        rawInput: value + nextChar,
+                    });
+                    resetCalculationData();
+                }
+            }
+        }
     };
 
     const tryMath = () => {
-        const { rawInput } = computationData || undefined;
-        console.log("tryMath", rawInput);
-
-        // if (rawInput) {
-        //     if (CONSTANTS.patternStack.MATH_CATCHER.test(rawInput)) {
-        // we can do maths
-
-        let _resultData = doMaths(rawInput);
-        if (_resultData.computed) {
+        let _rawInput, _resultData;
+        _rawInput = computationData.rawInput || undefined;
+        if (!resultData.computed) {
+            _resultData = doMath(_rawInput);
             console.log(
                 "we have returned from doing maths",
                 "_resultData",
                 _resultData
             );
-
-            const { computed, op1, num1, num2, op2, value } = _resultData;
-            setResultData({ ...resultData, ..._resultData });
         } else {
-            let _calculationData = { ...calculationData };
-            _calculationData.value = rawInput;
-            console.log(
-                " // no result from a maths computationc continue to process the user input build up calculation string continue to purify user input code",
-                _resultData,
-                _calculationData,
-                rawInput
-            );
-            setCalculationData(_calculationData);
+            preProcessResultData();
         }
+        setResultData({
+            ...resultData,
+            ..._resultData,
+            rawInput: _rawInput,
+        });
     };
 
     const getSelected = (keyboardName) => {
@@ -483,11 +642,6 @@ const Calculator = () => {
         }
     };
 
-    const setResultClass = (newClassName) => {
-        resultData.className = newClassName;
-        setResultData(resultData);
-    };
-
     return (
         <Container
             className={`container ${
@@ -496,7 +650,6 @@ const Calculator = () => {
             sx={{ p: "0!important" }}
         >
             {/* ------------ app ---------------- */}
-            {/* ------------ display and keyboards---------------- */}
             <p className="settings" onClick={toggleSidebar}>
                 <i className="cog" aria-hidden="true"></i>
             </p>
@@ -508,17 +661,15 @@ const Calculator = () => {
                 className={"calculator"}
                 meta-name="display and keyboards"
             >
+                {/* ------------ canvas ---------------- */}
                 <Canvas ref={canvasRef} id={CONSTANTS.CANVAS_CONTAINER_ID} />
                 <Typography className="title">
                     {CONSTANTS.APPLICATION_TITLE}
                 </Typography>
                 {/* ------------ display ---------------- */}
-                <CalculationContextProvider value={calculationData}>
-                    <Display
-                        // calculationData={{ ...calculationData }}
-                        resultData={{ ...resultData }}
-                    />
-                </CalculationContextProvider>
+                <DisplayContextProvider value={lines}>
+                    <Display />
+                </DisplayContextProvider>
                 {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container
@@ -531,7 +682,6 @@ const Calculator = () => {
                 </Grid>
             </Grid>
             {/* ------------ sidebar ---------------- */}
-            {/* <Sidebar props={sidebarData} /> */}
             {makeSidebar(sidebarData)}
         </Container>
     );

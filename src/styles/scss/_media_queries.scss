@@ -300,7 +300,7 @@
         .calculation {
         }
         .result,
-        .result_err {
+        .result_error {
         }
         p {
         }
@@ -421,7 +421,7 @@
             min-height: 2rem;
           }
           .result,
-          .result_err {
+          .result_error {
             font-size: 2rem;
           }
         }
@@ -500,7 +500,7 @@
             min-height: 3rem;
           }
           .result,
-          .result_err {
+          .result_error {
             font-size: 3rem;
           }
         }
@@ -552,7 +552,7 @@
             min-height: 2rem;
           }
           .result,
-          .result_err {
+          .result_error {
             font-size: 1.8rem;
           }
         }

@@ -1,16 +1,11 @@
 import { patternStack } from "./constants.js";
-import {
-    convertFromUnicodeToChar,
-    convertFromCharToUnicode,
-} from "./maths_engine.mjs";
+import { unicodify, deunicodify } from "./maths_engine.mjs";
 
 export const processRawInput = (input) => {
     // console.log("processRawInput", input);
-    // input = convertFromUnicodeToChar(input);
-
     for (const key in patternStack) {
         var _input = getPatternOperation(patternStack[key], key, input);
-        if (_input) {
+        if (_input || _input === "") {
             return _input;
         }
     }
@@ -18,8 +13,7 @@ export const processRawInput = (input) => {
 };
 
 const processRawInput2 = (repairs) => (pattern, name, input) => {
-    // console.log("processRawInput2", name, input);
-    console.log("processRawInput2 |", name);
+    // console.log("processRawInput2 |", name);
     if (pattern.test(input)) {
         input = repairs[name](input);
         return input;
@@ -144,7 +138,7 @@ const repairStack = {
         return input;
     },
     DOUBLE_OPERATOR_CATCHER: function (input) {
-        // console.log(`DOUBLE_OPERATOR_CATCHER ${input}`);
+        console.log(`DOUBLE_OPERATOR_CATCHER ${input}`);
         input = input.substring(0, input.length - 1);
         return input;
     },
@@ -186,11 +180,9 @@ const repairStack = {
         return input;
     },
     C_CATCHER: function (input) {
-        // console.log(`C_CATCHER ${input}`);
-        let _value = input;
-        let matches = _value.match(patternStack.C_CATCHER);
-        if (matches) {
-            input = input.replace(/.c$/, "");
+        console.log(`C_CATCHER ${input}`);
+        if (patternStack.C_CATCHER.test(input)) {
+            input = input.replace(/..$/, "");
         }
         return input;
     },

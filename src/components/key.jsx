@@ -24,11 +24,11 @@ const Key = (props) => {
             thmClass: "btn-theme",
             thmTypeClass: "btn-theme-type",
             picTypeClass: "btn-pic-type",
-            errClass: "btn-error",
+            errorClass: "btn-error",
             useMeClass: "btn-use-me",
         };
         const specialClass = keyObj.specialClass ? keyObj.specialClass : "";
-        const errState = props.keyErr ? props.keyErr : "";
+        const errorState = keyObj.keyError ? keyObj.keyError : "";
         const selected = keyObj.selected ? "selected" : "";
 
         if (keyObj.type === "num") {
@@ -48,9 +48,9 @@ const Key = (props) => {
         if (selected) {
             classNames += " " + selected;
         }
-        if (errState) {
+        if (errorState) {
             if (keyObj.value !== "a") {
-                classNames += " " + errClass;
+                classNames += " " + errorClass;
             } else {
                 classNames += " " + useMeClass;
             }
@@ -73,12 +73,10 @@ const Key = (props) => {
         return key.id === props.id;
     });
 
-    const { id, value, title, keycode, code, type, location } = _key;
+    const { id, value, title, location } = _key;
 
     const { uniChar } = _key || "";
-    const { specialClass } = _key || "";
     const { showTitle } = _key || "";
-    const { calculationDisplayChar } = _key || "";
     const { subTitle } = _key || "";
 
     if (showTitle) {
@@ -102,22 +100,20 @@ const Key = (props) => {
     }
 
     return (
-        <React.Fragment>
-            <Box className={boxClassName}>
-                {_title}
-                <Button
-                    id={id}
-                    className={setKeyClasses(_key)}
-                    onClick={(e) => handleClick(e)}
-                    size="large"
-                    title={title}
-                    variant={"outlined"}
-                >
-                    {uniChar ? uniChar : value}
-                </Button>
-                {_subTitle}
-            </Box>
-        </React.Fragment>
+        <Box className={boxClassName}>
+            {_title}
+            <Button
+                id={id}
+                className={setKeyClasses(_key)}
+                onClick={(e) => handleClick(e)}
+                size="large"
+                title={title}
+                variant={"outlined"}
+            >
+                {uniChar ? uniChar : value}
+            </Button>
+            {_subTitle}
+        </Box>
     );
 };
 export default Key;
