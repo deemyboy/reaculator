@@ -24,6 +24,7 @@ export const numberKeys = [
         code: "Digit1",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 2,
@@ -33,6 +34,7 @@ export const numberKeys = [
         code: "Digit2",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 3,
@@ -42,6 +44,7 @@ export const numberKeys = [
         code: "Digit3",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 4,
@@ -51,6 +54,7 @@ export const numberKeys = [
         code: "Digit4",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 5,
@@ -60,6 +64,7 @@ export const numberKeys = [
         code: "Digit5",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 6,
@@ -69,6 +74,7 @@ export const numberKeys = [
         code: "Digit6",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 7,
@@ -78,6 +84,7 @@ export const numberKeys = [
         code: "Digit7",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 8,
@@ -87,6 +94,7 @@ export const numberKeys = [
         code: "Digit8",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 9,
@@ -96,6 +104,7 @@ export const numberKeys = [
         code: "Digit9",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 0,
@@ -105,6 +114,7 @@ export const numberKeys = [
         code: "Digit0",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 10,
@@ -114,6 +124,7 @@ export const numberKeys = [
         code: "Period",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
     },
     {
         id: 11,
@@ -125,6 +136,7 @@ export const numberKeys = [
         code: "KeyM",
         type: "num",
         location: "main",
+        className: "btn btn-lg btn-primary",
         subTitle: "m",
     },
 ];
@@ -138,6 +150,7 @@ export const functionKeys = [
         code: "Equal",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-secondary",
     },
     {
         id: 12,
@@ -147,6 +160,7 @@ export const functionKeys = [
         code: "Minus",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-secondary",
     },
     {
         id: 13,
@@ -158,6 +172,7 @@ export const functionKeys = [
         code: "KeyX",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-secondary",
         subTitle: "x",
     },
     {
@@ -170,6 +185,7 @@ export const functionKeys = [
         code: "Slash",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-secondary",
         subTitle: "/",
     },
     {
@@ -182,6 +198,7 @@ export const functionKeys = [
         code: "KeyS",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-secondary",
         subTitle: "s",
     },
     {
@@ -194,6 +211,7 @@ export const functionKeys = [
         code: "KeyR",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-secondary",
         ctrlKey: false,
         subTitle: "r",
     },
@@ -207,30 +225,28 @@ export const functionKeys = [
         code: "KeyY",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-secondary",
         subTitle: "y",
     },
     {
         id: 16,
         value: "=",
-        specialClass: "btn-success",
         title: "equals",
         keycode: 187,
         code: "Equal",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-success btn-secondary",
     },
-];
-
-export const utilityKeys = [
     {
         id: 17,
         value: "c",
-        specialClass: "btn-danger",
         title: "clear last keypress (backspace)",
         keycode: 8,
         code: "Backspace",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-danger btn-secondary",
         subTitle: "\u232b", // erase left
         // subTitle: "\u2190", // left arrow
         // subTitle: "\u27A9", // left arrow 3d
@@ -239,13 +255,13 @@ export const utilityKeys = [
     {
         id: 18,
         value: "a",
-        specialClass: "btn-danger",
         uniChar: "\u0061\u0063",
         title: "all clear (esc)",
         keycode: 27,
         code: "Escape",
         type: "func",
         location: "main",
+        className: "btn btn-lg btn-danger btn-secondary",
         subTitle: "esc",
     },
 ];
@@ -254,31 +270,30 @@ export const themeTypeKeys = [
     {
         id: "picture",
         value: "picture",
-        specialClass: "",
         uniChar: "\uD83D\uDCF7",
         title: "picture",
         keycode: 65,
         code: "KeyA",
         type: "thype",
         location: "sidebar",
+        className: "btn btn-lg btn-theme-type",
         showTitle: true,
     },
     {
         id: "color",
         value: "color",
-        specialClass: "",
         uniChar: "\uD83C\uDFA8",
         title: "color",
         keycode: 65,
         code: "KeyA",
         type: "thype",
         location: "sidebar",
+        className: "btn btn-lg btn-theme-type",
         showTitle: true,
     },
     {
         id: "animation",
         value: "animation",
-        specialClass: "move-it",
         uniChar: "\u221E",
         uniChar: "\uD83D\uDE80",
         title: "animation",
@@ -286,6 +301,7 @@ export const themeTypeKeys = [
         code: "KeyA",
         type: "thype",
         location: "sidebar",
+        className: "btn btn-lg move-it btn-theme-type",
         showTitle: true,
     },
 ];
@@ -294,61 +310,61 @@ export const themeKeys = [
     {
         id: "fire",
         value: "fire",
-        specialClass: "btn-fire fire",
         uniChar: "\uD83D\uDD25",
         title: "fire",
         keycode: 55,
         code: "Digit7",
         type: "thm",
         location: "sidebar",
+        className: "btn btn-lg btn-fire fire btn-theme",
         showTitle: true,
     },
     {
         id: "midnight",
         value: "midnight",
-        specialClass: "btn-midnight midnight",
         uniChar: "\uD83C\uDF03",
         title: "midnight",
         keycode: 55,
         code: "Digit7",
         type: "thm",
         location: "sidebar",
+        className: "btn btn-lg btn-midnight midnight btn-theme",
         showTitle: true,
     },
     {
         id: "ocean",
         value: "ocean",
-        specialClass: "btn-ocean ocean",
         uniChar: "\uD83C\uDF0A",
         title: "ocean",
         keycode: 55,
         code: "Digit7",
         type: "thm",
         location: "sidebar",
+        className: "btn btn-lg btn-ocean ocean btn-theme",
         showTitle: true,
     },
     {
         id: "storm",
         value: "storm",
-        specialClass: "btn-storm storm",
         uniChar: "\u2614",
         title: "storm",
         keycode: 55,
         code: "Digit7",
         type: "thm",
         location: "sidebar",
+        className: "btn btn-lg btn-storm storm btn-theme",
         showTitle: true,
     },
     {
         id: "jungle",
         value: "jungle",
-        specialClass: "btn-jungle jungle",
         uniChar: "\uD83C\uDF33",
         title: "jungle",
         keycode: 55,
         code: "Digit7",
         type: "thm",
         location: "sidebar",
+        className: "btn btn-lg btn-jungle jungle btn-theme",
         showTitle: true,
     },
 ];
@@ -357,7 +373,6 @@ export const animKeys = [
     {
         id: "slither",
         value: "slither",
-        specialClass: "btn-animation-choose",
         // uniChar: "\uD83D\uDD00",
         uniChar: "\u219D",
         title: "slither",
@@ -365,12 +380,12 @@ export const animKeys = [
         code: "",
         type: "animChs",
         location: "sidebar",
+        className: "btn btn-lg btn-animation-choose",
         showTitle: true,
     },
     {
         id: "fireworks",
         value: "fireworks",
-        specialClass: "btn-animation-choose",
         // uniChar: "\uD83C\uDF86",// firework
         // uniChar: "\uD83C\uDF87",// sparkler
         uniChar: "\uD83D\uDCA5", // explosion
@@ -379,12 +394,12 @@ export const animKeys = [
         code: "",
         type: "animChs",
         location: "sidebar",
+        className: "btn btn-lg btn-animation-choose",
         showTitle: true,
     },
     // {
     //     id: "twist",
     //     value: "twist",
-    //     specialClass: "btn-animation-choose",
     //     // uniChar: "\uD83D\uDD00",// twisted-right
     //     // uniChar: "\uD83D\uDD01",// Clockwise Rightwards and Leftwards Open Circle Arrows
     //     // uniChar: "\uD83C\uDF0C" ,// milkyway symbol
@@ -394,6 +409,7 @@ export const animKeys = [
     //     code: "",
     //     type: "animChs",
     //     location: "sidebar",
+    // className: "btn btn-lg btn-animation-choose",
     //     showTitle: true,
     // },
 ];
@@ -402,29 +418,37 @@ export const animKeys = [
 // 0xD83D 0xDCA3 bomb
 // 0xD83D 0xDD2B pistol
 
+// numClass: "btn-primary",
+// funcClass: "btn-secondary",
+// thmClass: "btn-theme",
+// thmTypeClass: "btn-theme-type",
+// picTypeClass: "btn-pic-type",
+// errorClass: "btn-error",
+// useMeClass: "btn-use-me",
+
 export const pictureKeys = [
     {
         id: "still",
         value: "still",
-        specialClass: "btn-still still",
         uniChar: "\u23F8",
         title: "still",
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
         location: "sidebar",
+        className: "btn btn-lg btn-still still btn-pic-type",
         showTitle: true,
     },
     {
         id: "moving",
         value: "moving",
-        specialClass: "btn-moving moving",
         uniChar: "\u23E9",
         title: "moving",
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
         location: "sidebar",
+        className: "btn btn-lg btn-moving moving btn-pic-type",
         showTitle: true,
     },
 ];

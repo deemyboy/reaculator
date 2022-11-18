@@ -20,11 +20,15 @@
             font-size: 2rem;
             min-height: 3rem;
         }
+        .calculation-error {
+            @extend .calculation;
+            color: red;
+        }
         .result {
             font-size: 3rem;
             min-height: 4rem;
         }
-        .result_error {
+        .result-error {
             @extend .result;
             color: red;
         }

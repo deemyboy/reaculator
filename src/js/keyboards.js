@@ -1,7 +1,6 @@
 import {
     numberKeys,
     functionKeys,
-    utilityKeys,
     themeTypeKeys,
     themeKeys,
     animKeys,
@@ -24,15 +23,6 @@ export const keyboards = [
         keys: functionKeys,
         xs: 5,
         md: 5,
-    },
-    {
-        name: "utility",
-        className: "keyboard-utility",
-        showTitle: false,
-        keys: utilityKeys,
-        xs: 12,
-        md: 12,
-        lg: 12,
     },
     {
         name: "theme-type",

@@ -4,9 +4,8 @@ import Typography from "@mui/material/Typography";
 
 import Key from "./key";
 
-const Keyboard = ({ props, selected }) => {
+const Keyboard = ({ props, selected, appState }) => {
     const { title, className, keys } = props;
-
     const { xs } = props || "";
     const { md } = props || "";
     const { lg } = props || "";
@@ -28,7 +27,7 @@ const Keyboard = ({ props, selected }) => {
         >
             {_title}
             {keys.map((ky) => {
-                return <Key key={ky.id} id={ky.id} />;
+                return <Key key={ky.id} _key={ky} appState={appState} />;
             })}
         </Grid>
     );

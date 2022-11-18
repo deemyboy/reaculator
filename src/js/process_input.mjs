@@ -188,8 +188,7 @@ const repairStack = {
     },
     A_CATCHER: function (input) {
         console.log(`A_CATCHER ${input}`);
-        let allClear;
-        return undefined;
+        return "a";
     },
 };
 

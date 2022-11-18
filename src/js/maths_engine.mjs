@@ -43,6 +43,7 @@ export const unicodify = (str) => {
 };
 
 export const doMath = (input) => {
+    console.log("doMath", input);
     const extractComputationParts = (_input) => {
         let matches = VALID_COMPUTATION.exec(_input);
 
@@ -58,7 +59,7 @@ export const doMath = (input) => {
                 computationObject.op1 = matches[2];
                 computationObject.num2 = matches[3];
                 computationObject.op2 = matches[4];
-            } else {
+            } else if (matches[6] !== "=") {
                 computationObject.num1 = matches[5];
                 computationObject.op1 = matches[6];
                 computationObject.num2 = undefined;
@@ -73,13 +74,14 @@ export const doMath = (input) => {
 
     // console.log("time for doing maths!", input);
 
-    // if (patternStack.MATH_CATCHER.test(input)) {
     _result.value = getMathOperation(
         _computationalUnit.op1,
         _computationalUnit.num1,
         _computationalUnit.num2
-    ).toString();
-    // }
+    );
+    if (_result.value) {
+        _result.value = _result.value.toString();
+    }
 
     if (
         _result &&

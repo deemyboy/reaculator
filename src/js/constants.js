@@ -6,6 +6,8 @@ export const CONTINUING_MATH_OPERATOR_CATCHER = /[xy\/\-+rs]/;
 export const VALID_COMPUTATION =
     /(^-?\d+\.?\d*)([xy\/\-+])(-?\d+\.?\d*)([xy\/\-+=]$)|^(-?\d*\.?\d*)([rs=])$/;
 export const UNICHAR_REPLACEMENT_CATCHER = /[x\/sry]/;
+export const LAST_OPERATOR_CATCHER =
+    /(?:-?\d+\.?\d*)(?:[xy\/\-+])(?:-?\d+\.?\d*)([xy\/\-+=])/gm;
 
 export const patternStack = {
     INITIAL_OPERATOR_CATCHER: /^[xy\/\-+=rsacm]$/,
