@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { Grid } from "@mui/material";
-import { DisplayContext } from "../js/context";
+// import { DisplayContext } from "../js/context";
 
 import Line from "./line";
 
 const Display = (props) => {
-    const lines = useContext(DisplayContext);
+    const { lines } = props;
+    // console.log("Display", props);
     let displayClass = "display";
     if (props.displayClass) {
         displayClass = props.displayClass;

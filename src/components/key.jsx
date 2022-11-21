@@ -4,9 +4,9 @@ import { Typography, Box } from "@mui/material";
 import HandleClickContext from "../js/context";
 
 const Key = (props) => {
+    // console.log("Key");
     const handleClick = useContext(HandleClickContext);
-    const _disabled =
-        props.appState === "error" && props._key.id !== 18 ? true : false;
+    const _disabled = props.errorState && props._key.id !== 18 ? true : false;
     const _key = props._key;
     const errorClass = "btn-error";
 
@@ -18,7 +18,7 @@ const Key = (props) => {
         if (selected) {
             classNames += " " + selected;
         }
-        if (props.appState === "error") {
+        if (props.errorState) {
             if (keyObj.value !== "a") {
                 classNames += " " + errorClass;
             }

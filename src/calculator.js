@@ -40,7 +40,7 @@ const Calculator = () => {
 
     const title = "Reaculator";
 
-    const handleClick = (e) => {
+    const handleClick = useCallback((e) => {
         e.target.blur();
         const _keyData = {};
         const keyClicked = numberKeys.concat(functionKeys).filter((k) => {
@@ -50,9 +50,9 @@ const Calculator = () => {
         _keyData.key = key;
         _keyData.timeStamp = e.timeStamp;
         setInputData(_keyData);
-    };
+    }, []);
 
-    const onSelectThemeType = (e) => {
+    const onSelectThemeType = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
         let _themeTypeData = {};
@@ -61,9 +61,9 @@ const Calculator = () => {
         cookieData.cookieValue = _themeTypeData.currentSetting;
         cookieData.cookiePath = "/";
         setThemeType(_themeTypeData.currentSetting);
-    };
+    }, []);
 
-    const onSelectTheme = (e) => {
+    const onSelectTheme = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
         let _themesData = {};
@@ -73,9 +73,9 @@ const Calculator = () => {
         cookieData.cookiePath = "/";
         setTheme(_themesData.currentSetting);
         // setCookie(cookieData);
-    };
+    }, []);
 
-    const onSelectAnimation = (e) => {
+    const onSelectAnimation = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
         let _animation = e.target.id;
@@ -84,9 +84,9 @@ const Calculator = () => {
         cookieData.cookiePath = "/";
         setAnimation(_animation);
         // setCookie(cookieData);
-    };
+    }, []);
 
-    const onSelectPictureType = (e) => {
+    const onSelectPictureType = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
         let _pictureType = {};
@@ -96,7 +96,7 @@ const Calculator = () => {
         cookieData.cookiePath = "/";
         setPictureType(_pictureType);
         // setCookie(cookieData);
-    };
+    }, []);
 
     const [inputData, setInputData] = useState({
         key: undefined,
@@ -129,33 +129,19 @@ const Calculator = () => {
 
     const [pictureType, setPictureType] = useState("still");
 
-    const getClassNames = (componentData) => {
-        if (appState === "error") {
-            componentData.className =
-                classNames[componentData.name].defaultClassName +
-                " " +
-                classNames[componentData.name].errorClassName;
-        } else {
-            componentData.className =
-                classNames[componentData.name].defaultClassName;
-        }
-        return componentData;
-    };
-
     const classNames = {
         calculation: {
-            defaultClassName: "calculation",
-            errorClassName: "calculation-error",
+            default: "calculation",
+            error: "calculation-error",
         },
         result: {
-            defaultClassName: "result",
-            errorClassName: "result-error",
+            default: "result",
+            error: "result-error",
         },
     };
 
     const initialCalculationData = {
-        name: classNames.calculation.defaultClassName,
-        className: classNames.calculation.defaultClassName,
+        className: classNames.calculation.default,
         value: "",
     };
 
@@ -168,77 +154,24 @@ const Calculator = () => {
         setCalculationData(initialCalculationData);
     };
 
-    const makeCalculationData = () => {
-        console.log("makeCalculationData");
-
-        let _calculationData = { ...calculationData };
-        let _rawInput;
-        _rawInput =
-            computationData.rawInput !== undefined
-                ? computationData.rawInput
-                : undefined;
-
-        // convert symbols to unicode if present
-        if (appState !== "error") {
-            _calculationData.value = /[x\/sry]/.test(_rawInput)
-                ? unicodify(_rawInput).replace(
-                      CONSTANTS.LAST_OPERATOR_CATCHER,
-                      ""
-                  )
-                : _rawInput.replace(CONSTANTS.LAST_OPERATOR_CATCHER, "");
-        } else {
-            _calculationData.value = resultData.rawInput.replace(
-                CONSTANTS.LAST_OPERATOR_CATCHER,
-                ""
-            );
-        }
-        setCalculationData(_calculationData);
-    };
-
-    const initialResultData = {
-        name: classNames.result.defaultClassName,
-        className: classNames.result.defaultClassName,
-        value: 0,
-        computed: undefined,
-        num1: undefined,
-        op1: undefined,
-        num2: undefined,
-        op2: undefined,
-    };
-
-    const [resultData, setResultData] = useState({
-        ...initialResultData,
-    });
-
-    const resetResultData = () => {
-        setResultData(initialResultData);
-    };
-
-    const handleResult = () => {
-        let _resultData = { ...resultData };
-        let { value, computed, num1, op1, num2, op2 } = _resultData;
-        if (!op2) {
-            // unary math
-        } else {
-            // binary math
-        }
-    };
-
     const toggleSidebar = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (appState !== "error") {
+        let _sidebarData = { ...sidebarData };
+        if (!errorState) {
             // disable when in error
-            sidebarData.isOpen = !sidebarData.isOpen;
-            setSidebarData({ ...sidebarData });
+            _sidebarData.isOpen = !_sidebarData.isOpen;
+            setSidebarData(_sidebarData);
         }
     };
 
     const closeSidebar = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        sidebarData.isOpen = false;
+        let _sidebarData = { ...sidebarData };
+        _sidebarData.isOpen = false;
         setSidebarData({ ...sidebarData });
+        setSidebarData(_sidebarData);
     };
 
     const getVisibleSidebarKeyboards = () => {
@@ -263,13 +196,53 @@ const Calculator = () => {
 
     const initialComputationData = {
         rawInput: undefined,
-        parsedInput: undefined,
+        previousInput: undefined,
         calculationValue: undefined,
+        resultValue: 0,
         computed: undefined,
-        nextChar: undefined,
+        num1: undefined,
         op1: undefined,
+        num2: undefined,
         op2: undefined,
-        resultValue: undefined,
+        error: false,
+        calculationClassName: "calculation",
+        resultClassName: "result",
+        nextChar: undefined,
+    };
+
+    const setClassName = (key) => {
+        if (errorState) {
+            return classNames[key].default + " " + classNames[key].error;
+        } else {
+            return classNames[key].default;
+        }
+    };
+
+    const getLineData = (key) => {
+        let _lineData = {};
+        const _suffix = "ClassName";
+        const _suffix2 = "Value";
+        _lineData.className = computationData[key + _suffix];
+        _lineData.value = computationData[key + _suffix2];
+        return _lineData;
+    };
+
+    const setResultData = (data) => {
+        setComputationData({
+            rawInput: data.rawInput,
+            previousInput: data.rawInput,
+            calculationValue: data.calculationValue,
+            resultValue: data.resultValue,
+            computed: data.computed,
+            num1: data.num1,
+            op1: data.op1,
+            num2: data.num2,
+            op2: data.op2,
+            error: data.error,
+            // calculationClassName: setClassName("calculation"),
+            // resultClassName: setClassName("result"),
+            nextChar: data.nextChar,
+        });
     };
 
     const [computationData, setComputationData] = useState({
@@ -280,9 +253,29 @@ const Calculator = () => {
         setComputationData(initialComputationData);
     };
 
+    const makeCalculationData = () => {
+        console.log("makeCalculationData");
+
+        let _computationData = { ...computationData };
+        let calculationValue,
+            { rawInput, op2 } = _computationData;
+
+        calculationValue = /[x\/sry]/.test(rawInput)
+            ? unicodify(rawInput)
+            : rawInput;
+
+        if (op2) {
+            calculationValue = calculationValue.replace(/.$/, "");
+        }
+
+        setComputationData({
+            ...computationData,
+            calculationValue: calculationValue,
+        });
+    };
+
     const resetAll = () => {
-        setAppState(resetAppState);
-        resetResultData();
+        setErrorState(resetErrorState);
         resetCalculationData();
         resetComputationData();
     };
@@ -294,24 +287,33 @@ const Calculator = () => {
         } else if (computationData.rawInput !== undefined) {
             makeCalculationData();
         }
-    }, [computationData.rawInput]);
+    }, [computationData.rawInput, computationData.resultValue]);
 
-    const resetAppState = "default";
+    const resetErrorState = false;
 
-    const [appState, setAppState] = useState();
+    const [errorState, setErrorState] = useState();
 
-    const lines = [getClassNames(calculationData), getClassNames(resultData)];
+    const lineData = [
+        {
+            className: computationData.calculationClassName,
+            value: computationData.calculationValue,
+        },
+        {
+            className: computationData.resultClassName,
+            value: computationData.resultValue,
+        },
+    ];
 
-    //  appState
+    //  errorState
     useEffect(() => {
-        let _appState;
-        if (resultData.error) {
-            _appState = "error";
+        let _errorState;
+        if (computationData.error) {
+            _errorState = true;
         } else {
-            _appState = "default";
+            _errorState = false;
         }
-        setAppState(_appState);
-    }, [resultData.error]);
+        setErrorState(_errorState);
+    }, [computationData.error]);
 
     // tryMath
     useEffect(() => {
@@ -332,11 +334,11 @@ const Calculator = () => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-            if (resultData.computed === true) {
-                processResultData();
+            if (computationData.nextChar !== undefined) {
+                preProcessComputationData();
             }
         }
-    }, [resultData.computed]);
+    }, [computationData.nextChar]);
 
     // animation
     useEffect(() => {
@@ -430,7 +432,7 @@ const Calculator = () => {
         });
         return (
             <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                <Keyboard props={data} appState={appState} />
+                <Keyboard props={data} errorState={errorState} />
             </HandleClickContextProvider>
         );
     };
@@ -449,8 +451,7 @@ const Calculator = () => {
 
     const makeSidebar = (data) => {
         let _keyboards = [],
-            _keyboardData = {},
-            _data = data;
+            _keyboardData = {};
 
         data.keyboardNames.map((keyboardName) => {
             let _keyboardName = () => {
@@ -462,71 +463,66 @@ const Calculator = () => {
             _keyboardData.keyboards = _keyboards;
         });
 
-        _data.keyboards = _keyboards;
-        return <Sidebar props={_data} />;
+        data.keyboards = _keyboards;
+        return <Sidebar sidebarData={data} />;
     };
 
-    const handleKeyPress = useCallback(
-        (e) => {
-            const _keyData = {};
-            // prevent these keys firing
-            // ctrl key 17, shift key 16 alt key 18
-            // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
-            const {
-                key,
-                shiftKey,
-                ctrlKey,
-                metaKey,
-                keyCode,
-                repeat,
-                timeStamp,
-            } = e;
-            if (!DISALLOWED_KEYS.includes(keyCode)) {
-                var _key = numberKeys.concat(functionKeys).filter((k) => {
-                    return k.keycode === keyCode;
-                })[0];
-                if (_key) {
-                    var _button = document.getElementById(_key.id);
-                }
-            } else {
-                return;
-            }
-            if (!repeat) {
-                if (_button === null || _button === undefined) {
-                    return;
-                } else if (_button !== null || _button !== undefined) {
-                    _button.focus(timeout);
-                    var timeout = setTimeout(() => _button.blur(), 200);
-                }
-                if (ALLOWED_KEYS.includes(keyCode)) {
-                    // exceptions
-                    ////
-                    if (ctrlKey && key !== "") {
-                        return;
-                    }
-                    // handle shift key pressed by itself
-                    // prevent going forward
-                    // shift key only allowed with "+" key
-                    // shift key alone keyCode === 16
-                    if (shiftKey && keyCode === 16) {
-                        return;
-                    }
+    const makeDisplay = (data) => {
+        console.log("makeDisplay", data);
+        return <Display lines={data} />;
+    };
 
-                    // prevent ctrl/cmd + r triggering sqr root
-                    if (
-                        (ctrlKey && keyCode === 82) ||
-                        (metaKey && keyCode === 82)
-                    ) {
-                        return;
-                    }
-                }
-                _keyData.key = key;
-                _keyData.timeStamp = timeStamp;
-                setInputData(_keyData);
+    const handleKeyPress = useCallback((e) => {
+        const _keyData = {};
+        // prevent these keys firing
+        // ctrl key 17, shift key 16 alt key 18
+        // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
+        const { key, shiftKey, ctrlKey, metaKey, keyCode, repeat, timeStamp } =
+            e;
+        if (!DISALLOWED_KEYS.includes(keyCode)) {
+            var _key = numberKeys.concat(functionKeys).filter((k) => {
+                return k.keycode === keyCode;
+            })[0];
+            if (_key) {
+                var _button = document.getElementById(_key.id);
             }
-        },
-        [inputData]
-    );
+        } else {
+            return;
+        }
+        if (!repeat) {
+            if (_button === null || _button === undefined) {
+                return;
+            } else if (_button !== null || _button !== undefined) {
+                _button.focus(timeout);
+                var timeout = setTimeout(() => _button.blur(), 200);
+            }
+            if (ALLOWED_KEYS.includes(keyCode)) {
+                // exceptions
+                ////
+                if (ctrlKey && key !== "") {
+                    return;
+                }
+                // handle shift key pressed by itself
+                // prevent going forward
+                // shift key only allowed with "+" key
+                // shift key alone keyCode === 16
+                if (shiftKey && keyCode === 16) {
+                    return;
+                }
+
+                // prevent ctrl/cmd + r triggering sqr root
+                if (
+                    (ctrlKey && keyCode === 82) ||
+                    (metaKey && keyCode === 82)
+                ) {
+                    return;
+                }
+            }
+            _keyData.key = key;
+            _keyData.timeStamp = timeStamp;
+            setInputData(_keyData);
+        }
+    }, []);
 
     const handleUserInput = () => {
         // console.log("handleUserInput");
@@ -542,27 +538,40 @@ const Calculator = () => {
         if (keyError && key !== "a") {
             return;
         }
-        if (rawInput) {
-            rawInput += key;
+        if (_computationData.computed) {
+            _computationData.nextChar = key;
         } else {
-            rawInput = key;
-        }
-        _computationData.rawInput = processRawInput(rawInput);
-        if (_computationData.rawInput === "a") {
-            resetAll();
-            return;
+            if (rawInput) {
+                rawInput += key;
+            } else {
+                rawInput = key;
+            }
+            _computationData.rawInput = processRawInput(rawInput);
+            if (_computationData.rawInput === "a") {
+                resetAll();
+                return;
+            }
         }
         setComputationData(_computationData);
     };
 
-    const processResultData = () => {
-        let _resultData = { ...resultData };
-        console.log("processResultData hit");
-        let nextChar = computationData.rawInput.charAt(
-            computationData.rawInput.length - 1
-        );
+    const preProcessComputationData = () => {
+        console.log("preProcessComputationData hit", computationData);
+        let _computationData = { ...computationData };
 
-        let { computed, op1, num1, num2, op2, value, rawInput } = _resultData;
+        let {
+            rawInput,
+            previousInput,
+            calculationValue,
+            // resultValue,
+            computed,
+            num1,
+            op1,
+            num2,
+            op2,
+            error,
+            nextChar,
+        } = _computationData;
         console.log(
             "computed",
             computed,
@@ -576,8 +585,8 @@ const Calculator = () => {
             op2,
             "!op2",
             !op2,
-            "value",
-            value,
+            // "resultValue",
+            // resultValue,
             "rawInput",
             rawInput,
             "nextChar",
@@ -585,7 +594,7 @@ const Calculator = () => {
             "computationData.rawInput",
             computationData.rawInput
         );
-        setComputationData({ ...computationData, rawInput: undefined });
+        // setComputationData({ ...computationData, rawInput: undefined });
         if (!op2) {
             // unary maths
             if (/\d/.test(nextChar)) {
@@ -595,12 +604,11 @@ const Calculator = () => {
                 console.log(
                     " // unary maths | number pressed does not intend to | NOT continue"
                 );
-                resetResultData();
             } else {
                 console.log(" // unary maths | operator pressed | DO continue");
-                _resultData.computed = false;
-                setResultData({ ..._resultData });
-                resetCalculationData();
+                // _computationData.computed = false;
+                setResultData(_computationData);
+                // resetCalculationData();
             }
         } else {
             // binary maths
@@ -612,14 +620,13 @@ const Calculator = () => {
                         " // binary maths | NUMBER | TRIGGER -> = | NOT continue"
                     );
                     // non continuing
-                    resetResultData();
                 } else {
                     //
                     console.log(
                         " // binary maths | NUMBER | TRIGGER -> op | DO continue"
                     );
-                    _resultData.computed = false;
-                    setResultData({ ..._resultData });
+                    // _computationData.computed = false;
+                    setResultData(_computationData);
                     // resetCalculationData();
                 }
             } else {
@@ -632,19 +639,20 @@ const Calculator = () => {
                         " // binary maths | OPERATOR | TRIGGER -> =   | DO continue"
                     );
                     // CONTINUING
-                    _resultData.computed = false;
-                    setResultData({ ..._resultData });
-                    resetCalculationData();
+                    // _computationData.computed = false;
+                    setResultData(_computationData);
+                    // resetCalculationData();
                 } else {
                     //  + - / x + - / x
                     console.log(" // binary maths | OPERATOR");
                     console.log(
-                        " // binary maths | OPERATOR | TRIGGER -> + - / x   | DO continue"
+                        " // binary maths | OPERATOR | TRIGGER -> + - / x   | DO continue",
+                        _computationData
                     );
                     // CONTINUING
-                    _resultData.computed = false;
-                    setResultData({ ..._resultData });
-                    resetCalculationData();
+                    // _computationData.computed = false;
+                    setResultData(_computationData);
+                    // resetCalculationData();
                 }
             }
         }
@@ -652,36 +660,19 @@ const Calculator = () => {
 
     const tryMath = () => {
         console.log("tryMath");
-        let _rawInput, _resultData;
-        _rawInput = computationData.rawInput || undefined;
-        if (!resultData.computed && _rawInput) {
-            _resultData = doMath(_rawInput);
+        let _resultData,
+            _computationData = computationData;
+
+        let { rawInput, computed } = _computationData || undefined;
+        if (!computed && rawInput) {
+            _resultData = doMath(rawInput);
             console.log(
                 "we have returned from doing maths",
                 "_resultData",
                 _resultData
             );
-            setResultData({
-                ...resultData,
-                ..._resultData,
-                rawInput: _rawInput,
-            });
-            setComputationData({
-                ...computationData,
-                resultValue: _resultData.value,
-                computed: _resultData.computed,
-                num1: _resultData.num1,
-                op1: _resultData.op1,
-                num2: _resultData.num2,
-                op2: _resultData.op2,
-            });
+            setResultData(_resultData);
         }
-        // else {
-        //     setResultData({
-        //         ...resultData,
-        //         computed: false,
-        //     });
-        // }
     };
 
     const getSelected = (keyboardName) => {
@@ -724,9 +715,8 @@ const Calculator = () => {
                     {CONSTANTS.APPLICATION_TITLE}
                 </Typography>
                 {/* ------------ display ---------------- */}
-                <DisplayContextProvider value={lines}>
-                    <Display />
-                </DisplayContextProvider>
+                {/* <Display lines={lineData} /> */}
+                {makeDisplay(lineData)}
                 {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container

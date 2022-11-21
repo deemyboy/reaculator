@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 const Sidebar = (props) => {
     let className = "sidebar";
 
-    const { keyboards } = props.props;
+    const { keyboards } = props.sidebarData;
 
     let i = 0;
 
