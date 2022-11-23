@@ -74,7 +74,6 @@ export const doMath = (input) => {
 
     // console.log("time for doing maths!", input);
 
-    _result.rawInput = input;
     _result.value = getMathOperation(
         _computationalUnit.op1,
         _computationalUnit.num1,

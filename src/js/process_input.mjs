@@ -139,8 +139,10 @@ const repairStack = {
     },
     DOUBLE_OPERATOR_CATCHER: function (input) {
         console.log(`DOUBLE_OPERATOR_CATCHER ${input}`);
-        input = input.substring(0, input.length - 1);
-        return input;
+        return (
+            input.substring(0, input.length - 2) +
+            input.charAt(input.length - 1)
+        );
     },
     NUM1_FLOATING_DOT_CATCHER: function (input) {
         // console.log(`NUM1_FLOATING_DOT_CATCHER ${input}`);
