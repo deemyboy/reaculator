@@ -43,7 +43,7 @@ export const unicodify = (str) => {
 };
 
 export const doMath = (input) => {
-    console.log("doMath", input);
+    // console.log("doMath", input);
     const extractComputationParts = (_input) => {
         let matches = VALID_COMPUTATION.exec(_input);
 
@@ -86,9 +86,10 @@ export const doMath = (input) => {
     if (
         _result &&
         Object.keys(_result).length !== 0 &&
-        !isFinite(_result.value)
+        (!isFinite(_result.value) || isNaN(_result.value))
     ) {
         _result.error = true;
+        _result.value = "err";
     }
 
     if (_result.value || _result.value === 0) {

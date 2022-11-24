@@ -15,24 +15,29 @@ export const processRawInput = (input) => {
 const processRawInput2 = (repairs) => (pattern, name, input) => {
     // console.log("processRawInput2 |", name);
     if (pattern.test(input)) {
-        input = repairs[name](input);
-        return input;
+        return repairs[name](input);
     }
 };
 
 const repairStack = {
     INITIAL_OPERATOR_CATCHER: function (input) {
-        console.log(`INITIAL_OPERATOR_CATCHER ${input}`);
-        input = "";
-        return input;
+        // console.log(`INITIAL_OPERATOR_CATCHER ${input}`);
+        return "";
+    },
+    NUM1_EQUALS_CATCHER: function (input) {
+        // console.log(`NUM1_EQUALS_CATCHER ${input}`);
+        return input.replace(/.$/, "");
+    },
+    NUM1_OPERATOR_THEN_EQUALS_CATCHER: function (input) {
+        // console.log(`NUM1_OPERATOR_THEN_EQUALS_CATCHER ${input}`);
+        return input.replace(/.$/, "");
     },
     NUM1_INVISIBLE_ZERO_CATCHER: function (input) {
-        console.log(`NUM1_INVISIBLE_ZERO_CATCHER ${input}`);
-        input = "0" + input;
-        return input;
+        // console.log(`NUM1_INVISIBLE_ZERO_CATCHER ${input}`);
+        return "0" + input;
     },
     NUM2_INVISIBLE_ZERO_CATCHER: function (input) {
-        console.log(`NUM2_INVISIBLE_ZERO_CATCHER ${input}`);
+        // console.log(`NUM2_INVISIBLE_ZERO_CATCHER ${input}`);
         let _value = input;
         let matches = patternStack.NUM2_INVISIBLE_ZERO_CATCHER.exec(_value);
 
@@ -41,11 +46,10 @@ const repairStack = {
         let _num2 = _value.substring(idx + 1);
         let _operator = _value.substring(idx, idx + 1);
         _num2 = "0" + _num2;
-        input = _num1 + _operator + _num2;
-        return input;
+        return _num1 + _operator + _num2;
     },
     NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER: function (input) {
-        console.log(`NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER ${input}`);
+        // console.log(`NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER ${input}`);
         let _value = input;
         let matches =
             patternStack.NUM2_INVISIBLE_ZERO_OPERATOR_CATCHER.exec(_value);
@@ -55,11 +59,10 @@ const repairStack = {
         let _num2 = _value.substring(idx + 1);
         let _operator = _value.substring(idx, idx + 1);
         _num2 = "0" + _num2;
-        input = _num1 + _operator + _num2;
-        return input;
+        return _num1 + _operator + _num2;
     },
     NUM1_TRAILING_DECIMAL_ZERO_CATCHER: function (input) {
-        console.log(`NUM1_TRAILING_DECIMAL_ZERO_CATCHER ${input}`);
+        // console.log(`NUM1_TRAILING_DECIMAL_ZERO_CATCHER ${input}`);
         let _value = input;
         let matches = _value.match(
             patternStack.NUM1_TRAILING_DECIMAL_ZERO_CATCHER
@@ -75,7 +78,7 @@ const repairStack = {
         return input;
     },
     NUM2_REPEATED_INITIAL_ZERO_CATCHER: function (input) {
-        console.log(`NUM2_REPEATED_INITIAL_ZERO_CATCHER ${input}`);
+        // console.log(`NUM2_REPEATED_INITIAL_ZERO_CATCHER ${input}`);
         let _value = input;
         let matches = _value.match(
             patternStack.NUM2_REPEATED_INITIAL_ZERO_CATCHER
@@ -88,9 +91,9 @@ const repairStack = {
         return input;
     },
     NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER: function (input) {
-        console.log(
-            `NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER ${input}`
-        );
+        // console.log(
+        //     `NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER ${input}`
+        // );
         let matches = input.match(
             patternStack.NUM2_REPEATED_ZERO_IN_DECIMAL_WITH_OPERATOR_CATCHER
         );
@@ -104,26 +107,25 @@ const repairStack = {
 
         return input;
     },
-    NUM1_REPEATED_ZERO_CATCHER: function (input) {
-        console.log(`NUM1_REPEATED_ZERO_CATCHER ${input}`);
-        input = Number(input).toString();
-        return input;
+    NUM2_UNARY_OPERATOR_CATCHER: function (input) {
+        // console.log(`NUM2_UNARY_OPERATOR_CATCHER ${input}`);
+        return input.replace(/.$/, "");
     },
-
+    NUM1_REPEATED_ZERO_CATCHER: function (input) {
+        // console.log(`NUM1_REPEATED_ZERO_CATCHER ${input}`);
+        return Number(input).toString();
+    },
     UNIVERSAL_EXTRA_DOT_CATCHER: function (input) {
         // console.log(`UNIVERSAL_EXTRA_DOT_CATCHER ${input}`);
-        input = input.substring(0, input.length - 1);
-        return input;
+        return input.substring(0, input.length - 1);
     },
     UNIVERSAL_DOUBLE_DOT_CATCHER: function (input) {
         // console.log(`UNIVERSAL_DOUBLE_DOT_CATCHER ${input}`);
-        input = input.substring(0, input.length - 1);
-        return input;
+        return input.substring(0, input.length - 1);
     },
     NUM1_INTEGER_WITH_OPERATOR_CATCHER: function (input) {
         // console.log(`NUM1_INTEGER_WITH_OPERATOR_CATCHER ${input}`);
-        input = input.substring(0, input.length - 1);
-        return input;
+        return input.substring(0, input.length - 1);
     },
     UNNARY_MATH_CATCHER: function (input) {
         // console.log(`UNNARY_MATH_CATCHER ${input}`);
@@ -138,7 +140,7 @@ const repairStack = {
         return input;
     },
     DOUBLE_OPERATOR_CATCHER: function (input) {
-        console.log(`DOUBLE_OPERATOR_CATCHER ${input}`);
+        // console.log(`DOUBLE_OPERATOR_CATCHER ${input}`);
         return (
             input.substring(0, input.length - 2) +
             input.charAt(input.length - 1)
@@ -148,15 +150,13 @@ const repairStack = {
         // console.log(`NUM1_FLOATING_DOT_CATCHER ${input}`);
         const re = /\./;
 
-        input = input.replace(re, "");
-        return input;
+        return input.replace(re, "");
     },
     NUM2_FLOATING_DOT_CATCHER: function (input) {
         // console.log(`NUM2_FLOATING_DOT_CATCHER ${input}`);
         const re = /\./;
 
-        input = input.replace(re, "");
-        return input;
+        return input.replace(re, "");
     },
     PLUS_MINUS_CATCHER: function (input) {
         // console.log(`PLUS_MINUS_CATCHER ${input}`);
@@ -178,18 +178,22 @@ const repairStack = {
     },
     M_CATCHER: function (input) {
         // console.log(`M_CATCHER ${input}`);
-        input = input.replace(/.$/, "");
-        return input;
+        return input.replace(/.$/, "");
     },
     C_CATCHER: function (input) {
-        console.log(`C_CATCHER ${input}`);
+        // console.log(`C_CATCHER ${input}`);
         if (patternStack.C_CATCHER.test(input)) {
-            input = input.replace(/..$/, "");
+            input = input.replace("c", "");
+            input = input.replace(/.$/, "");
+        }
+        if (/^[xy\/\-+=rsacm]$/.test(input)) {
+            input = input.replace(/.$/, "");
+            return "clear all";
         }
         return input;
     },
     A_CATCHER: function (input) {
-        console.log(`A_CATCHER ${input}`);
+        // console.log(`A_CATCHER ${input}`);
         return "a";
     },
 };
