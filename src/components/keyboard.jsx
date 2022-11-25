@@ -1,26 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import Key from "./key";
 
-export function Keyboard({ props, selected, xs, md, lg }) {
-    const ref = React.createRef();
+const Keyboard = ({ props, selected, errorState }) => {
+    // console.log("Keyboard");
+    const { title, className, keys } = props;
+    const { xs } = props || "";
+    const { md } = props || "";
+    const { lg } = props || "";
+    const { showTitle } = props || "";
 
-    props.keys.forEach((key) => {
-        if (selected && selected === key.id) {
-            key.selected = true;
-        } else {
-            key.selected = false;
-        }
-    });
-    let title;
-    if (props.showTitle) {
-        title = (
-            <Typography className="sidebar_kb_title">{props.name}</Typography>
-        );
+    let _title;
+    if (showTitle) {
+        _title = <Typography className="sidebar-kb-title">{title}</Typography>;
     } else {
-        title = "";
+        _title = "";
     }
     return (
         <Grid
@@ -28,21 +24,13 @@ export function Keyboard({ props, selected, xs, md, lg }) {
             xs={xs}
             md={md}
             lg={lg}
-            className={`keyboard ${props.className}`}
+            className={`keyboard ${className}`}
         >
-            {title}
-            {props.keys.map((ky) => {
-                return (
-                    <Key
-                        location={props.location}
-                        ref={ref}
-                        key={ky.id}
-                        kObj={ky}
-                        handleClick={props.onClick}
-                        keyErr={props.keyErr}
-                    />
-                );
+            {_title}
+            {keys.map((ky) => {
+                return <Key key={ky.id} _key={ky} errorState={errorState} />;
             })}
         </Grid>
     );
-}
+};
+export default Keyboard;

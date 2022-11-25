@@ -1,81 +1,79 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button } from "@mui/material";
 import { Typography, Box } from "@mui/material";
+import HandleClickContext from "../js/context";
 
-const Key = React.forwardRef((props, ref) => {
+const Key = (props) => {
+    // console.log("Key");
+    const handleClick = useContext(HandleClickContext);
+    const _disabled = props.errorState && props._key.id !== 18 ? true : false;
+    const _key = props._key;
+    const errorClass = "btn-error";
+
     const setKeyClasses = (keyObj) => {
-        let classes = "btn btn-lg";
-        const numClass = "btn-primary";
-        const funcClass = "btn-secondary";
-        const thmClass = "btn-theme";
-        const thmTypeClass = "btn-theme-type";
-        const picTypeClass = "btn-pic-type";
-        const errClass = "btn-error";
-        const useMeClass = "btn-use-me";
-        const specialClass = keyObj.specialClass ? keyObj.specialClass : "";
-        const errState = props.keyErr ? props.keyErr : "";
+        let classNames = keyObj.className;
+
         const selected = keyObj.selected ? "selected" : "";
 
-        if (keyObj.type === "num") {
-            classes += " " + numClass;
-        } else if (keyObj.type === "func") {
-            classes += " " + funcClass;
-        } else if (keyObj.type === "thm") {
-            classes += " " + thmClass;
-        } else if (keyObj.type === "thype") {
-            classes += " " + thmTypeClass;
-        } else if (keyObj.type === "picTypeChs") {
-            classes += " " + picTypeClass;
-        }
-        if (specialClass) {
-            classes += " " + specialClass;
-        }
         if (selected) {
-            classes += " " + selected;
+            classNames += " " + selected;
         }
-        if (errState) {
+        if (props.errorState) {
             if (keyObj.value !== "a") {
-                classes += " " + errClass;
-            } else {
-                classes += " " + useMeClass;
+                classNames += " " + errorClass;
             }
         }
 
-        return classes;
+        return classNames;
     };
-    let title;
-    if (props.kObj.showTitle) {
-        title = (
-            <Typography className="sidebar_btn_title">
-                {props.kObj.title}
-            </Typography>
+
+    let _title, _subTitle;
+
+    const { id, value, title, location } = _key;
+
+    const { uniChar } = _key || "";
+    const { showTitle } = _key || "";
+    const { subTitle } = _key || "";
+
+    if (showTitle) {
+        _title = <Typography className="sidebar-btn-title">{title}</Typography>;
+    } else {
+        _title = "";
+    }
+    if (subTitle) {
+        _subTitle = (
+            <Typography className="btn-subtitle">{subTitle}</Typography>
         );
     } else {
-        title = "";
+        _subTitle = "";
     }
+
     let boxClassName;
-    // const boxEnd = (</Box>);
+    if (location === "sidebar") {
+        boxClassName = "sidebar-btn-wrapper";
+    } else if (location === "main") {
+        boxClassName = "main-btn-wrapper";
+    }
     if (props.location === "sidebar") {
         boxClassName = "sidebar_btn_wrapper";
     }
 
     return (
-        <React.Fragment>
-            <Box className={boxClassName}>
-                {title}
-                <Button
-                    ref={ref.id}
-                    id={props.kObj.id}
-                    className={setKeyClasses(props.kObj)}
-                    onClick={(e) => props.handleClick(e)}
-                    size="large"
-                    title={props.kObj.title}
-                    variant={"outlined"}
-                >
-                    {props.kObj.uniChar ? props.kObj.uniChar : props.kObj.value}
-                </Button>
-            </Box>
-        </React.Fragment>
+        <Box className={boxClassName}>
+            {_title}
+            <Button
+                id={id}
+                className={setKeyClasses(_key)}
+                onClick={(e) => handleClick(e)}
+                size="large"
+                title={title}
+                variant={"outlined"}
+                disabled={_disabled}
+            >
+                {uniChar ? uniChar : value}
+            </Button>
+            {_subTitle}
+        </Box>
     );
-});
+};
 export default Key;
