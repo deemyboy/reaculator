@@ -7,89 +7,94 @@
   height: $ps-1;
   top: 0;
   right: 0;
-  transform: scaleX(0);
   transform-origin: right;
   border-radius: $s-05r;
   justify-content: left$i;
+  max-width: 10%;
+
   .keyboard {
     margin: $s-05r;
-    display: grid;
+    // display: grid;
     align-items: center;
     justify-content: space-around;
-    width: 95%;
+    width: auto;
     border: $s-01r solid;
     border-radius: 5px;
     z-index: 4;
-    height: 30%;
+    height: 10%;
     @include transition(all 0.25s ease);
     position: relative;
+
     p.sidebar-kb-title {
       justify-self: center;
       text-transform: uppercase;
       font-weight: 400;
       font-size: 1.5rem;
     }
-      .sidebar-btn-wrapper{
-        display: inline-grid;
-        grid-template-rows: 1fr;
-        grid-template-columns:  1fr;
-        justify-content: center;
-        align-items: center;
-        grid-row: 2;  
-        button,p.sidebar-btn-title {
-          font-size: 1.5rem;
-          justify-self: center;
-          text-align: center;
-          line-height: normal;
-        }
+
+    .sidebar-btn-wrapper {
+      // display: inline-grid;
+      // grid-template-rows: 1fr;
+      // grid-template-columns: 1fr;
+      // justify-content: center;
+      // align-items: center;
+      // grid-row: 2;
+
+      p.sidebar-btn-title {
+        font-size: .8rem;
+        justify-self: center;
+        text-align: center;
+        line-height: normal;
+      }
     }
-    
+
   }
+
   .keyboard.keyboard-theme-type {
     p.sidebar-kb-title {
-      grid-column: 1 / 4;
+      // grid-column: 1 / 4;
       justify-self: center;
     }
   }
+
   .keyboard.keyboard-theme {
     p.sidebar-kb-title {
-      grid-column: 1 / 6;
+      // grid-column: 1 / 6;
     }
   }
+
   .keyboard.keyboard-picture-type {
     p.sidebar-kb-title {
-      grid-column: 1 / 3;
+      // grid-column: 1 / 3;
     }
   }
+
   .keyboard.keyboard-animation {
     p.sidebar-kb-title {
-      grid-column: 1 / 4;
+      // grid-column: 1 / 4;
     }
   }
 }
 
 #{$open} {
   div.sidebar {
-    transform: scaleX(1) $i;
+    // transform: scaleX(1) $i;
     z-index: 2;
-    .title {
-    }
+
+    .title {}
   }
 }
 
 #{$picture} {
+
   // sizes
   .sidebar {
     .keyboard {
-      p.sidebar-kb-title {
-
-      }
+      p.sidebar-kb-title {}
     }
   }
 }
 
-.sidebar {
-}
+.sidebar {}
 
-#{$animation} {
-}
+#{$animation} {}

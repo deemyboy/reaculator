@@ -10,7 +10,15 @@ import {
     ALLOWED_KEYS,
     DISALLOWED_KEYS,
 } from "./js/keys";
-import { Container, Grid, Typography } from "@mui/material";
+import {
+    Container,
+    Grid,
+    Typography,
+    Collapse,
+    Slide,
+    SlideProps,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import * as CONSTANTS from "./js/constants";
 import { doMath, unicodify, deunicodify } from "./js/maths_engine.mjs";
 import { processRawInput } from "./js/process_input.mjs";
@@ -114,10 +122,16 @@ const Calculator = () => {
     const [themeType, setThemeType] = useState(defaultThemeType);
 
     // setSidebarData - visibleKeyboards
+    // useEffect(() => {
+    //     let _visibleKeyboards = getVisibleSidebarKeyboards();
+    //     sidebarData.keyboardNames = _visibleKeyboards;
+    //     setSidebarData({ ...sidebarData });
+    // }, [themeType]);
+
     useEffect(() => {
         let _visibleKeyboards = getVisibleSidebarKeyboards();
-        sidebarData.keyboardNames = _visibleKeyboards;
-        setSidebarData({ ...sidebarData });
+        settingsData.keyboardNames = _visibleKeyboards;
+        setSettingsData({ ...settingsData });
     }, [themeType]);
 
     const [animation, setAnimation] = useState("fireworks");
@@ -155,6 +169,17 @@ const Calculator = () => {
         }
     };
 
+    const toggleSettings = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        let _settingsData = { ...settingsData };
+        if (!errorState) {
+            // disable when in error
+            _settingsData.isOpen = !_settingsData.isOpen;
+            setSidebarData(_settingsData);
+        }
+    };
+
     const closeSidebar = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -185,6 +210,7 @@ const Calculator = () => {
     };
 
     const [sidebarData, setSidebarData] = useState(initialSidebarData);
+    const [settingsData, setSettingsData] = useState([]);
 
     const resetSidebarData = () => {
         setSidebarData(initialSidebarData);
@@ -283,8 +309,13 @@ const Calculator = () => {
                 tryMath();
                 // makeCalculationData();
             }
+            makeCalculationData();
         }
-    }, [computationData.rawInput, computationData.computed]);
+    }, [
+        computationData.rawInput,
+        computationData.computed,
+        settingsData.isOpen,
+    ]);
 
     const initialErrorState = false;
 
@@ -432,7 +463,7 @@ const Calculator = () => {
             removeScript(_id);
         }
     }),
-        [sidebarData, animation];
+        [settingsData, animation];
 
     // key press event listeners
     useEffect(() => {
@@ -492,11 +523,120 @@ const Calculator = () => {
         return onSelectStack[keyboardName];
     };
 
+    const [checked, setChecked] = useState([]);
+
+    useEffect(() => {
+        console.log("setChecked");
+        // if (isInitialMount.current) {
+        //     isInitialMount.current = false;
+        // } else {
+        let s = {};
+        // let _checked = { ...checked };
+        settingsData.keyboardNames.map((kn) => {
+            s[kn] = false;
+        });
+        // return s;
+        console.log("setChecked", isInitialMount);
+        setChecked({ ...checked, ...s });
+        // }
+    }, [settingsData.keyboardNames]);
+
+    // const getKeyboards = () => {
+    //     let keyboards = [];
+    //     for (let item in Object.keys(keyboardData)) {
+    //         keyboards.push(keyboardData[item].keyboard);
+    //     }
+    //     return keyboards;
+    // };
+
+    const toggleSlide = (event) => {
+        const idx = event.currentTarget.dataset.index;
+        console.log(event.currentTarget.dataset.index);
+        let _checked = { ...checked };
+        let newVal = {};
+        // const _checked = (index) => {
+        //     let res;
+        //     for (let check of Object.keys(checked)) {
+        // console.log(
+        //         //     checked[check],
+        //         //     checked[index],
+        //         //     "check",
+        //         //     check,
+        //         //     "index",
+        //         //     index
+        //         // );
+        //         return checked[check] === index
+        //             ? !checked[check]
+        //             : checked[check];
+        //     }
+        // };
+
+        Object.keys(checked).map((k) => {
+            // console.log(
+            //     k,
+            //     checked[k],
+            //     idx,
+            //     k === idx,
+            //     newVal,
+            //     Object.keys(checked)[idx]
+            // );
+            if (k === idx) {
+                newVal[k] = !checked[k];
+            }
+            _checked = { ..._checked, ...newVal };
+            // console.log("_checked", _checked);
+        });
+
+        setChecked(_checked);
+    };
+
     const makeCalculationData = () => {
-        // console.log("makeCalculationData", { computationData });
+        console.log("makeCalculationData", { computationData, settingsData });
+
+        const getKeyboards = () => {
+            let keyboards = [];
+            for (let item in Object.keys(settingsData.keyboardNames)) {
+                keyboards.push(settingsData.keyboardNames[item].keyboard);
+            }
+            return keyboards;
+        };
+
         let { rawInput, value } = computationData;
 
-        value = /[x\/sry]/.test(rawInput) ? unicodify(rawInput) : rawInput;
+        if (settingsData.isOpen) {
+            value = themeSettingsRendering();
+        } else {
+            value = /[x\/sry]/.test(rawInput) ? unicodify(rawInput) : rawInput;
+        }
+
+        let themeSettingsRendering = getKeyboards().map((keyboard, index) => {
+            <React.Fragment>
+                <ExpandMoreIcon
+                    sx={{ transform: "rotate(90deg)" }}
+                    data-index={settingsData.keyboardNames[0]}
+                    onClick={(e) => toggleSlide(e)}
+                />
+                <ExpandMoreIcon
+                    sx={{ transform: "rotate(90deg)" }}
+                    data-index={settingsData.keyboardNames[0]}
+                    onClick={(e) => toggleSlide(e)}
+                />
+                <Collapse
+                    in={checked[settingsData.keyboardNames[0]]}
+                    // orientation="horizontal"
+                    // collapsedSize={1000}
+                    sx={{
+                        height: "100%",
+                        width: "auto",
+                        top: "0",
+                        position: "relative",
+                        left: "-6%",
+                    }}
+                >
+                    {/* {keyboard} */}
+                </Collapse>
+            </React.Fragment>;
+        });
 
         setCalculationData({
             ...calculationData,
@@ -516,21 +656,41 @@ const Calculator = () => {
     };
 
     const makeSidebar = (data) => {
-        let _keyboards = [],
-            _keyboardData = {};
-
+        // let _keyboards = [],
+        let _keyboardData = {};
+        let i = 0;
         data.keyboardNames.map((keyboardName) => {
-            let _keyboardName = () => {
-                keyboards.find((kb) => {
-                    return kb.name === keyboardName;
-                });
+            // _keyboards.push(makeKeyboard(keyboardName));
+            _keyboardData[i] = {
+                keyboard: makeKeyboard(keyboardName),
+                index: i,
             };
-            _keyboards.push(makeKeyboard(keyboardName));
-            _keyboardData.keyboards = _keyboards;
+            i++;
         });
 
-        data.keyboards = _keyboards;
+        // data.keyboards = _keyboards;
+        data.keyboardData = _keyboardData;
+
         return <Sidebar sidebarData={data} />;
+    };
+
+    const makeSettings = (data) => {
+        // let _keyboards = [],
+        let _keyboardData = {};
+        let i = 0;
+        data.keyboardNames.map((keyboardName) => {
+            // _keyboards.push(makeKeyboard(keyboardName));
+            _keyboardData[i] = {
+                keyboard: makeKeyboard(keyboardName),
+                index: i,
+            };
+            i++;
+        });
+
+        // data.keyboards = _keyboards;
+        data.keyboardData = _keyboardData;
+
+        settingsData({ ...settingsData, ...data });
     };
 
     const makeDisplay = (data) => {
@@ -895,7 +1055,7 @@ const Calculator = () => {
             sx={{ p: "0!important" }}
         >
             {/* ------------ app ---------------- */}
-            <p className="settings" onClick={toggleSidebar} disabled>
+            <p className="settings" onClick={toggleSettings} disabled>
                 <i className="cog" aria-hidden="true"></i>
             </p>
             <Grid
@@ -925,7 +1085,7 @@ const Calculator = () => {
                 </Grid>
             </Grid>
             {/* ------------ sidebar ---------------- */}
-            {makeSidebar(sidebarData)}
+            {/* {makeSidebar(sidebarData)} */}
         </Container>
     );
 };
