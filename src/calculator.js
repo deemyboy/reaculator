@@ -3,6 +3,7 @@ import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
 import Sidebar from "./components/sidebar";
+import Settings from "./components/settings";
 import Cookies from "universal-cookie";
 import {
     numberKeys,
@@ -129,9 +130,12 @@ const Calculator = () => {
     // }, [themeType]);
 
     useEffect(() => {
-        let _visibleKeyboards = getVisibleSidebarKeyboards();
-        settingsData.keyboardNames = _visibleKeyboards;
-        setSettingsData({ ...settingsData });
+        // let _visibleKeyboards = getVisibleSidebarKeyboards();
+        // keyboardNames = _visibleKeyboards;
+        setSettingsData({
+            ...settingsData,
+            keyboardNames: getVisibleKeyboards(),
+        });
     }, [themeType]);
 
     const [animation, setAnimation] = useState("fireworks");
@@ -172,11 +176,11 @@ const Calculator = () => {
     const toggleSettings = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        let _settingsData = { ...settingsData };
+        let { isOpen } = settingsData;
+        // prevent when in error
         if (!errorState) {
-            // disable when in error
-            _settingsData.isOpen = !_settingsData.isOpen;
-            setSidebarData(_settingsData);
+            isOpen = !isOpen;
+            setSettingsData({ ...settingsData, isOpen: isOpen });
         }
     };
 
@@ -189,31 +193,38 @@ const Calculator = () => {
         setSidebarData(_sidebarData);
     };
 
-    const getVisibleSidebarKeyboards = (level) => {
-        const defaultSidebarKeyboardNames = ["theme-type", "theme"];
-        if (level === "default") {
-            return defaultSidebarKeyboardNames;
+    const getVisibleKeyboards = (themeType) => {
+        let visibleKeyboardNames = [],
+            keyboards = [];
+        if (themeType === "color") {
+            visibleKeyboardNames = ["theme-type", "theme"];
         }
-        let sidebarVisibleKeyboardNames = defaultSidebarKeyboardNames;
 
         if (themeType !== "color") {
-            sidebarVisibleKeyboardNames.push(
+            visibleKeyboardNames.push(
                 themeType === "animation" ? "animation" : "picture-type"
             );
         }
-        return sidebarVisibleKeyboardNames;
+        let i = 0;
+        return visibleKeyboardNames.forEach((name) => {
+            keyboards.push(() => {
+                return { keyboard: makeKeyboard(name), index: i };
+            });
+            i++;
+        });
     };
-    const initialSidebarData = {
-        keyboardNames: getVisibleSidebarKeyboards("default"),
+
+    const initialSettingsData = {
+        keyboardData: getVisibleKeyboards("color"),
         isOpen: false,
         selected: "",
     };
 
-    const [sidebarData, setSidebarData] = useState(initialSidebarData);
-    const [settingsData, setSettingsData] = useState([]);
+    // const [sidebarData, setSidebarData] = useState(initialSidebarData);
+    const [settingsData, setSettingsData] = useState(initialSettingsData);
 
-    const resetSidebarData = () => {
-        setSidebarData(initialSidebarData);
+    const resetSettingsData = () => {
+        // setSettingsData(initialSettingsData);
         // setTheme(defaultTheme);
         // setThemeType(defaultThemeType);
     };
@@ -279,30 +290,14 @@ const Calculator = () => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-            // if (
-            //     (CONSTANTS.patternStack.UNNARY_MATH_CATCHER.test(
-            //         computationData.rawInput
-            //     ) &&
-            //         computationData.computed) ||
-            //     (computationData.rawInput !== undefined &&
-            //         !CONSTANTS.patternStack.MATH_CATCHER.test(
-            //             computationData.rawInput
-            //         ))
-            // )
-
             if (
-                (CONSTANTS.patternStack.UNNARY_MATH_CATCHER.test(
+                CONSTANTS.patternStack.UNNARY_MATH_CATCHER.test(
                     computationData.rawInput
-                ) &&
-                    computationData.computed) ||
-                (computationData.rawInput !== undefined &&
-                    !CONSTANTS.patternStack.MATH_CATCHER.test(
-                        computationData.rawInput
-                    ))
+                )
             ) {
-                // console.log("useEffect makeCalculationData", {
-                //     computationData,
-                // });
+                console.log("useEffect makeCalculationData", {
+                    computationData,
+                });
                 makeCalculationData();
             } else {
                 // console.log("useEffect tryMath", { computationData });
@@ -508,7 +503,7 @@ const Calculator = () => {
         resetCalculationData();
         resetResultData();
         resetComputationData();
-        // resetSidebarData();
+        // resetSettingsData();
     };
 
     const getOnSelect = (keyboardName) => {
@@ -525,29 +520,21 @@ const Calculator = () => {
 
     const [checked, setChecked] = useState([]);
 
-    useEffect(() => {
-        console.log("setChecked");
-        // if (isInitialMount.current) {
-        //     isInitialMount.current = false;
-        // } else {
-        let s = {};
-        // let _checked = { ...checked };
-        settingsData.keyboardNames.map((kn) => {
-            s[kn] = false;
-        });
-        // return s;
-        console.log("setChecked", isInitialMount);
-        setChecked({ ...checked, ...s });
-        // }
-    }, [settingsData.keyboardNames]);
-
-    // const getKeyboards = () => {
-    //     let keyboards = [];
-    //     for (let item in Object.keys(keyboardData)) {
-    //         keyboards.push(keyboardData[item].keyboard);
+    // useEffect(() => {
+    //     console.log("setChecked");
+    //     if (isInitialMount.current) {
+    //         isInitialMount.current = false;
+    //     } else {
+    //         let s = {};
+    //         // let _checked = { ...checked };
+    //         settingsData.keyboardNames.map((kn) => {
+    //             s[kn] = false;
+    //         });
+    //         // return s;
+    //         console.log("setChecked", isInitialMount);
+    //         setChecked({ ...checked, ...s });
     //     }
-    //     return keyboards;
-    // };
+    // }, [settingsData.keyboardData]);
 
     const toggleSlide = (event) => {
         const idx = event.currentTarget.dataset.index;
@@ -593,50 +580,13 @@ const Calculator = () => {
     const makeCalculationData = () => {
         console.log("makeCalculationData", { computationData, settingsData });
 
-        const getKeyboards = () => {
-            let keyboards = [];
-            for (let item in Object.keys(settingsData.keyboardNames)) {
-                keyboards.push(settingsData.keyboardNames[item].keyboard);
-            }
-            return keyboards;
-        };
-
         let { rawInput, value } = computationData;
 
         if (settingsData.isOpen) {
-            value = themeSettingsRendering();
+            value = makeSettings(themeType);
         } else {
             value = /[x\/sry]/.test(rawInput) ? unicodify(rawInput) : rawInput;
         }
-
-        let themeSettingsRendering = getKeyboards().map((keyboard, index) => {
-            <React.Fragment>
-                <ExpandMoreIcon
-                    sx={{ transform: "rotate(90deg)" }}
-                    data-index={settingsData.keyboardNames[0]}
-                    onClick={(e) => toggleSlide(e)}
-                />
-                <ExpandMoreIcon
-                    sx={{ transform: "rotate(90deg)" }}
-                    data-index={settingsData.keyboardNames[0]}
-                    onClick={(e) => toggleSlide(e)}
-                />
-                <Collapse
-                    in={checked[settingsData.keyboardNames[0]]}
-                    // orientation="horizontal"
-                    // collapsedSize={1000}
-                    sx={{
-                        height: "100%",
-                        width: "auto",
-                        top: "0",
-                        position: "relative",
-                        left: "-6%",
-                    }}
-                >
-                    {/* {keyboard} */}
-                </Collapse>
-            </React.Fragment>;
-        });
 
         setCalculationData({
             ...calculationData,
@@ -655,42 +605,12 @@ const Calculator = () => {
         );
     };
 
-    const makeSidebar = (data) => {
-        // let _keyboards = [],
-        let _keyboardData = {};
-        let i = 0;
-        data.keyboardNames.map((keyboardName) => {
-            // _keyboards.push(makeKeyboard(keyboardName));
-            _keyboardData[i] = {
-                keyboard: makeKeyboard(keyboardName),
-                index: i,
-            };
-            i++;
+    const makeSettings = (newThemeType) => {
+        setSettingsData({
+            ...settingsData,
+            keyboardData: getVisibleKeyboards(newThemeType),
         });
-
-        // data.keyboards = _keyboards;
-        data.keyboardData = _keyboardData;
-
-        return <Sidebar sidebarData={data} />;
-    };
-
-    const makeSettings = (data) => {
-        // let _keyboards = [],
-        let _keyboardData = {};
-        let i = 0;
-        data.keyboardNames.map((keyboardName) => {
-            // _keyboards.push(makeKeyboard(keyboardName));
-            _keyboardData[i] = {
-                keyboard: makeKeyboard(keyboardName),
-                index: i,
-            };
-            i++;
-        });
-
-        // data.keyboards = _keyboards;
-        data.keyboardData = _keyboardData;
-
-        settingsData({ ...settingsData, ...data });
+        return <Settings settingsData={settingsData} />;
     };
 
     const makeDisplay = (data) => {
@@ -1049,9 +969,11 @@ const Calculator = () => {
 
     return (
         <Container
-            className={`container ${
-                sidebarData.isOpen === true ? "open" : ""
-            } ${themeType} ${theme.toLowerCase()} ${pictureType}`}
+            className={`container 
+            ${themeType} ${theme.toLowerCase()} ${pictureType}`}
+            // ${
+            // sidebarData.isOpen === true ? "open" : ""
+            // }
             sx={{ p: "0!important" }}
         >
             {/* ------------ app ---------------- */}
@@ -1060,7 +982,7 @@ const Calculator = () => {
             </p>
             <Grid
                 container
-                onClick={closeSidebar}
+                // onClick={closeSidebar}
                 direction={"column"}
                 id="canvas-container"
                 className={"calculator"}
