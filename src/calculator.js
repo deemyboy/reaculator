@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Line from "./components/line";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
@@ -45,6 +46,105 @@ const Calculator = () => {
     //         "pictureType"
     //     );
     // }
+
+    const handleClick = useCallback((e) => {
+        e.target.blur();
+        const _keyData = {};
+        const keyClicked = numberKeys.concat(functionKeys).filter((k) => {
+            return k.id.toString() === e.target.id;
+        });
+        let key = keyClicked[0].value ? keyClicked[0].value : "";
+        _keyData.key = key;
+        _keyData.timeStamp = e.timeStamp;
+        setInputData(_keyData);
+    }, []);
+
+    const getOnSelect = (keyboardName) => {
+        const onSelectStack = {
+            number: handleClick,
+            function: handleClick,
+            "theme-type": onSelectThemeType,
+            theme: onSelectTheme,
+            animation: onSelectAnimation,
+            "picture-type": onSelectPictureType,
+        };
+        return onSelectStack[keyboardName];
+    };
+
+    const initialErrorState = false;
+
+    const [errorState, setErrorState] = useState(initialErrorState);
+
+    const resetErrorState = () => {
+        setErrorState(initialErrorState);
+    };
+
+    const makeKeyboard = (keyboardName) => {
+        const data = keyboards.find((kb) => {
+            return kb.name === keyboardName;
+        });
+        return (
+            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
+                <Keyboard props={data} errorState={errorState} />
+            </HandleClickContextProvider>
+        );
+    };
+
+    const handleKeyPress = useCallback((e) => {
+        const _keyData = {};
+        // prevent these keys firing
+        // ctrl key 17, shift key 16 alt key 18
+        // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
+        const { key, shiftKey, ctrlKey, metaKey, keyCode, repeat, timeStamp } =
+            e;
+        if (!DISALLOWED_KEYS.includes(keyCode)) {
+            var _key = numberKeys.concat(functionKeys).filter((k) => {
+                return k.keycode === keyCode;
+            })[0];
+            if (_key) {
+                var _button = document.getElementById(_key.id);
+            }
+        } else {
+            return;
+        }
+        if (!repeat) {
+            if (_button === null || _button === undefined) {
+                return;
+            } else if (_button !== null || _button !== undefined) {
+                _button.focus(timeout);
+                var timeout = setTimeout(() => _button.blur(), 200);
+            }
+            if (ALLOWED_KEYS.includes(keyCode)) {
+                // exceptions
+                ////
+                if (ctrlKey && key !== "") {
+                    return;
+                }
+                // handle shift key pressed by itself
+                // prevent going forward
+                // shift key only allowed with "+" key
+                // shift key alone keyCode === 16
+                if (shiftKey && keyCode === 16) {
+                    return;
+                }
+
+                // prevent ctrl/cmd + r triggering sqr root
+                if (
+                    (ctrlKey && keyCode === 82) ||
+                    (metaKey && keyCode === 82)
+                ) {
+                    return;
+                }
+            }
+            _keyData.key = key;
+            // Escape key hack
+            if (key === "Escape") {
+                _keyData.key = "a";
+            }
+            _keyData.timeStamp = timeStamp;
+            setInputData(_keyData);
+        }
+    }, []);
 
     const onSelectThemeType = useCallback((e) => {
         e.stopPropagation();
@@ -129,13 +229,66 @@ const Calculator = () => {
     //     setSidebarData({ ...sidebarData });
     // }, [themeType]);
 
+    const getVisibleKeyboardData = () => {
+        let visibleKeyboardNames = ["theme-type", "theme"],
+            keyboardData = [],
+            keyboardObject = {};
+        // if (themeType === "color") {
+        // }
+        if (themeType !== "color") {
+            visibleKeyboardNames.push(
+                themeType === "animation" ? "animation" : "picture-type"
+            );
+        }
+        let i = 0;
+        visibleKeyboardNames.forEach((name) => {
+            keyboardObject = {
+                index: i,
+                keyboard: makeKeyboard(name),
+                name: name,
+            };
+            keyboardData.push(keyboardObject);
+            i++;
+        });
+        console.log(keyboardData);
+        return keyboardData;
+    };
+
+    const initialSettingsData = {
+        keyboardData: getVisibleKeyboardData(),
+        isOpen: false,
+        selected: "",
+    };
+
+    // const [sidebarData, setSidebarData] = useState(initialSidebarData);
+    const [settingsData, setSettingsData] = useState(initialSettingsData, []);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            if (settingsData.isOpen) {
+                setDisplayData({
+                    settingsData: settingsData,
+                });
+            } else {
+                setDisplayData({
+                    linesData: linesData,
+                });
+            }
+        }
+    }, [settingsData.isOpen, settingsData.keyboardData]);
+
     useEffect(() => {
         // let _visibleKeyboards = getVisibleSidebarKeyboards();
         // keyboardNames = _visibleKeyboards;
+        const _keyboardData = getVisibleKeyboardData();
+        console.log(settingsData);
         setSettingsData({
             ...settingsData,
-            keyboardNames: getVisibleKeyboards(),
+            keyboardData: _keyboardData,
         });
+        console.log(settingsData);
     }, [themeType]);
 
     const [animation, setAnimation] = useState("fireworks");
@@ -152,6 +305,39 @@ const Calculator = () => {
         ...initialCalculationData,
     });
 
+    const initialResultData = {
+        value: 0,
+        computed: false,
+        num1: undefined,
+        op1: undefined,
+        num2: undefined,
+        op2: undefined,
+        error: false,
+        className: "result",
+    };
+
+    const [resultData, setResultData] = useState({
+        ...initialResultData,
+    });
+
+    const linesData = [
+        {
+            className: calculationData.className,
+            value: calculationData.value,
+        },
+        {
+            className: resultData.className,
+            value: resultData.value,
+        },
+    ];
+    // const [linesData, setLinesData] = useState(defaultLinesData);
+
+    const defaultDisplayData = linesData;
+
+    const [displayData, setDisplayData] = useState({
+        linesData: defaultDisplayData,
+    });
+
     const resetCalculationData = () => {
         // console.log("resetCalculationData");
         setCalculationData(initialCalculationData);
@@ -160,17 +346,6 @@ const Calculator = () => {
     const resetResultData = () => {
         // console.log("resetResultData");
         setResultData(initialResultData);
-    };
-
-    const toggleSidebar = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        let _sidebarData = { ...sidebarData };
-        if (!errorState) {
-            // disable when in error
-            _sidebarData.isOpen = !_sidebarData.isOpen;
-            setSidebarData(_sidebarData);
-        }
     };
 
     const toggleSettings = (e) => {
@@ -184,44 +359,14 @@ const Calculator = () => {
         }
     };
 
-    const closeSidebar = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        let _sidebarData = { ...sidebarData };
-        _sidebarData.isOpen = false;
-        setSidebarData({ ...sidebarData });
-        setSidebarData(_sidebarData);
-    };
-
-    const getVisibleKeyboards = (themeType) => {
-        let visibleKeyboardNames = [],
-            keyboards = [];
-        if (themeType === "color") {
-            visibleKeyboardNames = ["theme-type", "theme"];
-        }
-
-        if (themeType !== "color") {
-            visibleKeyboardNames.push(
-                themeType === "animation" ? "animation" : "picture-type"
-            );
-        }
-        let i = 0;
-        return visibleKeyboardNames.forEach((name) => {
-            keyboards.push(() => {
-                return { keyboard: makeKeyboard(name), index: i };
-            });
-            i++;
-        });
-    };
-
-    const initialSettingsData = {
-        keyboardData: getVisibleKeyboards("color"),
-        isOpen: false,
-        selected: "",
-    };
-
-    // const [sidebarData, setSidebarData] = useState(initialSidebarData);
-    const [settingsData, setSettingsData] = useState(initialSettingsData);
+    // const closeSidebar = (e) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     let _sidebarData = { ...sidebarData };
+    //     _sidebarData.isOpen = false;
+    //     setSidebarData({ ...sidebarData });
+    //     setSidebarData(_sidebarData);
+    // };
 
     const resetSettingsData = () => {
         // setSettingsData(initialSettingsData);
@@ -242,21 +387,6 @@ const Calculator = () => {
         error: false,
         nextChar: undefined,
     };
-
-    const initialResultData = {
-        value: 0,
-        computed: false,
-        num1: undefined,
-        op1: undefined,
-        num2: undefined,
-        op2: undefined,
-        error: false,
-        className: "result",
-    };
-
-    const [resultData, setResultData] = useState({
-        ...initialResultData,
-    });
 
     const processResult = (data) => {
         console.log("processResult");
@@ -312,14 +442,6 @@ const Calculator = () => {
         settingsData.isOpen,
     ]);
 
-    const initialErrorState = false;
-
-    const [errorState, setErrorState] = useState(initialErrorState);
-
-    const resetErrorState = () => {
-        setErrorState(initialErrorState);
-    };
-
     const setClassNames = () => {
         // console.log("setClassNames", errorState);
         const classNames = {
@@ -361,16 +483,6 @@ const Calculator = () => {
         // console.log("useEffect setClassNames", errorState);
         setClassNames();
     }, [errorState]);
-    const lineData = [
-        {
-            className: calculationData.className,
-            value: calculationData.value,
-        },
-        {
-            className: resultData.className,
-            value: resultData.value,
-        },
-    ];
 
     //  errorState
     useEffect(() => {
@@ -506,87 +618,16 @@ const Calculator = () => {
         // resetSettingsData();
     };
 
-    const getOnSelect = (keyboardName) => {
-        const onSelectStack = {
-            number: handleClick,
-            function: handleClick,
-            "theme-type": onSelectThemeType,
-            theme: onSelectTheme,
-            animation: onSelectAnimation,
-            "picture-type": onSelectPictureType,
-        };
-        return onSelectStack[keyboardName];
-    };
-
-    const [checked, setChecked] = useState([]);
-
-    // useEffect(() => {
-    //     console.log("setChecked");
-    //     if (isInitialMount.current) {
-    //         isInitialMount.current = false;
-    //     } else {
-    //         let s = {};
-    //         // let _checked = { ...checked };
-    //         settingsData.keyboardNames.map((kn) => {
-    //             s[kn] = false;
-    //         });
-    //         // return s;
-    //         console.log("setChecked", isInitialMount);
-    //         setChecked({ ...checked, ...s });
-    //     }
-    // }, [settingsData.keyboardData]);
-
-    const toggleSlide = (event) => {
-        const idx = event.currentTarget.dataset.index;
-        console.log(event.currentTarget.dataset.index);
-        let _checked = { ...checked };
-        let newVal = {};
-        // const _checked = (index) => {
-        //     let res;
-        //     for (let check of Object.keys(checked)) {
-        // console.log(
-        //         //     checked[check],
-        //         //     checked[index],
-        //         //     "check",
-        //         //     check,
-        //         //     "index",
-        //         //     index
-        //         // );
-        //         return checked[check] === index
-        //             ? !checked[check]
-        //             : checked[check];
-        //     }
-        // };
-
-        Object.keys(checked).map((k) => {
-            // console.log(
-            //     k,
-            //     checked[k],
-            //     idx,
-            //     k === idx,
-            //     newVal,
-            //     Object.keys(checked)[idx]
-            // );
-            if (k === idx) {
-                newVal[k] = !checked[k];
-            }
-            _checked = { ..._checked, ...newVal };
-            // console.log("_checked", _checked);
-        });
-
-        setChecked(_checked);
-    };
-
     const makeCalculationData = () => {
         console.log("makeCalculationData", { computationData, settingsData });
 
         let { rawInput, value } = computationData;
 
-        if (settingsData.isOpen) {
-            value = makeSettings(themeType);
-        } else {
-            value = /[x\/sry]/.test(rawInput) ? unicodify(rawInput) : rawInput;
-        }
+        // if (settingsData.isOpen) {
+        //     value = makeSettings(themeType);
+        // } else {
+        value = /[x\/sry]/.test(rawInput) ? unicodify(rawInput) : rawInput;
+        // }
 
         setCalculationData({
             ...calculationData,
@@ -594,97 +635,10 @@ const Calculator = () => {
         });
     };
 
-    const makeKeyboard = (keyboardName) => {
-        const data = keyboards.find((kb) => {
-            return kb.name === keyboardName;
-        });
-        return (
-            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                <Keyboard props={data} errorState={errorState} />
-            </HandleClickContextProvider>
-        );
-    };
-
-    const makeSettings = (newThemeType) => {
-        setSettingsData({
-            ...settingsData,
-            keyboardData: getVisibleKeyboards(newThemeType),
-        });
-        return <Settings settingsData={settingsData} />;
-    };
-
     const makeDisplay = (data) => {
         // console.log("makeDisplay", data);
-        return <Display lines={data} />;
+        return <Display content={data} />;
     };
-
-    const handleClick = useCallback((e) => {
-        e.target.blur();
-        const _keyData = {};
-        const keyClicked = numberKeys.concat(functionKeys).filter((k) => {
-            return k.id.toString() === e.target.id;
-        });
-        let key = keyClicked[0].value ? keyClicked[0].value : "";
-        _keyData.key = key;
-        _keyData.timeStamp = e.timeStamp;
-        setInputData(_keyData);
-    }, []);
-
-    const handleKeyPress = useCallback((e) => {
-        const _keyData = {};
-        // prevent these keys firing
-        // ctrl key 17, shift key 16 alt key 18
-        // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
-        const { key, shiftKey, ctrlKey, metaKey, keyCode, repeat, timeStamp } =
-            e;
-        if (!DISALLOWED_KEYS.includes(keyCode)) {
-            var _key = numberKeys.concat(functionKeys).filter((k) => {
-                return k.keycode === keyCode;
-            })[0];
-            if (_key) {
-                var _button = document.getElementById(_key.id);
-            }
-        } else {
-            return;
-        }
-        if (!repeat) {
-            if (_button === null || _button === undefined) {
-                return;
-            } else if (_button !== null || _button !== undefined) {
-                _button.focus(timeout);
-                var timeout = setTimeout(() => _button.blur(), 200);
-            }
-            if (ALLOWED_KEYS.includes(keyCode)) {
-                // exceptions
-                ////
-                if (ctrlKey && key !== "") {
-                    return;
-                }
-                // handle shift key pressed by itself
-                // prevent going forward
-                // shift key only allowed with "+" key
-                // shift key alone keyCode === 16
-                if (shiftKey && keyCode === 16) {
-                    return;
-                }
-
-                // prevent ctrl/cmd + r triggering sqr root
-                if (
-                    (ctrlKey && keyCode === 82) ||
-                    (metaKey && keyCode === 82)
-                ) {
-                    return;
-                }
-            }
-            _keyData.key = key;
-            // Escape key hack
-            if (key === "Escape") {
-                _keyData.key = "a";
-            }
-            _keyData.timeStamp = timeStamp;
-            setInputData(_keyData);
-        }
-    }, []);
 
     const handleUserInput = () => {
         // console.log("handleUserInput", { computationData });
@@ -977,7 +931,7 @@ const Calculator = () => {
             sx={{ p: "0!important" }}
         >
             {/* ------------ app ---------------- */}
-            <p className="settings" onClick={toggleSettings} disabled>
+            <p className="settings-icon" onClick={toggleSettings} disabled>
                 <i className="cog" aria-hidden="true"></i>
             </p>
             <Grid
@@ -995,7 +949,7 @@ const Calculator = () => {
                 </Typography>
                 {/* ------------ display ---------------- */}
                 {/* <Display lines={lineData} /> */}
-                {makeDisplay(lineData)}
+                {makeDisplay(displayData)}
                 {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container

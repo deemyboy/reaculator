@@ -3,33 +3,22 @@ import { Grid, Collapse, Slide, SlideProps } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import keyboards from "../js/keyboards";
+import Line from "./line";
 
 const Settings = (props) => {
-    let className = "settings",
-        { keyboardNames, keyboardData } = props.settingsData;
-    const [checked, setChecked] = useState([]);
+    const className = "settings",
+        { keyboardData } = props.settingsData;
 
-    const isInitialMount = useRef(true);
+    const [checked, setChecked] = useState({});
 
-    // useEffect(() => {
-    //     // console.log("setChecked");
-    //     // if (isInitialMount.current) {
-    //     //     isInitialMount.current = false;
-    //     // } else {
-    //     let s = {};
-    //     // let _checked = { ...checked };
-    //     keyboardNames.map((kn) => {
-    //         s[kn] = false;
-    //     });
-    //     // return s;
-    //     console.log("setChecked", isInitialMount);
-    //     setChecked({ ...checked, ...s });
-    //     // }
-    // }, [keyboardNames]);
-
-    const getKeyboard = (index) => {
-        return keyboardData.keyboards[index];
-    };
+    useEffect(() => {
+        let checkedData = {};
+        // let _checked = { ...checked };
+        keyboardData.map((keyboard) => {
+            checkedData[keyboard.name] = false;
+        });
+        setChecked({ ...checked, ...checkedData });
+    }, [keyboardData]);
 
     const makeSettingsComponent = (keyboardObject) => {
         return (
@@ -40,15 +29,16 @@ const Settings = (props) => {
                     onClick={(e) => toggleSlide(e)}
                 />
                 <Collapse
-                    in={checked[keyboardNames[index]]}
-                    // orientation="horizontal"
-                    // collapsedSize={1000}
+                    in={checked[keyboardObject.name]}
                     sx={{
-                        height: "100%",
-                        width: "auto",
-                        top: "0",
-                        position: "relative",
-                        left: "-6%",
+                        // // height: "100%",
+                        // // width: "auto",
+                        // top: "0",
+                        // position: "relative",
+                        // left: "-6%",
+                        transition:
+                            "height 3000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+                        border: "1px dashed red",
                     }}
                 >
                     {keyboardObject.keyboard}
@@ -57,46 +47,36 @@ const Settings = (props) => {
         );
     };
 
-    // const toggleSlide = (event) => {
-    //     const idx = event.currentTarget.dataset.index;
-    //     console.log(event.currentTarget.dataset.index);
-    //     let _checked = { ...checked };
-    //     let newVal = {};
-    //     // const _checked = (index) => {
-    //     //     let res;
-    //     //     for (let check of Object.keys(checked)) {
-    //     // console.log(
-    //     //         //     checked[check],
-    //     //         //     checked[index],
-    //     //         //     "check",
-    //     //         //     check,
-    //     //         //     "index",
-    //     //         //     index
-    //     //         // );
-    //     //         return checked[check] === index
-    //     //             ? !checked[check]
-    //     //             : checked[check];
-    //     //     }
-    //     // };
+    const toggleSlide = (event) => {
+        const idx = event.currentTarget.dataset.index;
+        let _checked = { ...checked };
+        let newVal = {};
+        // const _checked = (index) => {
+        //     let res;
+        //     for (let check of Object.keys(checked)) {
+        //         console.log(
+        //             checked[check],
+        //             checked[index],
+        //             "check",
+        //             check,
+        //             "index",
+        //             index
+        //         );
+        //         return checked[check] === index
+        //             ? !checked[check]
+        //             : checked[check];
+        //     }
+        // };
 
-    //     Object.keys(checked).map((k) => {
-    //         // console.log(
-    //         //     k,
-    //         //     checked[k],
-    //         //     idx,
-    //         //     k === idx,
-    //         //     newVal,
-    //         //     Object.keys(checked)[idx]
-    //         // );
-    //         if (k === idx) {
-    //             newVal[k] = !checked[k];
-    //         }
-    //         _checked = { ..._checked, ...newVal };
-    //         // console.log("_checked", _checked);
-    //     });
+        Object.keys(checked).map((k) => {
+            if (k === idx) {
+                newVal[k] = !checked[k];
+            }
+            _checked = { ..._checked, ...newVal };
+        });
 
-    //     setChecked(_checked);
-    // };
+        setChecked(_checked);
+    };
 
     // const { keyboardData } = props.settingsData;
     // const { keyboardData } = props.settingsData;
@@ -108,26 +88,19 @@ const Settings = (props) => {
             {" "}
             <Grid
                 container
+                key={Math.random()}
                 // direction="column"
                 className={className}
                 meta-name="settings"
                 justifyContent="space-around"
                 alignItems={"center"}
             >
-                {" "}
-                {keyboardData.keyboards.map((keyboardObject, index) => {
-                    makeSettingsComponent(keyboardObject.index);
-                    // console.log( checked);
-                    // console.log(
-                    //     "props.settingsData[key]",
-                    //     props.settingsData[key],
-                    //     "key",
-                    //     key,
-                    //     "index",
-                    //     index
-                    // );
-                    // keyboard.num = { i };
-                    // console.log(checked, index);
+                {keyboardData.map((keyboard, index) => {
+                    return (
+                        <React.Fragment key={index}>
+                            {makeSettingsComponent(keyboard)}
+                        </React.Fragment>
+                    );
                 })}
             </Grid>
         </React.Fragment>

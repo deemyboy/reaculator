@@ -50,7 +50,7 @@ const Key = (props) => {
 
     let boxClassName;
     if (location === "sidebar") {
-        boxClassName = "sidebar-btn-wrapper";
+        boxClassName = "settings-btn-wrapper";
     } else if (location === "main") {
         boxClassName = "main-btn-wrapper";
     }

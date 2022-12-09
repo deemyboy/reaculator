@@ -1,28 +1,40 @@
 #{$outer-wrapper} {
-    .settings {
+    .settings-icon {
         @include transition(all 0.25s);
         z-index: 3;
-        position: absolute;
-        top: -1rem;
-        right: 0;
-        margin: 0;
-        transform: scale(1);
+        position: relative;
+        top: 3rem;
+        left: 95%;
+        margin: 0 0 0 -5px;
+        // transform: scale(1);
+
         .cog {
             position: relative;
             font-size: 3rem;
+
             &:before {
                 content: "\2699";
             }
-            
+
         }
     }
-    
+
+    .settings {
+        .keyboard {
+            display: inline;
+
+            .settings-btn-wrapper {
+                display: inline-block;
+            }
+        }
+    }
+
     // open
     &#{$open} {
-        .settings {
+        .settings-icon {
             transform: scale(.7);
-            .cog {
-            }
+
+            .cog {}
         }
     }
 }
