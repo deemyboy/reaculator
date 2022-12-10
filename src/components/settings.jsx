@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Grid, Collapse, Slide, SlideProps } from "@mui/material";
+import { Grid, Slide, SlideProps } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import keyboards from "../js/keyboards";
+
 import Line from "./line";
 
 const Settings = (props) => {
@@ -12,15 +13,59 @@ const Settings = (props) => {
     const [checked, setChecked] = useState({});
 
     useEffect(() => {
-        let checkedData = {};
-        // let _checked = { ...checked };
+        let count = 0;
+        // let checkedData = {};
+        let checkedData = { ...checked };
+
+        //  initial setup of checked data
+        if (Object.keys(checkedData).length === 0) {
+            keyboardData.map((keyboard) => {
+                checkedData[keyboard.name] = false;
+            });
+            setChecked(checkedData);
+            return;
+        }
+        // add a new property
         keyboardData.map((keyboard) => {
-            checkedData[keyboard.name] = false;
+            if (!checkedData.hasOwnProperty(keyboard.name)) {
+                checkedData[keyboard.name] = false;
+            }
         });
-        setChecked({ ...checked, ...checkedData });
+        // delete a property when switching them types
+        keyboardData.map((keyboard) => {
+            if (checkedData.hasOwnProperty(keyboard.name)) {
+                const keysToRemoveFromChecked = Object.keys(checkedData).filter(
+                    (key) => {
+                        console.log(
+                            "keysToRemoveFromChecked keyboard.name",
+                            keyboard.name
+                        );
+                        const keyboardNames = keyboardData.map((keyboard) => {
+                            return keyboard.name;
+                        });
+                        return !keyboardNames.includes(key);
+                    }
+                );
+                keysToRemoveFromChecked.map((key) => {
+                    delete checkedData[key];
+                });
+                setChecked(checkedData);
+                return;
+
+                // checkedData[keyboard.name] = false;
+                // delete checkedData[keyboard.name];
+            }
+        });
+        // }
+        setChecked(checkedData);
     }, [keyboardData]);
 
     const makeSettingsComponent = (keyboardObject) => {
+        let collapseClassName = "collapse";
+        console.log("makeSettingsComponent", checked[keyboardObject.name]);
+        collapseClassName += checked[keyboardObject.name]
+            ? " expanded"
+            : " collapsed";
         return (
             <React.Fragment>
                 <ExpandMoreIcon
@@ -28,21 +73,9 @@ const Settings = (props) => {
                     data-index={keyboardObject.name}
                     onClick={(e) => toggleSlide(e)}
                 />
-                <Collapse
-                    in={checked[keyboardObject.name]}
-                    sx={{
-                        // // height: "100%",
-                        // // width: "auto",
-                        // top: "0",
-                        // position: "relative",
-                        // left: "-6%",
-                        transition:
-                            "height 3000ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
-                        border: "1px dashed red",
-                    }}
-                >
+                <div className={collapseClassName}>
                     {keyboardObject.keyboard}
-                </Collapse>
+                </div>
             </React.Fragment>
         );
     };
@@ -51,22 +84,6 @@ const Settings = (props) => {
         const idx = event.currentTarget.dataset.index;
         let _checked = { ...checked };
         let newVal = {};
-        // const _checked = (index) => {
-        //     let res;
-        //     for (let check of Object.keys(checked)) {
-        //         console.log(
-        //             checked[check],
-        //             checked[index],
-        //             "check",
-        //             check,
-        //             "index",
-        //             index
-        //         );
-        //         return checked[check] === index
-        //             ? !checked[check]
-        //             : checked[check];
-        //     }
-        // };
 
         Object.keys(checked).map((k) => {
             if (k === idx) {
@@ -77,9 +94,6 @@ const Settings = (props) => {
 
         setChecked(_checked);
     };
-
-    // const { keyboardData } = props.settingsData;
-    // const { keyboardData } = props.settingsData;
 
     let i = 0;
 

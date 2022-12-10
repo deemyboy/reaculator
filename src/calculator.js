@@ -250,7 +250,7 @@ const Calculator = () => {
             keyboardData.push(keyboardObject);
             i++;
         });
-        console.log(keyboardData);
+        // console.log(keyboardData);
         return keyboardData;
     };
 
@@ -283,12 +283,12 @@ const Calculator = () => {
         // let _visibleKeyboards = getVisibleSidebarKeyboards();
         // keyboardNames = _visibleKeyboards;
         const _keyboardData = getVisibleKeyboardData();
-        console.log(settingsData);
+        // console.log(settingsData);
         setSettingsData({
             ...settingsData,
             keyboardData: _keyboardData,
         });
-        console.log(settingsData);
+        // console.log(settingsData);
     }, [themeType]);
 
     const [animation, setAnimation] = useState("fireworks");
@@ -619,7 +619,7 @@ const Calculator = () => {
     };
 
     const makeCalculationData = () => {
-        console.log("makeCalculationData", { computationData, settingsData });
+        // console.log("makeCalculationData", { computationData, settingsData });
 
         let { rawInput, value } = computationData;
 

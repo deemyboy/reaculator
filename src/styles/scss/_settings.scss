@@ -20,6 +20,20 @@
     }
 
     .settings {
+        .collapse {
+            &.collapsed {
+                width: 0;
+
+                .keyboard {
+                    display: none;
+                }
+            }
+
+            &.expanded {
+                width: auto;
+            }
+        }
+
         .keyboard {
             display: inline;
 
