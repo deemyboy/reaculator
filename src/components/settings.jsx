@@ -30,19 +30,18 @@ const Settings = (props) => {
             if (!checkedData.hasOwnProperty(keyboard.name)) {
                 checkedData[keyboard.name] = false;
             }
+            setChecked(checkedData);
+            return;
         });
-        // delete a property when switching them types
+        // delete a property when switching theme types
+        const keyboardNames = keyboardData.map((keyboard) => {
+            return keyboard.name;
+        });
         keyboardData.map((keyboard) => {
             if (checkedData.hasOwnProperty(keyboard.name)) {
                 const keysToRemoveFromChecked = Object.keys(checkedData).filter(
                     (key) => {
-                        console.log(
-                            "keysToRemoveFromChecked keyboard.name",
-                            keyboard.name
-                        );
-                        const keyboardNames = keyboardData.map((keyboard) => {
-                            return keyboard.name;
-                        });
+                        console.log("keysToRemoveFromChecked ", key);
                         return !keyboardNames.includes(key);
                     }
                 );
@@ -51,13 +50,8 @@ const Settings = (props) => {
                 });
                 setChecked(checkedData);
                 return;
-
-                // checkedData[keyboard.name] = false;
-                // delete checkedData[keyboard.name];
             }
         });
-        // }
-        setChecked(checkedData);
     }, [keyboardData]);
 
     const makeSettingsComponent = (keyboardObject) => {
@@ -82,17 +76,15 @@ const Settings = (props) => {
 
     const toggleSlide = (event) => {
         const idx = event.currentTarget.dataset.index;
-        let _checked = { ...checked };
         let newVal = {};
 
         Object.keys(checked).map((k) => {
             if (k === idx) {
                 newVal[k] = !checked[k];
             }
-            _checked = { ..._checked, ...newVal };
         });
 
-        setChecked(_checked);
+        setChecked({ ...checked, ...newVal });
     };
 
     let i = 0;
