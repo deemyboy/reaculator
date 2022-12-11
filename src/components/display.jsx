@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 // import { DisplayContext } from "../js/context";
-import Settings from "../components/settings";
+import ThemeSettings from "./theme-settings";
 
 import Line from "./line";
 
@@ -35,7 +35,7 @@ const Display = (props) => {
     } else if (_settingsData) {
         return (
             <Grid sx={{}} className={displayClass}>
-                <Settings settingsData={_settingsData} />
+                <ThemeSettings settingsData={_settingsData} />
             </Grid>
         );
         //

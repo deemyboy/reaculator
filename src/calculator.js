@@ -4,7 +4,7 @@ import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
 import Sidebar from "./components/sidebar";
-import Settings from "./components/settings";
+import ThemeSettings from "./components/theme-settings";
 import Cookies from "universal-cookie";
 import {
     numberKeys,

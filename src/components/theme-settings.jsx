@@ -6,7 +6,7 @@ import keyboards from "../js/keyboards";
 
 import Line from "./line";
 
-const Settings = (props) => {
+const ThemeSettings = (props) => {
     const className = "settings",
         { keyboardData } = props.settingsData;
 
@@ -17,51 +17,44 @@ const Settings = (props) => {
         // let checkedData = {};
         let checkedData = { ...checked };
 
+        const keyboardNames = keyboardData.map((keyboard) => {
+            return keyboard.name;
+        });
         //  initial setup of checked data
         if (Object.keys(checkedData).length === 0) {
-            keyboardData.map((keyboard) => {
-                checkedData[keyboard.name] = false;
+            keyboardNames.map((keyboardName) => {
+                checkedData[keyboardName] = false;
             });
             setChecked(checkedData);
             return;
         }
         // add a new property
-        keyboardData.map((keyboard) => {
-            if (!checkedData.hasOwnProperty(keyboard.name)) {
-                checkedData[keyboard.name] = false;
+        keyboardNames.map((keyboardName) => {
+            if (!checkedData.hasOwnProperty(keyboardName)) {
+                checkedData[keyboardName] = false;
             }
             setChecked(checkedData);
             return;
         });
         // delete a property when switching theme types
-        const keyboardNames = keyboardData.map((keyboard) => {
-            return keyboard.name;
-        });
-        keyboardData.map((keyboard) => {
-            if (checkedData.hasOwnProperty(keyboard.name)) {
-                const keysToRemoveFromChecked = Object.keys(checkedData).filter(
-                    (key) => {
-                        console.log("keysToRemoveFromChecked ", key);
-                        return !keyboardNames.includes(key);
-                    }
-                );
-                keysToRemoveFromChecked.map((key) => {
-                    delete checkedData[key];
-                });
-                setChecked(checkedData);
-                return;
+        const keysToRemoveFromChecked = Object.keys(checkedData).filter(
+            (key) => {
+                return !keyboardNames.includes(key);
             }
+        );
+        keysToRemoveFromChecked.map((key) => {
+            delete checkedData[key];
         });
+        setChecked(checkedData);
     }, [keyboardData]);
 
     const makeSettingsComponent = (keyboardObject) => {
         let collapseClassName = "collapse";
-        console.log("makeSettingsComponent", checked[keyboardObject.name]);
         collapseClassName += checked[keyboardObject.name]
             ? " expanded"
             : " collapsed";
         return (
-            <React.Fragment>
+            <div className="setting-wrapper">
                 <ExpandMoreIcon
                     sx={{ transform: "rotate(90deg)" }}
                     data-index={keyboardObject.name}
@@ -70,7 +63,7 @@ const Settings = (props) => {
                 <div className={collapseClassName}>
                     {keyboardObject.keyboard}
                 </div>
-            </React.Fragment>
+            </div>
         );
     };
 
@@ -86,8 +79,6 @@ const Settings = (props) => {
 
         setChecked({ ...checked, ...newVal });
     };
-
-    let i = 0;
 
     return (
         <React.Fragment>
@@ -112,4 +103,4 @@ const Settings = (props) => {
         </React.Fragment>
     );
 };
-export default Settings;
+export default ThemeSettings;
