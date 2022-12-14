@@ -28,55 +28,55 @@ const Keyboard = ({ props, selected, errorState }) => {
     let _title;
 
     if (showTitle) {
-        _title = <Typography className="sidebar-kb-title">{title}</Typography>;
+        _title = <Typography className="settings-kb-title">{title}</Typography>;
     } else {
         _title = "";
     }
-    if (location === "sidebar") {
-        return (
-            // <SlideTransition>
-            // <Slide direction="up" in={checked} mountOnEnter unmountOnExit>
-            <React.Fragment>
-                {/* <ExpandMoreIcon
-                    // sx={{ transform: "rotate(90deg)" }}
-                    onClick={() => toggleSlide(id)}
-                />
-                <Collapse
-                    in={checked[id]}
-                    // orientation="horizontal"
-                    // collapsedSize={1000}
-                    sx={{
-                        height: "100%",
-                        width: "auto",
-                        top: "0",
-                        position: "relative",
-                        left: "-6%",
-                    }}
-                > */}
-                <Grid
-                    item={true}
-                    xs={xs}
-                    md={md}
-                    lg={lg}
-                    className={`keyboard ${className}`}
-                >
-                    {_title}
-                    {keys.map((ky) => {
-                        return (
-                            <Key
-                                key={ky.id}
-                                _key={ky}
-                                errorState={errorState}
-                            />
-                        );
-                    })}
-                </Grid>
-                {/* </Collapse> */}
-            </React.Fragment>
-            // </Slide>
-            // </SlideTransition>
-        );
-    }
+    // if (location === "sidebar") {
+    //     return (
+    //         // <SlideTransition>
+    //         // <Slide direction="up" in={checked} mountOnEnter unmountOnExit>
+    //         <React.Fragment>
+    //             {/* <ExpandMoreIcon
+    //                 // sx={{ transform: "rotate(90deg)" }}
+    //                 onClick={() => toggleSlide(id)}
+    //             />
+    //             <Collapse
+    //                 in={checked[id]}
+    //                 // orientation="horizontal"
+    //                 // collapsedSize={1000}
+    //                 sx={{
+    //                     height: "100%",
+    //                     width: "auto",
+    //                     top: "0",
+    //                     position: "relative",
+    //                     left: "-6%",
+    //                 }}
+    //             > */}
+    //             <Grid
+    //                 item={true}
+    //                 xs={xs}
+    //                 md={md}
+    //                 lg={lg}
+    //                 className={`keyboard ${className}`}
+    //             >
+    //                 {_title}
+    //                 {keys.map((ky) => {
+    //                     return (
+    //                         <Key
+    //                             key={ky.id}
+    //                             _key={ky}
+    //                             errorState={errorState}
+    //                         />
+    //                     );
+    //                 })}
+    //             </Grid>
+    //             {/* </Collapse> */}
+    //         </React.Fragment>
+    //         // </Slide>
+    //         // </SlideTransition>
+    //     );
+    // }
     return (
         <Grid
             item={true}

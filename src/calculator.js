@@ -92,17 +92,18 @@ const Calculator = () => {
 
     const handleKeyPress = useCallback((e) => {
         const _keyData = {};
+        let _button;
         // prevent these keys firing
         // ctrl key 17, shift key 16 alt key 18
         // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
         const { key, shiftKey, ctrlKey, metaKey, keyCode, repeat, timeStamp } =
             e;
         if (!DISALLOWED_KEYS.includes(keyCode)) {
-            var _key = numberKeys.concat(functionKeys).filter((k) => {
+            const _key = numberKeys.concat(functionKeys).filter((k) => {
                 return k.keycode === keyCode;
             })[0];
             if (_key) {
-                var _button = document.getElementById(_key.id);
+                _button = document.getElementById(_key.id);
             }
         } else {
             return;
@@ -149,23 +150,21 @@ const Calculator = () => {
     const onSelectThemeType = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
-        let _themeTypeData = {};
-        _themeTypeData.currentSetting = e.target.id;
+        const _themeType = e.target.id;
         cookieData.cookieLabel = "currentThemeType";
-        cookieData.cookieValue = _themeTypeData.currentSetting;
+        cookieData.cookieValue = _themeType;
         cookieData.cookiePath = "/";
-        setThemeType(_themeTypeData.currentSetting);
+        setThemeType(_themeType);
     }, []);
 
     const onSelectTheme = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
-        let _themesData = {};
-        _themesData.currentSetting = e.target.id;
+        const _theme = e.target.id;
         cookieData.cookieLabel = "currentTheme";
-        cookieData.cookieValue = _themesData.currentSetting;
+        cookieData.cookieValue = _theme;
         cookieData.cookiePath = "/";
-        setTheme(_themesData.currentSetting);
+        setTheme(_theme);
         // setCookie(cookieData);
     }, []);
 
@@ -183,8 +182,7 @@ const Calculator = () => {
     const onSelectPictureType = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
-        let _pictureType = {};
-        _pictureType = e.target.id;
+        const _pictureType = e.target.id;
         cookieData.cookieLabel = "currentPictureType";
         cookieData.cookieValue = _pictureType;
         cookieData.cookiePath = "/";
@@ -197,13 +195,13 @@ const Calculator = () => {
         timeStamp: undefined,
     };
 
-    const [inputData, setInputData] = useState({ ...initialInputData });
+    const [inputData, setInputData] = useState({});
 
     const isInitialMount = useRef(true);
 
     const resetInputData = () => {
         // console.log("resetInputData");
-        setInputData(initialInputData);
+        setInputData({});
     };
 
     // handleUserInput
@@ -260,6 +258,22 @@ const Calculator = () => {
         selected: "",
     };
 
+    const initialComputationData = {
+        rawInput: undefined,
+        resultValue: undefined,
+        computed: undefined,
+        num1: undefined,
+        op1: undefined,
+        num2: undefined,
+        op2: undefined,
+        error: false,
+        nextChar: undefined,
+    };
+
+    const [computationData, setComputationData] = useState({
+        ...initialComputationData,
+    });
+
     // const [sidebarData, setSidebarData] = useState(initialSidebarData);
     const [settingsData, setSettingsData] = useState(initialSettingsData, []);
 
@@ -277,18 +291,19 @@ const Calculator = () => {
                 });
             }
         }
-    }, [settingsData.isOpen, settingsData.keyboardData]);
+    }, [
+        settingsData.isOpen,
+        settingsData.keyboardData,
+        inputData,
+        computationData,
+    ]);
 
     useEffect(() => {
-        // let _visibleKeyboards = getVisibleSidebarKeyboards();
-        // keyboardNames = _visibleKeyboards;
         const _keyboardData = getVisibleKeyboardData();
-        // console.log(settingsData);
         setSettingsData({
             ...settingsData,
             keyboardData: _keyboardData,
         });
-        // console.log(settingsData);
     }, [themeType]);
 
     const [animation, setAnimation] = useState("fireworks");
@@ -308,11 +323,6 @@ const Calculator = () => {
     const initialResultData = {
         value: 0,
         computed: false,
-        num1: undefined,
-        op1: undefined,
-        num2: undefined,
-        op2: undefined,
-        error: false,
         className: "result",
     };
 
@@ -320,23 +330,21 @@ const Calculator = () => {
         ...initialResultData,
     });
 
-    const linesData = [
-        {
-            className: calculationData.className,
-            value: calculationData.value,
-        },
-        {
-            className: resultData.className,
-            value: resultData.value,
-        },
-    ];
-    // const [linesData, setLinesData] = useState(defaultLinesData);
+    // const linesData = ;
+    const [linesData, setLinesData] = useState({});
 
-    const defaultDisplayData = linesData;
-
-    const [displayData, setDisplayData] = useState({
-        linesData: defaultDisplayData,
-    });
+    useEffect(() => {
+        setLinesData({
+            calculation: {
+                className: calculationData.className,
+                value: calculationData.value,
+            },
+            result: {
+                className: resultData.className,
+                value: resultData.value,
+            },
+        });
+    }, [calculationData, resultData]);
 
     const resetCalculationData = () => {
         // console.log("resetCalculationData");
@@ -376,44 +384,15 @@ const Calculator = () => {
 
     const [keyError, setKeyError] = useState(false);
 
-    const initialComputationData = {
-        rawInput: undefined,
-        resultValue: undefined,
-        computed: undefined,
-        num1: undefined,
-        op1: undefined,
-        num2: undefined,
-        op2: undefined,
-        error: false,
-        nextChar: undefined,
-    };
-
-    const processResult = (data) => {
-        console.log("processResult");
-        setComputationData({
-            rawInput: data.rawInput,
-            previousInput: data.rawInput,
-            calculationValue: calculationData.value,
-            resultValue: resultData.value,
-            computed: data.computed,
-            num1: data.num1,
-            op1: data.op1,
-            num2: data.num2,
-            op2: data.op2,
-            error: data.error,
-            // calculationClassName: setClassNames("calculation"),
-            // resultClassName: setClassNames("result"),
-            nextChar: data.nextChar,
-        });
-    };
-
-    const [computationData, setComputationData] = useState({
-        ...initialComputationData,
-    });
-
     const resetComputationData = () => {
         setComputationData(initialComputationData);
     };
+
+    const [displayData, setDisplayData] = useState(linesData);
+
+    useEffect(() => {
+        setDisplayData({ linesData });
+    }, [computationData]);
 
     // makeCalculationData or tryMath
     useEffect(() => {
@@ -431,16 +410,15 @@ const Calculator = () => {
                 makeCalculationData();
             } else {
                 // console.log("useEffect tryMath", { computationData });
-                tryMath();
+                if (!resultData.computed) {
+                    makeCalculationData();
+                } else {
+                    tryMath();
+                }
                 // makeCalculationData();
             }
-            makeCalculationData();
         }
-    }, [
-        computationData.rawInput,
-        computationData.computed,
-        settingsData.isOpen,
-    ]);
+    }, [computationData.rawInput, computationData.computed]);
 
     const setClassNames = () => {
         // console.log("setClassNames", errorState);
@@ -533,13 +511,13 @@ const Calculator = () => {
         };
 
         if (themeType === "animation") {
-            var loadScript = function () {
-                var tag = document.createElement("script");
+            const loadScript = function () {
+                const tag = document.createElement("script");
                 tag.id = _id;
                 tag.async = false;
                 let _src = `./animation-${_scriptName}.js`;
                 tag.src = _src;
-                var body = document.getElementsByTagName("body")[0];
+                const body = document.getElementsByTagName("body")[0];
                 body.appendChild(tag);
             };
             if (document.getElementById(_id)) {
@@ -551,18 +529,18 @@ const Calculator = () => {
         }
 
         if (themeType === "animation") {
-            var loadScript = function () {
-                var tag = document.createElement("script");
+            const loadScript = function () {
+                const tag = document.createElement("script");
                 tag.id = _id;
                 tag.async = false;
                 let _src = `./animation-${_scriptName}.js`;
                 tag.src = _src;
-                var body = document.getElementsByTagName("body")[0];
+                const body = document.getElementsByTagName("body")[0];
                 body.appendChild(tag);
             };
 
             if (document.getElementById(_id)) {
-                var tag = document.getElementById(_id);
+                const tag = document.getElementById(_id);
                 tag.remove();
             }
             loadScript();
@@ -619,9 +597,10 @@ const Calculator = () => {
     };
 
     const makeCalculationData = () => {
-        // console.log("makeCalculationData", { computationData, settingsData });
+        console.log("makeCalculationData", { computationData });
 
-        let { rawInput, value } = computationData;
+        let { rawInput } = computationData,
+            value;
 
         // if (settingsData.isOpen) {
         //     value = makeSettings(themeType);
@@ -643,10 +622,9 @@ const Calculator = () => {
     const handleUserInput = () => {
         // console.log("handleUserInput", { computationData });
         let _rawInput =
-                computationData.rawInput !== undefined
-                    ? computationData.rawInput
-                    : "",
-            _nextChar;
+            computationData.rawInput !== undefined
+                ? computationData.rawInput
+                : "";
         const { key } = inputData;
         if (key === "a") {
             resetAll();
@@ -663,7 +641,10 @@ const Calculator = () => {
             key !== "c"
         ) {
             // console.log("computationData.computed", computationData.computed);
-            _nextChar = key;
+            setComputationData({
+                ...computationData,
+                nextChar: key,
+            });
         }
 
         if (computationData.computed && (key === "m" || key === "=")) {
@@ -675,18 +656,17 @@ const Calculator = () => {
         } else {
             _rawInput = key;
         }
-        _rawInput = processRawInput(_rawInput);
+        const _processedRawInput = processRawInput(_rawInput);
         // processedInput = processRawInput(_rawInput);
         // console.log({ computationData, computationData });
         // console.log({ computationData }, _rawInput);
-        if (_rawInput === "clear all") {
+        if (_processedRawInput === "ac") {
             resetAll();
             return;
         }
         setComputationData({
             ...computationData,
-            nextChar: _nextChar,
-            rawInput: _rawInput,
+            rawInput: _processedRawInput,
         });
     };
 
@@ -888,21 +868,18 @@ const Calculator = () => {
 
     const tryMath = () => {
         // console.log("tryMath");
-        let _resultData,
-            _computationData = { ...computationData };
+        let _resultData = { ...computationData };
 
-        let { rawInput, computed } = _computationData || undefined;
+        const { rawInput, computed } = computationData || undefined,
+            { className } = { ...resultData } || undefined;
         if (!computed && rawInput) {
             _resultData = doMath(rawInput);
-            // console.log(
-            //     "we have returned from doing maths",
-            //     "_resultData",
-            //     _resultData
-            // );
-            setResultData({
-                ..._resultData,
-                className: resultData.className,
-            });
+            if (_resultData.computed) {
+                setResultData({
+                    ..._resultData,
+                    className: className,
+                });
+            }
         }
     };
 
@@ -925,10 +902,7 @@ const Calculator = () => {
         <Container
             className={`container 
             ${themeType} ${theme.toLowerCase()} ${pictureType}`}
-            // ${
-            // sidebarData.isOpen === true ? "open" : ""
-            // }
-            sx={{ p: "0!important" }}
+            sx={{ padding: "0!important" }}
         >
             {/* ------------ app ---------------- */}
             <p className="settings-icon" onClick={toggleSettings} disabled>

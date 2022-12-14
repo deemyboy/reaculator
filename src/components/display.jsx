@@ -13,20 +13,21 @@ const Display = (props) => {
     } else if (content.hasOwnProperty("settingsData")) {
         ({ settingsData: _settingsData } = content);
     }
-    // console.log("Display", props);
     let displayClass = "display";
     if (props.displayClass) {
         displayClass = props.displayClass;
     }
-    if (_linesData) {
+    if (_linesData && Object.keys(_linesData).length > 0) {
+        let i = 0;
         return (
             <Grid sx={{}} className={displayClass}>
-                {_linesData.map((line) => {
+                {Object.keys(_linesData).map((line) => {
+                    i++;
                     return (
                         <Line
-                            key={Math.random()}
-                            className={line.className}
-                            value={line.value}
+                            key={_linesData[line].className + "-" + i}
+                            className={_linesData[line].className}
+                            value={_linesData[line].value}
                         />
                     );
                 })}

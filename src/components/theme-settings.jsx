@@ -3,8 +3,14 @@ import { Grid, Slide, SlideProps } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import keyboards from "../js/keyboards";
+import { Collapse } from "react-collapse";
+
+// const { Collapse, UnmountClosed } = ReactCollapse;
+
+// ...
 
 import Line from "./line";
+import { KebabDiningOutlined } from "@mui/icons-material";
 
 const ThemeSettings = (props) => {
     const className = "settings",
@@ -49,6 +55,9 @@ const ThemeSettings = (props) => {
     }, [keyboardData]);
 
     const makeSettingsComponent = (keyboardObject) => {
+        const expandMoreIconOrientation = !checked[keyboardObject.name]
+            ? { transform: "rotate(0deg);transition: 300ms ease all;" }
+            : { transform: "rotate(180deg);transition: 300ms ease all;" };
         let collapseClassName = "collapse";
         collapseClassName += checked[keyboardObject.name]
             ? " expanded"
@@ -56,13 +65,14 @@ const ThemeSettings = (props) => {
         return (
             <div className="setting-wrapper">
                 <ExpandMoreIcon
-                    sx={{ transform: "rotate(90deg)" }}
+                    sx={expandMoreIconOrientation}
                     data-index={keyboardObject.name}
                     onClick={(e) => toggleSlide(e)}
                 />
-                <div className={collapseClassName}>
+                <Collapse isOpened={checked[keyboardObject.name]}>
+                    <div>{keyboardObject.name.toUpperCase()}</div>
                     {keyboardObject.keyboard}
-                </div>
+                </Collapse>
             </div>
         );
     };
@@ -85,8 +95,6 @@ const ThemeSettings = (props) => {
             {" "}
             <Grid
                 container
-                key={Math.random()}
-                // direction="column"
                 className={className}
                 meta-name="settings"
                 justifyContent="space-around"

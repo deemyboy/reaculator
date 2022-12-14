@@ -188,7 +188,7 @@ const repairStack = {
         }
         if (/^[xy\/\-+=rsacm]$/.test(input)) {
             input = input.replace(/.$/, "");
-            return "clear all";
+            return "ac";
         }
         return input;
     },

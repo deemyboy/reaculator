@@ -33,7 +33,7 @@ export const keyboards = [
         className: "keyboard-theme-type",
         showTitle: true,
         keys: themeTypeKeys,
-        location: "sidebar",
+        location: "display",
         id: 3,
     },
     {
@@ -41,7 +41,7 @@ export const keyboards = [
         className: "keyboard-theme",
         showTitle: true,
         keys: themeKeys,
-        location: "sidebar",
+        location: "display",
         id: 4,
     },
     {
@@ -49,7 +49,7 @@ export const keyboards = [
         className: "keyboard-animation",
         showTitle: true,
         keys: animKeys,
-        location: "sidebar",
+        location: "display",
         id: 5,
     },
     {
@@ -57,7 +57,7 @@ export const keyboards = [
         className: "keyboard-picture-type",
         showTitle: true,
         keys: pictureKeys,
-        location: "sidebar",
+        location: "display",
         id: 6,
     },
 ];

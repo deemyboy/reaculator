@@ -20,24 +20,25 @@
     }
 
     .settings {
-        .collapse {
-            background-color: #cc44cc88;
+        // .collapse {
+        //     background-color: #cc44cc88;
 
-            &.collapsed {
-                width: 0;
+        //     &.collapsed {
+        //         width: 0;
 
-                .keyboard {
-                    display: none;
-                }
-            }
+        //         .keyboard {
+        //             display: none;
+        //         }
+        //     }
 
-            &.expanded {
-                width: auto;
-            }
-        }
+        //     &.expanded {
+        //         width: auto;
+        //     }
+        // }
 
         .keyboard {
-            display: inline;
+            display: inline-flex;
+            font-family: Orbitron, sans-serif;
 
             .settings-btn-wrapper {
                 display: inline-block;
