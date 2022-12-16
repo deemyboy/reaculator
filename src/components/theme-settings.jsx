@@ -1,26 +1,16 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Grid, Slide, SlideProps } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import React, { useState, useEffect } from "react";
+import { Grid } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import keyboards from "../js/keyboards";
 import { Collapse } from "react-collapse";
 
-// const { Collapse, UnmountClosed } = ReactCollapse;
-
-// ...
-
-import Line from "./line";
-import { KebabDiningOutlined } from "@mui/icons-material";
-
 const ThemeSettings = (props) => {
+    console;
     const className = "settings",
-        { keyboardData } = props.settingsData;
+        { keyboardData } = { ...props.settingsData.settingsData };
 
     const [checked, setChecked] = useState({});
 
     useEffect(() => {
-        let count = 0;
-        // let checkedData = {};
         let checkedData = { ...checked };
 
         const keyboardNames = keyboardData.map((keyboard) => {
@@ -43,18 +33,18 @@ const ThemeSettings = (props) => {
             return;
         });
         // delete a property when switching theme types
-        const keysToRemoveFromChecked = Object.keys(checkedData).filter(
-            (key) => {
+        Object.keys(checkedData)
+            .filter((key) => {
                 return !keyboardNames.includes(key);
-            }
-        );
-        keysToRemoveFromChecked.map((key) => {
-            delete checkedData[key];
-        });
+            })
+            .map((key) => {
+                delete checkedData[key];
+            });
         setChecked(checkedData);
     }, [keyboardData]);
 
-    const makeSettingsComponent = (keyboardObject) => {
+    const Setting = (keyboardData) => {
+        const { keyboardObject } = { ...keyboardData };
         const expandMoreIconOrientation = !checked[keyboardObject.name]
             ? { transform: "rotate(0deg);transition: 300ms ease all;" }
             : { transform: "rotate(180deg);transition: 300ms ease all;" };
@@ -101,11 +91,7 @@ const ThemeSettings = (props) => {
                 alignItems={"center"}
             >
                 {keyboardData.map((keyboard, index) => {
-                    return (
-                        <React.Fragment key={index}>
-                            {makeSettingsComponent(keyboard)}
-                        </React.Fragment>
-                    );
+                    return <Setting key={index} keyboardObject={keyboard} />;
                 })}
             </Grid>
         </React.Fragment>

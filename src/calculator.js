@@ -23,7 +23,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import * as CONSTANTS from "./js/constants";
 import { doMath, unicodify, deunicodify } from "./js/maths_engine.mjs";
-import { processRawInput } from "./js/process_input.mjs";
+import { processUserInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
 
@@ -49,49 +49,17 @@ const Calculator = () => {
 
     const handleClick = useCallback((e) => {
         e.target.blur();
-        const _keyData = {};
         const keyClicked = numberKeys.concat(functionKeys).filter((k) => {
             return k.id.toString() === e.target.id;
         });
         let key = keyClicked[0].value ? keyClicked[0].value : "";
-        _keyData.key = key;
-        _keyData.timeStamp = e.timeStamp;
-        setInputData(_keyData);
+        setKeyData({
+            key: key,
+            timeStamp: e.timeStamp,
+        });
     }, []);
 
-    const getOnSelect = (keyboardName) => {
-        const onSelectStack = {
-            number: handleClick,
-            function: handleClick,
-            "theme-type": onSelectThemeType,
-            theme: onSelectTheme,
-            animation: onSelectAnimation,
-            "picture-type": onSelectPictureType,
-        };
-        return onSelectStack[keyboardName];
-    };
-
-    const initialErrorState = false;
-
-    const [errorState, setErrorState] = useState(initialErrorState);
-
-    const resetErrorState = () => {
-        setErrorState(initialErrorState);
-    };
-
-    const makeKeyboard = (keyboardName) => {
-        const data = keyboards.find((kb) => {
-            return kb.name === keyboardName;
-        });
-        return (
-            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                <Keyboard props={data} errorState={errorState} />
-            </HandleClickContextProvider>
-        );
-    };
-
     const handleKeyPress = useCallback((e) => {
-        const _keyData = {};
         let _button;
         // prevent these keys firing
         // ctrl key 17, shift key 16 alt key 18
@@ -137,15 +105,87 @@ const Calculator = () => {
                     return;
                 }
             }
-            _keyData.key = key;
             // Escape key hack
-            if (key === "Escape") {
-                _keyData.key = "a";
-            }
-            _keyData.timeStamp = timeStamp;
-            setInputData(_keyData);
+            const _key = key === "Escape" ? "a" : key;
+
+            setKeyData({
+                key: _key,
+                timeStamp: timeStamp,
+            });
         }
     }, []);
+
+    const getOnSelect = (keyboardName) => {
+        const onSelectStack = {
+            number: handleClick,
+            function: handleClick,
+            "theme-type": onSelectThemeType,
+            theme: onSelectTheme,
+            animation: onSelectAnimation,
+            "picture-type": onSelectPictureType,
+        };
+        return onSelectStack[keyboardName];
+    };
+
+    const [errorState, setErrorState] = useState(false);
+
+    const resetErrorState = () => {
+        setErrorState(false);
+    };
+
+    const initialComputationData = {
+        userInput: undefined,
+        resultValue: 0,
+        resultClassName: "result",
+        calculationValue: "",
+        calculationClassName: "calculation",
+        computed: undefined,
+        num1: undefined,
+        op1: undefined,
+        num2: undefined,
+        op2: undefined,
+        error: false,
+        nextChar: undefined,
+        key: undefined,
+        timeStamp: undefined,
+    };
+
+    const [computationData, setComputationData] = useState({
+        ...initialComputationData,
+    });
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            if (computationData.error) {
+                setErrorState(true);
+                computationData.calculationClassName += " calculation-error";
+                computationData.resultClassName += " result-error";
+            }
+        }
+    }, [computationData.error]);
+
+    useEffect(() => {
+        // console.log("linesData calculationValue", { linesData });
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            if (computationData.computed)
+                console.log("computed an answer", computationData.op2);
+        }
+    }, [computationData.computed]);
+
+    const makeKeyboard = (keyboardName) => {
+        const data = keyboards.find((kb) => {
+            return kb.name === keyboardName;
+        });
+        return (
+            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
+                <Keyboard props={data} errorState={errorState} />
+            </HandleClickContextProvider>
+        );
+    };
 
     const onSelectThemeType = useCallback((e) => {
         e.stopPropagation();
@@ -190,18 +230,12 @@ const Calculator = () => {
         // setCookie(cookieData);
     }, []);
 
-    const initialInputData = {
-        key: undefined,
-        timeStamp: undefined,
-    };
-
-    const [inputData, setInputData] = useState({});
-
     const isInitialMount = useRef(true);
 
-    const resetInputData = () => {
-        // console.log("resetInputData");
-        setInputData({});
+    const [keyData, setKeyData] = useState({});
+
+    const resetKeyData = () => {
+        setKeyData({});
     };
 
     // handleUserInput
@@ -211,7 +245,22 @@ const Calculator = () => {
         } else {
             handleUserInput();
         }
-    }, [inputData]);
+    }, [keyData]);
+
+    // tryMath
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            if (
+                CONSTANTS.patternStack.MATH_CATCHER.test(
+                    computationData.userInput
+                )
+            )
+                tryMath();
+            else makeCalculationData();
+        }
+    }, [computationData.userInput]);
 
     const defaultTheme = "Ocean";
     const defaultThemeType = "color";
@@ -219,13 +268,6 @@ const Calculator = () => {
     const [theme, setTheme] = useState(defaultTheme);
 
     const [themeType, setThemeType] = useState(defaultThemeType);
-
-    // setSidebarData - visibleKeyboards
-    // useEffect(() => {
-    //     let _visibleKeyboards = getVisibleSidebarKeyboards();
-    //     sidebarData.keyboardNames = _visibleKeyboards;
-    //     setSidebarData({ ...sidebarData });
-    // }, [themeType]);
 
     const getVisibleKeyboardData = () => {
         let visibleKeyboardNames = ["theme-type", "theme"],
@@ -258,24 +300,15 @@ const Calculator = () => {
         selected: "",
     };
 
-    const initialComputationData = {
-        rawInput: undefined,
-        resultValue: undefined,
-        computed: undefined,
-        num1: undefined,
-        op1: undefined,
-        num2: undefined,
-        op2: undefined,
-        error: false,
-        nextChar: undefined,
-    };
+    const [settingsData, setSettingsData] = useState(initialSettingsData);
 
-    const [computationData, setComputationData] = useState({
-        ...initialComputationData,
+    const [linesData, setLinesData] = useState({
+        calculation: {
+            value: "",
+            className: computationData.calculationClassName,
+        },
+        result: { value: 0, className: computationData.resultClassName },
     });
-
-    // const [sidebarData, setSidebarData] = useState(initialSidebarData);
-    const [settingsData, setSettingsData] = useState(initialSettingsData, []);
 
     useEffect(() => {
         if (isInitialMount.current) {
@@ -291,12 +324,7 @@ const Calculator = () => {
                 });
             }
         }
-    }, [
-        settingsData.isOpen,
-        settingsData.keyboardData,
-        inputData,
-        computationData,
-    ]);
+    }, [settingsData, linesData]);
 
     useEffect(() => {
         const _keyboardData = getVisibleKeyboardData();
@@ -309,52 +337,6 @@ const Calculator = () => {
     const [animation, setAnimation] = useState("fireworks");
 
     const [pictureType, setPictureType] = useState("still");
-
-    const initialCalculationData = {
-        previous: undefined,
-        value: undefined,
-        className: "calculation",
-    };
-
-    const [calculationData, setCalculationData] = useState({
-        ...initialCalculationData,
-    });
-
-    const initialResultData = {
-        value: 0,
-        computed: false,
-        className: "result",
-    };
-
-    const [resultData, setResultData] = useState({
-        ...initialResultData,
-    });
-
-    // const linesData = ;
-    const [linesData, setLinesData] = useState({});
-
-    useEffect(() => {
-        setLinesData({
-            calculation: {
-                className: calculationData.className,
-                value: calculationData.value,
-            },
-            result: {
-                className: resultData.className,
-                value: resultData.value,
-            },
-        });
-    }, [calculationData, resultData]);
-
-    const resetCalculationData = () => {
-        // console.log("resetCalculationData");
-        setCalculationData(initialCalculationData);
-    };
-
-    const resetResultData = () => {
-        // console.log("resetResultData");
-        setResultData(initialResultData);
-    };
 
     const toggleSettings = (e) => {
         e.preventDefault();
@@ -391,101 +373,6 @@ const Calculator = () => {
     const [displayData, setDisplayData] = useState(linesData);
 
     useEffect(() => {
-        setDisplayData({ linesData });
-    }, [computationData]);
-
-    // makeCalculationData or tryMath
-    useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            if (
-                CONSTANTS.patternStack.UNNARY_MATH_CATCHER.test(
-                    computationData.rawInput
-                )
-            ) {
-                console.log("useEffect makeCalculationData", {
-                    computationData,
-                });
-                makeCalculationData();
-            } else {
-                // console.log("useEffect tryMath", { computationData });
-                if (!resultData.computed) {
-                    makeCalculationData();
-                } else {
-                    tryMath();
-                }
-                // makeCalculationData();
-            }
-        }
-    }, [computationData.rawInput, computationData.computed]);
-
-    const setClassNames = () => {
-        // console.log("setClassNames", errorState);
-        const classNames = {
-            calculation: {
-                default: "calculation",
-                error: "calculation-error",
-            },
-            result: {
-                default: "result",
-                error: "result-error",
-            },
-        };
-
-        let calculationClassName, resultClassName;
-
-        if (errorState) {
-            calculationClassName =
-                classNames.calculation.default +
-                " " +
-                classNames.calculation.error;
-            resultClassName =
-                classNames.result.default + " " + classNames.result.error;
-        } else {
-            calculationClassName = classNames.calculation.default;
-            resultClassName = classNames.result.default;
-        }
-        setCalculationData({
-            ...calculationData,
-            className: calculationClassName,
-        });
-        setResultData({
-            ...resultData,
-            className: resultClassName,
-        });
-    };
-
-    // setClassNames
-    useEffect(() => {
-        // console.log("useEffect setClassNames", errorState);
-        setClassNames();
-    }, [errorState]);
-
-    //  errorState
-    useEffect(() => {
-        if (resultData.error) {
-            setErrorState(true);
-        } else {
-            setErrorState(false);
-        }
-    }, [resultData.error]);
-
-    useEffect(() => {
-        // console.log(
-        //     "useEffect processComputationDataPostResult resultData.computed",
-        //     resultData.computed
-        // );
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            if (resultData.computed) {
-                processComputationDataPostResult();
-            }
-        }
-    }, [resultData.computed]);
-
-    useEffect(() => {
         // console.log(
         //     "useEffect preProcessComputationData computationData.nextChar",
         //     computationData.nextChar
@@ -498,6 +385,43 @@ const Calculator = () => {
             }
         }
     }, [computationData.nextChar]);
+
+    // linesData calculationValue
+    useEffect(() => {
+        // console.log("linesData calculationValue", { linesData });
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            setLinesData({
+                ...linesData,
+                calculation: {
+                    value: computationData.calculationValue,
+                    className: computationData.calculationClassName,
+                },
+            });
+        }
+    }, [
+        computationData.calculationValue,
+        computationData.calculationClassName,
+    ]);
+
+    // linesData resultValue
+    useEffect(() => {
+        // console.log("linesData resultValue", { linesData });
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            setLinesData({
+                ...linesData,
+                result: {
+                    value: computationData.resultValue
+                        ? computationData.resultValue
+                        : 0,
+                    className: computationData.resultClassName,
+                },
+            });
+        }
+    }, [computationData.resultValue]);
 
     // animation
     useEffect(() => {
@@ -589,43 +513,15 @@ const Calculator = () => {
 
     const resetAll = () => {
         resetErrorState();
-        resetInputData();
-        resetCalculationData();
-        resetResultData();
+        resetKeyData();
         resetComputationData();
         // resetSettingsData();
     };
 
-    const makeCalculationData = () => {
-        console.log("makeCalculationData", { computationData });
-
-        let { rawInput } = computationData,
-            value;
-
-        // if (settingsData.isOpen) {
-        //     value = makeSettings(themeType);
-        // } else {
-        value = /[x\/sry]/.test(rawInput) ? unicodify(rawInput) : rawInput;
-        // }
-
-        setCalculationData({
-            ...calculationData,
-            value: value,
-        });
-    };
-
-    const makeDisplay = (data) => {
-        // console.log("makeDisplay", data);
-        return <Display content={data} />;
-    };
-
     const handleUserInput = () => {
-        // console.log("handleUserInput", { computationData });
-        let _rawInput =
-            computationData.rawInput !== undefined
-                ? computationData.rawInput
-                : "";
-        const { key } = inputData;
+        let { userInput } = { ...computationData } || "";
+        const { key } = { ...keyData } || undefined;
+        console.log(key);
         if (key === "a") {
             resetAll();
             return;
@@ -651,236 +547,53 @@ const Calculator = () => {
             return;
         }
 
-        if (_rawInput) {
-            _rawInput += key;
+        if (userInput) {
+            userInput += key;
         } else {
-            _rawInput = key;
+            userInput = key;
         }
-        const _processedRawInput = processRawInput(_rawInput);
-        // processedInput = processRawInput(_rawInput);
-        // console.log({ computationData, computationData });
-        // console.log({ computationData }, _rawInput);
-        if (_processedRawInput === "ac") {
+        const _processedUserInput = processUserInput(userInput);
+        if (_processedUserInput === "ac") {
             resetAll();
             return;
         }
         setComputationData({
             ...computationData,
-            rawInput: _processedRawInput,
+            userInput: _processedUserInput,
         });
     };
 
-    const processComputationDataPostResult = () => {
-        // console.log("processComputationDataPostResult", {
-        //     resultData,
-        //     computationData,
-        // });
-        let _resultData = { ...resultData },
-            _computationData = { ...computationData };
-        let { rawInput, nextChar } = _computationData;
-        let {
-            previousInput,
-            calculationValue,
+    const tryMath = () => {
+        console.log("tryMath", { computationData });
+        const _resultData = doMath(computationData.userInput);
+        setComputationData({ ...computationData, ..._resultData });
+    };
+
+    const makeCalculationData = () => {
+        // console.log("makeCalculationData", { computationData });
+
+        const {
+            userInput,
+            resultValue,
             computed,
             num1,
             op1,
             num2,
             op2,
             error,
-            value,
-        } = _resultData;
+            nextChar,
+        } = { ...computationData };
+        let calculationValue =
+            num1 && op1 && num2 ? "" + num1 + op1 + num2 : userInput;
 
-        // setComputationData({ ...computationData, rawInput: undefined });
-        if (nextChar) {
-            return;
-        }
-        if (op2) {
-            // binary maths
-            // console.log(" // binary maths");
-            // EQUALS
-            if (op2 === "=") {
-                // console.log(" // binary maths | EQUALS | TRIGGER -> = ");
-                setResultData({ ...resultData, computed: false });
-                setComputationData({
-                    ...computationData,
-                    computed: true,
-                    operationType: "=",
-                    rawInput: rawInput.replace(/.$/, ""),
-                });
-                return;
-            }
-            // computed = false;
-            // x/-+
-            // console.log(" // binary maths | TRIGGER -> ", op2);
-            setResultData({ ...resultData, computed: false });
-            setComputationData({
-                ...computationData,
-                computed: true,
-                operationType: "binary",
-                rawInput: resultData.value + op2,
-            });
+        calculationValue = /[x\/sry]/.test(calculationValue)
+            ? unicodify(calculationValue)
+            : calculationValue;
 
-            return;
-        }
-        // console.log(" // binary maths | NUMBER");
-        // unary maths
-
-        // console.log(" // unary maths", op1);
         setComputationData({
             ...computationData,
-            computed: true,
-            operationType: "unary",
-            rawInput: num1 + op1,
+            calculationValue: calculationValue,
         });
-
-        return;
-
-        return;
-    };
-
-    const preProcessComputationData = () => {
-        // console.log("preProcessComputationData", computationData, resultData);
-        let { rawInput, nextChar, operationType } = computationData;
-
-        if (operationType === "unary") {
-            // console.log("operationType : unary");
-            // NUMBER
-            if (/\d/.test(nextChar)) {
-                //
-                // console.log("NUMBER pressed after unary ", resultData.op1);
-                setResultData({ ...resultData, computed: false, value: 0 });
-                setComputationData({
-                    ...computationData,
-                    computed: false,
-                    rawInput: nextChar,
-                    nextChar: undefined,
-                    operationType: undefined,
-                });
-                return;
-            }
-            //   OPERATOR
-            else {
-                // console.log(
-                //     "OPERATOR pressed after unary ",
-                //     resultData.op1,
-                //     nextChar
-                // );
-                // //
-                // console.log("unary op as nextChar");
-                setResultData({ ...resultData, computed: false });
-                setComputationData({
-                    ...computationData,
-                    computed: false,
-                    rawInput: resultData.value + nextChar,
-                    nextChar: undefined,
-                    operationType: undefined,
-                });
-                return;
-            }
-        }
-        if (operationType === "=") {
-            // console.log("operationType : =");
-            // NUMBER
-            if (/\d/.test(nextChar)) {
-                //
-                // console.log("NUMBER pressed | = | add to rawInput");
-                setResultData({ ...resultData, computed: false, value: 0 });
-                setComputationData({
-                    ...computationData,
-                    computed: false,
-                    rawInput: nextChar,
-                    nextChar: undefined,
-                    operationType: undefined,
-                });
-                return;
-            }
-            //   OPERATOR
-            else {
-                if (nextChar !== "m") {
-                    // console.log(
-                    //     "OPERATOR pressed | = | add to rawInput",
-                    //     nextChar,
-                    //     nextChar !== "m"
-                    // );
-                    //
-                    setResultData({ ...resultData, computed: false });
-                    setComputationData({
-                        ...computationData,
-                        computed: false,
-                        rawInput: resultData.value + nextChar,
-                        nextChar: undefined,
-                        operationType: undefined,
-                    });
-                    return;
-                }
-            }
-        }
-        if (operationType === "binary") {
-            // console.log("operationType : binary");
-            // NUMBER
-            if (/\d/.test(nextChar)) {
-                //
-                // console.log("NUMBER pressed | binary | add to rawInput");
-                setResultData({ ...resultData, computed: false });
-                setComputationData({
-                    ...computationData,
-                    computed: false,
-                    // rawInput: rawInput + nextChar,
-                    nextChar: undefined,
-                    operationType: undefined,
-                });
-                return;
-            }
-            //   OPERATOR
-            else {
-                // nextChar = unary op
-                if (CONSTANTS.patternStack.UNNARY_MATH_CATCHER.test(nextChar)) {
-                    // console.log("unary op as nextChar");
-                    setResultData({ ...resultData, computed: false });
-                    setComputationData({
-                        ...computationData,
-                        computed: false,
-                        rawInput: resultData.value + nextChar,
-                        nextChar: undefined,
-                        operationType: undefined,
-                    });
-                    return;
-                }
-                // nextChar = binary op
-                else {
-                    // console.log(
-                    //     " binary OPERATOR pressed | replace it",
-                    //     nextChar
-                    // );
-                    setResultData({ ...resultData, computed: false });
-                    setComputationData({
-                        ...computationData,
-                        computed: false,
-                        rawInput: rawInput.replace(/.$/, nextChar),
-                        nextChar: undefined,
-                        operationType: undefined,
-                    });
-                    return;
-                }
-            }
-        }
-    };
-
-    const tryMath = () => {
-        // console.log("tryMath");
-        let _resultData = { ...computationData };
-
-        const { rawInput, computed } = computationData || undefined,
-            { className } = { ...resultData } || undefined;
-        if (!computed && rawInput) {
-            _resultData = doMath(rawInput);
-            if (_resultData.computed) {
-                setResultData({
-                    ..._resultData,
-                    className: className,
-                });
-            }
-        }
     };
 
     const getSelected = (keyboardName) => {
@@ -923,7 +636,7 @@ const Calculator = () => {
                 </Typography>
                 {/* ------------ display ---------------- */}
                 {/* <Display lines={lineData} /> */}
-                {makeDisplay(displayData)}
+                <Display content={displayData} />
                 {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container

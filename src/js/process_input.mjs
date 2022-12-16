@@ -1,8 +1,8 @@
 import { patternStack } from "./constants.js";
 import { unicodify, deunicodify } from "./maths_engine.mjs";
 
-export const processRawInput = (input) => {
-    // console.log("processRawInput", input);
+export const processUserInput = (input) => {
+    // console.log("processUserInput", input);
     for (const key in patternStack) {
         var _input = getPatternOperation(patternStack[key], key, input);
         if (_input || _input === "") {
@@ -12,8 +12,8 @@ export const processRawInput = (input) => {
     return input;
 };
 
-const processRawInput2 = (repairs) => (pattern, name, input) => {
-    // console.log("processRawInput2 |", name);
+const processUserInput2 = (repairs) => (pattern, name, input) => {
+    // console.log("processUserInput2 |", name);
     if (pattern.test(input)) {
         return repairs[name](input);
     }
@@ -198,6 +198,4 @@ const repairStack = {
     },
 };
 
-const getPatternOperation = processRawInput2(repairStack);
-
-export default processRawInput;
+const getPatternOperation = processUserInput2(repairStack);

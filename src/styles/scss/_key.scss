@@ -131,7 +131,9 @@
   .btn-primary {
     background-color: themed(primaryButtonBgColor);
     color: themed(primaryButtonTextColor);
+
     border-color: themed(primaryButtonBorderColor);
+
 
     &:hover,
     &:focus {
@@ -171,6 +173,25 @@
 }
 
 @include themify($themes) {
+  &#{$picture} {
+    .btn-primary {
+      background-color: transparentize(themed(primaryButtonBgColor), .35);
+    }
+
+    .btn-secondary {
+      background-color: transparentize(themed(secondaryButtonBgColor), .35);
+    }
+
+    .btn-danger {
+      background-color: transparentize($btn-danger-bg-color, .35);
+    }
+
+    .btn-success {
+      background-color: transparentize($btn-success-bg-color, .35);
+    }
+
+  }
+
   .btn-secondary {
     background-color: themed(secondaryButtonBgColor);
     color: themed(secondaryButtonTextColor);

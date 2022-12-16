@@ -75,7 +75,7 @@ export const doMath = (input) => {
 
     // console.log("time for doing maths!", input);
     if (Object.keys(_computationalUnit).length > 0) {
-        _result.value = getMathOperation(
+        _result.resultValue = getMathOperation(
             _computationalUnit.op1,
             _computationalUnit.num1,
             _computationalUnit.num2
@@ -84,20 +84,20 @@ export const doMath = (input) => {
 
     if (
         Object.keys(_result).length > 0 &&
-        _result.value !== undefined &&
-        (!isFinite(_result.value) || isNaN(_result.value))
+        _result.resultValue !== undefined &&
+        (!isFinite(_result.resultValue) || isNaN(_result.resultValue))
     ) {
         _result.error = true;
-        _result.value = "err";
+        _result.resultValue = "err";
         return _result;
     }
 
     if (
         Object.keys(_result).length > 0 &&
-        (_result.value || _result.value === 0)
+        (_result.resultValue || _result.resultValue === 0)
     ) {
         // console.log("and the result is ", +_result.value);
-        _result.value = _result.value.toString();
+        _result.resultValue = _result.resultValue.toString();
         _result.computed = true;
         _result.num1 = _computationalUnit.num1;
         _result.op1 = _computationalUnit.op1;
