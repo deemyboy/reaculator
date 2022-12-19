@@ -20,7 +20,6 @@ import {
     Slide,
     SlideProps,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import * as CONSTANTS from "./js/constants";
 import { doMath, unicodify, deunicodify } from "./js/maths_engine.mjs";
 import { processUserInput } from "./js/process_input.mjs";
@@ -46,6 +45,8 @@ const Calculator = () => {
     //         "pictureType"
     //     );
     // }
+
+    const isInitialMount = useRef(true);
 
     const handleClick = useCallback((e) => {
         e.target.blur();
@@ -115,78 +116,6 @@ const Calculator = () => {
         }
     }, []);
 
-    const getOnSelect = (keyboardName) => {
-        const onSelectStack = {
-            number: handleClick,
-            function: handleClick,
-            "theme-type": onSelectThemeType,
-            theme: onSelectTheme,
-            animation: onSelectAnimation,
-            "picture-type": onSelectPictureType,
-        };
-        return onSelectStack[keyboardName];
-    };
-
-    const [errorState, setErrorState] = useState(false);
-
-    const resetErrorState = () => {
-        setErrorState(false);
-    };
-
-    const initialComputationData = {
-        userInput: undefined,
-        resultValue: 0,
-        resultClassName: "result",
-        calculationValue: "",
-        calculationClassName: "calculation",
-        computed: undefined,
-        num1: undefined,
-        op1: undefined,
-        num2: undefined,
-        op2: undefined,
-        error: false,
-        nextChar: undefined,
-        key: undefined,
-        timeStamp: undefined,
-    };
-
-    const [computationData, setComputationData] = useState({
-        ...initialComputationData,
-    });
-
-    useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            if (computationData.error) {
-                setErrorState(true);
-                computationData.calculationClassName += " calculation-error";
-                computationData.resultClassName += " result-error";
-            }
-        }
-    }, [computationData.error]);
-
-    useEffect(() => {
-        // console.log("linesData calculationValue", { linesData });
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            if (computationData.computed)
-                console.log("computed an answer", computationData.op2);
-        }
-    }, [computationData.computed]);
-
-    const makeKeyboard = (keyboardName) => {
-        const data = keyboards.find((kb) => {
-            return kb.name === keyboardName;
-        });
-        return (
-            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                <Keyboard props={data} errorState={errorState} />
-            </HandleClickContextProvider>
-        );
-    };
-
     const onSelectThemeType = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
@@ -230,7 +159,71 @@ const Calculator = () => {
         // setCookie(cookieData);
     }, []);
 
-    const isInitialMount = useRef(true);
+    const getOnSelect = (keyboardName) => {
+        const onSelectStack = {
+            number: handleClick,
+            function: handleClick,
+            "theme-type": onSelectThemeType,
+            theme: onSelectTheme,
+            animation: onSelectAnimation,
+            "picture-type": onSelectPictureType,
+        };
+        return onSelectStack[keyboardName];
+    };
+
+    const [errorState, setErrorState] = useState(false);
+
+    const resetErrorState = () => {
+        setErrorState(false);
+    };
+
+    const initialComputationData = {
+        userInput: undefined,
+        resultValue: 0,
+        resultClassName: "result",
+        calculationValue: "",
+        calculationClassName: "calculation",
+        computed: undefined,
+        num1: undefined,
+        op1: undefined,
+        num2: undefined,
+        op2: undefined,
+        error: false,
+        nextChar: undefined,
+        key: undefined,
+        timeStamp: undefined,
+        // mathsReady: false,
+        computationValue: "",
+    };
+
+    const [computationData, setComputationData] = useState({
+        ...initialComputationData,
+    });
+
+    useEffect(() => {
+        if (computationData.error) {
+            setErrorState(true);
+            computationData.calculationClassName += " calculation-error";
+            computationData.resultClassName += " result-error";
+        }
+    }, [computationData.error]);
+
+    useEffect(() => {
+        if (computationData.computed) {
+            // console.log(
+            //     "computed an answer",
+            //     computationData.op1,
+            //     computationData.op2
+            // );
+            setComputationData({
+                ...computationData,
+                nextChar: computationData.op2
+                    ? computationData.op2
+                    : computationData.op1,
+                // computed: false,
+            });
+        }
+    }, [computationData.computed]);
 
     const [keyData, setKeyData] = useState({});
 
@@ -247,19 +240,21 @@ const Calculator = () => {
         }
     }, [keyData]);
 
+    makeCalculationData;
+    useEffect(() => {
+        makeCalculationData();
+    }, [computationData.computationValue]);
+
     // tryMath
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            if (
-                CONSTANTS.patternStack.MATH_CATCHER.test(
-                    computationData.userInput
-                )
-            )
-                tryMath();
-            else makeCalculationData();
-        }
+        if (CONSTANTS.patternStack.MATH_CATCHER.test(computationData.userInput))
+            tryMath();
+    }, [computationData.computationValue]);
+
+    // makeCalculationData
+    useEffect(() => {
+        setComputationValue();
+        // return tryMath();
     }, [computationData.userInput]);
 
     const defaultTheme = "Ocean";
@@ -311,18 +306,14 @@ const Calculator = () => {
     });
 
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
+        if (settingsData.isOpen) {
+            setDisplayData({
+                settingsData: settingsData,
+            });
         } else {
-            if (settingsData.isOpen) {
-                setDisplayData({
-                    settingsData: settingsData,
-                });
-            } else {
-                setDisplayData({
-                    linesData: linesData,
-                });
-            }
+            setDisplayData({
+                linesData: linesData,
+            });
         }
     }, [settingsData, linesData]);
 
@@ -373,33 +364,20 @@ const Calculator = () => {
     const [displayData, setDisplayData] = useState(linesData);
 
     useEffect(() => {
-        // console.log(
-        //     "useEffect preProcessComputationData computationData.nextChar",
-        //     computationData.nextChar
-        // );
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            if (computationData.nextChar) {
-                preProcessComputationData();
-            }
+        if (computationData.nextChar) {
+            // preProcessComputationData();
         }
     }, [computationData.nextChar]);
 
     // linesData calculationValue
     useEffect(() => {
-        // console.log("linesData calculationValue", { linesData });
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            setLinesData({
-                ...linesData,
-                calculation: {
-                    value: computationData.calculationValue,
-                    className: computationData.calculationClassName,
-                },
-            });
-        }
+        setLinesData({
+            ...linesData,
+            calculation: {
+                value: computationData.calculationValue,
+                className: computationData.calculationClassName,
+            },
+        });
     }, [
         computationData.calculationValue,
         computationData.calculationClassName,
@@ -408,20 +386,16 @@ const Calculator = () => {
     // linesData resultValue
     useEffect(() => {
         // console.log("linesData resultValue", { linesData });
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            setLinesData({
-                ...linesData,
-                result: {
-                    value: computationData.resultValue
-                        ? computationData.resultValue
-                        : 0,
-                    className: computationData.resultClassName,
-                },
-            });
-        }
-    }, [computationData.resultValue]);
+        setLinesData({
+            ...linesData,
+            result: {
+                value: computationData.resultValue
+                    ? computationData.resultValue
+                    : 0,
+                className: computationData.resultClassName,
+            },
+        });
+    }, [computationData.resultValue, computationData.resultClassName]);
 
     // animation
     useEffect(() => {
@@ -518,6 +492,17 @@ const Calculator = () => {
         // resetSettingsData();
     };
 
+    function makeKeyboard(keyboardName) {
+        const data = keyboards.find((kb) => {
+            return kb.name === keyboardName;
+        });
+        return (
+            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
+                <Keyboard props={data} errorState={errorState} />
+            </HandleClickContextProvider>
+        );
+    }
+
     const handleUserInput = () => {
         let { userInput } = { ...computationData } || "";
         const { key } = { ...keyData } || undefined;
@@ -537,10 +522,10 @@ const Calculator = () => {
             key !== "c"
         ) {
             // console.log("computationData.computed", computationData.computed);
-            setComputationData({
-                ...computationData,
-                nextChar: key,
-            });
+            // setComputationData({
+            //     ...computationData,
+            //     nextChar: key,
+            // });
         }
 
         if (computationData.computed && (key === "m" || key === "=")) {
@@ -560,6 +545,7 @@ const Calculator = () => {
         setComputationData({
             ...computationData,
             userInput: _processedUserInput,
+            computationValue: _processedUserInput,
         });
     };
 
@@ -569,9 +555,7 @@ const Calculator = () => {
         setComputationData({ ...computationData, ..._resultData });
     };
 
-    const makeCalculationData = () => {
-        // console.log("makeCalculationData", { computationData });
-
+    function makeCalculationData() {
         const {
             userInput,
             resultValue,
@@ -582,10 +566,20 @@ const Calculator = () => {
             op2,
             error,
             nextChar,
+            computationValue,
         } = { ...computationData };
         let calculationValue =
-            num1 && op1 && num2 ? "" + num1 + op1 + num2 : userInput;
+            num1 && op1 && num2
+                ? "" + num1 + op1 + num2
+                : num1 && op1 && !num2
+                ? "" + num1 + op1
+                : computationValue;
 
+        calculationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
+            calculationValue
+        )
+            ? calculationValue.replace(/.$/, "")
+            : calculationValue;
         calculationValue = /[x\/sry]/.test(calculationValue)
             ? unicodify(calculationValue)
             : calculationValue;
@@ -594,7 +588,24 @@ const Calculator = () => {
             ...computationData,
             calculationValue: calculationValue,
         });
-    };
+    }
+
+    function setComputationValue() {
+        const { userInput } = { ...computationData };
+        let { computationValue } = { ...computationData } || "";
+        computationValue = userInput;
+
+        // computationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
+        //     computationValue
+        // )
+        //     ? computationValue.replace(/.$/, "")
+        //     : computationValue;
+
+        setComputationData({
+            ...computationData,
+            computationValue: computationValue,
+        });
+    }
 
     const getSelected = (keyboardName) => {
         switch (keyboardName) {
