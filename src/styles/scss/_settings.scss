@@ -3,23 +3,25 @@
         @include transition(all 0.25s);
         z-index: 3;
         position: relative;
-        top: 3rem;
+        position: absolute;
+        top: 0rem;
         left: 95%;
-        margin: 0 0 0 -5px;
-        // transform: scale(1);
+        /* margin: 0 0 0 -5px;*/
+        // transform:;
+        transform: scale(1.2) rotate(0deg);
+        transform-origin: 50% 45%;
 
-        .cog {
-            position: relative;
-            font-size: 3rem;
-
-            &:before {
-                content: "\2699";
-            }
-
+        &.open {
+            transform: scale(1.6) rotate(90deg);
         }
     }
 
-    .settings {
+    .setting-wrapper {
+        text-align: center;
+        border: 3px solid;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 10px;
         // .collapse {
         //     background-color: #cc44cc88;
 
@@ -44,14 +46,17 @@
                 display: inline-block;
             }
         }
+
+        button {
+            border: none;
+        }
     }
 
     // open
     &#{$open} {
         .settings-icon {
-            transform: scale(.7);
+            // transform: scale(.7);
 
-            .cog {}
         }
     }
 }

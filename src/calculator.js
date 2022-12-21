@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Line from "./components/line";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
-import Sidebar from "./components/sidebar";
-import ThemeSettings from "./components/theme-settings";
-import Cookies from "universal-cookie";
+import { useCookies } from "react-cookie";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
     numberKeys,
     functionKeys,
@@ -26,14 +24,29 @@ import { processUserInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
 
-const cookie = new Cookies();
+// const cookie = new Cookies();
 
 import {
     HandleClickContextProvider,
     DisplayContextProvider,
 } from "./js/context";
+import { positions } from "@mui/system";
 
 const Calculator = () => {
+    const [cookies, setCookie] = useCookies([
+        "theme",
+        "theme-type",
+        "animation",
+        "picture",
+        "picture-type",
+    ]);
+
+    // const [cookies, setCookie] = useState({
+    //     expires: undefined,
+    //     path: undefined,
+    //     label: undefined,
+    //     value: undefined,
+    // });
     // constructor(props) {
     //     super(props);
 
@@ -116,59 +129,71 @@ const Calculator = () => {
         }
     }, []);
 
-    const onSelectThemeType = useCallback((e) => {
+    const defaultTheme = "Ocean";
+    const defaultThemeType = "color";
+
+    const [theme, setTheme] = useState(defaultTheme);
+
+    const [themeType, setThemeType] = useState(defaultThemeType);
+    const onSelect = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
-        const _themeType = e.target.id;
-        cookieData.cookieLabel = "currentThemeType";
-        cookieData.cookieValue = _themeType;
+        const _id = e.target.id;
+        cookieData.cookieLabel = getCookieLabel(_id);
+        cookieData.cookieValue = _id;
         cookieData.cookiePath = "/";
-        setThemeType(_themeType);
+        setStateBasedOnId(_id)(_id);
+        // useCookie(_id);
     }, []);
 
-    const onSelectTheme = useCallback((e) => {
-        e.stopPropagation();
-        let cookieData = {};
-        const _theme = e.target.id;
-        cookieData.cookieLabel = "currentTheme";
-        cookieData.cookieValue = _theme;
-        cookieData.cookiePath = "/";
-        setTheme(_theme);
-        // setCookie(cookieData);
-    }, []);
-
-    const onSelectAnimation = useCallback((e) => {
-        e.stopPropagation();
-        let cookieData = {};
-        let _animation = e.target.id;
-        cookieData.cookieLabel = "currentAnimation";
-        cookieData.cookieValue = _animation;
-        cookieData.cookiePath = "/";
-        setAnimation(_animation);
-        // setCookie(cookieData);
-    }, []);
-
-    const onSelectPictureType = useCallback((e) => {
-        e.stopPropagation();
-        let cookieData = {};
-        const _pictureType = e.target.id;
-        cookieData.cookieLabel = "currentPictureType";
-        cookieData.cookieValue = _pictureType;
-        cookieData.cookiePath = "/";
-        setPictureType(_pictureType);
-        // setCookie(cookieData);
-    }, []);
+    // useCookie([theme]);
 
     const getOnSelect = (keyboardName) => {
         const onSelectStack = {
             number: handleClick,
             function: handleClick,
-            "theme-type": onSelectThemeType,
-            theme: onSelectTheme,
-            animation: onSelectAnimation,
-            "picture-type": onSelectPictureType,
+            "theme-type": onSelect,
+            theme: onSelect,
+            animation: onSelect,
+            "picture-type": onSelect,
         };
         return onSelectStack[keyboardName];
+    };
+
+    const getCookieLabel = (labelId) => {
+        const cookieLabelStack = {
+            picture: "currentThemeType",
+            color: "currentThemeType",
+            animation: "currentThemeType",
+            fire: "currentTheme",
+            midnight: "currentTheme",
+            ocean: "currentTheme",
+            storm: "currentTheme",
+            jungle: "currentTheme",
+            slither: "currentAnimation",
+            fireworks: "currentAnimation",
+            still: "currentPictureType",
+            moving: "currentPictureType",
+        };
+        return cookieLabelStack[labelId];
+    };
+
+    const setStateBasedOnId = (value) => {
+        const setStateFunctionStack = {
+            picture: setThemeType,
+            color: setThemeType,
+            animation: setThemeType,
+            fire: setTheme,
+            midnight: setTheme,
+            ocean: setTheme,
+            storm: setTheme,
+            jungle: setTheme,
+            slither: setAnimation,
+            fireworks: setAnimation,
+            still: setPictureType,
+            moving: setPictureType,
+        };
+        return setStateFunctionStack[value];
     };
 
     const [errorState, setErrorState] = useState(false);
@@ -193,7 +218,7 @@ const Calculator = () => {
         key: undefined,
         timeStamp: undefined,
         // mathsReady: false,
-        computationValue: "",
+        // computationValue: "",
     };
 
     const [computationData, setComputationData] = useState({
@@ -240,29 +265,20 @@ const Calculator = () => {
         }
     }, [keyData]);
 
-    makeCalculationData;
+    // makeCalculationData
     useEffect(() => {
-        makeCalculationData();
-    }, [computationData.computationValue]);
+        const calculationData = makeCalculationData();
+        setComputationData({
+            ...computationData,
+            ...calculationData,
+        });
+    }, [computationData.userInput]);
 
     // tryMath
     useEffect(() => {
         if (CONSTANTS.patternStack.MATH_CATCHER.test(computationData.userInput))
             tryMath();
-    }, [computationData.computationValue]);
-
-    // makeCalculationData
-    useEffect(() => {
-        setComputationValue();
-        // return tryMath();
     }, [computationData.userInput]);
-
-    const defaultTheme = "Ocean";
-    const defaultThemeType = "color";
-
-    const [theme, setTheme] = useState(defaultTheme);
-
-    const [themeType, setThemeType] = useState(defaultThemeType);
 
     const getVisibleKeyboardData = () => {
         let visibleKeyboardNames = ["theme-type", "theme"],
@@ -332,6 +348,7 @@ const Calculator = () => {
     const toggleSettings = (e) => {
         e.preventDefault();
         e.stopPropagation();
+
         let { isOpen } = settingsData;
         // prevent when in error
         if (!errorState) {
@@ -339,15 +356,6 @@ const Calculator = () => {
             setSettingsData({ ...settingsData, isOpen: isOpen });
         }
     };
-
-    // const closeSidebar = (e) => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     let _sidebarData = { ...sidebarData };
-    //     _sidebarData.isOpen = false;
-    //     setSidebarData({ ...sidebarData });
-    //     setSidebarData(_sidebarData);
-    // };
 
     const resetSettingsData = () => {
         // setSettingsData(initialSettingsData);
@@ -369,25 +377,15 @@ const Calculator = () => {
         }
     }, [computationData.nextChar]);
 
-    // linesData calculationValue
+    // linesData calculationValue resultValue
     useEffect(() => {
+        // console.log("linesData resultValue", { linesData });
         setLinesData({
             ...linesData,
             calculation: {
                 value: computationData.calculationValue,
                 className: computationData.calculationClassName,
             },
-        });
-    }, [
-        computationData.calculationValue,
-        computationData.calculationClassName,
-    ]);
-
-    // linesData resultValue
-    useEffect(() => {
-        // console.log("linesData resultValue", { linesData });
-        setLinesData({
-            ...linesData,
             result: {
                 value: computationData.resultValue
                     ? computationData.resultValue
@@ -395,7 +393,12 @@ const Calculator = () => {
                 className: computationData.resultClassName,
             },
         });
-    }, [computationData.resultValue, computationData.resultClassName]);
+    }, [
+        computationData.resultValue,
+        computationData.resultClassName,
+        computationData.calculationValue,
+        computationData.calculationClassName,
+    ]);
 
     // animation
     useEffect(() => {
@@ -458,32 +461,30 @@ const Calculator = () => {
 
     ////////////////////////////////////////////////////////////
 
-    //    const [cookieData, setCookie] = useState(
-    //       {   d:  new Date(),
-    //          year:  d.getFullYear(),
-    //          month:  d.getMonth(),
-    //          day:  d.getDate(),
-    //          expires:  new Date(year + 1, month, day),
-    //            path: cookieData.cookiePath,
-    //            label: undefined,
-    //          value:undefined,
-    // }
-
+    // useEffect(
+    //     (cookieName) => {
+    //         console.log("set cookie", cookieName);
+    //         const d = new Date();
+    //         const year = d.getFullYear();
+    //         const month = d.getMonth();
+    //         const day = d.getDate();
+    //         const cookieValues = {
+    //             expires: new Date(year + 1, month, day),
+    //             path: "/",
+    //             label: undefined,
+    //             value: undefined,
+    //         };
+    //         setCookie(cookieName, cookieValues);
+    //     },
+    //     [theme, themeType, pictureType, animation]
     // );
-    // const     setCookie(
-    //     cookie.set(
-    //     cookieData.cookieLabel,
-    //     cookieData.cookieValue,
-    //     path,
-    //     expires)
-    //     );
 
-    // const     getCookie = (cookieLabel, cookieDefault) => {
-    //         const cookie = new Cookies();
-    //         return cookie.get(cookieLabel)
-    //             ? cookie.get(cookieLabel)
-    //             : state[cookieDefault];
-    //     };
+    // const getCookie = (cookieLabel, cookieDefault) => {
+    //     const cookie = new Cookies();
+    //     return cookie.get(cookieLabel)
+    //         ? cookie.get(cookieLabel)
+    //         : cookieDefault;
+    // };
 
     const resetAll = () => {
         resetErrorState();
@@ -545,14 +546,19 @@ const Calculator = () => {
         setComputationData({
             ...computationData,
             userInput: _processedUserInput,
-            computationValue: _processedUserInput,
+            //     computationValue: _processedUserInput,
         });
     };
 
     const tryMath = () => {
         console.log("tryMath", { computationData });
         const _resultData = doMath(computationData.userInput);
-        setComputationData({ ...computationData, ..._resultData });
+        const calculationData = makeCalculationData();
+        setComputationData({
+            ...computationData,
+            ..._resultData,
+            ...calculationData,
+        });
     };
 
     function makeCalculationData() {
@@ -566,14 +572,15 @@ const Calculator = () => {
             op2,
             error,
             nextChar,
-            computationValue,
+            // computationValue,
+            calculationClassName,
         } = { ...computationData };
         let calculationValue =
             num1 && op1 && num2
                 ? "" + num1 + op1 + num2
                 : num1 && op1 && !num2
                 ? "" + num1 + op1
-                : computationValue;
+                : userInput;
 
         calculationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
             calculationValue
@@ -584,10 +591,10 @@ const Calculator = () => {
             ? unicodify(calculationValue)
             : calculationValue;
 
-        setComputationData({
-            ...computationData,
+        return {
             calculationValue: calculationValue,
-        });
+            calculationClassName: calculationClassName,
+        };
     }
 
     function setComputationValue() {
@@ -629,8 +636,18 @@ const Calculator = () => {
             sx={{ padding: "0!important" }}
         >
             {/* ------------ app ---------------- */}
-            <p className="settings-icon" onClick={toggleSettings} disabled>
-                <i className="cog" aria-hidden="true"></i>
+            <p
+                id="settings-icon"
+                className={
+                    settingsData.isOpen ? "settings-icon open" : "settings-icon"
+                }
+                onClick={toggleSettings}
+            >
+                <SettingsIcon
+                    sx={{ position: "relative", zIndex: -1 }}
+                    disabled
+                />
+                {/* <span className="cog" aria-hidden="true"></span> */}
             </p>
             <Grid
                 container

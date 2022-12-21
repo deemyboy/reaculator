@@ -4,7 +4,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Collapse } from "react-collapse";
 
 const ThemeSettings = (props) => {
-    console;
     const className = "settings",
         { keyboardData } = { ...props.settingsData.settingsData };
 
@@ -54,30 +53,10 @@ const ThemeSettings = (props) => {
             : " collapsed";
         return (
             <div className="setting-wrapper">
-                <ExpandMoreIcon
-                    sx={expandMoreIconOrientation}
-                    data-index={keyboardObject.name}
-                    onClick={(e) => toggleSlide(e)}
-                />
-                <Collapse isOpened={checked[keyboardObject.name]}>
-                    <div>{keyboardObject.name.toUpperCase()}</div>
-                    {keyboardObject.keyboard}
-                </Collapse>
+                <div>{keyboardObject.name.toUpperCase()}</div>
+                {keyboardObject.keyboard}
             </div>
         );
-    };
-
-    const toggleSlide = (event) => {
-        const idx = event.currentTarget.dataset.index;
-        let newVal = {};
-
-        Object.keys(checked).map((k) => {
-            if (k === idx) {
-                newVal[k] = !checked[k];
-            }
-        });
-
-        setChecked({ ...checked, ...newVal });
     };
 
     return (
@@ -90,8 +69,10 @@ const ThemeSettings = (props) => {
                 justifyContent="space-around"
                 alignItems={"center"}
             >
-                {keyboardData.map((keyboard, index) => {
-                    return <Setting key={index} keyboardObject={keyboard} />;
+                {keyboardData.map((keyboardObject, index) => {
+                    return (
+                        <Setting key={index} keyboardObject={keyboardObject} />
+                    );
                 })}
             </Grid>
         </React.Fragment>
