@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Grid } from "@mui/material";
-// import { DisplayContext } from "../js/context";
 import ThemeSettings from "./theme-settings";
 import { Collapse } from "react-collapse";
 
@@ -52,7 +51,6 @@ const Display = (props) => {
                 </Grid>
             </Collapse>
         );
-        //
     }
 };
 export default Display;

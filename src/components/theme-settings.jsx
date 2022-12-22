@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Collapse } from "react-collapse";
 
 const ThemeSettings = (props) => {
     const className = "settings",
@@ -60,22 +58,17 @@ const ThemeSettings = (props) => {
     };
 
     return (
-        <React.Fragment>
-            {" "}
-            <Grid
-                container
-                className={className}
-                meta-name="settings"
-                justifyContent="space-around"
-                alignItems={"center"}
-            >
-                {keyboardData.map((keyboardObject, index) => {
-                    return (
-                        <Setting key={index} keyboardObject={keyboardObject} />
-                    );
-                })}
-            </Grid>
-        </React.Fragment>
+        <Grid
+            container
+            className={className}
+            meta-name="settings"
+            justifyContent="space-around"
+            alignItems={"center"}
+        >
+            {keyboardData.map((keyboardObject, index) => {
+                return <Setting key={index} keyboardObject={keyboardObject} />;
+            })}
+        </Grid>
     );
 };
 export default ThemeSettings;

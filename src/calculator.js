@@ -10,21 +10,12 @@ import {
     ALLOWED_KEYS,
     DISALLOWED_KEYS,
 } from "./js/keys";
-import {
-    Container,
-    Grid,
-    Typography,
-    Collapse,
-    Slide,
-    SlideProps,
-} from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./js/constants";
-import { doMath, unicodify, deunicodify } from "./js/maths_engine.mjs";
+import { doMath, unicodify } from "./js/maths_engine.mjs";
 import { processUserInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
-
-// const cookie = new Cookies();
 
 import {
     HandleClickContextProvider,
@@ -146,8 +137,6 @@ const Calculator = () => {
         // useCookie(_id);
     }, []);
 
-    // useCookie([theme]);
-
     const getOnSelect = (keyboardName) => {
         const onSelectStack = {
             number: handleClick,
@@ -217,8 +206,6 @@ const Calculator = () => {
         nextChar: undefined,
         key: undefined,
         timeStamp: undefined,
-        // mathsReady: false,
-        // computationValue: "",
     };
 
     const [computationData, setComputationData] = useState({
@@ -546,12 +533,10 @@ const Calculator = () => {
         setComputationData({
             ...computationData,
             userInput: _processedUserInput,
-            //     computationValue: _processedUserInput,
         });
     };
 
     const tryMath = () => {
-        console.log("tryMath", { computationData });
         const _resultData = doMath(computationData.userInput);
         const calculationData = makeCalculationData();
         setComputationData({
@@ -572,7 +557,6 @@ const Calculator = () => {
             op2,
             error,
             nextChar,
-            // computationValue,
             calculationClassName,
         } = { ...computationData };
         let calculationValue =
@@ -595,23 +579,6 @@ const Calculator = () => {
             calculationValue: calculationValue,
             calculationClassName: calculationClassName,
         };
-    }
-
-    function setComputationValue() {
-        const { userInput } = { ...computationData };
-        let { computationValue } = { ...computationData } || "";
-        computationValue = userInput;
-
-        // computationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
-        //     computationValue
-        // )
-        //     ? computationValue.replace(/.$/, "")
-        //     : computationValue;
-
-        setComputationData({
-            ...computationData,
-            computationValue: computationValue,
-        });
     }
 
     const getSelected = (keyboardName) => {
