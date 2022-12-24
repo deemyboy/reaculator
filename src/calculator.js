@@ -54,40 +54,23 @@ const Calculator = () => {
 
     const handleClick = useCallback((e) => {
         e.target.blur();
-        const keyClicked = numberKeys.concat(functionKeys).filter((k) => {
-            return k.id.toString() === e.target.id;
-        });
-        let key = keyClicked[0].value ? keyClicked[0].value : "";
         setKeyData({
-            key: key,
+            key: [...numberKeys, ...functionKeys].filter((k) => {
+                return k.id.toString() === e.target.id;
+            })[0].value,
             timeStamp: e.timeStamp,
         });
     }, []);
 
     const handleKeyPress = useCallback((e) => {
-        let _button;
         // prevent these keys firing
         // ctrl key 17, shift key 16 alt key 18
         // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
         const { key, shiftKey, ctrlKey, metaKey, keyCode, repeat, timeStamp } =
             e;
-        if (!DISALLOWED_KEYS.includes(keyCode)) {
-            const _key = numberKeys.concat(functionKeys).filter((k) => {
-                return k.keycode === keyCode;
-            })[0];
-            if (_key) {
-                _button = document.getElementById(_key.id);
-            }
-        } else {
-            return;
-        }
+
         if (!repeat) {
-            if (_button === null || _button === undefined) {
-                return;
-            } else if (_button !== null || _button !== undefined) {
-                _button.focus(timeout);
-                var timeout = setTimeout(() => _button.blur(), 200);
-            }
+            if (DISALLOWED_KEYS.includes(keyCode)) return;
             if (ALLOWED_KEYS.includes(keyCode)) {
                 // exceptions
                 ////
@@ -109,14 +92,15 @@ const Calculator = () => {
                 ) {
                     return;
                 }
-            }
-            // Escape key hack
-            const _key = key === "Escape" ? "a" : key;
+                // Escape & Enter key hacks
+                const _key =
+                    key === "Escape" ? "a" : key === "Enter" ? "=" : key;
 
-            setKeyData({
-                key: _key,
-                timeStamp: timeStamp,
-            });
+                setKeyData({
+                    key: _key,
+                    timeStamp: timeStamp,
+                });
+            }
         }
     }, []);
 
@@ -203,9 +187,11 @@ const Calculator = () => {
         num2: undefined,
         op2: undefined,
         error: false,
-        nextChar: undefined,
+        previousCalculationOperator: undefined,
         key: undefined,
         timeStamp: undefined,
+        nextUserInput: undefined,
+        // preProcessUserInput: false,
     };
 
     const [computationData, setComputationData] = useState({
@@ -229,12 +215,14 @@ const Calculator = () => {
             // );
             setComputationData({
                 ...computationData,
-                nextChar: computationData.op2
+                previousCalculationOperator: computationData.op2
                     ? computationData.op2
                     : computationData.op1,
                 // computed: false,
+                // preProcessUserInput: true,
             });
         }
+        // preProcessComputationData();
     }, [computationData.computed]);
 
     const [keyData, setKeyData] = useState({});
@@ -248,16 +236,15 @@ const Calculator = () => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
-            handleUserInput();
+            if (Object.keys(keyData).length > 0) handleUserInput();
         }
     }, [keyData]);
 
     // makeCalculationData
     useEffect(() => {
-        const calculationData = makeCalculationData();
         setComputationData({
             ...computationData,
-            ...calculationData,
+            ...makeCalculationData(),
         });
     }, [computationData.userInput]);
 
@@ -359,10 +346,9 @@ const Calculator = () => {
     const [displayData, setDisplayData] = useState(linesData);
 
     useEffect(() => {
-        if (computationData.nextChar) {
-            // preProcessComputationData();
-        }
-    }, [computationData.nextChar]);
+        if (computationData.previousCalculationOperator)
+            preProcessComputationData();
+    }, [computationData.computed && keyData]);
 
     // linesData calculationValue resultValue
     useEffect(() => {
@@ -438,7 +424,7 @@ const Calculator = () => {
     }),
         [settingsData, animation];
 
-    // key press event listeners
+    // keypress event listeners
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress);
         return () => {
@@ -491,10 +477,46 @@ const Calculator = () => {
         );
     }
 
+    function preProcessComputationData() {
+        console.log("preProcessComputationData", { computationData });
+        const {
+            userInput,
+            resultValue,
+            computed,
+            num1,
+            op1,
+            num2,
+            op2,
+            error,
+            previousCalculationOperator,
+            calculationClassName,
+        } = { ...computationData };
+        const { key } = { ...keyData };
+        if (
+            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
+            CONSTANTS.UNARY_OPERATOR_REGEX.test(key)
+        ) {
+            console.log("unary op after unary op");
+            setComputationData({
+                ...computationData,
+                userInput: resultValue + key,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                // nextUserInput: resultValue,
+                computed: false,
+            });
+        }
+    }
+
     const handleUserInput = () => {
-        let { userInput } = { ...computationData } || "";
+        let { userInput, computed } = { ...computationData } || "";
+        // if (computed)
+        //     setComputationData({
+        //         ...computationData,
+        //         // preProcessUserInput: true,
+        //     });
         const { key } = { ...keyData } || undefined;
-        console.log(key);
         if (key === "a") {
             resetAll();
             return;
@@ -512,7 +534,7 @@ const Calculator = () => {
             // console.log("computationData.computed", computationData.computed);
             // setComputationData({
             //     ...computationData,
-            //     nextChar: key,
+            //     previousCalculationOperator: key,
             // });
         }
 
@@ -533,7 +555,9 @@ const Calculator = () => {
         setComputationData({
             ...computationData,
             userInput: _processedUserInput,
+            key: key,
         });
+        setKeyData({});
     };
 
     const tryMath = () => {
@@ -556,7 +580,7 @@ const Calculator = () => {
             num2,
             op2,
             error,
-            nextChar,
+            previousCalculationOperator,
             calculationClassName,
         } = { ...computationData };
         let calculationValue =
@@ -566,11 +590,17 @@ const Calculator = () => {
                 ? "" + num1 + op1
                 : userInput;
 
+        // remove last operator on binary
         calculationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
             calculationValue
         )
             ? calculationValue.replace(/.$/, "")
             : calculationValue;
+        // sqr root symbol hack - move it in front of numbers
+        calculationValue = /r$/.test(calculationValue)
+            ? "r" + calculationValue.replace(/.$/, "")
+            : calculationValue;
+        // replace strings or sysmbols with unicode chars
         calculationValue = /[x\/sry]/.test(calculationValue)
             ? unicodify(calculationValue)
             : calculationValue;

@@ -13,7 +13,7 @@ export const ALLOWED_KEYS = [
     110, 111, 187, 189, 190, 191,
 ];
 
-export const DISALLOWED_KEYS = [16, 17, 18, 37, 38, 39, 40, 91, 93];
+export const DISALLOWED_KEYS = [9, 16, 17, 18, 37, 38, 39, 40, 91, 93];
 
 export const numberKeys = [
     {

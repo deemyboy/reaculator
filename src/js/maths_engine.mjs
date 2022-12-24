@@ -9,10 +9,8 @@ export const deunicodify = (str) => {
             return;
         }
         [...functionKeys].forEach((k) => {
-            if (k.calculationDisplayChar) {
-                if (k.calculationDisplayChar === c) {
-                    str = str.replace(str.charAt(count), k.value);
-                }
+            if (k.calculationDisplayChar && k.calculationDisplayChar === c) {
+                str = str.replace(str.charAt(count), k.value);
             }
         });
         count++;
@@ -28,13 +26,8 @@ export const unicodify = (str) => {
             return;
         }
         [...functionKeys].forEach((k) => {
-            if (k.calculationDisplayChar) {
-                if (k.value === c) {
-                    str = str.replace(
-                        str.charAt(count),
-                        k.calculationDisplayChar
-                    );
-                }
+            if (k.calculationDisplayChar && k.value === c) {
+                str = str.replace(str.charAt(count), k.calculationDisplayChar);
             }
         });
         count++;
@@ -119,7 +112,7 @@ const doMath2 = (functionStack) => (operator, num1, num2) => {
           operator === "+" ||
           operator === "-" ||
           operator === "/"
-        ? functionStack[operator](num1, num2)
+        ? functionStack[operator](+num1, +num2) // +n - cast to numbers
         : undefined;
 };
 
@@ -128,27 +121,27 @@ const mathFunctionStack = {
     r: Math.sqrt,
     // square
     s: function (a) {
-        return (+a) ** 2;
+        return a ** 2;
     },
     //  multiply
     x: function (a, b) {
-        return +a * +b;
+        return a * b;
     },
     //  x raised to y
     y: function (a, b) {
-        return (+a) ** +b;
+        return a ** b;
     },
     //  addition
     "+": function (a, b) {
-        return +a + +b;
+        return a + b;
     },
     //  subtraction
     "-": function (a, b) {
-        return +a - +b;
+        return a - b;
     },
     //  division
     "/": function (a, b) {
-        return +a / +b;
+        return a / b;
     },
 };
 
