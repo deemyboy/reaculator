@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import Key from "./key";
 
 const Keyboard = ({ props, selected, errorState }) => {
+    // console.log("Keyboard");
     const { title, className, keys } = props;
     const { xs } = props || "";
     const { md } = props || "";
@@ -12,13 +13,11 @@ const Keyboard = ({ props, selected, errorState }) => {
     const { showTitle } = props || "";
 
     let _title;
-
     if (showTitle) {
-        _title = <Typography className="settings-kb-title">{title}</Typography>;
+        _title = <Typography className="sidebar-kb-title">{title}</Typography>;
     } else {
         _title = "";
     }
-
     return (
         <Grid
             item={true}

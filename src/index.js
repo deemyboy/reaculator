@@ -1,12 +1,7 @@
 import React from "react";
 import Calculator from "./calculator";
 import { createRoot } from "react-dom/client";
-import { CookiesProvider } from "react-cookie";
-
+// import animation from "./components/animation";
 const container = document.getElementById("calculator");
 const root = createRoot(container);
-root.render(
-    <CookiesProvider>
-        <Calculator />
-    </CookiesProvider>
-);
+root.render(<Calculator />);

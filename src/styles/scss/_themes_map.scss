@@ -46,20 +46,21 @@
 // animated gifs
 // url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
 
+$fire_moving_url: url("https://i.gifer.com/TIkr.gif");
+$midnight_moving_url: url("https://c.tenor.com/pwks_QPpbvoAAAAd/sky-night.gif");
+$ocean_moving_url: url("https://acegif.com/wp-content/gifs/water-26.gif");
+$storm_moving_url: url("https://i0.wp.com/windowscustomization.com/wp-content/uploads/2018/12/Thunders.gif?fit=700%2C335&quality=80&strip=all&ssl=1");
+$jungle_moving_url: url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
+
 $fire_still_url: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
 $midnight_still_url: url("https://c.pxhere.com/photos/ea/da/milky_way_stars_science_space_sky_galaxy_night_universe-845922.jpg!d");
 $ocean_still_url: url("https://c.pxhere.com/photos/6a/14/beach_dawn_dusk_ocean_sea_seascape_sun_sunrise-1364695.jpg!d");
 $storm_still_url: url("https://c.pxhere.com/photos/7a/92/lightning_storm_arizona_monsoon_lightning_storm_electricity_weather_sky-1323288.jpg!d");
 $jungle_still_url: url("https://c.pxhere.com/photos/4a/e6/spring_tree_flowers_meadow_wood_forest_sun_summer-985038.jpg!d");
 
-$fire_moving_url: url("https://i.gifer.com/TIkr.gif");
-$midnight_moving_url: url("https://c.tenor.com/pwks_QPpbvoAAAAd/sky-night.gif");
-$ocean_moving_url: url("https://media3.giphy.com/media/xUA7aLtgke2UiM6JYQ/giphy.gif?cid=790b76115c7bed43bd96ffd46e999d82f5b945e9b51e61ee&rid=giphy.gif&ct=g");
-$storm_moving_url: url("https://i0.wp.com/windowscustomization.com/wp-content/uploads/2018/12/Thunders.gif?fit=700%2C335&quality=80&strip=all&ssl=1");
-$jungle_moving_url: url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
-
 $themes: (
-  fire: (backgroundColor: $fire_bg,
+  fire: (
+    backgroundColor: $fire_bg,
     backgroundMovingUrl: $fire_moving_url,
     backgroundStillUrl: $fire_still_url,
     textColor: $fire_color,
@@ -92,10 +93,12 @@ $themes: (
     secondaryButtonBorderColor: complement($fire_btn_border),
     secondaryButtonHoverColor: darken(complement($fire_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($fire_btn_bg), 10%),
-    secondaryButtonBoxShadowColor: darken(transparentize(complement($fire_btn_bg), 0.5), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($fire_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
-  midnight: (backgroundColor: $midnight_bg,
+  midnight: (
+    backgroundColor: $midnight_bg,
     backgroundMovingUrl: $midnight_moving_url,
     backgroundStillUrl: $midnight_still_url,
     textColor: $midnight_color,
@@ -121,21 +124,24 @@ $themes: (
     primaryButtonBorderColor: $midnight_btn_border,
     primaryButtonHoverColor: darken($midnight_btn_bg, 5%),
     primaryButtonActiveColor: darken($midnight_btn_bg, 10%),
-    primaryButtonBoxShadowColor: darken(transparentize($midnight_btn_bg, 0.5), 10%),
+    primaryButtonBoxShadowColor:
+      darken(transparentize($midnight_btn_bg, 0.5), 10%),
     primaryButtonTextTransform: none,
     secondaryButtonBgColor: complement($midnight_btn_bg),
     secondaryButtonTextColor: complement($midnight_btn_color),
     secondaryButtonBorderColor: complement($midnight_btn_border),
     secondaryButtonHoverColor: darken(complement($midnight_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($midnight_btn_bg), 10%),
-    secondaryButtonBoxShadowColor: darken(transparentize(complement($midnight_btn_bg), 0.5), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($midnight_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
-  ocean: (backgroundColor: $ocean_bg,
+  ocean: (
+    backgroundColor: $ocean_bg,
     backgroundMovingUrl: $ocean_moving_url,
     backgroundStillUrl: $ocean_still_url,
     textColor: $ocean_color,
-    calculatorTitleTextColor: lighten($ocean_border, 25%),
+    calculatorTitleTextColor: darken($ocean_color, 20%),
     borderColor: $ocean_border,
     menuIconBackgroundColor: darken($ocean_bg, 5%),
     menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
@@ -164,10 +170,12 @@ $themes: (
     secondaryButtonBorderColor: complement($ocean_btn_border),
     secondaryButtonHoverColor: darken(complement($ocean_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($ocean_btn_bg), 10%),
-    secondaryButtonBoxShadowColor: darken(transparentize(complement($ocean_btn_bg), 0.5), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($ocean_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
-  storm: (backgroundColor: $storm_bg,
+  storm: (
+    backgroundColor: $storm_bg,
     backgroundMovingUrl: $storm_moving_url,
     backgroundStillUrl: $storm_still_url,
     textColor: $storm_color,
@@ -200,10 +208,12 @@ $themes: (
     secondaryButtonBorderColor: complement($storm_btn_border),
     secondaryButtonHoverColor: darken(complement($storm_btn_bg), 5%),
     secondaryButtonActiveColor: darken(complement($storm_btn_bg), 10%),
-    secondaryButtonBoxShadowColor: darken(transparentize(complement($storm_btn_bg), 0.6), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($storm_btn_bg), 0.6), 10%),
     secondaryButtonTextTransform: none,
   ),
-  jungle: (backgroundColor: $jungle_bg,
+  jungle: (
+    backgroundColor: $jungle_bg,
     backgroundMovingUrl: $jungle_moving_url,
     backgroundStillUrl: $jungle_still_url,
     textColor: $jungle_color,
@@ -230,38 +240,38 @@ $themes: (
     primaryButtonHoverColor: darken($jungle_btn_bg, 10%),
     primaryButtonActiveColor: darken($jungle_btn_bg, 10%),
     primaryButtonTextTransform: none,
-    primaryButtonBoxShadowColor: darken(transparentize($jungle_btn_bg, 0.5), 10%),
+    primaryButtonBoxShadowColor:
+      darken(transparentize($jungle_btn_bg, 0.5), 10%),
     secondaryButtonBgColor: $jungle_btn_sec_bg,
     secondaryButtonTextColor: $jungle_btn_sec_color,
     secondaryButtonBorderColor: $jungle_btn_sec_border,
     secondaryButtonHoverColor: $jungle_btn_sec_bg_hover,
     secondaryButtonActiveColor: darken($jungle_btn_bg, 10%),
-    secondaryButtonBoxShadowColor: darken(transparentize(complement($jungle_btn_bg), 0.5), 10%),
+    secondaryButtonBoxShadowColor:
+      darken(transparentize(complement($jungle_btn_bg), 0.5), 10%),
     secondaryButtonTextTransform: none,
   ),
 );
 
 
 @mixin themify($themes: $themes) {
-
-  @each $theme,
-  $map in $themes {
+  @each $theme, $map in $themes {
     #{$outer-wrapper}.#{$theme} {
       $theme-map: () !global;
-
-      @each $key,
-      $submap in $map {
+      @each $key, $submap in $map {
         $value: map-get(map-get($themes, $theme), "#{$key}");
-        $theme-map: map-merge($theme-map,
-          ($key: $value,
-          )) !global;
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value,
+          )
+        ) !global;
       }
 
       @content;
       $theme-map: null !global;
     }
   }
-
   @debug "outer-wrapper: #{outer-wrapper}";
 }
 
@@ -270,48 +280,31 @@ $themes: (
 }
 
 @include themify($themes) {
-  .settings-icon {
-    color: darken(themed(calculatorTitleTextColor), 5%);
-  }
-
   #calculator {
     background-color: themed(backgroundColor);
   }
-
   .calculator {
     background-color: themed(backgroundColor);
     border-color: themed(borderColor);
-
     .title {
       color: themed(textColor);
     }
-
     .display {
       background-color: #abbaa7;
       color: #2f2f2f;
       border-color: #6d6d6d;
-
-      .setting-wrapper {
-        border-color: themed(borderColor);
-      }
     }
   }
-
   .sidebar {
     background-color: themed(backgroundColor);
-
     .keyboard {
       border-color: themed(borderColor);
-
-      p.sidebar-kb-title,
-      button,
-      p.sidebar-btn-title {
+      p.sidebar-kb-title, button, p.sidebar-btn-title {
         color: darken(themed(calculatorTitleTextColor), 12%);
       }
-
-      .btn {
-        border: 2px solid transparentize(themed(keyboardBorderColor), .2);
-        background-color: transparentize(themed(primaryButtonBgColor), .2);
+      .btn{
+        border: 2px solid transparentize(themed(keyboardBorderColor),.2);
+        background-color: transparentize(themed(primaryButtonBgColor),.2);
       }
     }
   }
@@ -324,13 +317,11 @@ $themes: (
         color: themed(calculatorTitleTextColor);
       }
     }
-
     &#{$moving} {
       .calculator {
         background-image: themed(backgroundMovingUrl);
       }
     }
-
     &#{$still} {
       .calculator {
         background-image: themed(backgroundStillUrl);
@@ -346,31 +337,41 @@ $themes: (
         font-weight: 400;
       }
     }
-  }
-
-  &#{$picture},
-  &#{$animation} {
-    .display {
-      background-color: #abbaa7bb;
+    .settings {
+      .cog {
+        color: darken(themed(calculatorTitleTextColor), 12%);
+      }
+    }
+    .calculator,
+    .sidebar {
     }
   }
-
   &#{$animation} {
     .calculator {
       border-color: black;
-    }
-
-    .sidebar {
-      .keyboard {
-        background-color: transparentize(lighten(themed(keyboardBackground), 0%),
-            1);
+      .display {
+        background-color: #abbaa7b0;
       }
     }
-  }
+    .settings {
+      .cog {
+        color: darken(themed(calculatorTitleTextColor), 5%);
+      }
+    }
+    .sidebar {
+      .keyboard {
+        background-color: transparentize(
+              lighten(themed(keyboardBackground), 0%),
+              1
+          );
+          }
+        }
+      }
+      
+    &#{$open} {
 
-  &#{$open} {
     .sidebar {
       background-color: transparentize(themed(backgroundColor), .2);
     }
-  }
+}
 }
