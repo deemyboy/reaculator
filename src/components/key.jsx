@@ -4,7 +4,6 @@ import { Typography, Box } from "@mui/material";
 import HandleClickContext from "../js/context";
 
 const Key = (props) => {
-    // console.log("Key");
     const handleClick = useContext(HandleClickContext);
     const _disabled = props.errorState && props._key.id !== 18 ? true : false;
     const _key = props._key;

@@ -46,17 +46,17 @@
 // animated gifs
 // url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
 
-$fire_moving_url: url("https://i.gifer.com/TIkr.gif");
-$midnight_moving_url: url("https://c.tenor.com/pwks_QPpbvoAAAAd/sky-night.gif");
-$ocean_moving_url: url("https://acegif.com/wp-content/gifs/water-26.gif");
-$storm_moving_url: url("https://i0.wp.com/windowscustomization.com/wp-content/uploads/2018/12/Thunders.gif?fit=700%2C335&quality=80&strip=all&ssl=1");
-$jungle_moving_url: url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
-
 $fire_still_url: url("https://c.pxhere.com/photos/88/b3/fireworks_night_celebration_new_year_party_event_light-725512.jpg!a");
 $midnight_still_url: url("https://c.pxhere.com/photos/ea/da/milky_way_stars_science_space_sky_galaxy_night_universe-845922.jpg!d");
 $ocean_still_url: url("https://c.pxhere.com/photos/6a/14/beach_dawn_dusk_ocean_sea_seascape_sun_sunrise-1364695.jpg!d");
 $storm_still_url: url("https://c.pxhere.com/photos/7a/92/lightning_storm_arizona_monsoon_lightning_storm_electricity_weather_sky-1323288.jpg!d");
 $jungle_still_url: url("https://c.pxhere.com/photos/4a/e6/spring_tree_flowers_meadow_wood_forest_sun_summer-985038.jpg!d");
+
+$fire_moving_url: url("https://i.gifer.com/TIkr.gif");
+$midnight_moving_url: url("https://c.tenor.com/pwks_QPpbvoAAAAd/sky-night.gif");
+$ocean_moving_url: url("https://media3.giphy.com/media/xUA7aLtgke2UiM6JYQ/giphy.gif?cid=790b76115c7bed43bd96ffd46e999d82f5b945e9b51e61ee&rid=giphy.gif&ct=g");
+$storm_moving_url: url("https://i0.wp.com/windowscustomization.com/wp-content/uploads/2018/12/Thunders.gif?fit=700%2C335&quality=80&strip=all&ssl=1");
+$jungle_moving_url: url("https://c.tenor.com/-BWBiuD1bOIAAAAd/magic-forest-forest.gif");
 
 $themes: (
   fire: (backgroundColor: $fire_bg,
@@ -135,7 +135,7 @@ $themes: (
     backgroundMovingUrl: $ocean_moving_url,
     backgroundStillUrl: $ocean_still_url,
     textColor: $ocean_color,
-    calculatorTitleTextColor: darken($ocean_color, 20%),
+    calculatorTitleTextColor: $ocean_border,
     borderColor: $ocean_border,
     menuIconBackgroundColor: darken($ocean_bg, 5%),
     menuIconBackgroundHoverColor: darken($ocean_bg, 10%),

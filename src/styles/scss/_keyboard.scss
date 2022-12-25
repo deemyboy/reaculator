@@ -2,12 +2,24 @@
   .main-keyboards {
     display: flex;
     justify-content: space-between;
+    opacity: 1;
+    transition: all .25s ease;
+
     .keyboard {
       display: flex;
       justify-content: space-evenly;
       flex-wrap: wrap;
       width: 100%;
     }
+
+    &.hidden {
+      // display: none;
+      opacity: 0;
+      height: 0;
+
+      .keyboard {
+        // height: 0;
+      }
+    }
   }
 }
-

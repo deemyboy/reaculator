@@ -1,55 +1,55 @@
 import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 import ThemeSettings from "./theme-settings";
-import { Collapse } from "react-collapse";
-
+import { motion } from "framer-motion";
 import Line from "./line";
 
 const Display = (props) => {
-    const { content } = { ...props };
-    let linesData,
-        settingsData,
-        displayClass = "display",
-        isOpened = false;
-    if (content.hasOwnProperty("linesData")) {
-        linesData = { ...content };
-    } else if (content.hasOwnProperty("settingsData")) {
-        settingsData = { ...content };
-        displayClass += " open";
-        isOpened = true;
-    }
+    const content = { ...props };
+    let displayClass = "display";
+    const { linesData, settingsData } = { ...content };
+    displayClass += " open";
+    // isOpen = true;
+    const { isOpen } = { ...settingsData };
 
-    if (linesData && Object.keys(linesData).length > 0) {
+    if (!isOpen) {
         let i = 0;
         return (
-            <Collapse isOpened={!isOpened}>
+            <motion.div
+                initial={{ opacity: 0, height: 376 }}
+                animate={{ height: 176, opacity: 1 }}
+                transition={{ type: "tween" }}
+            >
                 <Grid className={displayClass}>
-                    {Object.keys(linesData["linesData"]).map((line) => {
+                    {Object.keys(linesData).map((line) => {
                         i++;
                         return (
-                            <Line
-                                key={
-                                    linesData["linesData"][line].className +
-                                    "-" +
-                                    i
-                                }
-                                className={
-                                    linesData["linesData"][line].className
-                                }
-                                value={linesData["linesData"][line].value}
-                            />
+                            <motion.div
+                                initial={{ opacity: 0, height: 176 }}
+                                animate={{ height: 64, opacity: 1 }}
+                                transition={{ type: "tween" }}
+                                key={linesData[line].className + "-" + i}
+                            >
+                                <Line
+                                    className={linesData[line].className}
+                                    value={linesData[line].value}
+                                />
+                            </motion.div>
                         );
                     })}
                 </Grid>
-            </Collapse>
+            </motion.div>
         );
-    } else if (settingsData && Object.keys(settingsData).length > 0) {
+    } else {
         return (
-            <Collapse isOpened={isOpened}>
+            <motion.div
+                animate={{ height: 356, opacity: 1 }}
+                transition={{ type: "tween" }}
+            >
                 <Grid sx={{}} className={displayClass}>
-                    <ThemeSettings settingsData={settingsData} />
+                    <ThemeSettings {...settingsData} />
                 </Grid>
-            </Collapse>
+            </motion.div>
         );
     }
 };

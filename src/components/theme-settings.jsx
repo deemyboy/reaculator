@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Grid } from "@mui/material";
+import { Grid, Collapse } from "@mui/material";
+import { motion } from "framer-motion";
 
 const ThemeSettings = (props) => {
     const className = "settings",
-        { keyboardData } = { ...props.settingsData.settingsData };
-
+        { keyboardData: content } = { ...props };
     const [checked, setChecked] = useState({});
 
     useEffect(() => {
         let checkedData = { ...checked };
 
-        const keyboardNames = keyboardData.map((keyboard) => {
+        const keyboardNames = content.map((keyboard) => {
             return keyboard.name;
         });
         //  initial setup of checked data
@@ -38,22 +38,22 @@ const ThemeSettings = (props) => {
                 delete checkedData[key];
             });
         setChecked(checkedData);
-    }, [keyboardData]);
+    }, [content]);
 
-    const Setting = (keyboardData) => {
-        const { keyboardObject } = { ...keyboardData };
-        const expandMoreIconOrientation = !checked[keyboardObject.name]
-            ? { transform: "rotate(0deg);transition: 300ms ease all;" }
-            : { transform: "rotate(180deg);transition: 300ms ease all;" };
-        let collapseClassName = "collapse";
-        collapseClassName += checked[keyboardObject.name]
-            ? " expanded"
-            : " collapsed";
+    const Setting = (content) => {
+        const { keyboard, name } = { ...content };
         return (
-            <div className="setting-wrapper">
-                <div>{keyboardObject.name.toUpperCase()}</div>
-                {keyboardObject.keyboard}
-            </div>
+            <motion.div
+                className="setting-wrapper"
+                initial={{ opacity: 0 }}
+                animate={{ height: 130, opacity: 1 }}
+                transition={{
+                    type: "tween",
+                }}
+            >
+                <div>{name.toUpperCase()}</div>
+                {keyboard}
+            </motion.div>
         );
     };
 
@@ -65,8 +65,8 @@ const ThemeSettings = (props) => {
             justifyContent="space-around"
             alignItems={"center"}
         >
-            {keyboardData.map((keyboardObject, index) => {
-                return <Setting key={index} keyboardObject={keyboardObject} />;
+            {content.map((keyboard, index) => {
+                return <Setting key={index} {...keyboard} />;
             })}
         </Grid>
     );

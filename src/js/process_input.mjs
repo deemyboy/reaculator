@@ -1,8 +1,8 @@
 import { patternStack } from "./constants.js";
 import { unicodify, deunicodify } from "./maths_engine.mjs";
 
-export const processUserInput = (input) => {
-    // console.log("processUserInput", input);
+export const processInput = (input) => {
+    console.log("processInput", input);
     for (const key in patternStack) {
         var _input = getPatternOperation(patternStack[key], key, input);
         if (_input || _input === "") {
@@ -147,7 +147,7 @@ const repairStack = {
         );
     },
     NUM1_FLOATING_DOT_CATCHER: function (input) {
-        // console.log(`NUM1_FLOATING_DOT_CATCHER ${input}`);
+        console.log(`NUM1_FLOATING_DOT_CATCHER ${input}`);
         const re = /\./;
 
         return input.replace(re, "");

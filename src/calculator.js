@@ -4,6 +4,7 @@ import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { motion } from "framer-motion";
 import {
     numberKeys,
     functionKeys,
@@ -13,7 +14,7 @@ import {
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./js/constants";
 import { doMath, unicodify } from "./js/maths_engine.mjs";
-import { processUserInput } from "./js/process_input.mjs";
+import { processInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
 
@@ -275,7 +276,6 @@ const Calculator = () => {
             keyboardData.push(keyboardObject);
             i++;
         });
-        // console.log(keyboardData);
         return keyboardData;
     };
 
@@ -296,22 +296,16 @@ const Calculator = () => {
     });
 
     useEffect(() => {
-        if (settingsData.isOpen) {
-            setDisplayData({
-                settingsData: settingsData,
-            });
-        } else {
-            setDisplayData({
-                linesData: linesData,
-            });
-        }
+        setDisplayData({
+            settingsData: settingsData,
+            linesData: linesData,
+        });
     }, [settingsData, linesData]);
 
     useEffect(() => {
-        const _keyboardData = getVisibleKeyboardData();
         setSettingsData({
             ...settingsData,
-            keyboardData: _keyboardData,
+            keyboardData: getVisibleKeyboardData(),
         });
     }, [themeType]);
 
@@ -323,11 +317,11 @@ const Calculator = () => {
         e.preventDefault();
         e.stopPropagation();
 
-        let { isOpen } = settingsData;
+        const { isOpen } = settingsData;
         // prevent when in error
         if (!errorState) {
-            isOpen = !isOpen;
-            setSettingsData({ ...settingsData, isOpen: isOpen });
+            // isOpen = !isOpen;
+            setSettingsData({ ...settingsData, isOpen: !isOpen });
         }
     };
 
@@ -343,7 +337,10 @@ const Calculator = () => {
         setComputationData(initialComputationData);
     };
 
-    const [displayData, setDisplayData] = useState(linesData);
+    const [displayData, setDisplayData] = useState({
+        settingsData: settingsData,
+        linesData: linesData,
+    });
 
     useEffect(() => {
         if (computationData.previousCalculationOperator)
@@ -352,7 +349,6 @@ const Calculator = () => {
 
     // linesData calculationValue resultValue
     useEffect(() => {
-        // console.log("linesData resultValue", { linesData });
         setLinesData({
             ...linesData,
             calculation: {
@@ -466,19 +462,8 @@ const Calculator = () => {
         // resetSettingsData();
     };
 
-    function makeKeyboard(keyboardName) {
-        const data = keyboards.find((kb) => {
-            return kb.name === keyboardName;
-        });
-        return (
-            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                <Keyboard props={data} errorState={errorState} />
-            </HandleClickContextProvider>
-        );
-    }
-
     function preProcessComputationData() {
-        console.log("preProcessComputationData", { computationData });
+        let changes = {};
         const {
             userInput,
             resultValue,
@@ -497,14 +482,79 @@ const Calculator = () => {
             CONSTANTS.UNARY_OPERATOR_REGEX.test(key)
         ) {
             console.log("unary op after unary op");
-            setComputationData({
-                ...computationData,
+            changes = {
                 userInput: resultValue + key,
                 op1: undefined,
                 num1: undefined,
                 previousCalculationOperator: undefined,
-                // nextUserInput: resultValue,
                 computed: false,
+            };
+        }
+        if (
+            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
+            CONSTANTS.BINARY_OPERATOR_REGEX.test(key)
+        ) {
+            console.log("binary op after unary op", key);
+            changes = {
+                userInput: resultValue + key,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                computed: false,
+            };
+        }
+        if (
+            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
+            CONSTANTS.NUMBER_REGEX.test(key)
+        ) {
+            console.log("number after unary op", key);
+            changes = {
+                userInput: key,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                key: undefined,
+                computed: false,
+                resultValue: 0,
+            };
+        }
+        if (
+            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
+            /m/.test(key)
+        ) {
+            console.log("+/- (m) after unary op", key);
+            changes = {
+                userInput: resultValue * -1,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                key: undefined,
+                computed: false,
+                resultValue: 0,
+            };
+        }
+        if (
+            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
+            /\./.test(key) &&
+            !CONSTANTS.patternStack.UNIVERSAL_EXTRA_DOT_CATCHER.test(
+                resultValue
+            )
+        ) {
+            console.log(". after unary op", key);
+            changes = {
+                userInput: resultValue + key,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                key: undefined,
+                computed: false,
+                resultValue: 0,
+            };
+        }
+        if (Object.keys(changes).length > 0) {
+            setComputationData({
+                ...computationData,
+                ...changes,
             });
         }
     }
@@ -521,7 +571,7 @@ const Calculator = () => {
             resetAll();
             return;
         }
-        // if maths error then prevent all input except esc for ac
+        // if maths error then prevent all input except esc for ac (Escape key)
         if (keyError && key !== "a") {
             return;
         }
@@ -547,7 +597,7 @@ const Calculator = () => {
         } else {
             userInput = key;
         }
-        const _processedUserInput = processUserInput(userInput);
+        const _processedUserInput = processInput(userInput);
         if (_processedUserInput === "ac") {
             resetAll();
             return;
@@ -571,6 +621,7 @@ const Calculator = () => {
     };
 
     function makeCalculationData() {
+        console.log("makeCalculationData");
         const {
             userInput,
             resultValue,
@@ -601,14 +652,25 @@ const Calculator = () => {
             ? "r" + calculationValue.replace(/.$/, "")
             : calculationValue;
         // replace strings or sysmbols with unicode chars
-        calculationValue = /[x\/sry]/.test(calculationValue)
-            ? unicodify(calculationValue)
-            : calculationValue;
-
+        let _calculationValue = processInput(calculationValue);
+        _calculationValue = /[x\/sry]/.test(_calculationValue)
+            ? unicodify(_calculationValue)
+            : _calculationValue;
         return {
-            calculationValue: calculationValue,
+            calculationValue: _calculationValue,
             calculationClassName: calculationClassName,
         };
+    }
+
+    function makeKeyboard(keyboardName) {
+        const data = keyboards.find((kb) => {
+            return kb.name === keyboardName;
+        });
+        return (
+            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
+                <Keyboard props={data} errorState={errorState} />
+            </HandleClickContextProvider>
+        );
     }
 
     const getSelected = (keyboardName) => {
@@ -661,19 +723,21 @@ const Calculator = () => {
                 </Typography>
                 {/* ------------ display ---------------- */}
                 {/* <Display lines={lineData} /> */}
-                <Display content={displayData} />
+                <Display {...displayData} />
                 {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container
-                    className="main-keyboards"
+                    className={
+                        !settingsData.isOpen
+                            ? "main-keyboards"
+                            : "main-keyboards hidden"
+                    }
                     meta-name="main keyboards"
                 >
                     {makeKeyboard("number")}
                     {makeKeyboard("function")}
                 </Grid>
             </Grid>
-            {/* ------------ sidebar ---------------- */}
-            {/* {makeSidebar(sidebarData)} */}
         </Container>
     );
 };
