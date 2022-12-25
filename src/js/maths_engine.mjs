@@ -9,10 +9,8 @@ export const deunicodify = (str) => {
             return;
         }
         [...functionKeys].forEach((k) => {
-            if (k.calculationDisplayChar) {
-                if (k.calculationDisplayChar === c) {
-                    str = str.replace(str.charAt(count), k.value);
-                }
+            if (k.calculationDisplayChar && k.calculationDisplayChar === c) {
+                str = str.replace(str.charAt(count), k.value);
             }
         });
         count++;
@@ -28,13 +26,8 @@ export const unicodify = (str) => {
             return;
         }
         [...functionKeys].forEach((k) => {
-            if (k.calculationDisplayChar) {
-                if (k.value === c) {
-                    str = str.replace(
-                        str.charAt(count),
-                        k.calculationDisplayChar
-                    );
-                }
+            if (k.calculationDisplayChar && k.value === c) {
+                str = str.replace(str.charAt(count), k.calculationDisplayChar);
             }
         });
         count++;
@@ -47,53 +40,57 @@ export const doMath = (input) => {
     const extractComputationParts = (_input) => {
         let matches = VALID_COMPUTATION.exec(_input);
 
-        let computationObject = {
+        let calculataionParameters = {
             num1: "",
             num2: "",
             op1: "",
             op2: "",
         };
+        if (!matches) return {};
         if (matches) {
             if (matches[1]) {
-                computationObject.num1 = matches[1];
-                computationObject.op1 = matches[2];
-                computationObject.num2 = matches[3];
-                computationObject.op2 = matches[4];
+                calculataionParameters.num1 = matches[1];
+                calculataionParameters.op1 = matches[2];
+                calculataionParameters.num2 = matches[3];
+                calculataionParameters.op2 = matches[4];
             } else if (matches[6] !== "=") {
-                computationObject.num1 = matches[5];
-                computationObject.op1 = matches[6];
-                computationObject.num2 = undefined;
-                computationObject.op2 = undefined;
+                calculataionParameters.num1 = matches[5];
+                calculataionParameters.op1 = matches[6];
+                calculataionParameters.num2 = undefined;
+                calculataionParameters.op2 = undefined;
             }
         }
-        return computationObject;
+        return calculataionParameters;
     };
 
     let _result = {},
         _computationalUnit = extractComputationParts(input);
 
     // console.log("time for doing maths!", input);
-
-    _result.value = getMathOperation(
-        _computationalUnit.op1,
-        _computationalUnit.num1,
-        _computationalUnit.num2
-    );
-    if (_result.value) {
-        _result.value = _result.value.toString();
+    if (Object.keys(_computationalUnit).length > 0) {
+        _result.resultValue = getMathOperation(
+            _computationalUnit.op1,
+            _computationalUnit.num1,
+            _computationalUnit.num2
+        );
     }
 
     if (
-        _result &&
-        Object.keys(_result).length !== 0 &&
-        (!isFinite(_result.value) || isNaN(_result.value))
+        Object.keys(_result).length > 0 &&
+        _result.resultValue !== undefined &&
+        (!isFinite(_result.resultValue) || isNaN(_result.resultValue))
     ) {
         _result.error = true;
-        _result.value = "err";
+        _result.resultValue = "err";
+        return _result;
     }
 
-    if (_result.value || _result.value === 0) {
+    if (
+        Object.keys(_result).length > 0 &&
+        (_result.resultValue || _result.resultValue === 0)
+    ) {
         // console.log("and the result is ", +_result.value);
+        _result.resultValue = _result.resultValue.toString();
         _result.computed = true;
         _result.num1 = _computationalUnit.num1;
         _result.op1 = _computationalUnit.op1;
@@ -101,6 +98,7 @@ export const doMath = (input) => {
         _result.op2 = _computationalUnit.op2;
     } else {
         _result.computed = false;
+        return _result;
     }
     return _result;
 };
@@ -114,7 +112,7 @@ const doMath2 = (functionStack) => (operator, num1, num2) => {
           operator === "+" ||
           operator === "-" ||
           operator === "/"
-        ? functionStack[operator](num1, num2)
+        ? functionStack[operator](+num1, +num2) // +n - cast to numbers
         : undefined;
 };
 
@@ -123,27 +121,27 @@ const mathFunctionStack = {
     r: Math.sqrt,
     // square
     s: function (a) {
-        return (+a) ** 2;
+        return a ** 2;
     },
     //  multiply
     x: function (a, b) {
-        return +a * +b;
+        return a * b;
     },
     //  x raised to y
     y: function (a, b) {
-        return (+a) ** +b;
+        return a ** b;
     },
     //  addition
     "+": function (a, b) {
-        return +a + +b;
+        return a + b;
     },
     //  subtraction
     "-": function (a, b) {
-        return +a - +b;
+        return a - b;
     },
     //  division
     "/": function (a, b) {
-        return +a / +b;
+        return a / b;
     },
 };
 
