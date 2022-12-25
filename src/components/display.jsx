@@ -11,19 +11,23 @@ const Display = ({ linesData, settingsData }) => {
     if (!isOpen) {
         let i = 0;
         return (
-            <motion.div
-                initial={{ opacity: 0, height: 376 }}
-                animate={{ height: 176, opacity: 1 }}
-                transition={{ type: "tween" }}
-            >
-                <Grid className={displayClass}>
+            <Grid className={displayClass}>
+                <motion.div
+                    initial={{ opacity: 0, height: 376 }}
+                    animate={{ height: 106, opacity: 1 }}
+                    transition={{ type: "tween", duration: 0.25 }}
+                >
                     {Object.keys(linesData).map((line) => {
                         i++;
                         return (
                             <motion.div
-                                initial={{ opacity: 0, height: 176 }}
-                                animate={{ height: 64, opacity: 1 }}
-                                transition={{ type: "tween" }}
+                                initial={{ opacity: 0, y: 500 }}
+                                animate={{ height: 64, opacity: 1, y: -10 }}
+                                transition={{
+                                    type: "spring",
+                                    duration: 0.5,
+                                    delay: 0.1,
+                                }}
                                 key={linesData[line].className + "-" + i}
                             >
                                 <Line
@@ -33,19 +37,19 @@ const Display = ({ linesData, settingsData }) => {
                             </motion.div>
                         );
                     })}
-                </Grid>
-            </motion.div>
+                </motion.div>
+            </Grid>
         );
     } else {
         return (
-            <motion.div
-                animate={{ height: 356, opacity: 1 }}
-                transition={{ type: "tween" }}
-            >
-                <Grid sx={{}} className={displayClass}>
+            <Grid sx={{}} className={displayClass}>
+                <motion.div
+                    animate={{ height: 356, opacity: 1 }}
+                    transition={{ type: "tween", duration: 0.25 }}
+                >
                     <ThemeSettings {...settingsData} />
-                </Grid>
-            </motion.div>
+                </motion.div>
+            </Grid>
         );
     }
 };

@@ -44,10 +44,12 @@ const ThemeSettings = ({ keyboardData: content }) => {
         return (
             <motion.div
                 className="setting-wrapper"
-                initial={{ opacity: 0 }}
-                animate={{ height: 130, opacity: 1 }}
+                initial={{ y: -500, opacity: 0.25 }}
+                animate={{ height: 130, opacity: 1, y: 0 }}
                 transition={{
-                    type: "tween",
+                    type: "spring",
+                    duration: 0.5,
+                    delay: 0.1,
                 }}
             >
                 <div>{name.toUpperCase()}</div>

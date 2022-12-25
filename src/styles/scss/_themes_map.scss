@@ -135,7 +135,7 @@ $themes: (
     backgroundMovingUrl: $ocean_moving_url,
     backgroundStillUrl: $ocean_still_url,
     textColor: $ocean_color,
-    calculatorTitleTextColor: $ocean_border,
+    calculatorTitleTextColor: lighten($ocean_border, 25%),
     borderColor: $ocean_border,
     menuIconBackgroundColor: darken($ocean_bg, 5%),
     menuIconBackgroundHoverColor: darken($ocean_bg, 10%),
