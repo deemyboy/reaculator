@@ -12,8 +12,8 @@ export const processInput = (input) => {
     return input;
 };
 
-const processUserInput2 = (repairs) => (pattern, name, input) => {
-    // console.log("processUserInput2 |", name);
+const processInput2 = (repairs) => (pattern, name, input) => {
+    // console.log("processInput2 |", name);
     if (pattern.test(input)) {
         return repairs[name](input);
     }
@@ -198,4 +198,4 @@ const repairStack = {
     },
 };
 
-const getPatternOperation = processUserInput2(repairStack);
+const getPatternOperation = processInput2(repairStack);

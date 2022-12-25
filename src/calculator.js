@@ -4,7 +4,6 @@ import Keyboard from "./components/keyboard";
 import Canvas from "./components/canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { motion } from "framer-motion";
 import {
     numberKeys,
     functionKeys,
@@ -18,11 +17,7 @@ import { processInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
 
-import {
-    HandleClickContextProvider,
-    DisplayContextProvider,
-} from "./js/context";
-import { positions } from "@mui/system";
+import { HandleClickContextProvider } from "./js/context";
 
 const Calculator = () => {
     const [cookies, setCookie] = useCookies([
@@ -561,20 +556,18 @@ const Calculator = () => {
 
     const handleUserInput = () => {
         let { userInput, computed } = { ...computationData } || "";
-        // if (computed)
-        //     setComputationData({
-        //         ...computationData,
-        //         // preProcessUserInput: true,
-        //     });
         const { key } = { ...keyData } || undefined;
+
         if (key === "a") {
             resetAll();
             return;
         }
+
         // if maths error then prevent all input except esc for ac (Escape key)
         if (keyError && key !== "a") {
             return;
         }
+
         if (
             computationData.computed &&
             key !== "m" &&

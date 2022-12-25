@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Key from "./key";
 
 const Keyboard = ({ props, selected, errorState }) => {
-    const { title, className, keys, location, id } = props;
+    const { title, className, keys } = props;
     const { xs } = props || "";
     const { md } = props || "";
     const { lg } = props || "";

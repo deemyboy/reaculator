@@ -4,13 +4,9 @@ import ThemeSettings from "./theme-settings";
 import { motion } from "framer-motion";
 import Line from "./line";
 
-const Display = (props) => {
-    const content = { ...props };
-    let displayClass = "display";
-    const { linesData, settingsData } = { ...content };
-    displayClass += " open";
-    // isOpen = true;
-    const { isOpen } = { ...settingsData };
+const Display = ({ linesData, settingsData }) => {
+    const displayClass = "display",
+        { isOpen } = settingsData;
 
     if (!isOpen) {
         let i = 0;

@@ -13,13 +13,10 @@
     }
 
     &.hidden {
-      // display: none;
       opacity: 0;
       height: 0;
 
-      .keyboard {
-        // height: 0;
-      }
+      .keyboard {}
     }
   }
 }

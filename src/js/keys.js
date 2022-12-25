@@ -1,11 +1,3 @@
-// import {
-//     handleClick,
-//     onSelectThemeType,
-//     onSelectTheme,
-//     onSelectAnimation,
-//     onSelectPictureType,
-// } from "../calculator";
-
 // allowed key codes for keyPress event handler
 export const ALLOWED_KEYS = [
     8, 13, 16, 17, 27, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 67, 77, 82, 83,
@@ -417,14 +409,6 @@ export const animKeys = [
 // 0xD83C 0xDFAE ps4 controller
 // 0xD83D 0xDCA3 bomb
 // 0xD83D 0xDD2B pistol
-
-// numClass: "btn-primary",
-// funcClass: "btn-secondary",
-// thmClass: "btn-theme",
-// thmTypeClass: "btn-theme-type",
-// picTypeClass: "btn-pic-type",
-// errorClass: "btn-error",
-// useMeClass: "btn-use-me",
 
 export const pictureKeys = [
     {

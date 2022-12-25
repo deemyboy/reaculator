@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Grid, Collapse } from "@mui/material";
 import { motion } from "framer-motion";
 
-const ThemeSettings = (props) => {
-    const className = "settings",
-        { keyboardData: content } = { ...props };
+const ThemeSettings = ({ keyboardData: content }) => {
+    const className = "settings";
     const [checked, setChecked] = useState({});
 
     useEffect(() => {
