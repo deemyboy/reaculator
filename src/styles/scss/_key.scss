@@ -107,10 +107,13 @@
       filter: grayscale(90%);
       @include transition(all 0.25s);
       padding: 0;
-      width: $btn-main-mob;
-      height: $btn-main-mob;
-      border-radius: $btn-main-mob-border-radius;
+      // width: $btn-main-mob;
+      // height: $btn-main-mob;
+      // border-radius: $btn-main-mob-border-radius;
       min-width: 0;
+      border: none$i;
+      border-radius: none$i;
+      background: none$i;
 
       &:hover,
       &:active {
@@ -128,7 +131,9 @@
   .btn-primary {
     background-color: themed(primaryButtonBgColor);
     color: themed(primaryButtonTextColor);
+
     border-color: themed(primaryButtonBorderColor);
+
 
     &:hover,
     &:focus {
@@ -168,6 +173,25 @@
 }
 
 @include themify($themes) {
+  &#{$picture} {
+    .btn-primary {
+      background-color: transparentize(themed(primaryButtonBgColor), .35);
+    }
+
+    .btn-secondary {
+      background-color: transparentize(themed(secondaryButtonBgColor), .35);
+    }
+
+    .btn-danger {
+      background-color: transparentize($btn-danger-bg-color, .35);
+    }
+
+    .btn-success {
+      background-color: transparentize($btn-success-bg-color, .35);
+    }
+
+  }
+
   .btn-secondary {
     background-color: themed(secondaryButtonBgColor);
     color: themed(secondaryButtonTextColor);
@@ -381,7 +405,7 @@
     .btn {
       align-items: center;
       justify-content: space-evenly;
-      font-size: 1rem;
+      font-size: 1.5rem;
       margin: 0;
       padding: 0;
       // opacity: 0;

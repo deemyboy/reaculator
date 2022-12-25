@@ -1,28 +1,45 @@
 #{$outer-wrapper} {
-    .settings {
+    .settings-icon {
         @include transition(all 0.25s);
         z-index: 3;
+        position: relative;
         position: absolute;
-        top: -1rem;
-        right: 0;
-        margin: 0;
-        transform: scale(1);
-        .cog {
-            position: relative;
-            font-size: 3rem;
-            &:before {
-                content: "\2699";
-            }
-            
+        top: 0rem;
+        left: 95%;
+        transform: scale(1.2) rotate(0deg);
+        transform-origin: 50% 45%;
+
+        &.open {
+            transform: scale(1.6) rotate(90deg);
         }
     }
-    
+
+    .setting-wrapper {
+        text-align: center;
+        border: 3px solid;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 10px;
+        // height: 0;
+
+        .keyboard {
+            display: inline-flex;
+            font-family: Orbitron, sans-serif;
+
+            .settings-btn-wrapper {
+                display: inline-block;
+            }
+        }
+
+        button {
+            border: none;
+        }
+    }
+
     // open
     &#{$open} {
-        .settings {
-            transform: scale(.7);
-            .cog {
-            }
+        .settings-icon {
+            // 
         }
     }
 }

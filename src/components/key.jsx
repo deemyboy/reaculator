@@ -4,7 +4,6 @@ import { Typography, Box } from "@mui/material";
 import HandleClickContext from "../js/context";
 
 const Key = (props) => {
-    // console.log("Key");
     const handleClick = useContext(HandleClickContext);
     const _disabled = props.errorState && props._key.id !== 18 ? true : false;
     const _key = props._key;
@@ -36,7 +35,14 @@ const Key = (props) => {
     const { subTitle } = _key || "";
 
     if (showTitle) {
-        _title = <Typography className="sidebar-btn-title">{title}</Typography>;
+        _title = (
+            <Typography
+                sx={{ fontFamily: "Orbitron, sans-serif;" }}
+                className="settings-btn-title"
+            >
+                {title}
+            </Typography>
+        );
     } else {
         _title = "";
     }
@@ -49,13 +55,13 @@ const Key = (props) => {
     }
 
     let boxClassName;
-    if (location === "sidebar") {
-        boxClassName = "sidebar-btn-wrapper";
+    if (location === "display") {
+        boxClassName = "settings-btn-wrapper";
     } else if (location === "main") {
         boxClassName = "main-btn-wrapper";
     }
-    if (props.location === "sidebar") {
-        boxClassName = "sidebar_btn_wrapper";
+    if (props.location === "display") {
+        boxClassName = "settings-btn-wrapper";
     }
 
     return (

@@ -16,29 +16,36 @@
             background-color: transparent;
             box-shadow: none;
         }
+
         .calculation {
             font-size: 2rem;
             min-height: 3rem;
         }
+
         .calculation-error {
             @extend .calculation;
             color: red;
         }
+
         .result {
             font-size: 3rem;
             min-height: 4rem;
         }
+
         .result-error {
             @extend .result;
             color: red;
         }
+
         .result_baba {
             font-size: 2.3em;
         }
     }
+
     sup {
         top: -0.8em;
     }
+
     sub,
     sup {
         position: relative;

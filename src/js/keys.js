@@ -1,11 +1,3 @@
-// import {
-//     handleClick,
-//     onSelectThemeType,
-//     onSelectTheme,
-//     onSelectAnimation,
-//     onSelectPictureType,
-// } from "../calculator";
-
 // allowed key codes for keyPress event handler
 export const ALLOWED_KEYS = [
     8, 13, 16, 17, 27, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 67, 77, 82, 83,
@@ -13,7 +5,7 @@ export const ALLOWED_KEYS = [
     110, 111, 187, 189, 190, 191,
 ];
 
-export const DISALLOWED_KEYS = [16, 17, 18, 37, 38, 39, 40, 91, 93];
+export const DISALLOWED_KEYS = [9, 16, 17, 18, 37, 38, 39, 40, 91, 93];
 
 export const numberKeys = [
     {
@@ -275,7 +267,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-theme-type",
         showTitle: true,
     },
@@ -287,7 +279,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-theme-type",
         showTitle: true,
     },
@@ -300,7 +292,7 @@ export const themeTypeKeys = [
         keycode: 65,
         code: "KeyA",
         type: "thype",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg move-it btn-theme-type",
         showTitle: true,
     },
@@ -315,7 +307,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-fire fire btn-theme",
         showTitle: true,
     },
@@ -327,7 +319,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-midnight midnight btn-theme",
         showTitle: true,
     },
@@ -339,7 +331,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-ocean ocean btn-theme",
         showTitle: true,
     },
@@ -351,7 +343,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-storm storm btn-theme",
         showTitle: true,
     },
@@ -363,7 +355,7 @@ export const themeKeys = [
         keycode: 55,
         code: "Digit7",
         type: "thm",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-jungle jungle btn-theme",
         showTitle: true,
     },
@@ -379,7 +371,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-animation-choose",
         showTitle: true,
     },
@@ -393,7 +385,7 @@ export const animKeys = [
         keycode: null,
         code: "",
         type: "animChs",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-animation-choose",
         showTitle: true,
     },
@@ -408,7 +400,7 @@ export const animKeys = [
     //     keycode: null,
     //     code: "",
     //     type: "animChs",
-    //     location: "sidebar",
+    //     location: "display",
     // className: "btn btn-lg btn-animation-choose",
     //     showTitle: true,
     // },
@@ -417,14 +409,6 @@ export const animKeys = [
 // 0xD83C 0xDFAE ps4 controller
 // 0xD83D 0xDCA3 bomb
 // 0xD83D 0xDD2B pistol
-
-// numClass: "btn-primary",
-// funcClass: "btn-secondary",
-// thmClass: "btn-theme",
-// thmTypeClass: "btn-theme-type",
-// picTypeClass: "btn-pic-type",
-// errorClass: "btn-error",
-// useMeClass: "btn-use-me",
 
 export const pictureKeys = [
     {
@@ -435,7 +419,7 @@ export const pictureKeys = [
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-still still btn-pic-type",
         showTitle: true,
     },
@@ -447,7 +431,7 @@ export const pictureKeys = [
         keycode: 55,
         code: "Digit7",
         type: "picTypeChs",
-        location: "sidebar",
+        location: "display",
         className: "btn btn-lg btn-moving moving btn-pic-type",
         showTitle: true,
     },

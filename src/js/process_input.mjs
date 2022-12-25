@@ -1,8 +1,8 @@
 import { patternStack } from "./constants.js";
 import { unicodify, deunicodify } from "./maths_engine.mjs";
 
-export const processRawInput = (input) => {
-    // console.log("processRawInput", input);
+export const processInput = (input) => {
+    console.log("processInput", input);
     for (const key in patternStack) {
         var _input = getPatternOperation(patternStack[key], key, input);
         if (_input || _input === "") {
@@ -12,8 +12,8 @@ export const processRawInput = (input) => {
     return input;
 };
 
-const processRawInput2 = (repairs) => (pattern, name, input) => {
-    // console.log("processRawInput2 |", name);
+const processInput2 = (repairs) => (pattern, name, input) => {
+    // console.log("processInput2 |", name);
     if (pattern.test(input)) {
         return repairs[name](input);
     }
@@ -147,7 +147,7 @@ const repairStack = {
         );
     },
     NUM1_FLOATING_DOT_CATCHER: function (input) {
-        // console.log(`NUM1_FLOATING_DOT_CATCHER ${input}`);
+        console.log(`NUM1_FLOATING_DOT_CATCHER ${input}`);
         const re = /\./;
 
         return input.replace(re, "");
@@ -188,7 +188,7 @@ const repairStack = {
         }
         if (/^[xy\/\-+=rsacm]$/.test(input)) {
             input = input.replace(/.$/, "");
-            return "clear all";
+            return "ac";
         }
         return input;
     },
@@ -198,6 +198,4 @@ const repairStack = {
     },
 };
 
-const getPatternOperation = processRawInput2(repairStack);
-
-export default processRawInput;
+const getPatternOperation = processInput2(repairStack);
