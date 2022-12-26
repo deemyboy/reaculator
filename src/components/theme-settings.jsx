@@ -52,7 +52,9 @@ const ThemeSettings = ({ keyboardData: content }) => {
                     delay: 0.1,
                 }}
             >
-                <div>{name.toUpperCase()}</div>
+                <div className="settings-keyboard-title">
+                    {name.toUpperCase()}
+                </div>
                 {keyboard}
             </motion.div>
         );
