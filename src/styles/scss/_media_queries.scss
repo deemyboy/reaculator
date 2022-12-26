@@ -108,150 +108,117 @@
 
     //sizes here
     // closed
+    .settings-icon {}
+
     .calculator {}
 
-    .settings {}
-
-    .sidebar {}
-
     &#{$open} {
+      .settings-icon {}
+
       .calculator {}
 
-      .settings {}
 
-      .sidebar {}
     }
   }
-}
 
-///////////// ///////////// /////////////
-/////////// generic section /////////////
-///////////// ///////////// /////////////
+  ///////////// ///////////// /////////////
+  /////////// generic section /////////////
+  ///////////// ///////////// /////////////
 
-///////////// both portrait and landscape
-///////md: 992px
-@include respond-below(md) {
-  #{$outer-wrapper} {
-    & {}
+  ///////////// both portrait and landscape
+  ///////md: 992px
+  @include respond-below(md) {
+    #{$outer-wrapper} {
+      & {}
 
-    //sizes here
-    // closed
-    div.calculator {
-      border-radius: 0;
-    }
+      //sizes here
+      // closed
+      div.calculator {
+        border-radius: 0;
+      }
 
-    .settings {}
+      .settings-icon {}
 
-    .sidebar {
-      border-radius: 0;
-    }
+      &#{$open} {
+        .calculator {}
 
-    &#{$open} {
-      .calculator {}
-
-      .settings {}
-
-      .sidebar {}
+        .settings-icon {}
+      }
     }
   }
-}
 
-///////////// ///////////// /////////////
-/////////// portrait section ////////////
-///////////// ///////////// /////////////
+  ///////////// ///////////// /////////////
+  /////////// portrait section ////////////
+  ///////////// ///////////// /////////////
 
-///////////// portrait
-/////// xxxs: 380px
-@include respond-below(xxxs) {
-  #{$outer-wrapper} {
-    p.settings {
-      top: 0;
-      right: -0.25rem;
-
-      .cog {
-        font-size: 1rem;
+  ///////////// portrait
+  /////// xxxs: 380px
+  @include respond-below(xxxs) {
+    #{$outer-wrapper} {
+      p.settings-icon {
+        top: 0;
+        right: -0.25rem;
       }
-    }
 
-    div.calculator {
-      >p.title {}
+      div.calculator {
+        >p.title {}
 
-      div.keyboard {
-        button.btn {
-          min-width: 50px;
-          margin: 5px;
-          font-size: 1.5rem;
+        div.keyboard {
+          button.btn {
+            min-width: 50px;
+            margin: 5px;
+            font-size: 1.5rem;
 
-          &.btn-lg {}
+            &.btn-lg {}
+          }
         }
       }
+
+      &#{$open} {}
     }
 
-    .sidebar {
-      .keyboard {
-        height: 28%;
-
-        p.sidebar-kb-title {
-          font-size: 1rem;
-        }
-
-        p.sidebar-btn-title {
-          font-weight: 300;
-          font-size: 0.8rem;
-          line-height: 1;
-        }
-
-        button {
-          width: 40px;
-          height: 40px;
-        }
-      }
-    }
-
-    &#{$open} {}
+    #{$outer-wrapper} {}
   }
 
-  #{$outer-wrapper} {}
-}
+  @include respond-below(md) {
+    @include orientation(landscape) {}
+  }
 
-@include respond-below(md) {
-  @include orientation(landscape) {}
-}
+  ///////////// portrait
+  /////// xxs: 480px
+  @include respond-below(xxs) {
+    #{$outer-wrapper} {
+      canvas {
+        border-radius: 0
+      }
 
-///////////// portrait
-/////// xxs: 480px
-@include respond-below(xxs) {
-  #{$outer-wrapper} {
-    canvas {
-      border-radius: 0
-    }
+      p.settings-icon {
+        left: 93%;
+      }
 
-    div.calculator {
       .settings {
-        .cog {}
-      }
-
-      >p.title {}
-
-      div.keyboard {
-        .btn {
-          font-size: 1.8rem;
-          height: $btn-main-mob;
-          width: $btn-main-mob;
-          margin: 5px;
+        .settings-keyboard-title {
+          padding: 5px 0 10px;
         }
       }
-    }
 
-    .sidebar {
-      .keyboard {
-        button {
-          border-radius: $btn-main-mob-border-radius;
+      div.calculator {
+
+        >p.title {}
+
+        div.keyboard {
+          .btn {
+            font-size: 1.8rem;
+            height: $btn-settings-mob-xxs;
+            width: $btn-settings-mob-xxs;
+            margin: 5px;
+            min-width: 0;
+          }
         }
       }
+
     }
 
-    &#{$open} {}
   }
 
   #{$outer-wrapper} {}
@@ -261,20 +228,10 @@
 /////// xs: 580px
 @include respond-below(xs) {
   #{$outer-wrapper} {
+    .settings-icon {}
+
     div.calculator {
 
-      // max-width: unset;
-      // width: $ps-1;
-      // position: fixed;
-      // top: 0;
-      // left: 0;
-      // right: 0;
-      // bottom: 0;
-      .settings {
-        .cog {
-          font-size: 1.6rem;
-        }
-      }
 
       >p.title {
         font-size: 2rem;
@@ -292,16 +249,13 @@
       }
     }
 
-    .sidebar {
-      .keyboard {
-        button {}
-      }
+    .display {
+      padding: 10px 0;
     }
 
     &#{$open} {}
   }
 
-  #{$outer-wrapper} {}
 }
 
 ///////////// portrait
@@ -331,33 +285,6 @@
         button {}
       }
     }
-
-    .sidebar {
-      >.title {
-        font-size: 3rem;
-        margin-top: -1.5rem;
-      }
-
-      .keyboard {
-        justify-content: space-around;
-
-        button {
-          padding: 0;
-        }
-      }
-
-      .keyboard-theme-type {
-        .btn-theme-type {}
-      }
-
-      .keyboard-theme {
-        .btn-theme {}
-      }
-
-      .keyboard-animation {}
-
-      .sidebar-keyboard-wrapper {}
-    }
   }
 }
 
@@ -370,6 +297,8 @@
       max-width: unset$i;
     }
 
+    p.settings-icon {}
+
     div.calculator {
       max-width: unset;
       width: $ps-1;
@@ -380,23 +309,12 @@
       bottom: 0;
     }
 
-    .sidebar {
-      width: $ps-1;
-      position: fixed;
-      top: 0;
-      left: $ps-1;
-      right: 0;
-      bottom: 0;
-    }
-
     &#{$open} {
 
       //sizes here
       div.calculator {}
 
-      .sidebar {
-        left: 0;
-      }
+
     }
   }
 }
@@ -424,11 +342,7 @@
         padding: 0;
       }
 
-      .settings {
-        .cog {
-          font-size: 1.5rem;
-        }
-      }
+      .settings-icon {}
 
       div.calculator {
         max-width: none;
@@ -470,26 +384,7 @@
         }
       }
 
-      div.sidebar {
-        height: $ps-1;
 
-        .keyboard {
-          margin: $s-06r 0 0 0;
-          padding-bottom: $s-1r;
-
-          .sidebar_kb_title {
-            line-height: 1;
-          }
-
-          .sidebar_btn_wrapper {
-            p.sidebar_btn_title {
-              line-height: 1;
-            }
-          }
-
-          .btn {}
-        }
-      }
     }
   }
 
@@ -499,13 +394,9 @@
         .keyboard {}
       }
 
-      &#{$animation} {
-        .sidebar {}
-      }
+      &#{$animation} {}
 
-      &#{$picture} {
-        .sidebar {}
-      }
+      &#{$picture} {}
     }
   }
 }
@@ -522,11 +413,7 @@
         padding-right: $s-1r$i;
       }
 
-      .settings {
-        .cog {
-          font-size: 1.5rem;
-        }
-      }
+      .settings-icon {}
 
       div.calculator {
         max-width: none;
@@ -564,15 +451,6 @@
         }
       }
 
-      .sidebar {
-        .keyboard {
-          height: 27%;
-
-          .btn-theme-type {}
-
-          .btn-theme {}
-        }
-      }
     }
   }
 }
@@ -612,13 +490,6 @@
         }
       }
 
-      .sidebar {
-        .keyboard {
-          .btn-theme-type {}
-
-          .btn-theme {}
-        }
-      }
 
       ///////////// landscape
       /////// xs: 580px
@@ -643,10 +514,9 @@
 @include respond-below(xxs) {
   @include orientation(landscape) {
     #{$outer-wrapper} {
+      .settings-icon {}
+
       div.calculator {
-        .settings {
-          .cog {}
-        }
 
         >p.title {}
 
@@ -659,26 +529,6 @@
         }
       }
 
-      div.sidebar {
-        .keyboard {
-          height: 26%;
-
-          p.sidebar-kb-title {
-            font-size: 1.3rem;
-          }
-
-          p.sidebar-btn-title {
-            font-weight: 300;
-            font-size: 1.2rem;
-            line-height: 1;
-          }
-
-          button {
-            width: 40px;
-            height: 40px;
-          }
-        }
-      }
 
       &#{$open} {}
     }
@@ -692,10 +542,9 @@
 @include respond-below(xxxs) {
   @include orientation(landscape) {
     #{$outer-wrapper} {
+      .settings-icon {}
+
       div.calculator {
-        .settings {
-          .cog {}
-        }
 
         >p.title {}
 
@@ -706,26 +555,6 @@
         }
       }
 
-      div.sidebar {
-        .keyboard {
-          height: 26%;
-
-          p.sidebar-kb-title {
-            font-size: 1.3rem;
-          }
-
-          p.sidebar-btn-title {
-            font-weight: 300;
-            font-size: 1rem;
-            line-height: 1;
-          }
-
-          button {
-            width: 40px;
-            height: 40px;
-          }
-        }
-      }
 
       &#{$open} {}
     }

@@ -7,6 +7,7 @@ import Line from "./line";
 const Display = ({ linesData, settingsData }) => {
     const displayClass = "display",
         { isOpen } = settingsData;
+    const size = settingsData.keyboardData.length === 2 ? 316 : 466;
 
     if (!isOpen) {
         let i = 0;
@@ -44,7 +45,7 @@ const Display = ({ linesData, settingsData }) => {
         return (
             <Grid sx={{}} className={displayClass}>
                 <motion.div
-                    animate={{ height: 356, opacity: 1 }}
+                    animate={{ height: size, opacity: 1 }}
                     transition={{ type: "tween", duration: 0.25 }}
                 >
                     <ThemeSettings {...settingsData} />

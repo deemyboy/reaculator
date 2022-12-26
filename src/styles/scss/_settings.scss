@@ -14,13 +14,16 @@
         }
     }
 
+    .settings {
+        flex-direction: column;
+    }
+
     .setting-wrapper {
         text-align: center;
         border: 3px solid;
         padding: 5px;
         margin: 5px;
         border-radius: 10px;
-        // height: 0;
 
         .keyboard {
             display: inline-flex;

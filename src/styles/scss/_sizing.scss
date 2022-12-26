@@ -32,14 +32,14 @@ $ps-10: 10%;
 $btn-main-pc: 3rem;
 $btn-main-tab: 3rem;
 $btn-main-mob: 4rem;
-$btn-sidebar-pc: 3rem;
-$btn-sidebar-tab: 3rem;
-$btn-sidebar-mob: 4rem;
+$btn-settings-pc: 3rem;
+$btn-settings-tab: 3rem;
+$btn-settings-mob-xxs: 3.5rem;
+$btn-settings-mob: 4rem;
 
-$btn-main-pc-border-radius: math.div($btn-main-pc,2);
-$btn-main-tab-border-radius: math.div($btn-main-tab,2);
-$btn-main-mob-border-radius: math.div($btn-main-mob,2);
-$btn-sidebar-pc-border-radius: math.div($btn-sidebar-pc,2);
-$btn-sidebar-tab-border-radius: math.div($btn-sidebar-tab,2);
-$btn-sidebar-mob-border-radius: math.div($btn-sidebar-mob,2);
-
+$btn-main-pc-border-radius: math.div($btn-main-pc, 2);
+$btn-main-tab-border-radius: math.div($btn-main-tab, 2);
+$btn-main-mob-border-radius: math.div($btn-main-mob, 2);
+$btn-settings-pc-border-radius: math.div($btn-settings-pc, 2);
+$btn-settings-tab-border-radius: math.div($btn-settings-tab, 2);
+$btn-settings-mob-border-radius: math.div($btn-settings-mob, 2);
