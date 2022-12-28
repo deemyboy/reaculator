@@ -1,14 +1,17 @@
 // buttons
+.btn {
+  width: 100%;
+  min-width: unset;
+}
+
 .calculator {
   .keyboard {
     .main-btn-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: max(17%, 70px);
 
-      .btn {
-        //
-      }
 
       p.btn-subtitle {
         position: relative;
@@ -368,52 +371,30 @@
     }
   }
 
-  .sidebar {
+  .settings {
     .keyboard {
       .btn {}
 
-      &.keyboard-theme-type {
-        .btn {}
+      &.keyboard-theme-type {}
+    }
+
+    .settings-btn-wrapper {
+      display: flex;
+      width: max(17%, 70px);
+      border: 1px dashed red;
+      flex-direction: column;
+
+      p {
+        justify-content: flex-end;
+        display: inline;
       }
-    }
-  }
-}
 
-#{$color} {
-
-  // sizes
-  .sidebar {
-    .keyboard {
-      .btn-theme-type:nth-of-type(2) {}
-    }
-  }
-
-  // colors
-  @include themify($themes) {
-    .sidebar {
-      .keyboard {
-        .btn-theme-type:nth-of-type(2) {
-          border: 2px solid themed(keyboardBorderColor);
-        }
+      .btn {
+        display: inline;
+        margin: 0;
+        // justify-content: flex-end;
+        align-items: baseline;
       }
-    }
-  }
-}
-
-.sidebar {
-  .keyboard {
-    .btn {
-      align-items: center;
-      justify-content: space-evenly;
-      font-size: 1.5rem;
-      margin: 0;
-      padding: 0;
-      // opacity: 0;
-      // position: absolute;
-      // border-radius: 3rem;
-      @include transition(all 0.25s);
-      // max-width: 2rem;
-      // min-width: 3rem;
     }
   }
 }

@@ -5,7 +5,7 @@
         box-shadow: inset -2px -2px 3px 1px #96a292;
         clear: both;
         font-family: Orbitron, sans-serif;
-        margin: 10px 5px;
+        margin: 10px;
         padding: 10px 5px;
         display: flex;
         text-align: right;
@@ -19,22 +19,17 @@
         }
 
         .calculation {
-            font-size: 2rem;
-            min-height: 3rem;
-        }
-
-        .calculation-error {
-            @extend .calculation;
-            color: red;
+            min-height: 8vh;
+            font-size: clamp(2rem, 3vw, 4rem);
         }
 
         .result {
-            font-size: 3rem;
-            min-height: 4rem;
+            min-height: 8vh;
+            font-size: clamp(3rem, 4vw, 5rem);
         }
 
+        .calculation-error,
         .result-error {
-            @extend .result;
             color: red;
         }
 

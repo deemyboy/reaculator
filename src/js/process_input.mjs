@@ -2,7 +2,7 @@ import { patternStack } from "./constants.js";
 import { unicodify, deunicodify } from "./maths_engine.mjs";
 
 export const processInput = (input) => {
-    console.log("processInput", input);
+    // console.log("processInput", input);
     for (const key in patternStack) {
         var _input = getPatternOperation(patternStack[key], key, input);
         if (_input || _input === "") {

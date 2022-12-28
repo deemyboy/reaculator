@@ -209,10 +209,10 @@
         div.keyboard {
           .btn {
             font-size: 1.8rem;
-            height: $btn-settings-mob-xxs;
-            width: $btn-settings-mob-xxs;
-            margin: 5px;
-            min-width: 0;
+            // height: $btn-settings-mob-xxs;
+            // width: $btn-settings-mob-xxs;
+            // margin: 5px;
+            // min-width: 0;
           }
         }
       }
@@ -241,16 +241,15 @@
 
       .keyboard {
         .btn {
-          height: $btn-main-mob;
-          width: $btn-main-mob;
-          margin: 8px;
+          //   height: $btn-main-mob;
+          //   width: $btn-main-mob;
           font-size: 2rem;
         }
       }
     }
 
     .display {
-      padding: 10px 0;
+      padding: 0;
     }
 
     &#{$open} {}
@@ -307,7 +306,14 @@
       left: 0;
       right: 0;
       bottom: 0;
+      border-radius: 0;
     }
+
+    .main-keyboards {
+      .main-btn-wrapper {}
+
+    }
+
 
     &#{$open} {
 
@@ -352,6 +358,7 @@
         left: 0;
         right: 0;
         border: 0;
+        border-radius: 0;
 
         p.title {
           font-size: 2rem;
@@ -365,21 +372,16 @@
           padding: 5px;
 
           .calculation {
-            font-size: 2rem;
             min-height: 2rem;
           }
 
           .result,
-          .result-error {
-            font-size: 2rem;
-          }
+          .result-error {}
         }
 
         .keyboard {
           .btn {
-            margin: 5px 2rem 0;
-            height: 2.6rem;
-            width: 5rem;
+            margin: 5px;
           }
         }
       }

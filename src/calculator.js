@@ -614,7 +614,7 @@ const Calculator = () => {
     };
 
     function makeCalculationData() {
-        console.log("makeCalculationData");
+        // console.log("makeCalculationData");
         const {
             userInput,
             resultValue,
