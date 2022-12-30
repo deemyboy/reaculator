@@ -1,20 +1,33 @@
-#{$outer-wrapper} {
-    .settings-icon {
-        @include transition(all 0.25s);
-        position: fixed;
-        top: 10px;
-        right: 25px;
-        transform: scale(2.5) rotate(0deg);
-        transform-origin: 50% 45%;
-        z-index: 20;
+.settings-icon {
+    @include transition(all 0.25s);
+    position: fixed;
+    top: 10px;
+    right: 25px;
+    transform: rotate(0deg);
+    transform-origin: 50% 45%;
+    z-index: 20;
 
-        &.open {
-            transform: scale(2) rotate(90deg);
-        }
+    svg {
+        height: clamp(2rem, 4vw, 4rem);
+
+        width: clamp(2rem, 4vw, 4rem);
     }
 
-    .settings {
-        flex-direction: column;
+    &.open {
+        transform: rotate(90deg);
+    }
+}
+
+.settings {
+    justify-content: space-around;
+    align-items: center;
+    margin: -10px 0 0 0;
+
+    .keyboard {
+        display: flex;
+        font-family: Orbitron, sans-serif;
+
+        .btn {}
     }
 
     .setting-wrapper {
@@ -22,38 +35,25 @@
         border: 3px solid;
         padding: 5px;
         border-radius: 10px;
-        margin-top: 10px;
         flex-basis: 10%;
+        margin: 10px 0 0 0;
 
-        &:nth-child(1) {
-            // margin-bottom: 10px;
-        }
 
-        &:nth-child(2),
-        &:nth-child(3) {
-            margin-bottom: 10px;
-        }
 
-        &:nth-child(3) {
-            margin-top: 0;
-        }
+        .settings-btn-wrapper {
+            display: flex;
+            border: 1px dashed red;
+            flex-direction: column;
 
-        .keyboard {
-            display: inline-flex;
-            font-family: Orbitron, sans-serif;
+            p {}
 
-            .settings-btn-wrapper {}
-        }
-
-        button {
-            border: none;
+            .btn {
+                // display: inline;
+                // // justify-content: flex-end;
+                // align-items: baseline;
+                width: max(150px, 10rem);
+            }
         }
     }
 
-    // open
-    &#{$open} {
-        .settings-icon {
-            // 
-        }
-    }
 }

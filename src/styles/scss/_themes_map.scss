@@ -285,35 +285,17 @@ $themes: (
     .title {
       color: themed(textColor);
     }
-
-    .display {
-      background-color: #abbaa7;
-      color: #2f2f2f;
-      border-color: #6d6d6d;
-
-      .setting-wrapper {
-        border-color: themed(borderColor);
-      }
-    }
   }
 
-  .sidebar {
-    background-color: themed(backgroundColor);
+  .display {
+    background-color: #abbaa7;
+    color: #2f2f2f;
+    border-color: #6d6d6d;
 
-    .keyboard {
-      border-color: themed(borderColor);
+  }
 
-      p.sidebar-kb-title,
-      button,
-      p.sidebar-btn-title {
-        color: darken(themed(calculatorTitleTextColor), 12%);
-      }
-
-      .btn {
-        border: 2px solid transparentize(themed(keyboardBorderColor), .2);
-        background-color: transparentize(themed(primaryButtonBgColor), .2);
-      }
-    }
+  .setting-wrapper {
+    border-color: themed(borderColor);
   }
 }
 
@@ -358,19 +340,6 @@ $themes: (
   &#{$animation} {
     .calculator {
       border-color: black;
-    }
-
-    .sidebar {
-      .keyboard {
-        background-color: transparentize(lighten(themed(keyboardBackground), 0%),
-            1);
-      }
-    }
-  }
-
-  &#{$open} {
-    .sidebar {
-      background-color: transparentize(themed(backgroundColor), .2);
     }
   }
 }

@@ -97,14 +97,16 @@ const Display = ({ linesData, settingsData }) => {
         );
     } else {
         return (
-            <Grid sx={{}} className={displayClass}>
+            <Grid
+                sx={{
+                    flexDirection: "column",
+                    flexBasis: "content",
+                }}
+                className={displayClass}
+            >
                 <motion.div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        flexBasis: "content",
-                    }}
-                    animate={{ height: displayHeight, opacity: 1 }}
+                    style={{}}
+                    animate={{ opacity: 1 }}
                     transition={{ type: "tween", duration: 0.25 }}
                 >
                     <ThemeSettings {...settingsData} />

@@ -19,13 +19,13 @@
         }
 
         .calculation {
-            min-height: 8vh;
-            font-size: clamp(2rem, 3vw, 4rem);
+            font-size: clamp(1.5rem, 4vw, 4rem);
+            min-height: 2rem;
         }
 
         .result {
-            min-height: 8vh;
-            font-size: clamp(3rem, 4vw, 5rem);
+            min-height: 3rem;
+            font-size: clamp(2.5rem, 6vw, 5rem);
         }
 
         .calculation-error,

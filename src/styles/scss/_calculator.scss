@@ -18,7 +18,7 @@
     padding-bottom: calc(var(--bs-gutter-x) * 0.5);
 
     .title {
-      font-size: 3rem;
+      font-size: clamp(2rem, 4vw, 3rem);
       line-height: 3rem;
       font-weight: 100;
       margin: 10px 20px;

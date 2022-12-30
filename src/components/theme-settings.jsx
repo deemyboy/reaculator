@@ -44,8 +44,8 @@ const ThemeSettings = ({ keyboardData: content }) => {
         return (
             <motion.div
                 className="setting-wrapper"
-                initial={{ y: -500, opacity: 0.25 }}
-                animate={{ height: 130, opacity: 1, y: 0 }}
+                initial={{ y: -500, opacity: 0.25, height: 0 }}
+                animate={{ height: "auto", opacity: 1, y: 0 }}
                 transition={{
                     type: "spring",
                     duration: 0.5,
@@ -61,13 +61,7 @@ const ThemeSettings = ({ keyboardData: content }) => {
     };
 
     return (
-        <Grid
-            container
-            className={className}
-            meta-name="settings"
-            justifyContent="space-around"
-            alignItems={"center"}
-        >
+        <Grid container className={className} meta-name="settings">
             {content.map((keyboard, index) => {
                 return <Setting key={index} {...keyboard} />;
             })}

@@ -1,51 +1,39 @@
 // buttons
-.btn {
-  width: 100%;
-  min-width: unset;
-}
-
 .calculator {
   .keyboard {
+    .btn {
+      aspect-ratio: 1/1;
+      padding: 0;
+      width: clamp(3.5rem, 8vw, 10rem);
+      min-width: unset;
+      font-size: clamp(1.5rem, 4vw, 4rem);
+    }
+
     .main-btn-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: max(17%, 70px);
 
+      .btn {
+        margin: 5px;
+        align-items: center;
+        justify-content: center;
+        @include transition(all 0.25s);
+      }
 
       p.btn-subtitle {
         position: relative;
-        top: -2rem;
+        top: -5.1vh;
         height: 0;
+        font-size: clamp(1rem, 1.5vw, 2rem);
       }
     }
 
-    .btn-lg {
-      font-size: 2rem;
-      line-height: 0;
-    }
-
-    .btn {
-      margin: 10px;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      @include transition(all 0.25s);
-      // width: 10%;
-      padding: 0;
-
-      &:before {
-        content: "";
-        // float: left;
-        display: block;
-        padding-top: $ps-1;
-        /* initial ratio of 1:1*/
-      }
-    }
+    .btn-lg {}
   }
 }
 
-.sidebar {
+.settings {
   .keyboard-theme {
     .btn-theme {}
 
@@ -371,30 +359,4 @@
     }
   }
 
-  .settings {
-    .keyboard {
-      .btn {}
-
-      &.keyboard-theme-type {}
-    }
-
-    .settings-btn-wrapper {
-      display: flex;
-      width: max(17%, 70px);
-      border: 1px dashed red;
-      flex-direction: column;
-
-      p {
-        justify-content: flex-end;
-        display: inline;
-      }
-
-      .btn {
-        display: inline;
-        margin: 0;
-        // justify-content: flex-end;
-        align-items: baseline;
-      }
-    }
-  }
 }

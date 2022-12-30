@@ -10,13 +10,8 @@ $outer-wrapper: "#calculator > .container";
 $i: #{"!"}important;
 
 $grid-breakpoints: (
-  xxxxs: 0,
-  xxxs: 380px,
-  xxs: 480px,
-  xs: 580px,
+  xs: 480px,
   sm: 767px,
   md: 992px,
   lg: 1200px,
-  xl: 1400px,
-  xxl: 1600px,
 );

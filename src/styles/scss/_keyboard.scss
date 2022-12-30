@@ -2,7 +2,7 @@
   .main-keyboards {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    // justify-content: space-between;
+    justify-items: center;
     opacity: 1;
     transition: all .25s ease;
 
@@ -15,9 +15,9 @@
     }
 
     &.hidden {
-      opacity: 0;
-      height: 0;
-      display: none;
+      // opacity: 0;
+      // height: 0;
+      // display: none;
 
       .keyboard {}
     }
