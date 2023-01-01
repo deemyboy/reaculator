@@ -1,7 +1,8 @@
 .calculator {
   .main-keyboards {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
     opacity: 1;
     transition: all .25s ease;
 
@@ -9,15 +10,26 @@
       display: flex;
       justify-content: space-evenly;
       flex-wrap: wrap;
-      width: 100%;
+      max-width: 100%;
+
     }
 
     &.hidden {
-      opacity: 0;
-      height: 0;
-      display: none;
+      // opacity: 0;
+      // height: 0;
+      // display: none;
 
       .keyboard {}
+    }
+  }
+
+  .setting-wrapper {
+
+    .keyboard {
+      display: flex;
+      justify-content: center;
+
+      .btn {}
     }
   }
 }

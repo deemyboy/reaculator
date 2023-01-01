@@ -1,48 +1,58 @@
-#{$outer-wrapper} {
-    .settings-icon {
-        @include transition(all 0.25s);
-        z-index: 3;
-        position: relative;
-        position: absolute;
-        top: 0rem;
-        left: 95%;
-        transform: scale(1.2) rotate(0deg);
-        transform-origin: 50% 45%;
+.settings-icon {
+    @include transition(all 0.25s);
+    position: fixed;
+    top: 10px;
+    right: 25px;
+    transform: rotate(0deg);
+    transform-origin: 50% 45%;
+    z-index: 20;
 
-        &.open {
-            transform: scale(1.6) rotate(90deg);
-        }
+    svg {
+        height: clamp(2rem, 4vw, 4rem);
+        width: clamp(2rem, 4vw, 4rem);
     }
 
-    .settings {
-        flex-direction: column;
+    &.open {
+        transform: rotate(90deg);
+    }
+}
+
+.settings {
+    justify-content: space-around;
+    align-items: center;
+    margin: -10px 0 0 0;
+    flex-direction: column;
+
+    .keyboard {
+        .btn {}
     }
 
     .setting-wrapper {
+        justify-content: space-around;
+        display: flex;
+        flex-direction: row;
         text-align: center;
         border: 3px solid;
         padding: 5px;
-        margin: 5px;
         border-radius: 10px;
+        margin: 10px 0 0 0;
+        flex-wrap: wrap;
+        border: 0;
 
-        .keyboard {
-            display: inline-flex;
-            font-family: Orbitron, sans-serif;
+        p:first-child {
+            flex: 1 1 100%;
+        }
 
-            .settings-btn-wrapper {
-                display: inline-block;
+        .settings-btn-wrapper {
+            display: flex;
+            flex-direction: column;
+
+            p {}
+
+            .btn {
+                width: clamp(4rem, 10vw, 6rem);
             }
         }
-
-        button {
-            border: none;
-        }
     }
 
-    // open
-    &#{$open} {
-        .settings-icon {
-            // 
-        }
-    }
 }

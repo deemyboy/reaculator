@@ -1,48 +1,53 @@
 // buttons
 .calculator {
   .keyboard {
+    .btn {
+      aspect-ratio: 1/1;
+      padding: 0;
+      // width: clamp(3.5rem, 8vw, 10rem);
+      width: clamp(5rem, 11vw, 10rem);
+      min-width: unset;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+    }
+
     .main-btn-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
 
       .btn {
-        //
+        margin: 5px;
+        align-items: center;
+        justify-content: center;
+        @include transition(all 0.25s);
       }
 
       p.btn-subtitle {
         position: relative;
-        top: -2rem;
+        top: -42px;
         height: 0;
+        font-size: clamp(1.1rem, 1.5vw, 2rem);
       }
     }
 
-    .btn-lg {
-      font-size: 2rem;
-      line-height: 0;
-    }
-
-    .btn {
-      margin: 10px;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      @include transition(all 0.25s);
-      // width: 10%;
-      padding: 0;
-
-      &:before {
-        content: "";
-        // float: left;
-        display: block;
-        padding-top: $ps-1;
-        /* initial ratio of 1:1*/
-      }
-    }
+    .btn-lg {}
   }
 }
 
-.sidebar {
+.settings {
+  .settings-btn-title {
+    font-family: unset;
+  }
+
+  .setting-wrapper {
+
+    .keyboard {
+      .btn {
+        aspect-ratio: unset;
+      }
+    }
+  }
+
   .keyboard-theme {
     .btn-theme {}
 
@@ -368,52 +373,4 @@
     }
   }
 
-  .sidebar {
-    .keyboard {
-      .btn {}
-
-      &.keyboard-theme-type {
-        .btn {}
-      }
-    }
-  }
-}
-
-#{$color} {
-
-  // sizes
-  .sidebar {
-    .keyboard {
-      .btn-theme-type:nth-of-type(2) {}
-    }
-  }
-
-  // colors
-  @include themify($themes) {
-    .sidebar {
-      .keyboard {
-        .btn-theme-type:nth-of-type(2) {
-          border: 2px solid themed(keyboardBorderColor);
-        }
-      }
-    }
-  }
-}
-
-.sidebar {
-  .keyboard {
-    .btn {
-      align-items: center;
-      justify-content: space-evenly;
-      font-size: 1.5rem;
-      margin: 0;
-      padding: 0;
-      // opacity: 0;
-      // position: absolute;
-      // border-radius: 3rem;
-      @include transition(all 0.25s);
-      // max-width: 2rem;
-      // min-width: 3rem;
-    }
-  }
 }

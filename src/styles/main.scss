@@ -5,6 +5,7 @@ $theme-map: null;
 "./scss/_calculator", "./scss/_keyboard", "./scss/_sidebar",
 "./scss/_settings", "./scss/_canvas", "./scss/_dev", "./scss/_anims";
 
-.ReactCollapse--collapse {
-  transition: height 250ms;
+body {
+  margin: 0;
+  padding: 0;
 }

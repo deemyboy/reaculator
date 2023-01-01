@@ -5,11 +5,11 @@
         box-shadow: inset -2px -2px 3px 1px #96a292;
         clear: both;
         font-family: Orbitron, sans-serif;
-        margin: 10px 5px;
         padding: 10px 5px;
         display: flex;
         text-align: right;
         flex-direction: column;
+        min-width: 100%;
 
         .calculation,
         .result {
@@ -19,22 +19,17 @@
         }
 
         .calculation {
-            font-size: 2rem;
-            min-height: 3rem;
-        }
-
-        .calculation-error {
-            @extend .calculation;
-            color: red;
+            font-size: clamp(1.5rem, 4vw, 4rem);
+            min-height: 2rem;
         }
 
         .result {
-            font-size: 3rem;
-            min-height: 4rem;
+            min-height: 3rem;
+            font-size: clamp(2.5rem, 6vw, 5rem);
         }
 
+        .calculation-error,
         .result-error {
-            @extend .result;
             color: red;
         }
 

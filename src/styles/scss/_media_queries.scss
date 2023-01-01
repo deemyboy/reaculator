@@ -2,15 +2,10 @@
 
 /* A map of breakpoints.
   $breakpoints: (
-  xxxxs: 0,
-  xxxs: 380px,
-  xxs: 480px,
-  xs: 580px,
+  xs: 480px,
   sm: 767px,
   md: 992px,
   lg: 1200px,
-  xl: 1400px,
-  xxl: 1600px,
   );
 */
 @mixin respond-above($bp) {
@@ -98,162 +93,42 @@
 }
 
 ///////////// ///////////// /////////////
-/////////// basic structure  ////////////
+/////////// portrait section ////////////
 ///////////// ///////////// /////////////
-/////// xs: 580px
-/////// open
-@include respond-below(xs) {
-  #{$outer-wrapper} {
-    & {}
-
-    //sizes here
-    // closed
-    .settings-icon {}
-
-    .calculator {}
-
-    &#{$open} {
-      .settings-icon {}
-
-      .calculator {}
-
-
-    }
-  }
-
-  ///////////// ///////////// /////////////
-  /////////// generic section /////////////
-  ///////////// ///////////// /////////////
-
-  ///////////// both portrait and landscape
-  ///////md: 992px
-  @include respond-below(md) {
-    #{$outer-wrapper} {
-      & {}
-
-      //sizes here
-      // closed
-      div.calculator {
-        border-radius: 0;
-      }
-
-      .settings-icon {}
-
-      &#{$open} {
-        .calculator {}
-
-        .settings-icon {}
-      }
-    }
-  }
-
-  ///////////// ///////////// /////////////
-  /////////// portrait section ////////////
-  ///////////// ///////////// /////////////
-
-  ///////////// portrait
-  /////// xxxs: 380px
-  @include respond-below(xxxs) {
-    #{$outer-wrapper} {
-      p.settings-icon {
-        top: 0;
-        right: -0.25rem;
-      }
-
-      div.calculator {
-        >p.title {}
-
-        div.keyboard {
-          button.btn {
-            min-width: 50px;
-            margin: 5px;
-            font-size: 1.5rem;
-
-            &.btn-lg {}
-          }
-        }
-      }
-
-      &#{$open} {}
-    }
-
-    #{$outer-wrapper} {}
-  }
-
-  @include respond-below(md) {
-    @include orientation(landscape) {}
-  }
-
-  ///////////// portrait
-  /////// xxs: 480px
-  @include respond-below(xxs) {
-    #{$outer-wrapper} {
-      canvas {
-        border-radius: 0
-      }
-
-      p.settings-icon {
-        left: 93%;
-      }
-
-      .settings {
-        .settings-keyboard-title {
-          padding: 5px 0 10px;
-        }
-      }
-
-      div.calculator {
-
-        >p.title {}
-
-        div.keyboard {
-          .btn {
-            font-size: 1.8rem;
-            height: $btn-settings-mob-xxs;
-            width: $btn-settings-mob-xxs;
-            margin: 5px;
-            min-width: 0;
-          }
-        }
-      }
-
-    }
-
-  }
-
-  #{$outer-wrapper} {}
-}
 
 ///////////// portrait
-/////// xs: 580px
+/////// xs: 480px
 @include respond-below(xs) {
   #{$outer-wrapper} {
-    .settings-icon {}
+    .settings-icon {
+      transform: scale(1.5);
+    }
 
     div.calculator {
-
-
-      >p.title {
-        font-size: 2rem;
-        line-height: 1rem;
-        margin: 15px 5px;
-      }
+      >p.title {}
 
       .keyboard {
-        .btn {
-          height: $btn-main-mob;
-          width: $btn-main-mob;
-          margin: 8px;
-          font-size: 2rem;
-        }
+        .btn {}
       }
+
+    }
+
+    .main-btn-wrapper {
+      p.btn-subtitle {}
     }
 
     .display {
-      padding: 10px 0;
+
+      .calculation {}
+
+      .result {}
+
+
+      .calculation-error,
+      .result-error {}
+
     }
 
-    &#{$open} {}
   }
 
 }
@@ -270,21 +145,31 @@
     div.calculator {
       >.title {}
 
-      .display {
-        .calculation {}
-
-        .result,
-        .result-error {}
-
-        p {}
+      .keyboard {
+        .btn {}
       }
 
-      .keyboard {
-        justify-content: space-evenly;
+    }
 
-        button {}
+    .main-keyboards {
+      .main-btn-wrapper {
+        p.btn-subtitle {
+          top: -30px;
+        }
       }
     }
+
+    .display {
+
+      .calculation {}
+
+      .result {}
+
+      .result,
+      .result-error {}
+
+    }
+
   }
 }
 
@@ -293,29 +178,71 @@
 /////// open
 @include respond-below(md) {
   #{$outer-wrapper} {
-    & {
-      max-width: unset$i;
-    }
+    & {}
 
     p.settings-icon {}
 
     div.calculator {
-      max-width: unset;
-      width: $ps-1;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      >.title {}
+
+      .keyboard {
+        .btn {}
+      }
     }
 
-    &#{$open} {
-
-      //sizes here
-      div.calculator {}
-
-
+    .main-keyboards {
+      .main-btn-wrapper {
+        .btn-subtitle {
+          top: -35px;
+        }
+      }
     }
+
+    .display {
+
+      .calculation {}
+
+      .result {}
+
+      .calculation-error,
+      .result-error {}
+    }
+
+  }
+}
+
+///////////// portrait
+/////// lg: 1200px
+/////// open
+@include respond-below(lg) {
+  #{$outer-wrapper} {
+    & {}
+
+    p.settings-icon {}
+
+    div.calculator {
+
+      .keyboard {
+        .btn {}
+      }
+    }
+
+    .main-keyboards {
+      .main-btn-wrapper {
+        .btn-subtitle {}
+      }
+    }
+
+    .display {
+
+      .calculation {}
+
+      .result {}
+
+      .calculation-error,
+      .result-error {}
+    }
+
   }
 }
 
@@ -323,80 +250,32 @@
 /////////// landscape section ///////////
 ///////////// ///////////// /////////////
 
+
 ///////////// landscape
-///////md: 992px
-
-@include respond-below(md) {
+/////// xs: 480px
+@include respond-below(xs) {
   @include orientation(landscape) {
-    :root {
-      font-size: 12px;
-    }
-
-    body {
-      margin: 0;
-    }
-
     #{$outer-wrapper} {
-      & {
-        margin: 0;
-        padding: 0;
-      }
-
       .settings-icon {}
 
       div.calculator {
-        max-width: none;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        border: 0;
 
-        p.title {
-          font-size: 2rem;
-          line-height: 1rem;
-          margin: 13px 13px 5px;
-          font-weight: 100;
-        }
-
-        .display {
-          margin: 8px 6px 5px;
-          padding: 5px;
-
-          .calculation {
-            font-size: 2rem;
-            min-height: 2rem;
-          }
-
-          .result,
-          .result-error {
-            font-size: 2rem;
-          }
-        }
+        .title {}
 
         .keyboard {
-          .btn {
-            margin: 5px 2rem 0;
-            height: 2.6rem;
-            width: 5rem;
-          }
+          .btn {}
         }
       }
 
+      .display {
 
-    }
-  }
+        .calculation {}
 
-  #{$outer-wrapper} {
-    &#{$open} {
-      div.calculator {
-        .keyboard {}
+        .result {}
+
+        .calculation-error,
+        .result-error {}
       }
-
-      &#{$animation} {}
-
-      &#{$picture} {}
     }
   }
 }
@@ -406,181 +285,128 @@
 @include respond-below(sm) {
   @include orientation(landscape) {
     #{$outer-wrapper} {
-      & {
-        width: $ps-1;
-        margin-top: 0;
-        padding-left: $s-1r$i;
-        padding-right: $s-1r$i;
-      }
+      & {}
 
       .settings-icon {}
 
       div.calculator {
-        max-width: none;
 
-        p.title {
-          font-size: 2rem;
-          line-height: 1rem;
-          margin: 13px 13px 5px;
-          font-weight: 100;
+        p.title {}
+
+        .keyboard {
+          .btn {}
         }
+      }
 
-        .display {
-          margin: 14px 13px 10px;
-          padding: 0px 5px;
+      .display {
 
-          .calculation {
-            font-size: 2rem;
-            min-height: 3rem;
-          }
+        .calculation {}
 
-          .result,
-          .result-error {
-            font-size: 3rem;
-          }
+        .result,
+        .result-error {}
+
+        .keyboard {
+          .btn {}
         }
+      }
+
+    }
+  }
+}
+
+///////////// landscape
+///////md: 992px
+/// iphone landscape
+
+@include respond-below(md) {
+  @include orientation(landscape) {
+    :root {}
+
+    body {}
+
+    #{$outer-wrapper} {
+      & {}
+
+      .settings-icon {}
+
+      div.calculator {
+
+        p.title {}
 
         .keyboard {
           .btn {
-            min-width: 0;
-            margin: 5px;
-            height: 3rem;
-            width: 3rem;
-            font-size: 1.5rem;
+            min-width: unset;
+            width: clamp(3.6rem, 8vh, 10rem);
+            font-size: clamp(2rem, 3vw, 4rem);
           }
         }
+
+        .main-keyboards .keyboard {
+          max-width: 80%;
+        }
+
+        .main-btn-wrapper {
+          p.btn-subtitle {}
+        }
       }
+
+      .display {
+
+        .calculation {
+          font-size: clamp(1.2rem, 2.4vw, 4rem);
+          min-height: 1.6rem;
+        }
+
+        .result {
+          min-height: 2rem;
+          font-size: clamp(2rem, 4vw, 5rem);
+        }
+
+        .result-error,
+        .calculation-error {}
+
+        .keyboard {
+          .btn {}
+        }
+      }
+
 
     }
   }
+
 }
 
 ///////////// landscape
-/////// xs: 580px
-@include respond-below(xs) {
+///////lg: 1200px
+
+@include respond-below(lg) {
   @include orientation(landscape) {
+    :root {}
+
+    body {}
+
     #{$outer-wrapper} {
-      & {
-        width: $ps-1;
-        margin-top: $s-05r$i;
-        padding-left: $s-1r$i;
-        padding-right: $s-1r$i;
-      }
+      & {}
 
-      .calculator {
-        .title {
-          font-size: 2rem;
-          line-height: 1rem;
-          margin: 13px 13px 0;
-        }
-
-        .display {
-          margin: 14px 13px 10px;
-          padding: 0px 5px;
-
-          .calculation {
-            font-size: 1.3rem;
-            min-height: 2rem;
-          }
-
-          .result,
-          .result-error {
-            font-size: 1.8rem;
-          }
-        }
-      }
-
-
-      ///////////// landscape
-      /////// xs: 580px
-      /////// open
-      &#{$open} {
-        .calculator {}
-      }
-    }
-  }
-}
-
-///////////// landscape
-/////// xs: 580px
-@include respond-below(xs) {
-  @include orientation(landscape) {
-    #{$outer-wrapper} {}
-  }
-}
-
-///////////// landscape
-/////// xxs: 480px
-@include respond-below(xxs) {
-  @include orientation(landscape) {
-    #{$outer-wrapper} {
       .settings-icon {}
 
       div.calculator {
 
-        >p.title {}
+        p.title {}
 
-        div.keyboard {
-          .btn {
-            // min-width: inherit;
-            margin: 5px;
-            font-size: 1.8rem;
-          }
-        }
       }
 
+      .display {
 
-      &#{$open} {}
-    }
+        .calculation {}
 
-    #{$outer-wrapper} {}
-  }
-}
+        .result,
+        .result-error {}
 
-///////////// landscape
-/////// xxxs: 380px
-@include respond-below(xxxs) {
-  @include orientation(landscape) {
-    #{$outer-wrapper} {
-      .settings-icon {}
-
-      div.calculator {
-
-        >p.title {}
-
-        div.keyboard {
-          button.btn {
-            &.btn-lg {}
-          }
+        .keyboard {
+          .btn {}
         }
       }
-
-
-      &#{$open} {}
     }
-
-    #{$outer-wrapper} {}
   }
-}
-
-
-/* ============================================== */
-/* Smaller devices                                */
-/* Android Landscape                      320x240 */
-/* ============================================== */
-@media screen and (min-width: 240px) and (max-width: 320px) {
-
-  /* ADD YOUR CSS ADJUSTMENTS BELOW HERE */
-  :root {
-    font-size: 4px;
-  }
-}
-
-/* ============================================== */
-/* Smaller devices                                */
-/* Android Portrait                       240x320 */
-/* ============================================== */
-@media screen and (max-width: 240px) {
-  /* ADD YOUR CSS ADJUSTMENTS BELOW HERE */
-  //
 }
