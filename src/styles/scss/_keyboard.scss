@@ -22,4 +22,14 @@
       .keyboard {}
     }
   }
+
+  .setting-wrapper {
+
+    .keyboard {
+      display: flex;
+      justify-content: center;
+
+      .btn {}
+    }
+  }
 }

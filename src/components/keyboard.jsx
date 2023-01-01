@@ -4,34 +4,46 @@ import Typography from "@mui/material/Typography";
 
 import Key from "./key";
 
-const Keyboard = ({ props, selected, errorState }) => {
-    const { title, className, keys } = props;
-    const { xs } = props || "";
-    const { md } = props || "";
-    const { lg } = props || "";
-    const { showTitle } = props || "";
-
-    let _title;
-
-    if (showTitle) {
-        _title = <Typography className="settings-kb-title">{title}</Typography>;
-    } else {
-        _title = "";
-    }
-
+const Keyboard = ({
+    className,
+    errorState,
+    id,
+    keys,
+    location,
+    name,
+    showTitle,
+    selected,
+}) => {
+    const keyboardClassName =
+        location === "display" ? "settings-keyboard-title" : "";
+    const _title = showTitle ? (
+        <Typography className={keyboardClassName}>
+            {name.toUpperCase()}
+        </Typography>
+    ) : (
+        ""
+    );
     return (
-        <Grid
-            item={true}
-            xs={xs}
-            md={md}
-            lg={lg}
-            className={`keyboard ${className}`}
-        >
+        <React.Fragment>
             {_title}
-            {keys.map((ky) => {
-                return <Key key={ky.id} _key={ky} errorState={errorState} />;
-            })}
-        </Grid>
+            <Grid item={true} className={`keyboard ${className}`}>
+                {keys.map((ky) => {
+                    Object.keys(selected).forEach((key) => {
+                        console.log(
+                            ky.value === selected[key],
+                            ky.value,
+                            selected[key]
+                        );
+                        if (ky.value === selected[key]) {
+                            ky.selected = true;
+                        } else ky.selected = false;
+                    });
+                    return (
+                        <Key key={ky.id} _key={ky} errorState={errorState} />
+                    );
+                })}
+            </Grid>
+        </React.Fragment>
     );
 };
 export default Keyboard;

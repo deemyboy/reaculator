@@ -12,10 +12,25 @@ const Key = (props) => {
     const setKeyClasses = (keyObj) => {
         let classNames = keyObj.className;
 
-        const selected = keyObj.selected ? "selected" : "";
-
-        if (selected) {
-            classNames += " " + selected;
+        if (keyObj.selected) {
+            classNames += " selected";
+        } else {
+            // console.log(classNames);
+            // console.log(
+            //     keyObj.className.includes("selected"),
+            //     keyObj.className
+            // );
+            if (document.getElementById(keyObj.id)) {
+                // console.log(document.getElementById(keyObj.id).classList);
+            }
+            if (keyObj.className.includes("selected")) {
+                // console.log(
+                //     keyObj.value === selected[key],
+                //     keyObj.value,
+                //     selected[key]
+                // );
+                // keyObj.className = keyObj.className.replace("selected", "");
+            }
         }
         if (props.errorState) {
             if (keyObj.value !== "a") {
@@ -36,12 +51,7 @@ const Key = (props) => {
 
     if (showTitle) {
         _title = (
-            <Typography
-                sx={{ fontFamily: "Orbitron, sans-serif;" }}
-                className="settings-btn-title"
-            >
-                {title}
-            </Typography>
+            <Typography className="settings-btn-title">{title}</Typography>
         );
     } else {
         _title = "";

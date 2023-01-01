@@ -22,10 +22,10 @@ import { HandleClickContextProvider } from "./js/context";
 const Calculator = () => {
     const [cookies, setCookie] = useCookies([
         "theme",
-        "theme-type",
+        "themeType",
         "animation",
         "picture",
-        "picture-type",
+        "pictureType",
     ]);
 
     // const [cookies, setCookie] = useState({
@@ -100,12 +100,56 @@ const Calculator = () => {
         }
     }, []);
 
-    const defaultTheme = "Ocean";
+    const defaultTheme = "ocean";
     const defaultThemeType = "color";
 
     const [theme, setTheme] = useState(defaultTheme);
 
     const [themeType, setThemeType] = useState(defaultThemeType);
+
+    const [animation, setAnimation] = useState("fireworks");
+
+    const [pictureType, setPictureType] = useState("still");
+
+    const [selected, setSelected] = useState({
+        theme: theme,
+        themeType: themeType,
+        animation: animation,
+        pictureType: pictureType,
+    });
+
+    useEffect(() => {
+        const dependencies = [theme, themeType, animation, pictureType];
+        const propertyValueToKeyMapper = {
+            color: "themeType",
+            picture: "themeType",
+            animation: "themeType",
+            fire: "theme",
+            midnight: "theme",
+            ocean: "theme",
+            storm: "theme",
+            jungle: "theme",
+            slither: "animation",
+            fireworks: "animation",
+            still: "pictureType",
+            moving: "pictureType",
+        };
+        const propertyKeyToStateMapper = {
+            themeType: themeType,
+            theme: theme,
+            animation: animation,
+            pictureType: pictureType,
+        };
+        const getChanged = () => {
+            return dependencies.filter((dep) => {
+                return selected[propertyValueToKeyMapper[dep]] !== dep;
+            });
+        };
+        const whatChanged = getChanged();
+        const key = propertyValueToKeyMapper[whatChanged[0]];
+        setSelected({ ...selected, [key]: propertyKeyToStateMapper[key] });
+    }, [theme, themeType, animation, pictureType]);
+
     const onSelect = useCallback((e) => {
         e.stopPropagation();
         let cookieData = {};
@@ -121,10 +165,10 @@ const Calculator = () => {
         const onSelectStack = {
             number: handleClick,
             function: handleClick,
-            "theme-type": onSelect,
+            themeType: onSelect,
             theme: onSelect,
             animation: onSelect,
-            "picture-type": onSelect,
+            pictureType: onSelect,
         };
         return onSelectStack[keyboardName];
     };
@@ -251,14 +295,12 @@ const Calculator = () => {
     }, [computationData.userInput]);
 
     const getVisibleKeyboardData = () => {
-        let visibleKeyboardNames = ["theme-type", "theme"],
+        let visibleKeyboardNames = ["themeType", "theme"],
             keyboardData = [],
             keyboardObject = {};
-        // if (themeType === "color") {
-        // }
         if (themeType !== "color") {
             visibleKeyboardNames.push(
-                themeType === "animation" ? "animation" : "picture-type"
+                themeType === "animation" ? "animation" : "pictureType"
             );
         }
         let i = 0;
@@ -302,11 +344,7 @@ const Calculator = () => {
             ...settingsData,
             keyboardData: getVisibleKeyboardData(),
         });
-    }, [themeType]);
-
-    const [animation, setAnimation] = useState("fireworks");
-
-    const [pictureType, setPictureType] = useState("still");
+    }, [themeType, theme, pictureType, animation]);
 
     const toggleSettings = (e) => {
         e.preventDefault();
@@ -659,27 +697,29 @@ const Calculator = () => {
         const data = keyboards.find((kb) => {
             return kb.name === keyboardName;
         });
+        data.selected = selected;
+        data.errorState = errorState;
         return (
             <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                <Keyboard props={data} errorState={errorState} />
+                <Keyboard {...data} />
             </HandleClickContextProvider>
         );
     }
 
-    const getSelected = (keyboardName) => {
+    function getSelected(keyboardName) {
         switch (keyboardName) {
-            case "theme-type":
-                return themeType;
+            case "themeType":
+                if (themeType) return themeType;
             case "theme":
-                return theme;
+                if (theme) return theme;
             case "animation":
-                return animation;
-            case "picture-type":
-                return pictureType;
+                if (animation) return animation;
+            case "pictureType":
+                if (pictureType) return pictureType;
             default:
                 return;
         }
-    };
+    }
 
     return (
         <Container
@@ -720,11 +760,7 @@ const Calculator = () => {
                 {/* ------------ main keyboards ---------------- */}
                 <Grid
                     container
-                    className={
-                        !settingsData.isOpen
-                            ? "main-keyboards"
-                            : "main-keyboards hidden"
-                    }
+                    className="main-keyboards"
                     meta-name="main keyboards"
                 >
                     {makeKeyboard("number")}

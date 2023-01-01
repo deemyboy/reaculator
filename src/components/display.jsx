@@ -14,22 +14,12 @@ const theme = createTheme({
     },
 });
 
-export function SimpleMediaQuery() {
-    const matches = useMediaQuery("(min-width:600px)");
-
-    return <span>{`(min-width:600px) matches: ${matches}`}</span>;
-}
-
 const Display = ({ linesData, settingsData }) => {
     const mediaQueryBreakPoints = {
-        xxxs: "380px",
-        xxs: "480px",
-        xs: "580px",
+        xs: "480px",
         sm: "767px",
         md: "992px",
         lg: "1200px",
-        xl: "1400px",
-        xxl: "1600px",
     };
 
     const getBreakPoint2 = (breakPoints) => {
@@ -62,7 +52,6 @@ const Display = ({ linesData, settingsData }) => {
             <ThemeProvider theme={theme}>
                 <Grid className={displayClass}>
                     <motion.div
-                        style={{ width: "100%" }}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ type: "tween", duration: 0.25 }}
@@ -97,15 +86,8 @@ const Display = ({ linesData, settingsData }) => {
         );
     } else {
         return (
-            <Grid
-                sx={{
-                    flexDirection: "column",
-                    flexBasis: "content",
-                }}
-                className={displayClass}
-            >
+            <Grid className={displayClass}>
                 <motion.div
-                    style={{}}
                     animate={{ opacity: 1 }}
                     transition={{ type: "tween", duration: 0.25 }}
                 >

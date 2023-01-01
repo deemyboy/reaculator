@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Collapse } from "@mui/material";
+import { Grid } from "@mui/material";
 import { motion } from "framer-motion";
 
 const ThemeSettings = ({ keyboardData: content }) => {
@@ -40,7 +40,7 @@ const ThemeSettings = ({ keyboardData: content }) => {
     }, [content]);
 
     const Setting = (content) => {
-        const { keyboard, name } = { ...content };
+        const { keyboard } = { ...content };
         return (
             <motion.div
                 className="setting-wrapper"
@@ -52,9 +52,6 @@ const ThemeSettings = ({ keyboardData: content }) => {
                     delay: 0.1,
                 }}
             >
-                <div className="settings-keyboard-title">
-                    {name.toUpperCase()}
-                </div>
                 {keyboard}
             </motion.div>
         );

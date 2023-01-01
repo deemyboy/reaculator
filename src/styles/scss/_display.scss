@@ -5,11 +5,11 @@
         box-shadow: inset -2px -2px 3px 1px #96a292;
         clear: both;
         font-family: Orbitron, sans-serif;
-        margin: 10px;
         padding: 10px 5px;
         display: flex;
         text-align: right;
         flex-direction: column;
+        min-width: 100%;
 
         .calculation,
         .result {

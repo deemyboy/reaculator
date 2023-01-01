@@ -14,8 +14,7 @@
     @include transition(all 0.25s);
     z-index: 1;
     transform-origin: 0;
-    padding-top: calc(var(--bs-gutter-x) * 0.5);
-    padding-bottom: calc(var(--bs-gutter-x) * 0.5);
+    padding: 10px;
 
     .title {
       font-size: clamp(2rem, 4vw, 3rem);

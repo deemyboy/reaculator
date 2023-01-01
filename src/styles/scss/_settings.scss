@@ -9,7 +9,6 @@
 
     svg {
         height: clamp(2rem, 4vw, 4rem);
-
         width: clamp(2rem, 4vw, 4rem);
     }
 
@@ -22,36 +21,36 @@
     justify-content: space-around;
     align-items: center;
     margin: -10px 0 0 0;
+    flex-direction: column;
 
     .keyboard {
-        display: flex;
-        font-family: Orbitron, sans-serif;
-
         .btn {}
     }
 
     .setting-wrapper {
+        justify-content: space-around;
+        display: flex;
+        flex-direction: row;
         text-align: center;
         border: 3px solid;
         padding: 5px;
         border-radius: 10px;
-        flex-basis: 10%;
         margin: 10px 0 0 0;
+        flex-wrap: wrap;
+        border: 0;
 
-
+        p:first-child {
+            flex: 1 1 100%;
+        }
 
         .settings-btn-wrapper {
             display: flex;
-            border: 1px dashed red;
             flex-direction: column;
 
             p {}
 
             .btn {
-                // display: inline;
-                // // justify-content: flex-end;
-                // align-items: baseline;
-                width: max(150px, 10rem);
+                width: clamp(4rem, 10vw, 6rem);
             }
         }
     }
