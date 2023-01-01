@@ -331,13 +331,18 @@
 
       div.calculator {
 
-        p.title {}
+        p.title {
+          line-height: 2.4rem;
+        }
 
         .keyboard {
           .btn {
+            // min-width: unset;
+            // width: clamp(3.6rem, 8vh, 10rem);
+            // font-size: clamp(2rem, 3vw, 4rem);
             min-width: unset;
-            width: clamp(3.6rem, 8vh, 10rem);
-            font-size: clamp(2rem, 3vw, 4rem);
+            width: clamp(2.8rem, 8vh, 10rem);
+            font-size: clamp(1.4rem, 3vw, 4rem);
           }
         }
 
@@ -346,11 +351,15 @@
         }
 
         .main-btn-wrapper {
-          p.btn-subtitle {}
+          p.btn-subtitle {
+            font-size: clamp(0.8rem, 1.5vw, 2rem);
+            top: -23px;
+          }
         }
       }
 
       .display {
+        padding: 0;
 
         .calculation {
           font-size: clamp(1.2rem, 2.4vw, 4rem);
@@ -370,6 +379,27 @@
         }
       }
 
+
+    }
+
+    #calculator div.settings {
+
+      .keyboard {
+        .btn {}
+      }
+
+      div.setting-wrapper {
+
+
+        div.settings-btn-wrapper {
+
+          p {}
+
+          button.btn {
+            width: clamp(4rem, 8vw, 6rem);
+          }
+        }
+      }
 
     }
   }
