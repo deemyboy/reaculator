@@ -21,7 +21,6 @@
 .settings {
     justify-content: space-around;
     align-items: center;
-    margin: -10px 0 0 0;
     flex-direction: column;
 
     .keyboard {
@@ -34,9 +33,7 @@
         flex-direction: row;
         text-align: center;
         border: 3px solid;
-        padding: 5px;
         border-radius: 10px;
-        margin: 10px 0 0 0;
         flex-wrap: wrap;
         border: 0;
 
