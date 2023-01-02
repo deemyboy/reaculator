@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
@@ -28,15 +28,11 @@ const Keyboard = ({
             {_title}
             <Grid item={true} className={`keyboard ${className}`}>
                 {keys.map((ky) => {
+                    ky.selected = false;
                     Object.keys(selected).forEach((key) => {
-                        console.log(
-                            ky.value === selected[key],
-                            ky.value,
-                            selected[key]
-                        );
                         if (ky.value === selected[key]) {
                             ky.selected = true;
-                        } else ky.selected = false;
+                        }
                     });
                     return (
                         <Key key={ky.id} _key={ky} errorState={errorState} />

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { motion } from "framer-motion";
 
-const ThemeSettings = ({ keyboardData: content }) => {
+const ThemeSettings = ({ keyboardData: content, selected }) => {
     const className = "settings";
     const [checked, setChecked] = useState({});
-
     useEffect(() => {
         let checkedData = { ...checked };
 
@@ -39,8 +38,7 @@ const ThemeSettings = ({ keyboardData: content }) => {
         setChecked(checkedData);
     }, [content]);
 
-    const Setting = (content) => {
-        const { keyboard } = { ...content };
+    const Setting = ({ keyboard }) => {
         return (
             <motion.div
                 className="setting-wrapper"

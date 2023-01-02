@@ -35,17 +35,15 @@ const Display = ({ linesData, settingsData }) => {
     const currentBreakPoint = getBreakPoint2(mediaQueryBreakPoints);
 
     const getDisplayHeight = (numberOfKeyboards, breakPointSize) => {
-        console.log(numberOfKeyboards, breakPointSize);
+        // console.log(numberOfKeyboards, breakPointSize);
     };
 
     const displayClass = "display",
-        { isOpen } = settingsData;
+        { isOpen, selected } = settingsData;
     const displayHeight = getDisplayHeight(
         settingsData.keyboardData.length,
         currentBreakPoint
     );
-    const LINE_HEIGHTS = [48, 64];
-    // const content =
     let i = 0;
     if (!isOpen) {
         return (
