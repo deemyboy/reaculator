@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
-import Canvas from "./components/canvas";
+import { Canvas } from "./components/canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
@@ -16,6 +16,7 @@ import { doMath, unicodify } from "./js/maths_engine.mjs";
 import { processInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
+import { motion } from "framer-motion";
 
 import { HandleClickContextProvider } from "./js/context";
 
@@ -24,7 +25,6 @@ const Calculator = () => {
         "theme",
         "themeType",
         "animation",
-        "picture",
         "pictureType",
     ]);
 
@@ -102,14 +102,16 @@ const Calculator = () => {
 
     const defaultTheme = "ocean";
     const defaultThemeType = "color";
+    const defaultAnimationType = "fireworks";
+    const defaultPictureType = "still";
 
     const [theme, setTheme] = useState(defaultTheme);
 
     const [themeType, setThemeType] = useState(defaultThemeType);
 
-    const [animation, setAnimation] = useState("fireworks");
+    const [animation, setAnimation] = useState(defaultAnimationType);
 
-    const [pictureType, setPictureType] = useState("still");
+    const [pictureType, setPictureType] = useState(defaultPictureType);
 
     const [selected, setSelected] = useState({
         theme: theme,
@@ -120,7 +122,7 @@ const Calculator = () => {
 
     useEffect(() => {
         const dependencies = [theme, themeType, animation, pictureType];
-        const propertyValueToKeyMapper = {
+        const valueToStatePropertyMapper = {
             color: "themeType",
             picture: "themeType",
             animation: "themeType",
@@ -134,7 +136,7 @@ const Calculator = () => {
             still: "pictureType",
             moving: "pictureType",
         };
-        const propertyKeyToStateMapper = {
+        const keyToStatePropertyMapper = {
             themeType: themeType,
             theme: theme,
             animation: animation,
@@ -142,12 +144,13 @@ const Calculator = () => {
         };
         const getChanged = () => {
             return dependencies.filter((dep) => {
-                return selected[propertyValueToKeyMapper[dep]] !== dep;
+                return selected[valueToStatePropertyMapper[dep]] !== dep;
             });
         };
         const whatChanged = getChanged();
-        const key = propertyValueToKeyMapper[whatChanged[0]];
-        setSelected({ ...selected, [key]: propertyKeyToStateMapper[key] });
+        const key = valueToStatePropertyMapper[whatChanged[0]];
+        if (key)
+            setSelected({ ...selected, [key]: keyToStatePropertyMapper[key] });
     }, [theme, themeType, animation, pictureType]);
 
     const onSelect = useCallback((e) => {
@@ -296,8 +299,7 @@ const Calculator = () => {
 
     const getVisibleKeyboardData = () => {
         let visibleKeyboardNames = ["themeType", "theme"],
-            keyboardData = [],
-            keyboardObject = {};
+            keyboardData = [];
         if (themeType !== "color") {
             visibleKeyboardNames.push(
                 themeType === "animation" ? "animation" : "pictureType"
@@ -305,7 +307,7 @@ const Calculator = () => {
         }
         let i = 0;
         visibleKeyboardNames.forEach((name) => {
-            keyboardObject = {
+            const keyboardObject = {
                 index: i,
                 keyboard: makeKeyboard(name),
                 name: name,
@@ -319,17 +321,17 @@ const Calculator = () => {
     const initialSettingsData = {
         keyboardData: getVisibleKeyboardData(),
         isOpen: false,
-        selected: "",
+        selected: selected,
     };
 
     const [settingsData, setSettingsData] = useState(initialSettingsData);
 
     const [linesData, setLinesData] = useState({
+        result: { value: 0, className: computationData.resultClassName },
         calculation: {
             value: "",
             className: computationData.calculationClassName,
         },
-        result: { value: 0, className: computationData.resultClassName },
     });
 
     useEffect(() => {
@@ -343,8 +345,16 @@ const Calculator = () => {
         setSettingsData({
             ...settingsData,
             keyboardData: getVisibleKeyboardData(),
+            selected: selected,
         });
-    }, [themeType, theme, pictureType, animation]);
+    }, [theme, themeType, animation, pictureType, selected]);
+
+    // useEffect(() => {
+    //     setSettingsData({
+    //         ...settingsData,
+    //         selected: selected,
+    //     });
+    // }, [selected]);
 
     const toggleSettings = (e) => {
         e.preventDefault();
@@ -406,14 +416,32 @@ const Calculator = () => {
     useEffect(() => {
         let _id = "animation-script",
             _scriptName = animation;
+        const canvas = document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID);
 
         const removeScript = (id) => {
             if (document.getElementById(id)) {
                 document.getElementById(id).remove();
             }
         };
+        const createCanvas = () => {
+            const canvasParent = document.getElementById("canvas-container");
+            const canvas = document.getElementById(
+                CONSTANTS.CANVAS_CONTAINER_ID
+            );
+            if (!canvas) {
+                const newCanvas = document.createElement("canvas");
+                newCanvas.setAttribute("id", CONSTANTS.CANVAS_CONTAINER_ID);
+                canvasParent.appendChild(newCanvas);
+            }
+        };
+        const removeCanvas = () => {
+            if (canvas) {
+                canvas.remove();
+            }
+        };
 
         if (themeType === "animation") {
+            if (!canvas) createCanvas();
             const loadScript = function () {
                 const tag = document.createElement("script");
                 tag.id = _id;
@@ -429,26 +457,7 @@ const Calculator = () => {
             loadScript();
         } else if (document.getElementById(_id)) {
             removeScript(_id);
-        }
-
-        if (themeType === "animation") {
-            const loadScript = function () {
-                const tag = document.createElement("script");
-                tag.id = _id;
-                tag.async = false;
-                let _src = `./animation-${_scriptName}.js`;
-                tag.src = _src;
-                const body = document.getElementsByTagName("body")[0];
-                body.appendChild(tag);
-            };
-
-            if (document.getElementById(_id)) {
-                const tag = document.getElementById(_id);
-                tag.remove();
-            }
-            loadScript();
-        } else if (document.getElementById(_id)) {
-            removeScript(_id);
+            removeCanvas();
         }
     }),
         [settingsData, animation];
@@ -705,22 +714,29 @@ const Calculator = () => {
             </HandleClickContextProvider>
         );
     }
-
-    function getSelected(keyboardName) {
-        switch (keyboardName) {
-            case "themeType":
-                if (themeType) return themeType;
-            case "theme":
-                if (theme) return theme;
-            case "animation":
-                if (animation) return animation;
-            case "pictureType":
-                if (pictureType) return pictureType;
-            default:
-                return;
-        }
-    }
-
+    const showMainKeyboards = () => {
+        if (!settingsData.isOpen)
+            return (
+                <motion.div
+                    initial={{ y: 2000, opacity: 0.25, height: 0 }}
+                    animate={{ height: "auto", opacity: 1, y: 0 }}
+                    transition={{
+                        type: "spring",
+                        duration: 0.5,
+                        delay: 0.3,
+                    }}
+                >
+                    <Grid
+                        container
+                        className="main-keyboards"
+                        meta-name="main keyboards"
+                    >
+                        {makeKeyboard("number")}
+                        {makeKeyboard("function")}
+                    </Grid>
+                </motion.div>
+            );
+    };
     return (
         <Container
             className={`container 
@@ -739,33 +755,23 @@ const Calculator = () => {
                     sx={{ position: "relative", zIndex: -1 }}
                     disabled
                 />
-                {/* <span className="cog" aria-hidden="true"></span> */}
             </p>
             <Grid
                 container
-                // onClick={closeSidebar}
                 direction={"column"}
                 id="canvas-container"
                 className={"calculator"}
                 meta-name="display and keyboards"
             >
                 {/* ------------ canvas ---------------- */}
-                <Canvas id={CONSTANTS.CANVAS_CONTAINER_ID} />
+                {/* <Canvas id={CONSTANTS.CANVAS_CONTAINER_ID} /> */}
                 <Typography className="title">
                     {CONSTANTS.APPLICATION_TITLE}
                 </Typography>
                 {/* ------------ display ---------------- */}
-                {/* <Display lines={lineData} /> */}
                 <Display {...displayData} />
                 {/* ------------ main keyboards ---------------- */}
-                <Grid
-                    container
-                    className="main-keyboards"
-                    meta-name="main keyboards"
-                >
-                    {makeKeyboard("number")}
-                    {makeKeyboard("function")}
-                </Grid>
+                {showMainKeyboards()}
             </Grid>
         </Container>
     );

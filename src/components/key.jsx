@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import { Button } from "@mui/material";
 import { Typography, Box } from "@mui/material";
-import HandleClickContext from "../js/context";
+import { HandleClickContext } from "../js/context";
 
-const Key = (props) => {
+const Key = ({ errorState, _key }) => {
     const handleClick = useContext(HandleClickContext);
-    const _disabled = props.errorState && props._key.id !== 18 ? true : false;
-    const _key = props._key;
+    const _disabled = errorState && _key.id !== 18;
     const errorClass = "btn-error";
 
     const setKeyClasses = (keyObj) => {
@@ -32,7 +31,7 @@ const Key = (props) => {
                 // keyObj.className = keyObj.className.replace("selected", "");
             }
         }
-        if (props.errorState) {
+        if (_disabled) {
             if (keyObj.value !== "a") {
                 classNames += " " + errorClass;
             }
@@ -69,9 +68,6 @@ const Key = (props) => {
         boxClassName = "settings-btn-wrapper";
     } else if (location === "main") {
         boxClassName = "main-btn-wrapper";
-    }
-    if (props.location === "display") {
-        boxClassName = "settings-btn-wrapper";
     }
 
     return (

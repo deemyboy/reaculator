@@ -302,7 +302,9 @@
 
         .calculation {}
 
-        .result,
+        .result {}
+
+        .calculation-error,
         .result-error {}
 
         .keyboard {
@@ -361,12 +363,12 @@
       .display {
         padding: 0;
 
-        .calculation {
+        .result {
           font-size: clamp(1.2rem, 2.4vw, 4rem);
           min-height: 1.6rem;
         }
 
-        .result {
+        .calculation {
           min-height: 2rem;
           font-size: clamp(2rem, 4vw, 5rem);
         }

@@ -18,14 +18,14 @@
             padding: 0 10px 0 0;
         }
 
-        .calculation {
+        .result {
             font-size: clamp(1.5rem, 4vw, 4rem);
             min-height: 2rem;
         }
 
-        .result {
-            min-height: 3rem;
+        .calculation {
             font-size: clamp(2.5rem, 6vw, 5rem);
+            min-height: 3.125rem;
         }
 
         .calculation-error,
