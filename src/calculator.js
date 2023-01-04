@@ -16,7 +16,7 @@ import { doMath, unicodify } from "./js/maths_engine.mjs";
 import { processInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
-import { motion } from "framer-motion";
+import { motion, useIsPresent } from "framer-motion";
 
 import { HandleClickContextProvider } from "./js/context";
 
@@ -240,27 +240,31 @@ const Calculator = () => {
     const [computationData, setComputationData] = useState({
         ...initialComputationData,
     });
+    const [computed, setComputed] = useState(true);
 
     useEffect(() => {
         if (computationData.error) {
             setErrorState(true);
-            computationData.calculationClassName += " calculation-error";
-            computationData.resultClassName += " result-error";
+            let { calculationClassName, resultClassName } = computationData;
+            calculationClassName += " calculation-error";
+            resultClassName += " result-error";
+            setComputationData({
+                ...computationData,
+                calculationClassName: calculationClassName,
+                resultClassName: resultClassName,
+            });
         }
     }, [computationData.error]);
 
     useEffect(() => {
         if (computationData.computed) {
-            // console.log(
-            //     "computed an answer",
-            //     computationData.op1,
-            //     computationData.op2
-            // );
+            const processedResultData = processResult();
             setComputationData({
                 ...computationData,
                 previousCalculationOperator: computationData.op2
                     ? computationData.op2
                     : computationData.op1,
+                ...processedResultData,
                 // computed: false,
                 // preProcessUserInput: true,
             });
@@ -285,16 +289,13 @@ const Calculator = () => {
 
     // makeCalculationData
     useEffect(() => {
-        setComputationData({
-            ...computationData,
-            ...makeCalculationData(),
-        });
-    }, [computationData.userInput]);
-
-    // tryMath
-    useEffect(() => {
         if (CONSTANTS.patternStack.MATH_CATCHER.test(computationData.userInput))
             tryMath();
+        else
+            setComputationData({
+                ...computationData,
+                ...makeCalculationData(),
+            });
     }, [computationData.userInput]);
 
     const getVisibleKeyboardData = () => {
@@ -505,6 +506,18 @@ const Calculator = () => {
     };
 
     function preProcessComputationData() {
+        const { previousCalculationOperator } = computationData;
+        if (CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator)) {
+            preProcessComputationDataAfterUnaryMathsOperation();
+        } else if (
+            CONSTANTS.BINARY_OPERATOR_REGEX.test(previousCalculationOperator)
+        ) {
+            preProcessComputationDataAfterBinaryMathsOperation();
+        }
+    }
+
+    function preProcessComputationDataAfterUnaryMathsOperation() {
+        console.log("preProcessComputationDataAfterUnaryMathsOperation");
         let changes = {};
         const {
             userInput,
@@ -519,10 +532,7 @@ const Calculator = () => {
             calculationClassName,
         } = { ...computationData };
         const { key } = { ...keyData };
-        if (
-            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
-            CONSTANTS.UNARY_OPERATOR_REGEX.test(key)
-        ) {
+        if (CONSTANTS.UNARY_OPERATOR_REGEX.test(key)) {
             console.log("unary op after unary op");
             changes = {
                 userInput: resultValue + key,
@@ -532,10 +542,7 @@ const Calculator = () => {
                 computed: false,
             };
         }
-        if (
-            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
-            CONSTANTS.BINARY_OPERATOR_REGEX.test(key)
-        ) {
+        if (CONSTANTS.BINARY_OPERATOR_REGEX.test(key)) {
             console.log("binary op after unary op", key);
             changes = {
                 userInput: resultValue + key,
@@ -545,10 +552,7 @@ const Calculator = () => {
                 computed: false,
             };
         }
-        if (
-            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
-            CONSTANTS.NUMBER_REGEX.test(key)
-        ) {
+        if (CONSTANTS.NUMBER_REGEX.test(key)) {
             console.log("number after unary op", key);
             changes = {
                 userInput: key,
@@ -560,10 +564,7 @@ const Calculator = () => {
                 resultValue: 0,
             };
         }
-        if (
-            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
-            /m/.test(key)
-        ) {
+        if (/m/.test(key)) {
             console.log("+/- (m) after unary op", key);
             changes = {
                 userInput: resultValue * -1,
@@ -576,13 +577,103 @@ const Calculator = () => {
             };
         }
         if (
-            CONSTANTS.UNARY_OPERATOR_REGEX.test(previousCalculationOperator) &&
             /\./.test(key) &&
             !CONSTANTS.patternStack.UNIVERSAL_EXTRA_DOT_CATCHER.test(
                 resultValue
             )
         ) {
             console.log(". after unary op", key);
+            changes = {
+                userInput: resultValue + key,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                key: undefined,
+                computed: false,
+                resultValue: 0,
+            };
+        }
+        if (Object.keys(changes).length > 0) {
+            setComputationData({
+                ...computationData,
+                ...changes,
+            });
+        }
+    }
+
+    function preProcessComputationDataAfterBinaryMathsOperation() {
+        console.log("preProcessComputationDataAfterBinaryMathsOperation");
+        let changes = {};
+        const {
+            calculationValue,
+            userInput,
+            resultValue,
+            preProcessedResult,
+            computed,
+            num1,
+            op1,
+            num2,
+            op2,
+            error,
+            previousCalculationOperator,
+            calculationClassName,
+        } = { ...computationData };
+        const { key } = { ...keyData };
+        if (CONSTANTS.UNARY_OPERATOR_REGEX.test(key)) {
+            console.log("unary op after binary op");
+            changes = {
+                userInput: resultValue + key,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                computed: false,
+            };
+        }
+        if (CONSTANTS.BINARY_OPERATOR_REGEX.test(key)) {
+            console.log("binary op after binary op", key);
+            changes = {
+                userInput: resultValue + key,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                computed: false,
+            };
+        }
+        if (CONSTANTS.NUMBER_REGEX.test(key)) {
+            console.log("number after binary op", key);
+            // const newResult = "Ans " + calculationValue + " = " + resultValue;
+            changes = {
+                userInput:
+                    preProcessedResult + previousCalculationOperator + key,
+                op1: undefined,
+                num1: undefined,
+                op2: undefined,
+                num2: undefined,
+                previousCalculationOperator: undefined,
+                key: undefined,
+                computed: false,
+                // resultValue: newResult,
+            };
+        }
+        if (/m/.test(key)) {
+            console.log("+/- (m) after binary op", key);
+            changes = {
+                userInput: resultValue * -1,
+                op1: undefined,
+                num1: undefined,
+                previousCalculationOperator: undefined,
+                key: undefined,
+                computed: false,
+                resultValue: 0,
+            };
+        }
+        if (
+            /\./.test(key) &&
+            !CONSTANTS.patternStack.UNIVERSAL_EXTRA_DOT_CATCHER.test(
+                resultValue
+            )
+        ) {
+            console.log(". after binary op", key);
             changes = {
                 userInput: resultValue + key,
                 op1: undefined,
@@ -651,20 +742,61 @@ const Calculator = () => {
     };
 
     const tryMath = () => {
-        const _resultData = doMath(computationData.userInput);
-        const calculationData = makeCalculationData();
+        let _resultData = doMath(computationData.userInput);
+
         setComputationData({
             ...computationData,
             ..._resultData,
-            ...calculationData,
+            ...makeCalculationData(_resultData),
         });
     };
 
-    function makeCalculationData() {
+    const processResult = () => {
+        const { computed, num1, num2, op1, op2, resultValue, userInput } =
+            computationData;
+        let _userInput = userInput;
+        if (
+            CONSTANTS.BINARY_OPERATOR_REGEX.test(
+                _userInput.charAt(_userInput.length - 1)
+            )
+        ) {
+            _userInput = _userInput.replace(/.$/, "");
+        }
+        _userInput = unicodify(_userInput);
+        const _resultValue = unicodify(resultValue);
+        let resultTemplate = `Ans ${_userInput} = ${_resultValue}`;
+
+        let processedResultData = {
+            computed: computed,
+            num1: num1,
+            num2: num2,
+            op1: op1,
+            op2: op2,
+            preProcessedResult: resultValue,
+            resultValue: resultTemplate,
+        };
+        return processedResultData;
+    };
+
+    function makeCalculationData(args) {
         // console.log("makeCalculationData");
+        // let
+        //     userInput,
+        //     resultValue,
+        //     preProcessedResult,
+        //     computed,
+        //     num1,
+        //     op1,
+        //     num2,
+        //     op2,
+        //     error,
+        //     previousCalculationOperator,
+        //     calculationClassName,
+        // ;
         const {
             userInput,
             resultValue,
+            preProcessedResult,
             computed,
             num1,
             op1,
@@ -672,21 +804,23 @@ const Calculator = () => {
             op2,
             error,
             previousCalculationOperator,
-            calculationClassName,
-        } = { ...computationData };
-        let calculationValue =
+            // calculationClassName,
+        } = !args ? { ...computationData } : { ...args };
+
+        let calculationValue;
+        calculationValue =
             num1 && op1 && num2
                 ? "" + num1 + op1 + num2
                 : num1 && op1 && !num2
                 ? "" + num1 + op1
                 : userInput;
-
         // remove last operator on binary
-        calculationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
-            calculationValue
-        )
-            ? calculationValue.replace(/.$/, "")
-            : calculationValue;
+        // calculationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
+        //     calculationValue
+        // )
+        //     ? calculationValue.replace(/.$/, "")
+        //     : calculationValue;
+
         // sqr root symbol hack - move it in front of numbers
         calculationValue = /r$/.test(calculationValue)
             ? "r" + calculationValue.replace(/.$/, "")
@@ -698,7 +832,7 @@ const Calculator = () => {
             : _calculationValue;
         return {
             calculationValue: _calculationValue,
-            calculationClassName: calculationClassName,
+            // calculationClassName: calculationClassName,
         };
     }
 
