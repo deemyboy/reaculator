@@ -163,6 +163,28 @@
       }
     }
 
+    #settings {
+
+      .setting-wrapper {
+
+        div.keyboard {
+          .settings-btn-wrapper {
+            .settings-btn-title {
+              font-size: clamp(0.8rem, 2vw, 2rem);
+            }
+
+            .btn {
+              aspect-ratio: unset;
+              width: clamp(2rem, 5vw, 5rem);
+              min-width: unset;
+              font-size: clamp(2.5rem, 4vw, 4rem);
+
+            }
+          }
+        }
+      }
+    }
+
     .display {
 
       .calculation {}
@@ -399,6 +421,7 @@
 
           button.btn {
             width: clamp(4rem, 8vw, 6rem);
+            font-size: clamp(2rem, 4vw, 4rem);
           }
         }
       }

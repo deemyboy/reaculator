@@ -33,103 +33,103 @@
   }
 }
 
-.settings {
-  .settings-btn-title {
-    font-family: unset;
-  }
+#settings {
 
   .setting-wrapper {
 
-    .keyboard {
-      .btn {
-        aspect-ratio: unset;
-      }
-    }
-  }
+    div.keyboard {
+      .settings-btn-wrapper {
+        .settings-btn-title {
+          font-family: unset;
+        }
 
-  .keyboard-theme {
-    .btn-theme {}
+        .btn {
+          filter: grayscale(90%);
+          @include transition(all 0.25s);
+          padding: 0;
+          border: none$i;
+          border-radius: none$i;
+          background: none$i;
+          aspect-ratio: unset;
+          width: clamp(4rem, 5vw, 5rem);
+          min-width: unset;
+          font-size: clamp(2.5rem, 4vw, 4rem);
 
-    .btn-fire {
-      background-color: $fire_bg;
-      color: $fire_color;
-      border-color: $fire_border;
+          &:hover,
+          &:active {
+            filter: grayscale(40%);
+          }
 
-      &:hover,
-      &:focus {
-        background-color: darken($fire_bg, 10%);
-      }
-    }
-
-    .btn-midnight {
-      background-color: $midnight_bg;
-      color: $midnight_color;
-      border-color: $midnight_border;
-
-      &:hover,
-      &:focus {
-        background-color: lighten($midnight_bg, 10%);
-      }
-    }
-
-    .btn-ocean {
-      background-color: $ocean_bg;
-      color: $ocean_color;
-      border-color: $ocean_border;
-
-      &:hover,
-      &:focus {
-        background-color: darken($ocean_bg, 10%);
-      }
-    }
-
-    .btn-storm {
-      background-color: $storm_bg;
-      color: $storm_color;
-      border-color: $storm_border;
-
-      &:hover,
-      &:focus {
-        background-color: darken($storm_bg, 10%);
-      }
-    }
-
-    .btn-jungle {
-      background-color: $jungle_bg;
-      color: $jungle_color;
-      border-color: $jungle_border;
-
-      &:hover,
-      &:focus {
-        background-color: darken($jungle_bg, 10%);
-      }
-    }
-  }
-
-  .keyboard {
-    .btn {
-      filter: grayscale(90%);
-      @include transition(all 0.25s);
-      padding: 0;
-      // width: $btn-main-mob;
-      // height: $btn-main-mob;
-      // border-radius: $btn-main-mob-border-radius;
-      min-width: 0;
-      border: none$i;
-      border-radius: none$i;
-      background: none$i;
-
-      &:hover,
-      &:active {
-        filter: grayscale(40%);
-      }
-
-      &.selected {
-        filter: grayscale(0);
+          &.selected {
+            filter: grayscale(0);
+          }
+        }
       }
     }
   }
 }
+
+.keyboard-theme {
+  .btn-theme {}
+
+  .btn-fire {
+    background-color: $fire_bg;
+    color: $fire_color;
+    border-color: $fire_border;
+
+    &:hover,
+    &:focus {
+      background-color: darken($fire_bg, 10%);
+    }
+  }
+
+  .btn-midnight {
+    background-color: $midnight_bg;
+    color: $midnight_color;
+    border-color: $midnight_border;
+
+    &:hover,
+    &:focus {
+      background-color: lighten($midnight_bg, 10%);
+    }
+  }
+
+  .btn-ocean {
+    background-color: $ocean_bg;
+    color: $ocean_color;
+    border-color: $ocean_border;
+
+    &:hover,
+    &:focus {
+      background-color: darken($ocean_bg, 10%);
+    }
+  }
+
+  .btn-storm {
+    background-color: $storm_bg;
+    color: $storm_color;
+    border-color: $storm_border;
+
+    &:hover,
+    &:focus {
+      background-color: darken($storm_bg, 10%);
+    }
+  }
+
+  .btn-jungle {
+    background-color: $jungle_bg;
+    color: $jungle_color;
+    border-color: $jungle_border;
+
+    &:hover,
+    &:focus {
+      background-color: darken($jungle_bg, 10%);
+    }
+  }
+}
+
+
+
 
 @include themify($themes) {
   .btn-primary {
