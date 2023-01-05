@@ -56,7 +56,12 @@ const ThemeSettings = ({ keyboardData: content, selected }) => {
     };
 
     return (
-        <Grid container className={className} meta-name="settings">
+        <Grid
+            id="settings"
+            container
+            className={className}
+            meta-name="settings"
+        >
             {content.map((keyboard, index) => {
                 return <Setting key={index} {...keyboard} />;
             })}
