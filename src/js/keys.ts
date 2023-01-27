@@ -1,11 +1,13 @@
 // allowed key codes for keyPress event handler
-export const ALLOWED_KEYS = [
+export const ALLOWED_KEYS: number[] = [
     8, 13, 16, 17, 27, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 67, 77, 82, 83,
     88, 89, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 109,
     110, 111, 187, 189, 190, 191,
 ];
 
-export const DISALLOWED_KEYS = [9, 16, 17, 18, 37, 38, 39, 40, 91, 93];
+export const DISALLOWED_KEYS: number[] = [
+    9, 16, 17, 18, 37, 38, 39, 40, 91, 93,
+];
 
 export const numberKeys = [
     {
@@ -286,7 +288,7 @@ export const themeTypeKeys = [
     {
         id: "animation",
         value: "animation",
-        uniChar: "\u221E",
+        // uniChar: "\u221E",
         uniChar: "\uD83D\uDE80",
         title: "animation",
         keycode: 65,

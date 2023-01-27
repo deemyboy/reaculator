@@ -1,5 +1,5 @@
 import { patternStack, VALID_COMPUTATION } from "../js/constants.js";
-import { functionKeys } from "./keys.js";
+import { functionKeys } from "./keys.ts";
 
 export const deunicodify = (str) => {
     let count = 0;

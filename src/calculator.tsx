@@ -17,6 +17,7 @@ import { processInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
 import keyboards from "./js/keyboards";
 import { motion, useIsPresent } from "framer-motion";
+import * as Types from "./types/types";
 
 import { HandleClickContextProvider } from "./js/context";
 
@@ -155,11 +156,15 @@ const Calculator = () => {
 
     const onSelect = useCallback((e) => {
         e.stopPropagation();
-        let cookieData = {};
+        const cookieData: Types.TCookieData = {
+            label: "",
+            value: "",
+            path: "",
+        };
         const _id = e.target.id;
-        cookieData.cookieLabel = getCookieLabel(_id);
-        cookieData.cookieValue = _id;
-        cookieData.cookiePath = "/";
+        cookieData.label = getCookieLabel(_id);
+        cookieData.value = _id;
+        cookieData.path = "/";
         setStateBasedOnId(_id)(_id);
         // useCookie(_id);
     }, []);
@@ -218,23 +223,22 @@ const Calculator = () => {
         setErrorState(false);
     };
 
-    const initialComputationData = {
-        userInput: undefined,
-        resultValue: 0,
+    const initialComputationData: Types.TComputationData = {
+        userInput: "",
+        resultValue: "0",
         resultClassName: "result",
         calculationValue: "",
         calculationClassName: "calculation",
-        computed: undefined,
-        num1: undefined,
-        op1: undefined,
-        num2: undefined,
-        op2: undefined,
+        computed: "",
+        num1: "",
+        op1: "",
+        num2: "",
+        op2: "",
         error: false,
-        previousCalculationOperator: undefined,
-        key: undefined,
-        timeStamp: undefined,
-        nextUserInput: undefined,
-        // preProcessUserInput: false,
+        previousCalculationOperator: "",
+        key: "",
+        timeStamp: "",
+        nextUserInput: "",
     };
 
     const [computationData, setComputationData] = useState({
@@ -491,10 +495,10 @@ const Calculator = () => {
     //     [theme, themeType, pictureType, animation]
     // );
 
-    // const getCookie = (cookieLabel, cookieDefault) => {
+    // const getCookie = (label, cookieDefault) => {
     //     const cookie = new Cookies();
-    //     return cookie.get(cookieLabel)
-    //         ? cookie.get(cookieLabel)
+    //     return cookie.get(label)
+    //         ? cookie.get(label)
     //         : cookieDefault;
     // };
 
@@ -754,7 +758,7 @@ const Calculator = () => {
     const processResult = () => {
         const { computed, num1, num2, op1, op2, resultValue, userInput } =
             computationData;
-        let _userInput = userInput;
+        let _userInput = userInput | undefined;
         if (
             CONSTANTS.BINARY_OPERATOR_REGEX.test(
                 _userInput.charAt(_userInput.length - 1)
@@ -780,23 +784,12 @@ const Calculator = () => {
 
     function makeCalculationData(args) {
         // console.log("makeCalculationData");
-        // let
-        //     userInput,
-        //     resultValue,
-        //     preProcessedResult,
-        //     computed,
-        //     num1,
-        //     op1,
-        //     num2,
-        //     op2,
-        //     error,
-        //     previousCalculationOperator,
-        //     calculationClassName,
-        // ;
         const {
             userInput,
             resultValue,
-            preProcessedResult,
+            resultClassName,
+            calculationValue,
+            calculationClassName,
             computed,
             num1,
             op1,
@@ -804,7 +797,9 @@ const Calculator = () => {
             op2,
             error,
             previousCalculationOperator,
-            // calculationClassName,
+            key,
+            timeStamp,
+            nextUserInput,
         } = !args ? { ...computationData } : { ...args };
 
         let calculationValue;
