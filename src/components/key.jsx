@@ -4,7 +4,6 @@ import { Typography, Box } from "@mui/material";
 import { HandleClickContext } from "../js/context";
 
 const Key = ({ errorState, _key, onClick }) => {
-    // const handleClick = useContext(HandleClickContext);
     const _disabled = errorState && _key.id !== 18;
     const errorClass = "btn-error";
 
@@ -14,21 +13,11 @@ const Key = ({ errorState, _key, onClick }) => {
         if (keyObj.selected) {
             classNames += " selected";
         } else {
-            // console.log(classNames);
-            // console.log(
-            //     keyObj.className.includes("selected"),
-            //     keyObj.className
-            // );
             if (document.getElementById(keyObj.id)) {
-                // console.log(document.getElementById(keyObj.id).classList);
+                //
             }
             if (keyObj.className.includes("selected")) {
-                // console.log(
-                //     keyObj.value === selected[key],
-                //     keyObj.value,
-                //     selected[key]
-                // );
-                // keyObj.className = keyObj.className.replace("selected", "");
+                //
             }
         }
         if (_disabled) {

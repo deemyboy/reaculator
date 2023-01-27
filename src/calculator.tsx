@@ -123,21 +123,6 @@ const Calculator = () => {
         ["pictureType", pictureType],
     ]);
 
-    // useEffect(() => {
-    //     console.log("useEffect getChanged");
-
-    //     const dependencies = [theme, themeType, animation, pictureType];
-    //     const getChanged = () => {
-    //         return dependencies.filter((dep) => {
-    //             return themeSelections.get(dep.name);
-    //         });
-    //     };
-    //     const whatChanged = getChanged();
-    //     // const key = valueToStatePropertyMapper[whatChanged[0].name];
-    //     // if (key)
-    //     //     setSelected({ ...selected, [key]: keyToStatePropertyMapper[key] });
-    // }, [theme, themeType, animation, pictureType]);
-
     const onSelect = useCallback((e) => {
         const { classList } = e.target;
         e.stopPropagation();
@@ -230,11 +215,8 @@ const Calculator = () => {
                     ? computationData.op2
                     : computationData.op1,
                 ...processedResultData,
-                // computed: false,
-                // preProcessUserInput: true,
             });
         }
-        // preProcessComputationData();
     }, [computationData.computed]);
 
     const [keyData, setKeyData] = useState<Types.TKeyData>({
@@ -315,13 +297,6 @@ const Calculator = () => {
             keyboardData: getVisibleKeyboardData(),
         });
     }, [theme, themeType, animation, pictureType]);
-
-    // useEffect(() => {
-    //     setSettingsData({
-    //         ...settingsData,
-    //         selected: selected,
-    //     });
-    // }, [selected]);
 
     const toggleSettings = (e) => {
         e.preventDefault();
@@ -607,7 +582,6 @@ const Calculator = () => {
         }
         if (CONSTANTS.NUMBER_REGEX.test(key)) {
             console.log("number after binary op", key);
-            // const newResult = "Ans " + calculationValue + " = " + resultValue;
             changes = {
                 userInput:
                     preProcessedResult + previousCalculationOperator + key,
@@ -618,7 +592,6 @@ const Calculator = () => {
                 previousCalculationOperator: undefined,
                 key: undefined,
                 computed: false,
-                // resultValue: newResult,
             };
         }
         if (/m/.test(key)) {
@@ -764,13 +737,6 @@ const Calculator = () => {
                 : num1 && op1 && !num2
                 ? "" + num1 + op1
                 : userInput;
-        // remove last operator on binary
-        // calculationValue = CONSTANTS.LAST_OPERATOR_CATCHER.test(
-        //     calculationValue
-        // )
-        //     ? calculationValue.replace(/.$/, "")
-        //     : calculationValue;
-
         // sqr root symbol hack - move it in front of numbers
         calculationValue = /r$/.test(calculationValue)
             ? "r" + calculationValue.replace(/.$/, "")
@@ -782,7 +748,6 @@ const Calculator = () => {
             : _calculationValue;
         return {
             calculationValue: _calculationValue,
-            // calculationClassName: calculationClassName,
         };
     }
 
@@ -793,8 +758,6 @@ const Calculator = () => {
         keyboardData.selected = themeSelections.get(keyboardName);
         keyboardData.errorState = errorState;
         keyboardData.onClick = onSelectMap.get(keyboardName)!;
-        // data.selected = selected;
-        // data.errorState = errorState;
         return keyboardData;
     }
     const showMainKeyboards = () => {
@@ -825,7 +788,6 @@ const Calculator = () => {
             ${themeType.name} ${theme.name} ${pictureType.name}`}
             sx={{ padding: "0!important" }}
         >
-            {/* ------------ app ---------------- */}
             <p
                 id="settings-icon"
                 className={
@@ -842,14 +804,10 @@ const Calculator = () => {
                 className={"calculator"}
                 meta-name="display and keyboards"
             >
-                {/* ------------ canvas ---------------- */}
-                {/* <Canvas id={CONSTANTS.CANVAS_CONTAINER_ID} /> */}
                 <Typography className="title">
                     {CONSTANTS.APPLICATION_TITLE}
                 </Typography>
-                {/* ------------ display ---------------- */}
                 <Display {...displayData} />
-                {/* ------------ main keyboards ---------------- */}
                 {!settingsData.isOpen ? showMainKeyboards() : <></>}
             </Grid>
         </Container>
