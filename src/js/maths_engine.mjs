@@ -1,5 +1,5 @@
 import { patternStack, VALID_COMPUTATION } from "../js/constants.js";
-import { functionKeys } from "./keys.ts";
+import { functionKeys } from "../ts/keys.ts";
 
 export const deunicodify = (str) => {
     let count = 0;
@@ -63,8 +63,8 @@ export const doMath = (input) => {
         return calculataionParameters;
     };
 
-    let _result = {},
-        _computationalUnit = extractComputationParts(input);
+    let _result = { ...input };
+    _computationalUnit = extractComputationParts(input);
 
     // console.log("time for doing maths!", input);
     if (Object.keys(_computationalUnit).length > 0) {

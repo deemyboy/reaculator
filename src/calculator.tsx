@@ -9,13 +9,13 @@ import {
     functionKeys,
     ALLOWED_KEYS,
     DISALLOWED_KEYS,
-} from "./js/keys";
+} from "./ts/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./js/constants";
 import { doMath, unicodify } from "./js/maths_engine.mjs";
 import { processInput } from "./js/process_input.mjs";
 import "./styles/main.scss";
-import keyboards from "./js/keyboards";
+import { keyboardMap } from "./ts/keyboards";
 import { motion, useIsPresent } from "framer-motion";
 import * as Types from "./types/types";
 
@@ -59,7 +59,7 @@ const Calculator = () => {
         });
     }, []);
 
-    const handleKeyPress = useCallback((e) => {
+    const handleKeyPress = useCallback((e: Types.TKeyEventData) => {
         // prevent these keys firing
         // ctrl key 17, shift key 16 alt key 18
         // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
@@ -101,85 +101,64 @@ const Calculator = () => {
         }
     }, []);
 
-    const defaultTheme = "ocean";
-    const defaultThemeType = "color";
-    const defaultAnimationType = "fireworks";
-    const defaultPictureType = "still";
+    const defaultTheme = { name: "ocean" };
+    const defaultThemeType = { name: "color" };
+    const defaultAnimationType = { name: "fireworks" };
+    const defaultPictureType = { name: "still" };
 
-    const [theme, setTheme] = useState(defaultTheme);
+    const [theme, setTheme] = useState<Types.TSelect>(defaultTheme);
 
-    const [themeType, setThemeType] = useState(defaultThemeType);
+    const [themeType, setThemeType] = useState<Types.TSelect>(defaultThemeType);
 
-    const [animation, setAnimation] = useState(defaultAnimationType);
+    const [animation, setAnimation] =
+        useState<Types.TSelect>(defaultAnimationType);
 
-    const [pictureType, setPictureType] = useState(defaultPictureType);
+    const [pictureType, setPictureType] =
+        useState<Types.TSelect>(defaultPictureType);
 
-    const [selected, setSelected] = useState({
-        theme: theme,
-        themeType: themeType,
-        animation: animation,
-        pictureType: pictureType,
-    });
+    const themeSelections = new Map<string, Types.TSelect>([
+        ["theme", theme],
+        ["themeType", themeType],
+        ["animation", animation],
+        ["pictureType", pictureType],
+    ]);
 
-    useEffect(() => {
-        const dependencies = [theme, themeType, animation, pictureType];
-        const valueToStatePropertyMapper = {
-            color: "themeType",
-            picture: "themeType",
-            animation: "themeType",
-            fire: "theme",
-            midnight: "theme",
-            ocean: "theme",
-            storm: "theme",
-            jungle: "theme",
-            slither: "animation",
-            fireworks: "animation",
-            still: "pictureType",
-            moving: "pictureType",
-        };
-        const keyToStatePropertyMapper = {
-            themeType: themeType,
-            theme: theme,
-            animation: animation,
-            pictureType: pictureType,
-        };
-        const getChanged = () => {
-            return dependencies.filter((dep) => {
-                return selected[valueToStatePropertyMapper[dep]] !== dep;
-            });
-        };
-        const whatChanged = getChanged();
-        const key = valueToStatePropertyMapper[whatChanged[0]];
-        if (key)
-            setSelected({ ...selected, [key]: keyToStatePropertyMapper[key] });
-    }, [theme, themeType, animation, pictureType]);
+    // useEffect(() => {
+    //     console.log("useEffect getChanged");
+
+    //     const dependencies = [theme, themeType, animation, pictureType];
+    //     const getChanged = () => {
+    //         return dependencies.filter((dep) => {
+    //             return themeSelections.get(dep.name);
+    //         });
+    //     };
+    //     const whatChanged = getChanged();
+    //     // const key = valueToStatePropertyMapper[whatChanged[0].name];
+    //     // if (key)
+    //     //     setSelected({ ...selected, [key]: keyToStatePropertyMapper[key] });
+    // }, [theme, themeType, animation, pictureType]);
 
     const onSelect = useCallback((e) => {
+        const { classList } = e.target;
         e.stopPropagation();
-        const cookieData: Types.TCookieData = {
-            label: "",
-            value: "",
-            path: "",
-        };
-        const _id = e.target.id;
-        cookieData.label = getCookieLabel(_id);
-        cookieData.value = _id;
-        cookieData.path = "/";
-        setStateBasedOnId(_id)(_id);
-        // useCookie(_id);
+        const { id } = e.target;
+        if ([...classList].includes("btn-theme")) setTheme({ name: id });
+        if ([...classList].includes("btn-theme-type"))
+            setThemeType({ name: id });
+        if ([...classList].includes("btn-animation-choose"))
+            setAnimation({ name: id });
+        if ([...classList].includes("btn-pic-type"))
+            setPictureType({ name: id });
     }, []);
 
-    const getOnSelect = (keyboardName) => {
-        const onSelectStack = {
-            number: handleClick,
-            function: handleClick,
-            themeType: onSelect,
-            theme: onSelect,
-            animation: onSelect,
-            pictureType: onSelect,
-        };
-        return onSelectStack[keyboardName];
-    };
+    const onSelectMap = new Map([
+        ["number", handleClick],
+        ["function", handleClick],
+        ["theme", onSelect],
+        ["themeType", onSelect],
+        ["animation", onSelect],
+        ["pictureType", onSelect],
+    ]);
 
     const getCookieLabel = (labelId) => {
         const cookieLabelStack = {
@@ -197,24 +176,6 @@ const Calculator = () => {
             moving: "currentPictureType",
         };
         return cookieLabelStack[labelId];
-    };
-
-    const setStateBasedOnId = (value) => {
-        const setStateFunctionStack = {
-            picture: setThemeType,
-            color: setThemeType,
-            animation: setThemeType,
-            fire: setTheme,
-            midnight: setTheme,
-            ocean: setTheme,
-            storm: setTheme,
-            jungle: setTheme,
-            slither: setAnimation,
-            fireworks: setAnimation,
-            still: setPictureType,
-            moving: setPictureType,
-        };
-        return setStateFunctionStack[value];
     };
 
     const [errorState, setErrorState] = useState(false);
@@ -276,10 +237,13 @@ const Calculator = () => {
         // preProcessComputationData();
     }, [computationData.computed]);
 
-    const [keyData, setKeyData] = useState({});
+    const [keyData, setKeyData] = useState<Types.TKeyData>({
+        key: "",
+        timeStamp: 0,
+    });
 
     const resetKeyData = () => {
-        setKeyData({});
+        setKeyData({ key: "", timeStamp: 0 });
     };
 
     // handleUserInput
@@ -302,19 +266,19 @@ const Calculator = () => {
             });
     }, [computationData.userInput]);
 
-    const getVisibleKeyboardData = () => {
+    const getVisibleKeyboardData = (): Types.TKeyBoardObject[] => {
         let visibleKeyboardNames = ["themeType", "theme"],
-            keyboardData = [];
-        if (themeType !== "color") {
+            keyboardData: Types.TKeyBoardObject[] = [];
+        if (themeType.name !== "color") {
             visibleKeyboardNames.push(
-                themeType === "animation" ? "animation" : "pictureType"
+                themeType.name === "animation" ? "animation" : "pictureType"
             );
         }
         let i = 0;
         visibleKeyboardNames.forEach((name) => {
-            const keyboardObject = {
+            const keyboardObject: Types.TKeyBoardObject = {
                 index: i,
-                keyboard: makeKeyboard(name),
+                keyboard: <Keyboard {...getKeyboardData(name)} />,
                 name: name,
             };
             keyboardData.push(keyboardObject);
@@ -326,13 +290,12 @@ const Calculator = () => {
     const initialSettingsData = {
         keyboardData: getVisibleKeyboardData(),
         isOpen: false,
-        selected: selected,
     };
 
     const [settingsData, setSettingsData] = useState(initialSettingsData);
 
     const [linesData, setLinesData] = useState({
-        result: { value: 0, className: computationData.resultClassName },
+        result: { value: "0", className: computationData.resultClassName },
         calculation: {
             value: "",
             className: computationData.calculationClassName,
@@ -350,9 +313,8 @@ const Calculator = () => {
         setSettingsData({
             ...settingsData,
             keyboardData: getVisibleKeyboardData(),
-            selected: selected,
         });
-    }, [theme, themeType, animation, pictureType, selected]);
+    }, [theme, themeType, animation, pictureType]);
 
     // useEffect(() => {
     //     setSettingsData({
@@ -406,7 +368,7 @@ const Calculator = () => {
             result: {
                 value: computationData.resultValue
                     ? computationData.resultValue
-                    : 0,
+                    : "0",
                 className: computationData.resultClassName,
             },
         });
@@ -420,16 +382,16 @@ const Calculator = () => {
     // animation
     useEffect(() => {
         let _id = "animation-script",
-            _scriptName = animation;
+            _scriptName = animation.name;
         const canvas = document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID);
 
         const removeScript = (id) => {
             if (document.getElementById(id)) {
-                document.getElementById(id).remove();
+                document.getElementById(id)!.remove();
             }
         };
         const createCanvas = () => {
-            const canvasParent = document.getElementById("canvas-container");
+            const canvasParent = document.getElementById("canvas-container")!;
             const canvas = document.getElementById(
                 CONSTANTS.CANVAS_CONTAINER_ID
             );
@@ -445,7 +407,7 @@ const Calculator = () => {
             }
         };
 
-        if (themeType === "animation") {
+        if (themeType.name === "animation") {
             if (!canvas) createCanvas();
             const loadScript = function () {
                 const tag = document.createElement("script");
@@ -571,7 +533,7 @@ const Calculator = () => {
         if (/m/.test(key)) {
             console.log("+/- (m) after unary op", key);
             changes = {
-                userInput: resultValue * -1,
+                userInput: +resultValue * -1,
                 op1: undefined,
                 num1: undefined,
                 previousCalculationOperator: undefined,
@@ -662,7 +624,7 @@ const Calculator = () => {
         if (/m/.test(key)) {
             console.log("+/- (m) after binary op", key);
             changes = {
-                userInput: resultValue * -1,
+                userInput: +resultValue * -1,
                 op1: undefined,
                 num1: undefined,
                 previousCalculationOperator: undefined,
@@ -742,33 +704,27 @@ const Calculator = () => {
             userInput: _processedUserInput,
             key: key,
         });
-        setKeyData({});
     };
 
     const tryMath = () => {
-        let _resultData = doMath(computationData.userInput);
-
-        setComputationData({
-            ...computationData,
-            ..._resultData,
-            ...makeCalculationData(_resultData),
-        });
+        let _resultData = doMath(computationData);
+        const dataToSet = { ...computationData, ..._resultData };
+        setComputationData({ ..._resultData });
     };
 
     const processResult = () => {
-        const { computed, num1, num2, op1, op2, resultValue, userInput } =
-            computationData;
-        let _userInput = userInput | undefined;
+        const { computed, num1, num2, op1, op2, resultValue } = computationData;
+        let { userInput } = computationData;
         if (
             CONSTANTS.BINARY_OPERATOR_REGEX.test(
-                _userInput.charAt(_userInput.length - 1)
+                userInput.charAt(userInput.length - 1)
             )
         ) {
-            _userInput = _userInput.replace(/.$/, "");
+            userInput = userInput.replace(/.$/, "");
         }
-        _userInput = unicodify(_userInput);
+        userInput = unicodify(userInput);
         const _resultValue = unicodify(resultValue);
-        let resultTemplate = `Ans ${_userInput} = ${_resultValue}`;
+        let resultTemplate = `Ans ${userInput} = ${_resultValue}`;
 
         let processedResultData = {
             computed: computed,
@@ -782,13 +738,12 @@ const Calculator = () => {
         return processedResultData;
     };
 
-    function makeCalculationData(args) {
+    function makeCalculationData() {
         // console.log("makeCalculationData");
         const {
             userInput,
             resultValue,
             resultClassName,
-            calculationValue,
             calculationClassName,
             computed,
             num1,
@@ -800,9 +755,9 @@ const Calculator = () => {
             key,
             timeStamp,
             nextUserInput,
-        } = !args ? { ...computationData } : { ...args };
+        } = { ...computationData };
 
-        let calculationValue;
+        let { calculationValue } = computationData;
         calculationValue =
             num1 && op1 && num2
                 ? "" + num1 + op1 + num2
@@ -831,45 +786,43 @@ const Calculator = () => {
         };
     }
 
-    function makeKeyboard(keyboardName) {
-        const data = keyboards.find((kb) => {
-            return kb.name === keyboardName;
-        });
-        data.selected = selected;
-        data.errorState = errorState;
-        return (
-            <HandleClickContextProvider value={getOnSelect(keyboardName)}>
-                <Keyboard {...data} />
-            </HandleClickContextProvider>
-        );
+    function getKeyboardData(keyboardName: string): {} {
+        const keyboardData: Types.TKeyboard = {
+            ...keyboardMap.get(keyboardName)!,
+        };
+        keyboardData.selected = themeSelections.get(keyboardName);
+        keyboardData.errorState = errorState;
+        keyboardData.onClick = onSelectMap.get(keyboardName)!;
+        // data.selected = selected;
+        // data.errorState = errorState;
+        return keyboardData;
     }
     const showMainKeyboards = () => {
-        if (!settingsData.isOpen)
-            return (
-                <motion.div
-                    initial={{ y: 2000, opacity: 0.25, height: 0 }}
-                    animate={{ height: "auto", opacity: 1, y: 0 }}
-                    transition={{
-                        type: "spring",
-                        duration: 0.5,
-                        delay: 0.3,
-                    }}
+        return (
+            <motion.div
+                initial={{ y: 2000, opacity: 0.25, height: 0 }}
+                animate={{ height: "auto", opacity: 1, y: 0 }}
+                transition={{
+                    type: "spring",
+                    duration: 0.5,
+                    delay: 0.3,
+                }}
+            >
+                <Grid
+                    container
+                    className="main-keyboards"
+                    meta-name="main keyboards"
                 >
-                    <Grid
-                        container
-                        className="main-keyboards"
-                        meta-name="main keyboards"
-                    >
-                        {makeKeyboard("number")}
-                        {makeKeyboard("function")}
-                    </Grid>
-                </motion.div>
-            );
+                    <Keyboard {...getKeyboardData("number")} />
+                    <Keyboard {...getKeyboardData("function")} />
+                </Grid>
+            </motion.div>
+        );
     };
     return (
         <Container
             className={`container 
-            ${themeType} ${theme.toLowerCase()} ${pictureType}`}
+            ${themeType.name} ${theme.name} ${pictureType.name}`}
             sx={{ padding: "0!important" }}
         >
             {/* ------------ app ---------------- */}
@@ -880,10 +833,7 @@ const Calculator = () => {
                 }
                 onClick={toggleSettings}
             >
-                <SettingsIcon
-                    sx={{ position: "relative", zIndex: -1 }}
-                    disabled
-                />
+                <SettingsIcon sx={{ position: "relative", zIndex: -1 }} />
             </p>
             <Grid
                 container
@@ -900,7 +850,7 @@ const Calculator = () => {
                 {/* ------------ display ---------------- */}
                 <Display {...displayData} />
                 {/* ------------ main keyboards ---------------- */}
-                {showMainKeyboards()}
+                {!settingsData.isOpen ? showMainKeyboards() : <></>}
             </Grid>
         </Container>
     );

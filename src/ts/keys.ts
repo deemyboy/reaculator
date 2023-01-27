@@ -1,3 +1,4 @@
+import * as Types from "../types/types";
 // allowed key codes for keyPress event handler
 export const ALLOWED_KEYS: number[] = [
     8, 13, 16, 17, 27, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 67, 77, 82, 83,
@@ -9,7 +10,7 @@ export const DISALLOWED_KEYS: number[] = [
     9, 16, 17, 18, 37, 38, 39, 40, 91, 93,
 ];
 
-export const numberKeys = [
+export const numberKeys: Types.TKey[] = [
     {
         id: 1,
         value: "1",
@@ -135,7 +136,7 @@ export const numberKeys = [
     },
 ];
 
-export const functionKeys = [
+export const functionKeys: Types.TKey[] = [
     {
         id: 19,
         value: "+",
@@ -260,7 +261,7 @@ export const functionKeys = [
     },
 ];
 
-export const themeTypeKeys = [
+export const themeTypeKeys: Types.TKey[] = [
     {
         id: "picture",
         value: "picture",
@@ -300,7 +301,7 @@ export const themeTypeKeys = [
     },
 ];
 
-export const themeKeys = [
+export const themeKeys: Types.TKey[] = [
     {
         id: "fire",
         value: "fire",
@@ -363,7 +364,7 @@ export const themeKeys = [
     },
 ];
 
-export const animKeys = [
+export const animationKeys: Types.TKey[] = [
     {
         id: "slither",
         value: "slither",
@@ -412,7 +413,7 @@ export const animKeys = [
 // 0xD83D 0xDCA3 bomb
 // 0xD83D 0xDD2B pistol
 
-export const pictureKeys = [
+export const pictureKeys: Types.TKey[] = [
     {
         id: "still",
         value: "still",

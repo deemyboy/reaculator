@@ -1,5 +1,5 @@
 import React from "react";
-import Calculator from "./calculator.tsx";
+import Calculator from "./calculator";
 import { createRoot } from "react-dom/client";
 import { CookiesProvider } from "react-cookie";
 

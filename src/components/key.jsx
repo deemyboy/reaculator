@@ -3,8 +3,8 @@ import { Button } from "@mui/material";
 import { Typography, Box } from "@mui/material";
 import { HandleClickContext } from "../js/context";
 
-const Key = ({ errorState, _key }) => {
-    const handleClick = useContext(HandleClickContext);
+const Key = ({ errorState, _key, onClick }) => {
+    // const handleClick = useContext(HandleClickContext);
     const _disabled = errorState && _key.id !== 18;
     const errorClass = "btn-error";
 
@@ -76,7 +76,7 @@ const Key = ({ errorState, _key }) => {
             <Button
                 id={id}
                 className={setKeyClasses(_key)}
-                onClick={(e) => handleClick(e)}
+                onClick={(e) => onClick(e)}
                 size="large"
                 title={title}
                 variant={"outlined"}
