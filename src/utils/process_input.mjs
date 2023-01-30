@@ -1,5 +1,5 @@
 import { patternStack } from "./constants.js";
-import { unicodify, deunicodify } from "./maths_engine.mjs";
+import { unicodify, deunicodify } from "./helpers.js";
 
 export const processInput = (input) => {
     // console.log("processInput", input);

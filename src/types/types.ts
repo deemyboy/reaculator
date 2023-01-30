@@ -52,12 +52,6 @@ export type TKeyBoardData = {
     errorState?: boolean;
 };
 
-// name: "number",
-// className: "keyboard-number",
-// showTitle: false,
-// keys: numberKeys,
-// location: "main",
-// id: 1,
 export type TKeyboard = {
     name: string;
     className: string;
@@ -70,18 +64,6 @@ export type TKeyboard = {
     onClick?: Function;
 };
 
-// id: 21,
-// value: "r",
-// uniChar: "\u221A2",
-// calculationDisplayChar: "\u221A",
-// title: "square root (r)",
-// keycode: 82,
-// code: "KeyR",
-// type: "func",
-// location: "main",
-// className: "btn btn-lg btn-secondary",
-// ctrlKey: false,
-// subTitle: "r",
 export type TKey = {
     id: number | string;
     value: string;
@@ -107,4 +89,9 @@ export type TThemeSelections = {
     themeType: TSelect;
     animation: TSelect;
     pictureType: TSelect;
+};
+
+export type TSettingsData = {
+    settingsKeyboardsData: TKeyboard[];
+    isOpen: boolean;
 };

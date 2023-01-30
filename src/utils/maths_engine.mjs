@@ -1,42 +1,41 @@
-import { patternStack, VALID_COMPUTATION } from "../js/constants.js";
-import { functionKeys } from "../ts/keys.ts";
+import { patternStack, VALID_COMPUTATION } from "./constants.js";
 
-export const deunicodify = (str) => {
-    let count = 0;
-    [...str].forEach((c) => {
-        if (/\d|\./.test(c)) {
-            count++;
-            return;
-        }
-        [...functionKeys].forEach((k) => {
-            if (k.calculationDisplayChar && k.calculationDisplayChar === c) {
-                str = str.replace(str.charAt(count), k.value);
-            }
-        });
-        count++;
-    });
-    return str;
-};
-
-export const unicodify = (str) => {
-    let count = 0;
-    [...str].forEach((c) => {
-        if (/\d|\./.test(c)) {
-            count++;
-            return;
-        }
-        [...functionKeys].forEach((k) => {
-            if (k.calculationDisplayChar && k.value === c) {
-                str = str.replace(str.charAt(count), k.calculationDisplayChar);
-            }
-        });
-        count++;
-    });
-    return str;
-};
-
+// export const doMath = ({
+//     userInput,
+//     resultValue,
+//     resultClassName,
+//     calculationValue,
+//     calculationClassName,
+//     computed,
+//     num1,
+//     op1,
+//     num2,
+//     op2,
+//     error,
+//     previousCalculationOperator,
+//     key,
+//     timeStamp,
+//     nextUserInput,
+// }) => {
 export const doMath = (input) => {
     // console.log("doMath", input);
+    const {
+        userInput,
+        resultValue,
+        resultClassName,
+        calculationValue,
+        calculationClassName,
+        computed,
+        num1,
+        op1,
+        num2,
+        op2,
+        error,
+        previousCalculationOperator,
+        key,
+        timeStamp,
+        nextUserInput,
+    } = input;
     const extractComputationParts = (_input) => {
         let matches = VALID_COMPUTATION.exec(_input);
 
@@ -63,8 +62,8 @@ export const doMath = (input) => {
         return calculataionParameters;
     };
 
-    let _result = { ...input };
-    _computationalUnit = extractComputationParts(input);
+    let _result = { ...input },
+        _computationalUnit = extractComputationParts(userInput);
 
     // console.log("time for doing maths!", input);
     if (Object.keys(_computationalUnit).length > 0) {

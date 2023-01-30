@@ -16,7 +16,7 @@ import * as Types from "../types/types";
 //     errorState,
 // }): React.FC => {
 
-const Keyboard = (props: any): JSX.Element => {
+const Keyboard = (props: Types.TKeyboard): JSX.Element => {
     const {
         name,
         className,
@@ -29,18 +29,27 @@ const Keyboard = (props: any): JSX.Element => {
         onClick,
     } = props;
 
-    const keyboardClassName =
-        location === "display" ? "settings-keyboard-title" : "";
-    const _title = showTitle ? (
-        <Typography className={keyboardClassName}>
-            {name.toUpperCase()}
-        </Typography>
-    ) : (
-        ""
-    );
+    // const _title = showTitle ? (
+    //     <Typography
+    //         className={location === "display" ? "settings-keyboard-title" : ""}
+    //     >
+    //         {name.toUpperCase()}
+    //     </Typography>
+    // ) : (
+    //     ""
+    // );
     return (
         <React.Fragment>
-            {_title}
+            {/* {_title} */}
+            {showTitle && (
+                <Typography
+                    className={
+                        location === "display" ? "settings-keyboard-title" : ""
+                    }
+                >
+                    {name.toUpperCase()}
+                </Typography>
+            )}{" "}
             <Grid item={true} className={`keyboard ${className}`}>
                 {keys.map((ky) => {
                     // ky.selected = false;

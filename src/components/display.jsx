@@ -41,9 +41,10 @@ const Display = ({ linesData, settingsData }) => {
     const displayClass = "display",
         { isOpen, selected } = settingsData;
     const displayHeight = getDisplayHeight(
-        settingsData.keyboardData.length,
+        settingsData.settingsKeyboardsData.length,
         currentBreakPoint
     );
+    const _settingsKeyboardsData = settingsData.settingsKeyboardsData;
     let i = 0;
     if (!isOpen) {
         return (
@@ -89,7 +90,11 @@ const Display = ({ linesData, settingsData }) => {
                     animate={{ opacity: 1 }}
                     transition={{ type: "tween", duration: 0.25 }}
                 >
-                    <ThemeSettings {...settingsData} />
+                    <ThemeSettings
+                        settingsKeyboardsData={
+                            settingsData.settingsKeyboardsData
+                        }
+                    />
                 </motion.div>
             </Grid>
         );

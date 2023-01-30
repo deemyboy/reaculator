@@ -4,22 +4,18 @@ import Keyboard from "./components/keyboard";
 import { Canvas } from "./components/canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
-import {
-    numberKeys,
-    functionKeys,
-    ALLOWED_KEYS,
-    DISALLOWED_KEYS,
-} from "./ts/keys";
+import { ALLOWED_KEYS, DISALLOWED_KEYS, keyboardKeysMap } from "./ts/keys";
 import { Container, Grid, Typography } from "@mui/material";
-import * as CONSTANTS from "./js/constants";
-import { doMath, unicodify } from "./js/maths_engine.mjs";
-import { processInput } from "./js/process_input.mjs";
+import * as CONSTANTS from "./utils/constants";
+import { doMath } from "./utils/maths_engine.mjs";
+import { unicodify, deunicodify } from "./utils/helpers";
+import { processInput } from "./utils/process_input.mjs";
 import "./styles/main.scss";
 import { keyboardMap } from "./ts/keyboards";
 import { motion, useIsPresent } from "framer-motion";
 import * as Types from "./types/types";
-
-import { HandleClickContextProvider } from "./js/context";
+import { keyMap } from "./ts/keys";
+import { HandleClickContextProvider } from "./utils/context";
 
 const Calculator = () => {
     const [cookies, setCookie] = useCookies([
@@ -52,9 +48,7 @@ const Calculator = () => {
     const handleClick = useCallback((e) => {
         e.target.blur();
         setKeyData({
-            key: [...numberKeys, ...functionKeys].filter((k) => {
-                return k.id.toString() === e.target.id;
-            })[0].value,
+            key: keyMap.get(e.target.id)!.value,
             timeStamp: e.timeStamp,
         });
     }, []);
@@ -100,6 +94,12 @@ const Calculator = () => {
             }
         }
     }, []);
+
+    const defaultSettingsKeyboardNames = ["themeType", "theme"];
+
+    const [settingsKeyboardNames, setSettingsKeyboardNames] = useState(
+        defaultSettingsKeyboardNames
+    );
 
     const defaultTheme = { name: "ocean" };
     const defaultThemeType = { name: "color" };
@@ -248,29 +248,10 @@ const Calculator = () => {
             });
     }, [computationData.userInput]);
 
-    const getVisibleKeyboardData = (): Types.TKeyBoardObject[] => {
-        let visibleKeyboardNames = ["themeType", "theme"],
-            keyboardData: Types.TKeyBoardObject[] = [];
-        if (themeType.name !== "color") {
-            visibleKeyboardNames.push(
-                themeType.name === "animation" ? "animation" : "pictureType"
-            );
-        }
-        let i = 0;
-        visibleKeyboardNames.forEach((name) => {
-            const keyboardObject: Types.TKeyBoardObject = {
-                index: i,
-                keyboard: <Keyboard {...getKeyboardData(name)} />,
-                name: name,
-            };
-            keyboardData.push(keyboardObject);
-            i++;
-        });
-        return keyboardData;
-    };
-
     const initialSettingsData = {
-        keyboardData: getVisibleKeyboardData(),
+        settingsKeyboardsData: defaultSettingsKeyboardNames.map((name) =>
+            getKeyboardData(name)
+        ),
         isOpen: false,
     };
 
@@ -294,9 +275,29 @@ const Calculator = () => {
     useEffect(() => {
         setSettingsData({
             ...settingsData,
-            keyboardData: getVisibleKeyboardData(),
+            settingsKeyboardsData: settingsKeyboardNames.map((name) =>
+                getKeyboardData(name)
+            ),
         });
-    }, [theme, themeType, animation, pictureType]);
+    }, [theme, animation, pictureType, themeType]);
+
+    useEffect(() => {
+        updateSettingsKeyboardNames(themeType.name);
+    }, [theme, animation, pictureType, themeType]);
+
+    const updateSettingsKeyboardNames = (name: string) => {
+        const keyboardNames = [...settingsKeyboardNames];
+        // if (name !== "color" && (name !== "theme" || name !== "themeType")) {
+        if (name !== "color") {
+            if (keyboardNames.indexOf(name) >= 0) {
+                keyboardNames.splice(keyboardNames.indexOf(name));
+            }
+            keyboardNames.push(
+                name === "animation" ? "animation" : "pictureType"
+            );
+            setSettingsKeyboardNames(keyboardNames);
+        } else setSettingsKeyboardNames(defaultSettingsKeyboardNames);
+    };
 
     const toggleSettings = (e) => {
         e.preventDefault();
@@ -681,7 +682,6 @@ const Calculator = () => {
 
     const tryMath = () => {
         let _resultData = doMath(computationData);
-        const dataToSet = { ...computationData, ..._resultData };
         setComputationData({ ..._resultData });
     };
 
@@ -751,14 +751,14 @@ const Calculator = () => {
         };
     }
 
-    function getKeyboardData(keyboardName: string): {} {
-        const keyboardData: Types.TKeyboard = {
+    function getKeyboardData(keyboardName: string): Types.TKeyboard {
+        const keyboard = {
             ...keyboardMap.get(keyboardName)!,
         };
-        keyboardData.selected = themeSelections.get(keyboardName);
-        keyboardData.errorState = errorState;
-        keyboardData.onClick = onSelectMap.get(keyboardName)!;
-        return keyboardData;
+        keyboard.selected = themeSelections.get(keyboardName);
+        keyboard.errorState = errorState;
+        keyboard.onClick = onSelectMap.get(keyboardName)!;
+        return keyboard;
     }
     const showMainKeyboards = () => {
         return (
@@ -774,7 +774,7 @@ const Calculator = () => {
                 <Grid
                     container
                     className="main-keyboards"
-                    meta-name="main keyboards"
+                    meta-name="main-keyboards"
                 >
                     <Keyboard {...getKeyboardData("number")} />
                     <Keyboard {...getKeyboardData("function")} />
