@@ -73,8 +73,9 @@ const Calculator = () => {
         if (!repeat) {
             if (DISALLOWED_KEYS.includes(keyCode)) return;
             if (ALLOWED_KEYS.includes(keyCode)) {
-                // exceptions
-                ////
+                ////////////////
+                // exceptions //
+                ////////////////
                 if (ctrlKey && key !== "") {
                     return;
                 }
@@ -95,7 +96,13 @@ const Calculator = () => {
                 }
                 // Escape & Enter key hacks
                 const _key =
-                    key === "Escape" ? "a" : key === "Enter" ? "=" : key;
+                    key === "Escape"
+                        ? "a"
+                        : key === "Enter"
+                        ? "="
+                        : key === "Backspace"
+                        ? "c"
+                        : key;
 
                 setKeyData({
                     key: _key,
@@ -200,7 +207,6 @@ const Calculator = () => {
     const [computationData, setComputationData] = useState({
         ...initialComputationData,
     });
-    const [computed, setComputed] = useState(true);
 
     useEffect(() => {
         if (computationData.error) {
@@ -286,10 +292,6 @@ const Calculator = () => {
             settingsKeyboardsData: settingsKeyboardNames,
         });
     }, [themeData]);
-
-    // useEffect(() => {
-    //     updateSettingsKeyboardNames();
-    // }, [themeData]);
 
     const toggleSettings = (e) => {
         e.preventDefault();
@@ -758,44 +760,51 @@ const Calculator = () => {
         );
     };
     return (
-        <ErrorStateContextProvider value={errorState}>
-            <Container
-                className={`container ${themeData.themeType} ${themeData.theme} ${themeData.pictureType}`}
-                sx={{ padding: "0!important" }}
-            >
-                <p
-                    id="settings-icon"
-                    className={
-                        settingsData.isOpen
-                            ? "settings-icon open"
-                            : "settings-icon"
-                    }
-                    onClick={toggleSettings}
+        <ThemeContextProvider value={themeData}>
+            <ErrorStateContextProvider value={errorState}>
+                <Container
+                    className={`container ${themeData.themeType} ${themeData.theme} ${themeData.pictureType}`}
+                    sx={{ padding: "0!important" }}
                 >
-                    <SettingsIcon sx={{ position: "relative", zIndex: -1 }} />
-                </p>
-                <Grid
-                    container
-                    direction={"column"}
-                    id="canvas-container"
-                    className={"calculator"}
-                    meta-name="display and keyboards"
-                >
-                    <Typography className="title">
-                        {CONSTANTS.APPLICATION_TITLE}
-                    </Typography>
-                    <HandleClickContextProvider
-                        value={{
-                            onClickFunctions: [onThemeDataSelect, handleClick],
-                        }}
+                    <p
+                        id="settings-icon"
+                        className={
+                            settingsData.isOpen
+                                ? "settings-icon open"
+                                : "settings-icon"
+                        }
+                        onClick={toggleSettings}
                     >
-                        <Display {...displayData} />
+                        <SettingsIcon
+                            sx={{ position: "relative", zIndex: -1 }}
+                        />
+                    </p>
+                    <Grid
+                        container
+                        direction={"column"}
+                        id="canvas-container"
+                        className={"calculator"}
+                        meta-name="display and keyboards"
+                    >
+                        <Typography className="title">
+                            {CONSTANTS.APPLICATION_TITLE}
+                        </Typography>
+                        <HandleClickContextProvider
+                            value={{
+                                onClickFunctions: [
+                                    onThemeDataSelect,
+                                    handleClick,
+                                ],
+                            }}
+                        >
+                            <Display {...displayData} />
 
-                        {!settingsData.isOpen ? showMainKeyboards() : <></>}
-                    </HandleClickContextProvider>
-                </Grid>
-            </Container>
-        </ErrorStateContextProvider>
+                            {!settingsData.isOpen ? showMainKeyboards() : <></>}
+                        </HandleClickContextProvider>
+                    </Grid>
+                </Container>
+            </ErrorStateContextProvider>
+        </ThemeContextProvider>
     );
 };
 

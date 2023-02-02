@@ -4,14 +4,13 @@ export const HandleClickContext = React.createContext({});
 
 export const HandleClickContextProvider = HandleClickContext.Provider;
 
-// export const ThemeContext = React.createContext<Types.TThemeSelections2>({
-//     theme: "",
-//     themeType: "",
-//     animation: "",
-//     pictureType: "",
-//     onClick: undefined,
-// });
-export const ThemeContext = React.createContext({});
+export const ThemeContext = React.createContext<Types.TThemeSelections>({
+    theme: "",
+    themeType: "",
+    animation: "",
+    pictureType: "",
+});
+// export const ThemeContext = React.createContext({});
 
 export const ThemeContextProvider = ThemeContext.Provider;
 

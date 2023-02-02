@@ -6,7 +6,7 @@ import { HandleClickContext, ErrorStateContext } from "../utils/context";
 export const Key = ({ keyData }) => {
     const ERROR_CLASS = "btn-error";
     const SELECTED_CLASS = "selected";
-    const CLASS_NAME_SEPERATOR = " ";
+    const CLASS_NAME_SEPARATOR = " ";
     const CLEAR_ERROR_KEY_ID = "18"; // ac key
     const { errorState } = useContext(ErrorStateContext);
     const { onClickFunctions } = useContext(HandleClickContext);
@@ -14,10 +14,10 @@ export const Key = ({ keyData }) => {
     const setKeyClasses = ({ className, selected, id }) => {
         let classNames = className;
 
-        classNames += selected ? CLASS_NAME_SEPERATOR + SELECTED_CLASS : "";
+        classNames += selected ? CLASS_NAME_SEPARATOR + SELECTED_CLASS : "";
         classNames +=
             errorState && id !== CLEAR_ERROR_KEY_ID
-                ? CLASS_NAME_SEPERATOR + ERROR_CLASS
+                ? CLASS_NAME_SEPARATOR + ERROR_CLASS
                 : "";
 
         return classNames;
@@ -43,7 +43,15 @@ export const Key = ({ keyData }) => {
     return (
         <Box className={btnWrapperClassName}>
             {showTitle && (
-                <Typography className="settings-btn-title">{title}</Typography>
+                <Typography
+                    className={
+                        keyData.selected
+                            ? `settings-btn-title ${SELECTED_CLASS}`
+                            : `settings-btn-title`
+                    }
+                >
+                    {title}
+                </Typography>
             )}
             <Button
                 id={id}
