@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+    useState,
+    useEffect,
+    useRef,
+    useCallback,
+    useContext,
+} from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
 import { Canvas } from "./components/canvas";
@@ -15,7 +21,11 @@ import { keyboardMap } from "./ts/keyboards";
 import { motion, useIsPresent } from "framer-motion";
 import * as Types from "./types/types";
 import { keyMap } from "./ts/keys";
-import { HandleClickContextProvider } from "./utils/context";
+import {
+    HandleClickContextProvider,
+    ThemeContextProvider,
+    ErrorStateContextProvider,
+} from "./utils/context";
 
 const Calculator = () => {
     const [cookies, setCookie] = useCookies([
@@ -95,55 +105,53 @@ const Calculator = () => {
         }
     }, []);
 
+    const defaultThemeData: Types.TThemeSelections = {
+        theme: "ocean",
+        themeType: "color",
+        animation: "fireworks",
+        pictureType: "still",
+    };
+
+    const [themeData, setThemeData] =
+        useState<Types.TThemeSelections>(defaultThemeData);
+
+    const onThemeDataSelect: React.MouseEventHandler<HTMLButtonElement> =
+        useCallback(
+            (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const { id, classList } = e.currentTarget as HTMLButtonElement;
+                if ([...classList].includes("btn-theme")) {
+                    setThemeData({ ...themeData, theme: id });
+                }
+                if ([...classList].includes("btn-theme-type")) {
+                    setThemeData({ ...themeData, themeType: id });
+                    setSettingsKeyboardNames(
+                        id === "color"
+                            ? defaultSettingsKeyboardNames
+                            : id === "animation"
+                            ? animationSettingsKeyboardNames
+                            : id === "picture"
+                            ? pictureSettingsKeyboardNames
+                            : defaultSettingsKeyboardNames
+                    );
+                }
+                if ([...classList].includes("btn-animation-choose")) {
+                    setThemeData({ ...themeData, animation: id });
+                }
+                if ([...classList].includes("btn-pic-type")) {
+                    setThemeData({ ...themeData, pictureType: id });
+                }
+            },
+            [themeData]
+        );
     const defaultSettingsKeyboardNames = ["themeType", "theme"];
+    const animationSettingsKeyboardNames = ["themeType", "theme", "animation"];
+    const pictureSettingsKeyboardNames = ["themeType", "theme", "pictureType"];
 
     const [settingsKeyboardNames, setSettingsKeyboardNames] = useState(
         defaultSettingsKeyboardNames
     );
-
-    const defaultTheme = { name: "ocean" };
-    const defaultThemeType = { name: "color" };
-    const defaultAnimationType = { name: "fireworks" };
-    const defaultPictureType = { name: "still" };
-
-    const [theme, setTheme] = useState<Types.TSelect>(defaultTheme);
-
-    const [themeType, setThemeType] = useState<Types.TSelect>(defaultThemeType);
-
-    const [animation, setAnimation] =
-        useState<Types.TSelect>(defaultAnimationType);
-
-    const [pictureType, setPictureType] =
-        useState<Types.TSelect>(defaultPictureType);
-
-    const themeSelections = new Map<string, Types.TSelect>([
-        ["theme", theme],
-        ["themeType", themeType],
-        ["animation", animation],
-        ["pictureType", pictureType],
-    ]);
-
-    const onSelect = useCallback((e) => {
-        const { classList } = e.target;
-        e.stopPropagation();
-        const { id } = e.target;
-        if ([...classList].includes("btn-theme")) setTheme({ name: id });
-        if ([...classList].includes("btn-theme-type"))
-            setThemeType({ name: id });
-        if ([...classList].includes("btn-animation-choose"))
-            setAnimation({ name: id });
-        if ([...classList].includes("btn-pic-type"))
-            setPictureType({ name: id });
-    }, []);
-
-    const onSelectMap = new Map([
-        ["number", handleClick],
-        ["function", handleClick],
-        ["theme", onSelect],
-        ["themeType", onSelect],
-        ["animation", onSelect],
-        ["pictureType", onSelect],
-    ]);
 
     const getCookieLabel = (labelId) => {
         const cookieLabelStack = {
@@ -163,10 +171,12 @@ const Calculator = () => {
         return cookieLabelStack[labelId];
     };
 
-    const [errorState, setErrorState] = useState(false);
+    const [errorState, setErrorState] = useState<Types.TErrorState>({
+        errorState: false,
+    });
 
     const resetErrorState = () => {
-        setErrorState(false);
+        setErrorState({ errorState: false });
     };
 
     const initialComputationData: Types.TComputationData = {
@@ -194,7 +204,7 @@ const Calculator = () => {
 
     useEffect(() => {
         if (computationData.error) {
-            setErrorState(true);
+            setErrorState({ errorState: true });
             let { calculationClassName, resultClassName } = computationData;
             calculationClassName += " calculation-error";
             resultClassName += " result-error";
@@ -249,9 +259,7 @@ const Calculator = () => {
     }, [computationData.userInput]);
 
     const initialSettingsData = {
-        settingsKeyboardsData: defaultSettingsKeyboardNames.map((name) =>
-            getKeyboardData(name)
-        ),
+        settingsKeyboardsData: defaultSettingsKeyboardNames,
         isOpen: false,
     };
 
@@ -275,29 +283,13 @@ const Calculator = () => {
     useEffect(() => {
         setSettingsData({
             ...settingsData,
-            settingsKeyboardsData: settingsKeyboardNames.map((name) =>
-                getKeyboardData(name)
-            ),
+            settingsKeyboardsData: settingsKeyboardNames,
         });
-    }, [theme, animation, pictureType, themeType]);
+    }, [themeData]);
 
-    useEffect(() => {
-        updateSettingsKeyboardNames(themeType.name);
-    }, [theme, animation, pictureType, themeType]);
-
-    const updateSettingsKeyboardNames = (name: string) => {
-        const keyboardNames = [...settingsKeyboardNames];
-        // if (name !== "color" && (name !== "theme" || name !== "themeType")) {
-        if (name !== "color") {
-            if (keyboardNames.indexOf(name) >= 0) {
-                keyboardNames.splice(keyboardNames.indexOf(name));
-            }
-            keyboardNames.push(
-                name === "animation" ? "animation" : "pictureType"
-            );
-            setSettingsKeyboardNames(keyboardNames);
-        } else setSettingsKeyboardNames(defaultSettingsKeyboardNames);
-    };
+    // useEffect(() => {
+    //     updateSettingsKeyboardNames();
+    // }, [themeData]);
 
     const toggleSettings = (e) => {
         e.preventDefault();
@@ -305,8 +297,7 @@ const Calculator = () => {
 
         const { isOpen } = settingsData;
         // prevent when in error
-        if (!errorState) {
-            // isOpen = !isOpen;
+        if (!errorState.errorState) {
             setSettingsData({ ...settingsData, isOpen: !isOpen });
         }
     };
@@ -358,8 +349,8 @@ const Calculator = () => {
     // animation
     useEffect(() => {
         let _id = "animation-script",
-            _scriptName = animation.name;
-        const canvas = document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID);
+            _scriptName = themeData.animation;
+        let canvas = document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID);
 
         const removeScript = (id) => {
             if (document.getElementById(id)) {
@@ -368,13 +359,11 @@ const Calculator = () => {
         };
         const createCanvas = () => {
             const canvasParent = document.getElementById("canvas-container")!;
-            const canvas = document.getElementById(
-                CONSTANTS.CANVAS_CONTAINER_ID
-            );
-            if (!canvas) {
-                const newCanvas = document.createElement("canvas");
-                newCanvas.setAttribute("id", CONSTANTS.CANVAS_CONTAINER_ID);
-                canvasParent.appendChild(newCanvas);
+            !document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID);
+            {
+                const canvas = document.createElement("canvas");
+                canvas.id = CONSTANTS.CANVAS_CONTAINER_ID; // + Math.random();
+                canvasParent.appendChild(canvas);
             }
         };
         const removeCanvas = () => {
@@ -383,7 +372,7 @@ const Calculator = () => {
             }
         };
 
-        if (themeType.name === "animation") {
+        if (themeData.themeType === "animation") {
             if (!canvas) createCanvas();
             const loadScript = function () {
                 const tag = document.createElement("script");
@@ -403,7 +392,7 @@ const Calculator = () => {
             removeCanvas();
         }
     }),
-        [settingsData, animation];
+        [themeData.animation];
 
     // keypress event listeners
     useEffect(() => {
@@ -641,11 +630,6 @@ const Calculator = () => {
             return;
         }
 
-        // if maths error then prevent all input except esc for ac (Escape key)
-        if (keyError && key !== "a") {
-            return;
-        }
-
         if (
             computationData.computed &&
             key !== "m" &&
@@ -751,15 +735,6 @@ const Calculator = () => {
         };
     }
 
-    function getKeyboardData(keyboardName: string): Types.TKeyboard {
-        const keyboard = {
-            ...keyboardMap.get(keyboardName)!,
-        };
-        keyboard.selected = themeSelections.get(keyboardName);
-        keyboard.errorState = errorState;
-        keyboard.onClick = onSelectMap.get(keyboardName)!;
-        return keyboard;
-    }
     const showMainKeyboards = () => {
         return (
             <motion.div
@@ -776,41 +751,51 @@ const Calculator = () => {
                     className="main-keyboards"
                     meta-name="main-keyboards"
                 >
-                    <Keyboard {...getKeyboardData("number")} />
-                    <Keyboard {...getKeyboardData("function")} />
+                    <Keyboard keyboardName={"number"} />
+                    <Keyboard keyboardName={"function"} />
                 </Grid>
             </motion.div>
         );
     };
     return (
-        <Container
-            className={`container 
-            ${themeType.name} ${theme.name} ${pictureType.name}`}
-            sx={{ padding: "0!important" }}
-        >
-            <p
-                id="settings-icon"
-                className={
-                    settingsData.isOpen ? "settings-icon open" : "settings-icon"
-                }
-                onClick={toggleSettings}
+        <ErrorStateContextProvider value={errorState}>
+            <Container
+                className={`container ${themeData.themeType} ${themeData.theme} ${themeData.pictureType}`}
+                sx={{ padding: "0!important" }}
             >
-                <SettingsIcon sx={{ position: "relative", zIndex: -1 }} />
-            </p>
-            <Grid
-                container
-                direction={"column"}
-                id="canvas-container"
-                className={"calculator"}
-                meta-name="display and keyboards"
-            >
-                <Typography className="title">
-                    {CONSTANTS.APPLICATION_TITLE}
-                </Typography>
-                <Display {...displayData} />
-                {!settingsData.isOpen ? showMainKeyboards() : <></>}
-            </Grid>
-        </Container>
+                <p
+                    id="settings-icon"
+                    className={
+                        settingsData.isOpen
+                            ? "settings-icon open"
+                            : "settings-icon"
+                    }
+                    onClick={toggleSettings}
+                >
+                    <SettingsIcon sx={{ position: "relative", zIndex: -1 }} />
+                </p>
+                <Grid
+                    container
+                    direction={"column"}
+                    id="canvas-container"
+                    className={"calculator"}
+                    meta-name="display and keyboards"
+                >
+                    <Typography className="title">
+                        {CONSTANTS.APPLICATION_TITLE}
+                    </Typography>
+                    <HandleClickContextProvider
+                        value={{
+                            onClickFunctions: [onThemeDataSelect, handleClick],
+                        }}
+                    >
+                        <Display {...displayData} />
+
+                        {!settingsData.isOpen ? showMainKeyboards() : <></>}
+                    </HandleClickContextProvider>
+                </Grid>
+            </Container>
+        </ErrorStateContextProvider>
     );
 };
 

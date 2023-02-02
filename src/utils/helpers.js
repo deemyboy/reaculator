@@ -1,4 +1,4 @@
-import { keyboardKeysMap } from "../ts/keys";
+import { keyboardKeysMap } from "ts/keys";
 export const deunicodify = (str) => {
     let count = 0;
     [...str].forEach((c) => {
@@ -6,7 +6,7 @@ export const deunicodify = (str) => {
             count++;
             return;
         }
-        [...keyboardKeysMap.get("func")].forEach((k) => {
+        keyboardKeysMap.get("function").forEach((k) => {
             if (k.calculationDisplayChar && k.calculationDisplayChar === c) {
                 str = str.replace(str.charAt(count), k.value);
             }
@@ -23,7 +23,7 @@ export const unicodify = (str) => {
             count++;
             return;
         }
-        [...keyboardKeysMap.get("func")].forEach((k) => {
+        keyboardKeysMap.get("function").forEach((k) => {
             if (k.calculationDisplayChar && k.value === c) {
                 str = str.replace(str.charAt(count), k.calculationDisplayChar);
             }

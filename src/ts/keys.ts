@@ -12,7 +12,7 @@ export const DISALLOWED_KEYS: number[] = [
 
 const numberKeys: Types.TKey[] = [
     {
-        id: 1,
+        id: "1",
         value: "1",
         title: "one",
         keycode: 49,
@@ -22,7 +22,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 2,
+        id: "2",
         value: "2",
         title: "two",
         keycode: 50,
@@ -32,7 +32,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 3,
+        id: "3",
         value: "3",
         title: "three",
         keycode: 51,
@@ -42,7 +42,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 4,
+        id: "4",
         value: "4",
         title: "four",
         keycode: 52,
@@ -52,7 +52,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 5,
+        id: "5",
         value: "5",
         title: "five",
         keycode: 53,
@@ -62,7 +62,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 6,
+        id: "6",
         value: "6",
         title: "six",
         keycode: 54,
@@ -72,7 +72,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 7,
+        id: "7",
         value: "7",
         title: "seven",
         keycode: 55,
@@ -82,7 +82,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 8,
+        id: "8",
         value: "8",
         title: "eight",
         keycode: 56,
@@ -92,7 +92,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 9,
+        id: "9",
         value: "9",
         title: "nine",
         keycode: 57,
@@ -102,7 +102,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 0,
+        id: "0",
         value: "0",
         title: "zero",
         keycode: 48,
@@ -112,7 +112,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 10,
+        id: "10",
         value: ".",
         title: "dot",
         keycode: 190,
@@ -122,7 +122,7 @@ const numberKeys: Types.TKey[] = [
         className: "btn btn-lg btn-primary",
     },
     {
-        id: 11,
+        id: "11",
         value: "m",
         // uniChar: "\u00B1",
         uniChar: "\u207A\u2044-",
@@ -138,7 +138,7 @@ const numberKeys: Types.TKey[] = [
 
 const functionKeys: Types.TKey[] = [
     {
-        id: 19,
+        id: "19",
         value: "+",
         title: "plus",
         keycode: 187,
@@ -148,7 +148,7 @@ const functionKeys: Types.TKey[] = [
         className: "btn btn-lg btn-secondary",
     },
     {
-        id: 12,
+        id: "12",
         value: "-",
         title: "minus",
         keycode: 189,
@@ -158,7 +158,7 @@ const functionKeys: Types.TKey[] = [
         className: "btn btn-lg btn-secondary",
     },
     {
-        id: 13,
+        id: "13",
         value: "x",
         title: "multiply (x)",
         keycode: 88,
@@ -171,7 +171,7 @@ const functionKeys: Types.TKey[] = [
         subTitle: "x",
     },
     {
-        id: 14,
+        id: "14",
         value: "/",
         title: "divide (/)",
         keycode: 191,
@@ -184,7 +184,7 @@ const functionKeys: Types.TKey[] = [
         subTitle: "/",
     },
     {
-        id: 15,
+        id: "15",
         value: "s",
         title: "square (s)",
         keycode: 83,
@@ -197,7 +197,7 @@ const functionKeys: Types.TKey[] = [
         subTitle: "s",
     },
     {
-        id: 21,
+        id: "21",
         value: "r",
         title: "square root (r)",
         keycode: 82,
@@ -211,7 +211,7 @@ const functionKeys: Types.TKey[] = [
         ctrlKey: false,
     },
     {
-        id: 20,
+        id: "20",
         value: "y",
         title: "x to the power y (y)",
         keycode: 89,
@@ -224,7 +224,7 @@ const functionKeys: Types.TKey[] = [
         subTitle: "y",
     },
     {
-        id: 16,
+        id: "16",
         value: "=",
         title: "equals",
         keycode: 187,
@@ -234,7 +234,7 @@ const functionKeys: Types.TKey[] = [
         className: "btn btn-lg btn-success btn-secondary",
     },
     {
-        id: 17,
+        id: "17",
         value: "c",
         title: "clear last keypress (backspace)",
         keycode: 8,
@@ -248,7 +248,7 @@ const functionKeys: Types.TKey[] = [
         // subTitle: "bksp",
     },
     {
-        id: 18,
+        id: "18",
         value: "a",
         title: "all clear (esc)",
         keycode: 27,
@@ -441,8 +441,8 @@ const pictureKeys: Types.TKey[] = [
 ];
 
 export const keyboardKeysMap = new Map<string, Types.TKey[]>([
-    ["num", numberKeys],
-    ["func", functionKeys],
+    ["number", numberKeys],
+    ["function", functionKeys],
     ["themeType", themeTypeKeys],
     ["theme", themeKeys],
     ["animation", animationKeys],

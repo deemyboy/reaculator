@@ -47,51 +47,64 @@ export type TKeyBoardObject = {
 };
 
 export type TKeyBoardData = {
-    keyboard: JSX.Element;
-    selected?: TSelect;
-    errorState?: boolean;
+    keyboard: string;
 };
 
-export type TKeyboard = {
+export type TKeyboardProps = {
     name: string;
     className: string;
     showTitle: boolean;
-    keys: TKey[];
+    keyboardKeys: string;
     location: string;
-    id: number;
-    selected?: TSelect;
-    errorState?: boolean;
-    onClick?: Function;
 };
 
 export type TKey = {
-    id: number | string;
+    id: string;
     value: string;
-    uniChar?: string;
-    calculationDisplayChar?: string;
     title: string;
     keycode: number | null;
     code: string;
     type: string;
     location: string;
     className: string;
+    uniChar?: string;
+    calculationDisplayChar?: string;
     ctrlKey?: boolean;
     subTitle?: string;
     showTitle?: boolean;
+    selected?: boolean;
+    onClick?: Function;
 };
 
-export type TSelect = {
-    name: string;
+export type TTheme = {
+    theme: string;
+};
+export type TThemeType = {
+    themeType: string;
+};
+export type TAnimation = {
+    animation: string;
+};
+export type TPictureType = {
+    pictureType: string;
 };
 
 export type TThemeSelections = {
-    theme: TSelect;
-    themeType: TSelect;
-    animation: TSelect;
-    pictureType: TSelect;
+    theme: string;
+    themeType: string;
+    animation: string;
+    pictureType: string;
 };
 
-export type TSettingsData = {
-    settingsKeyboardsData: TKeyboard[];
+export type TThemeSettingsData = {
+    settingsKeyboardsData: TKeyboardProps[];
     isOpen: boolean;
+};
+export type TSettingsData = {
+    key: number;
+    keyboardName: string;
+};
+
+export type TErrorState = {
+    errorState: boolean;
 };

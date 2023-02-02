@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { motion } from "framer-motion";
 import Keyboard from "./keyboard";
+import * as Types from "../types/types";
 
-export const Setting = (keyboardData) => {
-    console.log(keyboardData);
-
+export const Setting = ({ keyboardName }: Types.TSettingsData) => {
     return (
         <motion.div
             className="setting-wrapper"
@@ -17,7 +16,7 @@ export const Setting = (keyboardData) => {
                 delay: 0.1,
             }}
         >
-            <Keyboard {...keyboardData} />
+            <Keyboard keyboardName={keyboardName} />
         </motion.div>
     );
 };

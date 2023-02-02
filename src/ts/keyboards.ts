@@ -1,17 +1,14 @@
 import * as Types from "../types/types";
 
-import { keyboardKeysMap } from "./keys";
-
-export const keyboardMap = new Map<string, Types.TKeyboard>([
+export const keyboardMap = new Map<string, Types.TKeyboardProps>([
     [
         "number",
         {
             name: "number",
             className: "keyboard-number",
             showTitle: false,
-            keys: keyboardKeysMap.get("num")!,
+            keyboardKeys: "number",
             location: "main",
-            id: 1,
         },
     ],
     [
@@ -20,9 +17,8 @@ export const keyboardMap = new Map<string, Types.TKeyboard>([
             name: "function",
             className: "keyboard-function",
             showTitle: false,
-            keys: keyboardKeysMap.get("func")!,
+            keyboardKeys: "function",
             location: "main",
-            id: 2,
         },
     ],
     [
@@ -31,9 +27,8 @@ export const keyboardMap = new Map<string, Types.TKeyboard>([
             name: "themeType",
             className: "keyboard-theme-type",
             showTitle: true,
-            keys: keyboardKeysMap.get("themeType")!,
+            keyboardKeys: "themeType",
             location: "display",
-            id: 3,
         },
     ],
     [
@@ -42,9 +37,8 @@ export const keyboardMap = new Map<string, Types.TKeyboard>([
             name: "theme",
             className: "keyboard-theme",
             showTitle: true,
-            keys: keyboardKeysMap.get("theme")!,
+            keyboardKeys: "theme",
             location: "display",
-            id: 4,
         },
     ],
     [
@@ -53,9 +47,8 @@ export const keyboardMap = new Map<string, Types.TKeyboard>([
             name: "animation",
             className: "keyboard-animation",
             showTitle: true,
-            keys: keyboardKeysMap.get("animation")!,
+            keyboardKeys: "animation",
             location: "display",
-            id: 5,
         },
     ],
     [
@@ -64,9 +57,8 @@ export const keyboardMap = new Map<string, Types.TKeyboard>([
             name: "pictureType",
             className: "keyboard-picture-type",
             showTitle: true,
-            keys: keyboardKeysMap.get("pictureType")!,
+            keyboardKeys: "pictureType",
             location: "display",
-            id: 6,
         },
     ],
 ]);
