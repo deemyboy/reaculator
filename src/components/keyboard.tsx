@@ -7,10 +7,15 @@ import * as Types from "../types/types";
 import { keyboardKeysMap } from "ts/keys";
 import { keyboardMap } from "ts/keyboards";
 
-import { ThemeContext } from "../utils/context";
+import {
+    ThemeContext,
+    SettingsDataContext,
+    HandleClickContext,
+} from "../utils/context";
 
 const Keyboard = ({ keyboardName }): React.ReactElement => {
     const { ...themeData } = useContext(ThemeContext);
+    const onClickMapper = useContext(HandleClickContext);
     const { name, className, showTitle, keyboardKeys, location } =
         keyboardMap.get(keyboardName)!;
     const keys: Types.TKey[] = keyboardKeysMap.get(keyboardKeys)!;
@@ -29,6 +34,7 @@ const Keyboard = ({ keyboardName }): React.ReactElement => {
                 <Grid item={true} className={`keyboard ${className}`}>
                     {keys.map((key) => {
                         key.selected = themeData[name] === key.id;
+                        key.onClick = onClickMapper[name];
                         return <Key key={key.id} keyData={key} />;
                     })}
                 </Grid>

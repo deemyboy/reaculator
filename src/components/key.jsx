@@ -26,22 +26,21 @@ export const Key = ({ keyData }) => {
     const { id, value, title, location, type } = keyData;
 
     const onClick =
-        type === "num" || type === "func"
+        type === "number" || type === "function"
             ? onClickFunctions[1]
             : onClickFunctions[0];
     const { uniChar } = keyData || "";
     const { showTitle } = keyData || "";
     const { subTitle } = keyData || "";
 
-    let btnWrapperClassName;
-    if (location === "display") {
-        btnWrapperClassName = "settings-btn-wrapper";
-    } else if (location === "main") {
-        btnWrapperClassName = "main-btn-wrapper";
-    }
-
     return (
-        <Box className={btnWrapperClassName}>
+        <Box
+            className={
+                location === "display"
+                    ? "settings-btn-wrapper"
+                    : "main-btn-wrapper"
+            }
+        >
             {showTitle && (
                 <Typography
                     className={

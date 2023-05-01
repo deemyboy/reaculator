@@ -7,8 +7,7 @@ import { red } from "@mui/material/colors";
 
 const Display = ({ linesData, settingsData }) => {
     const displayClass = "display",
-        { isOpen, selected } = settingsData;
-    let i = 0;
+        { isOpen } = settingsData;
     if (!isOpen) {
         return (
             <Grid className={displayClass}>
@@ -17,8 +16,7 @@ const Display = ({ linesData, settingsData }) => {
                     animate={{ opacity: 1 }}
                     transition={{ type: "tween", duration: 0.25 }}
                 >
-                    {Object.keys(linesData).map((line) => {
-                        i++;
+                    {Object.keys(linesData).map((line, i) => {
                         return (
                             <motion.div
                                 initial={{ opacity: 0, y: 500 }}
@@ -51,11 +49,7 @@ const Display = ({ linesData, settingsData }) => {
                     animate={{ opacity: 1 }}
                     transition={{ type: "tween", duration: 0.25 }}
                 >
-                    <ThemeSettings
-                        settingsKeyboardsData={
-                            settingsData.settingsKeyboardsData
-                        }
-                    />
+                    <ThemeSettings />
                 </motion.div>
             </Grid>
         );

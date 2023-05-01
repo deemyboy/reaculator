@@ -3,8 +3,9 @@ import { Grid } from "@mui/material";
 import { motion } from "framer-motion";
 import { Setting } from "./setting";
 import * as Types from "types/types";
-import { ThemeContext } from "../utils/context";
-const ThemeSettings = ({ settingsKeyboardsData }) => {
+import { ThemeContext, SettingsDataContext } from "../utils/context";
+const ThemeSettings = () => {
+    const { settingsKeyboardsData } = useContext(SettingsDataContext);
     const className: string = "settings";
     return (
         <Grid
