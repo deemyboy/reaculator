@@ -36,11 +36,21 @@
 #settings {
 
   .setting-wrapper {
+    .settings-keyboard-title {
+      font-weight: 600;
+    }
 
     div.keyboard {
       .settings-btn-wrapper {
         .settings-btn-title {
           font-family: unset;
+
+          &.selected {
+            font-weight: 900;
+            // color: white;
+            // background-color: white;
+            text-shadow: -.1px -.1px 0 #000, .1px -.1px 0 #000, -.1px .1px 0 #000, .1px .1px 0 #000;
+          }
         }
 
         .btn {
@@ -347,9 +357,7 @@
 
     // sizes
     .sidebar {
-      .keyboard {
-        .btn-theme-type:nth-of-type(1) {}
-      }
+      .keyboard {}
     }
   }
 }

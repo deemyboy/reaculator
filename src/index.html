@@ -16,6 +16,21 @@
 
 <body>
   <div id="calculator"></div>
+  <script>
+    // HTMLCanvasElement.prototype.getContext = (function (origFn) {
+    //   let bannedTypes = {
+    //     "webgl": true,
+    //     "webgl2": true,
+    //     "experimental-webgl": true,
+    //   };
+    //   return function () {
+    //     let type = arguments[0];
+    //     return bannedTypes[type]
+    //       ? null
+    //       : origFn.apply(this, arguments);
+    //   };
+    // }(HTMLCanvasElement.prototype.getContext));
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js" crossorigin="anonymous"></script>
 </body>
 

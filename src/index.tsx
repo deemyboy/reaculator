@@ -3,7 +3,7 @@ import Calculator from "./calculator";
 import { createRoot } from "react-dom/client";
 import { CookiesProvider } from "react-cookie";
 
-const container = document.getElementById("calculator");
+const container = document.getElementById("calculator") as Element;
 const root = createRoot(container);
 root.render(
     <CookiesProvider>
