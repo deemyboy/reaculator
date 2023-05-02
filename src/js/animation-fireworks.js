@@ -1,6 +1,6 @@
 function reset(parent) {
-  // console.log(parent);
-  // console.log(parent.firstChild);
+  console.log(parent);
+  console.log(parent.firstChild);
   var newCanvas = parent.firstChild.cloneNode(false);
   parent.replaceChild(newCanvas, parent.firstChild);
 
@@ -8,7 +8,8 @@ function reset(parent) {
 }
 
 function initFireworks(parent) {
-  // reset(parent);
+  console.log(parent);
+  reset(parent);
   // console.log(parent);
   const cvs = parent.firstChild;
 

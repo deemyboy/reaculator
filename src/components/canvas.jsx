@@ -7,26 +7,19 @@ export const Canvas = ({ themeData }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    console.log(
-      "canvas hit",
-      themeData.animation,
-      canvas,
-      canvas.parentNode,
-      canvasRef
-    );
-    // const gl = canvas.getContext("webgl");
-    if (
-      themeData.animation === "fireworks" &&
-      themeData.themeType === "animation"
-    ) {
+    // console.log(
+    //   "canvas hit",
+    //   themeData.animation,
+    //   canvas,
+    //   canvas.parentNode,
+    //   canvasRef
+    // );
+    if (themeData.animation === "fireworks") {
       initFireworks(canvas.parentNode);
-    } else if (
-      themeData.animation === "slither" &&
-      themeData.themeType === "animation"
-    ) {
+    } else if (themeData.animation === "slither") {
       initSlither(canvas.parentNode);
     }
-  }, [themeData]); // empty dependency array means this effect runs only once
+  }, [themeData]);
 
   return <canvas ref={canvasRef} />;
 };

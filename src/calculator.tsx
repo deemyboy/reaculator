@@ -110,9 +110,10 @@ const Calculator = () => {
   }, []);
 
   const defaultThemeData: Types.TThemeSelections = {
+    // animation fireworks slither
     theme: "ocean",
-    themeType: "color",
-    animation: "fireworks",
+    themeType: "animation",
+    animation: "slither",
     pictureType: "still",
   };
 

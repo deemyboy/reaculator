@@ -1,3 +1,12 @@
+function reset(parent) {
+  console.log(parent);
+  console.log(parent.firstChild);
+  var newCanvas = parent.firstChild.cloneNode(false);
+  parent.replaceChild(newCanvas, parent.firstChild);
+
+  // return newCanvas;
+}
+
 var cvs,
   ctx,
   img,
@@ -12,16 +21,8 @@ var cvs,
   lines,
   frame;
 
-function reset(parent) {
-  // console.log(parent);
-  // console.log(parent.firstChild);
-  var newCanvas = parent.firstChild.cloneNode(false);
-  parent.replaceChild(newCanvas, parent.firstChild);
-
-  // return newCanvas;
-}
-
 function initSlither(parent) {
+  console.log(parent);
   window.onclick = null;
   reset(parent);
   const cvs = parent.firstChild;
