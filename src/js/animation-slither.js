@@ -12,16 +12,19 @@ var cvs,
   lines,
   frame;
 
-function reset(canvas) {
-  var newCanvas = canvas.cloneNode(false);
-  canvas.parentNode.replaceChild(newCanvas, canvas);
-  return newCanvas;
+function reset(parent) {
+  // console.log(parent);
+  // console.log(parent.firstChild);
+  var newCanvas = parent.firstChild.cloneNode(false);
+  parent.replaceChild(newCanvas, parent.firstChild);
+
+  // return newCanvas;
 }
 
-function init() {
-  cvs = document.getElementById("cvs");
+function initSlither(parent) {
   window.onclick = null;
-  cvs = reset(cvs);
+  reset(parent);
+  const cvs = parent.firstChild;
   ctx = cvs.getContext("2d"); /* Error in getContext("2d") */
 
   (w = cvs.width = cvs.parentNode.clientWidth),
@@ -113,4 +116,6 @@ window.addEventListener("resize", function () {
   ctx.fillRect(0, 0, w, h);
 });
 
-init();
+// initSlither();
+
+export default initSlither;
