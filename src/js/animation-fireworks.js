@@ -1,13 +1,4 @@
-function reset(canvas) {
-  var newCanvas = canvas.cloneNode(false);
-  canvas.parentNode.replaceChild(newCanvas, canvas);
-  return newCanvas;
-}
-
-function initWebgl() {
-  var cvs = document.getElementById("cvs");
-  cvs = reset(cvs);
-
+function initFireworks(cvs) {
   var gl = cvs.getContext("webgl", { preserveDrawingBuffer: true }),
     w = (cvs.width = cvs.parentNode.clientWidth),
     h = (cvs.height = cvs.parentNode.clientHeight),
@@ -303,4 +294,5 @@ void main(){
     fireworks.push(firework);
   });
 }
-initWebgl();
+
+export default initFireworks;

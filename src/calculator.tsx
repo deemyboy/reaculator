@@ -7,18 +7,18 @@ import React, {
 } from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
-import { Canvas } from "./components/canvas";
+import { FireworksCanvas } from "components/fireworks-canvas";
+import { SlitherCanvas } from "components/slither-canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { ALLOWED_KEYS, DISALLOWED_KEYS, keyboardKeysMap } from "./ts/keys";
+import { ALLOWED_KEYS, DISALLOWED_KEYS } from "./ts/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./utils/constants";
 import { doMath } from "./utils/maths_engine.mjs";
-import { unicodify, deunicodify } from "./utils/helpers";
+import { unicodify } from "./utils/helpers";
 import { processInput } from "./utils/process_input.mjs";
 import "./styles/main.scss";
-import { keyboardMap } from "./ts/keyboards";
-import { motion, useIsPresent } from "framer-motion";
+import { motion } from "framer-motion";
 import * as Types from "./types/types";
 import { keyMap } from "./ts/keys";
 import {
@@ -345,52 +345,38 @@ const Calculator = () => {
   ]);
 
   // animation
-  useEffect(() => {
-    let _id = "animation-script",
-      _scriptName = themeData.animation;
-    let canvas = document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID);
+  // useEffect(() => {
+  //   let canvas;
 
-    const removeScript = (id) => {
-      if (document.getElementById(id)) {
-        document.getElementById(id)!.remove();
-      }
-    };
-    const createCanvas = () => {
-      const canvasParent = document.getElementById("canvas-container")!;
-      !document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID);
-      {
-        const canvas = document.createElement("canvas");
-        canvas.id = CONSTANTS.CANVAS_CONTAINER_ID; // + Math.random();
-        canvasParent.appendChild(canvas);
-      }
-    };
-    const removeCanvas = () => {
-      if (canvas) {
-        canvas.remove();
-      }
-    };
+  //   const createCanvas = () => {
+  //     const canvasParent = document.getElementById("canvas-container")!;
+  //     {
+  //       const canvas = document.createElement("canvas");
+  //       canvas.id = CONSTANTS.CANVAS_CONTAINER_ID;
+  //       // canvasParent.appendChild(canvas);
+  //     }
+  //   };
 
-    if (themeData.themeType === "animation") {
-      if (!canvas) createCanvas();
-      const loadScript = function () {
-        const tag = document.createElement("script");
-        tag.id = _id;
-        tag.async = false;
-        let _src = `./animation-${_scriptName}.js`;
-        tag.src = _src;
-        const body = document.getElementsByTagName("body")[0];
-        body.appendChild(tag);
-      };
-      if (document.getElementById(_id)) {
-        removeScript(_id);
-      }
-      loadScript();
-    } else if (document.getElementById(_id)) {
-      removeScript(_id);
-      removeCanvas();
-    }
-  }),
-    [themeData.animation];
+  //   if (!document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID)) {
+  //     canvas = createCanvas();
+  //   }
+  //   if (!canvas) createCanvas();
+  //   if (
+  //     themeData.animation === "fireworks" &&
+  //     document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID)
+  //   ) {
+  //     console.log(document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID));
+  //     console.log("initFireworks");
+
+  //     // initFireworks();
+  //   } else if (
+  //     themeData.animation === "fireworks" &&
+  //     document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID)
+  //   ) {
+  //     // initSlither();
+  //   }
+  // }),
+  //   [themeData.animation];
 
   // keypress event listeners
   useEffect(() => {
@@ -684,7 +670,6 @@ const Calculator = () => {
   };
 
   function makeCalculationData() {
-    // console.log("makeCalculationData");
     const {
       userInput,
       resultValue,
@@ -764,6 +749,12 @@ const Calculator = () => {
             className={"calculator"}
             meta-name="display and keyboards"
           >
+            {themeData.themeType === "animation" &&
+              (themeData.animation === "fireworks" ? (
+                <FireworksCanvas />
+              ) : (
+                <SlitherCanvas />
+              ))}
             <Typography className="title">
               {CONSTANTS.APPLICATION_TITLE}
             </Typography>
