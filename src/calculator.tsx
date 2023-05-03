@@ -7,18 +7,18 @@ import React, {
 } from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
-import { Canvas } from "./components/canvas";
+import { FireworksCanvas } from "components/fireworks-canvas";
+import { SlitherCanvas } from "components/slither-canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { ALLOWED_KEYS, DISALLOWED_KEYS, keyboardKeysMap } from "./ts/keys";
+import { ALLOWED_KEYS, DISALLOWED_KEYS } from "./ts/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./utils/constants";
 import { doMath } from "./utils/maths_engine.mjs";
-import { unicodify, deunicodify } from "./utils/helpers";
+import { unicodify } from "./utils/helpers";
 import { processInput } from "./utils/process_input.mjs";
 import "./styles/main.scss";
-import { keyboardMap } from "./ts/keyboards";
-import { motion, useIsPresent } from "framer-motion";
+import { motion } from "framer-motion";
 import * as Types from "./types/types";
 import { keyMap } from "./ts/keys";
 import {
@@ -110,10 +110,9 @@ const Calculator = () => {
   }, []);
 
   const defaultThemeData: Types.TThemeSelections = {
-    // animation fireworks slither
     theme: "ocean",
     themeType: "animation",
-    animation: "slither",
+    animation: "fireworks",
     pictureType: "still",
   };
 
@@ -750,9 +749,12 @@ const Calculator = () => {
             className={"calculator"}
             meta-name="display and keyboards"
           >
-            {themeData.themeType === "animation" && (
-              <Canvas themeData={themeData} />
-            )}
+            {themeData.themeType === "animation" &&
+              (themeData.animation === "fireworks" ? (
+                <FireworksCanvas />
+              ) : (
+                <SlitherCanvas />
+              ))}
             <Typography className="title">
               {CONSTANTS.APPLICATION_TITLE}
             </Typography>

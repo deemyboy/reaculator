@@ -1,18 +1,4 @@
-function reset(parent) {
-  console.log(parent);
-  console.log(parent.firstChild);
-  var newCanvas = parent.firstChild.cloneNode(false);
-  parent.replaceChild(newCanvas, parent.firstChild);
-
-  // return newCanvas;
-}
-
-function initFireworks(parent) {
-  console.log(parent);
-  reset(parent);
-  // console.log(parent);
-  const cvs = parent.firstChild;
-
+function initFireworks(cvs) {
   var gl = cvs.getContext("webgl", { preserveDrawingBuffer: true }),
     w = (cvs.width = cvs.parentNode.clientWidth),
     h = (cvs.height = cvs.parentNode.clientHeight),
@@ -308,6 +294,5 @@ void main(){
     fireworks.push(firework);
   });
 }
-// initFireworks();
 
 export default initFireworks;
