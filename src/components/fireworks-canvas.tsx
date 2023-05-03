@@ -1,6 +1,5 @@
-import React, { useRef, useEffect, useContext, forwardRef } from "react";
+import React from "react";
 import initFireworks from "js/animation-fireworks";
-import initSlither from "js/animation-slither";
 import { Canvas } from "./canvas";
 
 export const FireworksCanvas = () => {

@@ -111,7 +111,7 @@ const Calculator = () => {
 
   const defaultThemeData: Types.TThemeSelections = {
     theme: "ocean",
-    themeType: "animation",
+    themeType: "color",
     animation: "fireworks",
     pictureType: "still",
   };

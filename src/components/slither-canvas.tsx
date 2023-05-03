@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext, forwardRef } from "react";
+import React from "react";
 import initSlither from "js/animation-slither";
 import { Canvas } from "./canvas";
 
