@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard";
-import { FireworksCanvas } from "components/fireworks-canvas";
-import { SlitherCanvas } from "components/slither-canvas";
+import { FireworksCanvas } from "./components/fireworks-canvas";
+import { SlitherCanvas } from "./components/slither-canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { ALLOWED_KEYS, DISALLOWED_KEYS } from "./ts/keys";
