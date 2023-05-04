@@ -92,21 +92,30 @@ const Calculator = () => {
           return;
         }
         // Escape & Enter key hacks
-        const _key =
-          key === "Escape"
-            ? "a"
-            : key === "Enter"
-            ? "="
-            : key === "Backspace"
-            ? "c"
-            : key;
-
+        const testKey = (k: string) => {
+          const keyHack = {
+            Escape: "a",
+            Enter: "=",
+            Backspace: "c",
+          };
+          return keyHack[k] ?? k;
+        };
         setKeyData({
-          key: _key,
+          key: testKey(key),
           timeStamp: timeStamp,
         });
       }
     }
+    const actions = {
+      key: "",
+      shiftKey: "",
+      ctrlKey: "",
+      metaKey: "",
+      keyCode: "",
+      repeat: "",
+      timeStamp: "",
+    };
+    // return actions[action] ?()
   }, []);
 
   const defaultThemeData: Types.TThemeSelections = {
@@ -717,8 +726,7 @@ const Calculator = () => {
           type: "spring",
           duration: 0.5,
           delay: 0.3,
-        }}
-      >
+        }}>
         <Grid container className="main-keyboards" meta-name="main-keyboards">
           <Keyboard keyboardName={"number"} />
           <Keyboard keyboardName={"function"} />
@@ -731,15 +739,13 @@ const Calculator = () => {
       <ErrorStateContextProvider value={errorState}>
         <Container
           className={`container ${themeData.themeType} ${themeData.theme} ${themeData.pictureType}`}
-          sx={{ padding: "0!important" }}
-        >
+          sx={{ padding: "0!important" }}>
           <p
             id="settings-icon"
             className={
               settingsData.isOpen ? "settings-icon open" : "settings-icon"
             }
-            onClick={toggleSettings}
-          >
+            onClick={toggleSettings}>
             <SettingsIcon sx={{ position: "relative", zIndex: -1 }} />
           </p>
           <Grid
@@ -747,8 +753,7 @@ const Calculator = () => {
             direction={"column"}
             id="canvas-container"
             className={"calculator"}
-            meta-name="display and keyboards"
-          >
+            meta-name="display and keyboards">
             {themeData.themeType === "animation" &&
               (themeData.animation === "fireworks" ? (
                 <FireworksCanvas />
@@ -761,11 +766,9 @@ const Calculator = () => {
             <HandleClickContextProvider
               value={{
                 onClickFunctions: [onThemeDataSelect, handleClick],
-              }}
-            >
+              }}>
               <SettingsDataContextProvider
-                value={settingsData as Types.TSettingsDataContext}
-              >
+                value={settingsData as Types.TSettingsDataContext}>
                 <Display {...displayData} />
               </SettingsDataContextProvider>
 
