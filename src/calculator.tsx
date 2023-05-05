@@ -11,7 +11,7 @@ import { FireworksCanvas } from "./components/fireworks-canvas";
 import { SlitherCanvas } from "./components/slither-canvas";
 import { useCookies } from "react-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { ALLOWED_KEYS, DISALLOWED_KEYS } from "./ts/keys";
+import { ALLOWED_KEYS, ALLOWED_STRINGS, DISALLOWED_KEYS } from "./ts/keys";
 import { Container, Grid, Typography } from "@mui/material";
 import * as CONSTANTS from "./utils/constants";
 import { doMath } from "./utils/maths_engine.mjs";
@@ -68,45 +68,91 @@ const Calculator = () => {
     // prevent these keys firing
     // ctrl key 17, shift key 16 alt key 18
     // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
-    const { key, shiftKey, ctrlKey, metaKey, keyCode, repeat, timeStamp } = e;
+    const {
+      key,
+      altKey,
+      shiftKey,
+      ctrlKey,
+      metaKey,
+      keyCode,
+      repeat,
+      timeStamp,
+      code,
+    } = e;
 
-    if (!repeat) {
-      if (DISALLOWED_KEYS.includes(keyCode)) return;
-      if (ALLOWED_KEYS.includes(keyCode)) {
-        ////////////////
-        // exceptions //
-        ////////////////
-        if (ctrlKey && key !== "") {
-          return;
-        }
-        // handle shift key pressed by itself
-        // prevent going forward
-        // shift key only allowed with "+" key
-        // shift key alone keyCode === 16
-        if (shiftKey && keyCode === 16) {
-          return;
-        }
+    ////////////////
+    // exceptions //
+    ////////////////
+    console.log(
+      "DISALLOWED_KEYS.includes(keyCode) ",
+      DISALLOWED_KEYS.includes(keyCode),
+      "isNaN(+key)",
+      isNaN(+key),
+      "(isNaN(+key) && !ALLOWED_STRINGS.includes(key))",
+      isNaN(+key) && !ALLOWED_STRINGS.includes(key)
+    );
 
-        // prevent ctrl/cmd + r triggering sqr root
-        if ((ctrlKey && keyCode === 82) || (metaKey && keyCode === 82)) {
-          return;
-        }
-        // Escape & Enter key hacks
-        const _key =
-          key === "Escape"
-            ? "a"
-            : key === "Enter"
-            ? "="
-            : key === "Backspace"
-            ? "c"
-            : key;
+    if (
+      repeat ||
+      DISALLOWED_KEYS.includes(keyCode) ||
+      altKey ||
+      ctrlKey ||
+      (shiftKey && keyCode === 16) ||
+      (shiftKey && keyCode === 82) ||
+      (ctrlKey && keyCode === 82) ||
+      (metaKey && keyCode === 82) ||
+      code === "Home" ||
+      code === "End" ||
+      (isNaN(+key) && !ALLOWED_STRINGS.includes(key))
+    )
+      return;
+    // if (DISALLOWED_KEYS.includes(keyCode)) return;
+    // if (ALLOWED_KEYS.includes(keyCode)) {
+    ////////////////
+    // exceptions //
+    ////////////////
+    //   if (ctrlKey && key !== "") {
+    //     return;
+    //   }
+    //   // handle shift key pressed by itself
+    //   // prevent going forward
+    //   // shift key only allowed with "+" key
+    //   // shift key alone keyCode === 16
+    //   if (shiftKey && keyCode === 16) {
+    //     return;
+    //   }
 
-        setKeyData({
-          key: _key,
-          timeStamp: timeStamp,
-        });
-      }
-    }
+    //   // prevent ctrl/cmd + r triggering sqr root
+    //   if ((ctrlKey && keyCode === 82) || (metaKey && keyCode === 82)) {
+    //     return;
+    //   }
+
+    /* Escape & Enter & Backspace key hacks
+    /*
+    */
+    const replaceInvalidKeyValue = (k: string): string => {
+      const invalidKeyRenamer: { [key: string]: string } = {
+        Escape: "a",
+        Enter: "=",
+        Backspace: "c",
+      };
+      return invalidKeyRenamer[k] ?? k;
+    };
+    setKeyData({
+      key: replaceInvalidKeyValue(key),
+      timeStamp: timeStamp,
+    });
+
+    const actions = {
+      key: "",
+      shiftKey: "",
+      ctrlKey: "",
+      metaKey: "",
+      keyCode: "",
+      repeat: "",
+      timeStamp: "",
+    };
+    // return actions[action] ?()
   }, []);
 
   const defaultThemeData: Types.TThemeSelections = {

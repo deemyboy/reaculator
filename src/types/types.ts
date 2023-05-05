@@ -13,12 +13,14 @@ export type TKeyData = {
 
 export type TKeyEventData = {
   key: string;
+  altKey: boolean;
   shiftKey: boolean;
   ctrlKey: boolean;
   metaKey: boolean;
   keyCode: number;
   repeat: boolean;
   timeStamp: number;
+  code: string;
 };
 
 export type TComputationData = {
