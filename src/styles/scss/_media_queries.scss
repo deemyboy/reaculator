@@ -149,7 +149,7 @@
         .btn {
           width: clamp(4rem, 5vw, 5rem);
           min-width: unset;
-          font-size: clamp(2.5rem, 4vw, 4rem);
+          font-size: clamp(2.35rem, 4vw, 4rem);
         }
       }
 
@@ -320,7 +320,18 @@
         p.title {}
 
         .keyboard {
-          .btn {}
+          button.btn {
+            min-width: unset;
+            width: clamp(5.6rem, 8vh, 10rem);
+            font-size: clamp(2.7rem, 3vw, 4rem);
+          }
+
+          .main-btn-wrapper {
+            p.btn-subtitle {
+              font-size: clamp(0.9rem, 1.5vw, 2rem);
+              top: -23px;
+            }
+          }
         }
       }
 
