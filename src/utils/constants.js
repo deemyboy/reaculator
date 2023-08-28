@@ -36,6 +36,6 @@ export const patternStack = {
   NUM2_FLOATING_DOT_CATCHER: /(?!^-?\d+\.\d+)[xy\/\-+](-?\d+\.[xy\/\-+])$/,
   PLUS_MINUS_CATCHER: /^(-?\d+\.?\d*)m|(-?\d+\.?\d*)([xy\/\-+])(-?\d+\.?\d*)m$/,
   M_CATCHER: /([xy\/\-+=])m$/,
-  C_CATCHER: /(.*)(?<!a)c$/,
+  C_CATCHER: /(.*)c$/,
   A_CATCHER: /(.*)a$/,
 };
