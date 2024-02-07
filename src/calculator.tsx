@@ -19,7 +19,6 @@ import { unicodify } from "./utils/helpers";
 import { processInput } from "./utils/process_input.mjs";
 import "./styles/main.scss";
 import { motion } from "framer-motion";
-import * as Types from "./types/types";
 import { keyMap } from "./ts/keys";
 import {
   HandleClickContextProvider,
@@ -27,6 +26,15 @@ import {
   ErrorStateContextProvider,
   SettingsDataContextProvider,
 } from "./utils/context";
+import { CANVAS_CONTAINER_ID, APPLICATION_TITLE } from "constants/constants";
+import {
+  TKeyEventData,
+  ThemeData,
+  TErrorState,
+  TComputationData,
+  TKeyData,
+  TThemeSettingsData,
+} from "types/types";
 
 const Calculator = () => {
   const [cookies, setCookie] = useCookies([
@@ -56,15 +64,19 @@ const Calculator = () => {
 
   const isInitialMount = useRef(true);
 
-  const handleClick = useCallback((e) => {
-    e.target.blur();
-    setKeyData({
-      key: keyMap.get(e.target.id)!.value,
-      timeStamp: e.timeStamp,
-    });
-  }, []);
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      const target = e.target as HTMLButtonElement;
+      target.blur();
+      setKeyData({
+        key: keyMap.get(target.id)!.value,
+        timeStamp: e.timeStamp,
+      });
+    },
+    []
+  );
 
-  const handleKeyPress = useCallback((e: Types.TKeyEventData) => {
+  const handleKeyPress = useCallback((e: TKeyEventData) => {
     // prevent these keys firing
     // ctrl key 17, shift key 16 alt key 18
     // mac key codes added 91-left cmd, 93-right cmd, 37-40 arrow keys
@@ -155,15 +167,14 @@ const Calculator = () => {
     // return actions[action] ?()
   }, []);
 
-  const defaultThemeData: Types.TThemeSelections = {
+  const defaultThemeData: ThemeData = {
     theme: "ocean",
     themeType: "color",
     animation: "fireworks",
     pictureType: "still",
   };
 
-  const [themeData, setThemeData] =
-    useState<Types.TThemeSelections>(defaultThemeData);
+  const [themeData, setThemeData] = useState<ThemeData>(defaultThemeData);
 
   const onThemeDataSelect: React.MouseEventHandler<HTMLButtonElement> =
     useCallback(
@@ -222,7 +233,7 @@ const Calculator = () => {
     return cookieLabelStack[labelId];
   };
 
-  const [errorState, setErrorState] = useState<Types.TErrorState>({
+  const [errorState, setErrorState] = useState<TErrorState>({
     errorState: false,
   });
 
@@ -230,7 +241,7 @@ const Calculator = () => {
     setErrorState({ errorState: false });
   };
 
-  const initialComputationData: Types.TComputationData = {
+  const initialComputationData: TComputationData = {
     userInput: "",
     resultValue: "0",
     resultClassName: "result",
@@ -279,7 +290,7 @@ const Calculator = () => {
     }
   }, [computationData.computed]);
 
-  const [keyData, setKeyData] = useState<Types.TKeyData>({
+  const [keyData, setKeyData] = useState<TKeyData>({
     key: "",
     timeStamp: 0,
   });
@@ -309,7 +320,7 @@ const Calculator = () => {
   }, [computationData.userInput]);
 
   const initialSettingsData = {
-    settingsKeyboardsData: defaultSettingsKeyboardNames,
+    keyboardsData: defaultSettingsKeyboardNames,
     isOpen: false,
   };
 
@@ -333,7 +344,7 @@ const Calculator = () => {
   useEffect(() => {
     setSettingsData({
       ...settingsData,
-      settingsKeyboardsData: settingsKeyboardNames,
+      keyboardsData: settingsKeyboardNames,
     });
   }, [themeData]);
 
@@ -398,26 +409,26 @@ const Calculator = () => {
   //     const canvasParent = document.getElementById("canvas-container")!;
   //     {
   //       const canvas = document.createElement("canvas");
-  //       canvas.id = CONSTANTS.CANVAS_CONTAINER_ID;
+  //       canvas.id = CANVAS_CONTAINER_ID;
   //       // canvasParent.appendChild(canvas);
   //     }
   //   };
 
-  //   if (!document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID)) {
+  //   if (!document.getElementById(CANVAS_CONTAINER_ID)) {
   //     canvas = createCanvas();
   //   }
   //   if (!canvas) createCanvas();
   //   if (
   //     themeData.animation === "fireworks" &&
-  //     document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID)
+  //     document.getElementById(CANVAS_CONTAINER_ID)
   //   ) {
-  //     console.log(document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID));
+  //     console.log(document.getElementById(CANVAS_CONTAINER_ID));
   //     console.log("initFireworks");
 
   //     // initFireworks();
   //   } else if (
   //     themeData.animation === "fireworks" &&
-  //     document.getElementById(CONSTANTS.CANVAS_CONTAINER_ID)
+  // document.getElementById(CANVAS_CONTAINER_ID);
   //   ) {
   //     // initSlither();
   //   }
@@ -801,16 +812,14 @@ const Calculator = () => {
               ) : (
                 <SlitherCanvas />
               ))}
-            <Typography className="title">
-              {CONSTANTS.APPLICATION_TITLE}
-            </Typography>
+            <Typography className="title">{APPLICATION_TITLE}</Typography>
             <HandleClickContextProvider
               value={{
                 onClickFunctions: [onThemeDataSelect, handleClick],
               }}
             >
               <SettingsDataContextProvider
-                value={settingsData as Types.TSettingsDataContext}
+                value={settingsData as TThemeSettingsData}
               >
                 <Display {...displayData} />
               </SettingsDataContextProvider>

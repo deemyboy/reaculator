@@ -1,25 +1,27 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Grid } from "@mui/material";
-import { motion } from "framer-motion";
 import { Setting } from "./setting";
-import * as Types from "types/types";
-import { ThemeContext, SettingsDataContext } from "../utils/context";
+import { SettingsDataContext, useSettings } from "../utils/context";
+import {
+  SETTINGS_CLASS_NAME,
+  SETTINGS_ID,
+  SETTINGS_META_NAME,
+} from "constants/constants";
+
 const ThemeSettings = () => {
-    const { settingsKeyboardsData } = useContext(SettingsDataContext);
-    const className: string = "settings";
-    return (
-        <Grid
-            id="settings"
-            container
-            className={className}
-            meta-name="settings"
-        >
-            {settingsKeyboardsData.map(
-                (keyboardName: string, index: number) => {
-                    return <Setting key={index} keyboardName={keyboardName} />;
-                }
-            )}
-        </Grid>
-    );
+  const { keyboardsData: keyboardData } = useSettings();
+
+  return (
+    <Grid
+      id={SETTINGS_ID}
+      container
+      className={SETTINGS_CLASS_NAME}
+      meta-name={SETTINGS_META_NAME}
+    >
+      {keyboardData.map((keyboardName: string, index: number) => {
+        return <Setting key={index} keyboardName={keyboardName} />;
+      })}
+    </Grid>
+  );
 };
 export default ThemeSettings;

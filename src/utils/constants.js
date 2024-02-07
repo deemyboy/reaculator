@@ -1,5 +1,3 @@
-export const APPLICATION_TITLE = "Reaculator";
-export const CANVAS_CONTAINER_ID = "cvs";
 export const BINARY_OPERATOR_REGEX = /[xy\/\-+=]/i;
 export const UNARY_OPERATOR_REGEX = /[sr]/;
 export const NUMBER_REGEX = /\d/;

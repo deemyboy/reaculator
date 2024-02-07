@@ -1,28 +1,38 @@
-import { createContext } from "react";
-import * as Types from "../types/types";
+import { createContext, useContext } from "react";
+import {
+  HandleClickContextType,
+  TErrorState,
+  TThemeSettingsData,
+  ThemeData,
+} from "../types/types";
 
-export const HandleClickContext = createContext({});
+export const HandleClickContext = createContext<HandleClickContextType>({
+  onClickFunctions: [() => {}, () => {}],
+});
 
 export const HandleClickContextProvider = HandleClickContext.Provider;
 
-export const ThemeContext = createContext<Types.TThemeSelections>({
+export const ThemeContext = createContext<ThemeData>({
   theme: "",
   themeType: "",
   animation: "",
   pictureType: "",
 });
-// export const ThemeContext = createContext({});
 
 export const ThemeContextProvider = ThemeContext.Provider;
 
-export const ErrorStateContext = createContext<Types.TErrorState>({
+export const ErrorStateContext = createContext<TErrorState>({
   errorState: false,
 });
 
 export const ErrorStateContextProvider = ErrorStateContext.Provider;
 
-export const SettingsDataContext = createContext<Types.TSettingsDataContext>(
-  {} as Types.TSettingsDataContext
+export const SettingsDataContext = createContext<TThemeSettingsData>(
+  {} as TThemeSettingsData
 );
+
+export const useSettings = () => {
+  return useContext(SettingsDataContext);
+};
 
 export const SettingsDataContextProvider = SettingsDataContext.Provider;

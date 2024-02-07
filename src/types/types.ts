@@ -1,4 +1,5 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { MouseEventHandler } from "react";
 
 export type TCookieData = {
   label: string;
@@ -91,7 +92,7 @@ export type TPictureType = {
   pictureType: string;
 };
 
-export type TThemeSelections = {
+export type ThemeData = {
   theme: string;
   themeType: string;
   animation: string;
@@ -99,9 +100,10 @@ export type TThemeSelections = {
 };
 
 export type TThemeSettingsData = {
-  settingsKeyboardsData: string[];
+  keyboardsData: string[];
   isOpen: boolean;
 };
+
 export type TSettingsData = {
   key: number;
   keyboardName: string;
@@ -109,11 +111,6 @@ export type TSettingsData = {
 
 export type TErrorState = {
   errorState: boolean;
-};
-
-export type TSettingsDataContext = {
-  settingsKeyboardsData: string[];
-  isOpen: boolean;
 };
 
 // export type TOnClick = {
@@ -154,3 +151,10 @@ export type TSettingsDataContext = {
 // x
 
 // export type IOnClickMapperStrings = Record<keyof TOnClickMapper, string>;
+
+export type HandleClickContextType = {
+  onClickFunctions: [
+    MouseEventHandler<HTMLButtonElement>,
+    MouseEventHandler<HTMLButtonElement>
+  ];
+};
